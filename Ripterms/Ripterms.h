@@ -2,6 +2,8 @@
 #include <JNI/jni.h>
 #include <vector>
 #include <string>
+#include <json.hpp>
+#include "Mappings/mappings_lunar_1_8_9.h"
 
 namespace Ripterms
 {
@@ -11,11 +13,17 @@ namespace Ripterms
 	{
 		public:
 			JavaClass(const std::string& class_path);
+			JavaClass();
 			JavaClass(JavaClass& otherJavaClass);
 			~JavaClass();
-			jclass javaClass;
-			std::vector<jfieldID> fields;
-			std::vector<jmethodID> methods;
+			void fill(const std::string& class_path);
+			bool isFilled(const std::string& class_path);
+			jclass javaClass = nullptr;
+			std::vector<std::string> class_paths;
+			std::unordered_map<std::string, jfieldID> fields;
+			std::unordered_map<std::string, jmethodID> methods;
+		private:
+			inline static nlohmann::json mappings{};
 	};
 
 	void init();

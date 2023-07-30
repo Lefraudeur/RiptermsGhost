@@ -7,6 +7,6 @@ public:
 	Object(Object& other_Object);
 	~Object();
 private:
-	inline static Ripterms::JavaClass javaClass{ "java/lang/Object" };
+	inline static Ripterms::JavaClass javaClass;
 	jobject instance;
 };
