@@ -1,17 +1,22 @@
 #include <Windows.h>
-
+#include <iostream>
 
 BOOL WINAPI DllMain(
     HINSTANCE hinstDLL,  // handle to DLL module
     DWORD fdwReason,     // reason for calling function
     LPVOID lpvReserved)  // reserved
 {
+    static FILE* fbuffer1 = nullptr, * fbuffer2 = nullptr, * fbuffer3 = nullptr;
     // Perform actions based on the reason for calling.
     switch (fdwReason)
     {
     case DLL_PROCESS_ATTACH:
         // Initialize once for each new process.
         // Return FALSE to fail DLL load.
+        AllocConsole();
+        freopen_s(&fbuffer1, "CONOUT$", "w", stdout);
+        freopen_s(&fbuffer2, "CONERR$", "w", stderr);
+        freopen_s(&fbuffer3, "CONIN$", "r", stdin);
         break;
 
     case DLL_THREAD_ATTACH:
@@ -28,7 +33,10 @@ BOOL WINAPI DllMain(
         {
             break; // do not do cleanup if process termination scenario
         }
-
+        fclose(fbuffer1);
+        fclose(fbuffer2);
+        fclose(fbuffer3);
+        FreeConsole();
         // Perform any necessary cleanup.
         break;
     }

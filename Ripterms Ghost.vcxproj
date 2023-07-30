@@ -163,7 +163,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="java\lang\Object\Object.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Ripterms\Ripterms.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="java\lang\Object\Object.h" />
+    <ClInclude Include="Ripterms\Ripterms.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
