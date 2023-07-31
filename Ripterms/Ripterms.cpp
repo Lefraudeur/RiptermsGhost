@@ -3,6 +3,41 @@
 #include <psapi.h>
 #include <iostream>
 
+void mainLoop()
+{
+
+}
+
+typedef void(*nglClearType)(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer);
+
+nglClearType originalnglClear = nullptr;
+
+nglClearType targetnglClear = nullptr;
+
+bool tmp_no_hook = false;
+
+void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
+{
+	if (tmp_no_hook) return originalnglClear(env, clazz, mask, function_pointer);
+	static bool runonce = true;
+	if (runonce && env)
+	{
+		Ripterms::p_env = env;
+		runonce = false;
+	}
+	if (GetAsyncKeyState(VK_END)) {
+		tmp_no_hook = true;
+		std::thread a([] {
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			FreeLibrary(Ripterms::module);
+		});
+		if (a.joinable()) a.detach();
+		return originalnglClear(env, clazz, mask, function_pointer);
+	}
+	mainLoop();
+	return originalnglClear(env, clazz, mask, function_pointer);
+}
+
 struct Process
 {
 	DWORD pid;
@@ -18,9 +53,9 @@ BOOL CALLBACK EnumWindowsCallback(_In_ HWND hwnd, _In_ LPARAM lParam)
 		&& GetWindow(hwnd, GW_OWNER) == NULL
 		&& IsWindowVisible(hwnd)
 		&& GetConsoleWindow() != hwnd
-	) {
-		char str[32];
-		GetWindowTextA(hwnd, str, 32);
+		) {
+		char str[64];
+		GetWindowTextA(hwnd, str, 64);
 		p_process->windowName = str;
 		return FALSE;
 	}
@@ -34,49 +69,39 @@ std::string getCurrentWindowName()
 	return process.windowName;
 }
 
-Ripterms::JavaClass::JavaClass(const std::string& class_path)
-{
-	fill(class_path);
-	this->class_paths.push_back(class_path);
-}
-
-Ripterms::JavaClass::JavaClass()
-{
-}
-
-Ripterms::JavaClass::JavaClass(JavaClass& otherJavaClass)
-{
-	if (otherJavaClass.javaClass) this->javaClass = (jclass)p_env->NewLocalRef(otherJavaClass.javaClass);
-	this->class_paths = otherJavaClass.class_paths;
-	this->fields = otherJavaClass.fields;
-	this->methods = otherJavaClass.methods;
-}
-
-Ripterms::JavaClass::~JavaClass()
-{
-	if (javaClass) p_env->DeleteLocalRef(javaClass);
-}
-
-bool Ripterms::JavaClass::isFilled(const std::string& class_path)
-{
-	for (const std::string& str : class_paths) {
-		if (str == class_path) return true;
-	}
-	return false;
-}
-
-void Ripterms::JavaClass::fill(const std::string& class_path)
-{
-	if (this->mappings.empty()) {
-		std::string windowName = getCurrentWindowName();
-		size_t ignore = windowName.find(" (v");
-		if (windowName.substr(0, ignore) == "Lunar Client 1.8.9") {
-
-		}
-	}
-}
-
 void Ripterms::init()
 {
+	if (getCurrentWindowName().find("Lunar Client 1.8.9") != std::string::npos) version = LUNAR_1_8_9;
+	if (version == UNDEFINED) {
+		std::cout << "unknown version" << std::endl;
+		std::cin.ignore();
+		FreeLibrary(module);
+		return;
+	}
+	MH_Initialize();
+	HMODULE lwjgl64dll = GetModuleHandleA("lwjgl64.dll");
+	targetnglClear = reinterpret_cast<nglClearType>(GetProcAddress(lwjgl64dll, "Java_org_lwjgl_opengl_GL11_nglClear"));
+	MH_STATUS status = MH_CreateHook(targetnglClear, detournglClear, reinterpret_cast<LPVOID*>(&originalnglClear));
+	if (status != MH_OK)
+	{
+		std::cerr << MH_StatusToString(status) << std::endl;
+		std::cin.ignore();
+		FreeLibrary(module);
+		return;
+	}
+	status = MH_EnableHook(targetnglClear);
+	if (status != MH_OK)
+	{
+		std::cerr << MH_StatusToString(status) << std::endl;
+		std::cin.ignore();
+		FreeLibrary(module);
+		return;
+	}
+}
 
+void Ripterms::clean()
+{
+	MH_DisableHook(targetnglClear);
+	MH_RemoveHook(targetnglClear);
+	MH_Uninitialize();
 }

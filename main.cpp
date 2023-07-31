@@ -1,5 +1,6 @@
 #include <Windows.h>
 #include <iostream>
+#include "Ripterms/Ripterms.h"
 
 BOOL WINAPI DllMain(
     HINSTANCE hinstDLL,  // handle to DLL module
@@ -17,6 +18,8 @@ BOOL WINAPI DllMain(
         freopen_s(&fbuffer1, "CONOUT$", "w", stdout);
         freopen_s(&fbuffer2, "CONERR$", "w", stderr);
         freopen_s(&fbuffer3, "CONIN$", "r", stdin);
+        Ripterms::module = hinstDLL;
+        Ripterms::init();
         break;
 
     case DLL_THREAD_ATTACH:
@@ -33,6 +36,7 @@ BOOL WINAPI DllMain(
         {
             break; // do not do cleanup if process termination scenario
         }
+        Ripterms::clean();
         fclose(fbuffer1);
         fclose(fbuffer2);
         fclose(fbuffer3);

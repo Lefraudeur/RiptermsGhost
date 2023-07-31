@@ -91,7 +91,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Include\ImGui;$(SolutionDir)Include\JNI;$(SolutionDir)Include\JNI\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Include\ImGui;$(SolutionDir)Include\JNI;$(SolutionDir)Include\JNI\win32;$(SolutionDir)Include\JNI\win32\bridge;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -111,7 +111,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Include\ImGui;$(SolutionDir)Include\JNI;$(SolutionDir)Include\JNI\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Include\ImGui;$(SolutionDir)Include\JNI;$(SolutionDir)Include\JNI\win32;$(SolutionDir)Include\JNI\win32\bridge;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -131,7 +131,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Include\ImGui;$(SolutionDir)Include\JNI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Include\ImGui;$(SolutionDir)Include\JNI;$(SolutionDir)Include\JNI\win32;$(SolutionDir)Include\JNI\win32\bridge;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -151,7 +151,7 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Include\ImGui;$(SolutionDir)Include\JNI;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Include\ImGui;$(SolutionDir)Include\JNI;$(SolutionDir)Include\JNI\win32;$(SolutionDir)Include\JNI\win32\bridge;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -166,6 +166,7 @@
     <ClCompile Include="java\lang\Object\Object.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="net\minecraft\client\Minecraft\Minecraft.cpp" />
+    <ClCompile Include="Ripterms\JavaClass.cpp" />
     <ClCompile Include="Ripterms\Ripterms.cpp" />
   </ItemGroup>
   <ItemGroup>
