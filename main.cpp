@@ -19,8 +19,7 @@ BOOL WINAPI DllMain(
         freopen_s(&fbuffer2, "CONERR$", "w", stderr);
         freopen_s(&fbuffer3, "CONIN$", "r", stdin);
         Ripterms::module = hinstDLL;
-        Ripterms::init();
-        break;
+        return Ripterms::init();
 
     case DLL_THREAD_ATTACH:
         // Do thread-specific initialization.

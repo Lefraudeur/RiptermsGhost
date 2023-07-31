@@ -15,3 +15,8 @@ Object::~Object()
 {
 	if (instance) Ripterms::p_env->DeleteLocalRef(instance);
 }
+
+bool Object::init()
+{
+	return ObjectClass.fill("java/lang/Object");
+}

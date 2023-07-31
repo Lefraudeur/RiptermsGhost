@@ -1,5 +1,4 @@
 #include "Ripterms.h"
-#include <Windows.h>
 #include <psapi.h>
 #include <iostream>
 
@@ -19,10 +18,12 @@ bool tmp_no_hook = false;
 void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
 {
 	if (tmp_no_hook) return originalnglClear(env, clazz, mask, function_pointer);
+	Ripterms::p_env = env;
 	static bool runonce = true;
-	if (runonce && env)
+	if (runonce)
 	{
-		Ripterms::p_env = env;
+		env->GetJavaVM(&Ripterms::p_jvm);
+		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION);
 		runonce = false;
 	}
 	if (GetAsyncKeyState(VK_END)) {
@@ -53,7 +54,7 @@ BOOL CALLBACK EnumWindowsCallback(_In_ HWND hwnd, _In_ LPARAM lParam)
 		&& GetWindow(hwnd, GW_OWNER) == NULL
 		&& IsWindowVisible(hwnd)
 		&& GetConsoleWindow() != hwnd
-		) {
+	) {
 		char str[64];
 		GetWindowTextA(hwnd, str, 64);
 		p_process->windowName = str;
@@ -69,14 +70,12 @@ std::string getCurrentWindowName()
 	return process.windowName;
 }
 
-void Ripterms::init()
+BOOL Ripterms::init()
 {
 	if (getCurrentWindowName().find("Lunar Client 1.8.9") != std::string::npos) version = LUNAR_1_8_9;
 	if (version == UNDEFINED) {
-		std::cout << "unknown version" << std::endl;
-		std::cin.ignore();
-		FreeLibrary(module);
-		return;
+		std::cerr << "unknown version" << std::endl;
+		return FALSE;
 	}
 	MH_Initialize();
 	HMODULE lwjgl64dll = GetModuleHandleA("lwjgl64.dll");
@@ -85,18 +84,17 @@ void Ripterms::init()
 	if (status != MH_OK)
 	{
 		std::cerr << MH_StatusToString(status) << std::endl;
-		std::cin.ignore();
-		FreeLibrary(module);
-		return;
+		return FALSE;
 	}
 	status = MH_EnableHook(targetnglClear);
 	if (status != MH_OK)
 	{
 		std::cerr << MH_StatusToString(status) << std::endl;
-		std::cin.ignore();
-		FreeLibrary(module);
-		return;
+		return FALSE;
 	}
+	while (!Ripterms::p_env);
+	if (!JavaClass::fillAll()) return FALSE;
+	return TRUE;
 }
 
 void Ripterms::clean()
