@@ -12,14 +12,16 @@ BOOL WINAPI DllMain(
     switch (fdwReason)
     {
     case DLL_PROCESS_ATTACH:
+    {
         // Initialize once for each new process.
         // Return FALSE to fail DLL load.
         AllocConsole();
         freopen_s(&fbuffer1, "CONOUT$", "w", stdout);
-        freopen_s(&fbuffer2, "CONERR$", "w", stderr);
+        freopen_s(&fbuffer2, "CONOUT$", "w", stderr);
         freopen_s(&fbuffer3, "CONIN$", "r", stdin);
         Ripterms::module = hinstDLL;
         return Ripterms::init();
+    }
 
     case DLL_THREAD_ATTACH:
         // Do thread-specific initialization.

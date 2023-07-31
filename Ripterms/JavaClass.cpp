@@ -31,8 +31,41 @@ bool Ripterms::JavaClass::fill(const std::string& class_path)
 	auto classjson = mappings[class_path];
 	if (classjson.empty()) {
 		std::cerr << "Can not find info for class " << class_path << " in mappings" << std::endl;
+		return false;
 	}
 	this->javaClass = findClass(classjson["obfuscated"]);
+	if (!this->javaClass) {
+		std::cerr << "Can't find class " << std::string(classjson["obfuscated"]) << std::endl;
+		return false;
+	}
+	for (auto& field : classjson["fields"]) {
+		jfieldID fieldID = nullptr;
+		if (field["static"] == true) {
+			fieldID = p_env->GetStaticFieldID(this->javaClass, std::string(field["obfuscated"]).c_str(), std::string(field["signature"]).c_str());
+		}
+		else {
+			fieldID = p_env->GetFieldID(this->javaClass, std::string(field["obfuscated"]).c_str(), std::string(field["signature"]).c_str());
+		}
+		if (!fieldID) {
+			std::cerr << "Failed to find field " << std::string(field["obfuscated"]) << std::endl;
+			return false;
+		}
+		this->fields.insert({ std::string(field["name"]), fieldID });
+	}
+	for (auto& method : classjson["methods"]) {
+		jmethodID methodID = nullptr;
+		if (method["static"] == true) {
+			methodID = p_env->GetStaticMethodID(this->javaClass, std::string(method["obfuscated"]).c_str(), std::string(method["signature"]).c_str());
+		}
+		else {
+			methodID = p_env->GetMethodID(this->javaClass, std::string(method["obfuscated"]).c_str(), std::string(method["signature"]).c_str());
+		}
+		if (!methodID) {
+			std::cerr << "Failed to find field " << std::string(method["obfuscated"]) << std::endl;
+			return false;
+		}
+		this->methods.insert({ std::string(method["name"]), methodID });
+	}
 	return true;
 }
 
@@ -54,12 +87,37 @@ bool Ripterms::JavaClass::fillAll()
 			return false;
 		}
 	}
-	Object::init();
-	Minecraft::init();
+	if (!(
+		Object::init() &&
+		Minecraft::init()
+	)) {
+		return false;
+	}
 	return true;
 }
 
 jclass Ripterms::JavaClass::findClass(const std::string& path)
 {
-	return jclass();
+	static std::unordered_map<std::string, jclass> classmap{};
+	if (classmap.empty()) {
+		jint class_count = 0;
+		jclass* classes = nullptr;
+		p_tienv->GetLoadedClasses(&class_count, &classes);
+		for (int i = 0; i < class_count; ++i) {
+			char* signature_buffer = nullptr;
+			p_tienv->GetClassSignature(classes[i], &signature_buffer, nullptr);
+			std::string signature = signature_buffer;
+			p_tienv->Deallocate((unsigned char*)signature_buffer);
+			signature = signature.substr(1);
+			signature.pop_back();
+			classmap.insert({signature, classes[i]});
+		}
+		p_tienv->Deallocate((unsigned char*)classes);
+	}
+	try {
+		return classmap[path];
+	}
+	catch (...) {
+		return nullptr;
+	}
 }

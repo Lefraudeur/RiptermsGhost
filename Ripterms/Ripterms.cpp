@@ -11,19 +11,22 @@ typedef void(*nglClearType)(JNIEnv* env, jclass clazz, jint mask, jlong function
 
 nglClearType originalnglClear = nullptr;
 
-nglClearType targetnglClear = nullptr;
+FARPROC targetnglClear = nullptr;
 
 bool tmp_no_hook = false;
+
+bool runMainLoop = false;
 
 void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
 {
 	if (tmp_no_hook) return originalnglClear(env, clazz, mask, function_pointer);
-	Ripterms::p_env = env;
 	static bool runonce = true;
 	if (runonce)
 	{
+		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION);
+		runMainLoop = Ripterms::JavaClass::fillAll();
 		runonce = false;
 	}
 	if (GetAsyncKeyState(VK_END)) {
@@ -35,7 +38,7 @@ void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer
 		if (a.joinable()) a.detach();
 		return originalnglClear(env, clazz, mask, function_pointer);
 	}
-	mainLoop();
+	if (runMainLoop) mainLoop();
 	return originalnglClear(env, clazz, mask, function_pointer);
 }
 
@@ -79,7 +82,7 @@ BOOL Ripterms::init()
 	}
 	MH_Initialize();
 	HMODULE lwjgl64dll = GetModuleHandleA("lwjgl64.dll");
-	targetnglClear = reinterpret_cast<nglClearType>(GetProcAddress(lwjgl64dll, "Java_org_lwjgl_opengl_GL11_nglClear"));
+	targetnglClear = GetProcAddress(lwjgl64dll, "Java_org_lwjgl_opengl_GL11_nglClear");
 	MH_STATUS status = MH_CreateHook(targetnglClear, detournglClear, reinterpret_cast<LPVOID*>(&originalnglClear));
 	if (status != MH_OK)
 	{
@@ -92,13 +95,12 @@ BOOL Ripterms::init()
 		std::cerr << MH_StatusToString(status) << std::endl;
 		return FALSE;
 	}
-	while (!Ripterms::p_env);
-	if (!JavaClass::fillAll()) return FALSE;
 	return TRUE;
 }
 
 void Ripterms::clean()
 {
+	if (p_tienv) p_tienv->DisposeEnvironment();
 	MH_DisableHook(targetnglClear);
 	MH_RemoveHook(targetnglClear);
 	MH_Uninitialize();

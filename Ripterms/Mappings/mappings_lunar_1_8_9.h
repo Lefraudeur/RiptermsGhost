@@ -8,7 +8,7 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 		"methods": []
 	},
 	"net/minecraft/client/Minecraft": {
-		"obfuscted": "net/minecraft/client/Minecraft",
+		"obfuscated": "net/minecraft/client/Minecraft",
 		"fields": [
 			{
 				"name": "theMinecraft",
