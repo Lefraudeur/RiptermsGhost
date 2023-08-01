@@ -5,6 +5,7 @@
 #include "../net/minecraft/client/Minecraft/Minecraft.h"
 #include "../net/minecraft/client/entity/EntityPlayerSP/EntityPlayerSP.h"
 #include "../net/minecraft/client/multiplayer/WorldClient/WorldClient.h"
+#include "../java/util/List/List.h"
 
 Ripterms::JavaClass::JavaClass(const std::string& class_path)
 {
@@ -98,7 +99,9 @@ bool Ripterms::JavaClass::fillAll()
 		AbstractClientPlayer::init() &&
 		EntityPlayerSP::init() &&
 		World::init() &&
-		WorldClient::init()
+		WorldClient::init() &&
+		Collection::init() &&
+		List::init()
 	)) {
 		return false;
 	}

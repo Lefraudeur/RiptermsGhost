@@ -7,6 +7,23 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 		"fields": [],
 		"methods": []
 	},
+	"java/util/Collection": {
+		"obfuscated": "java/util/Collection",
+		"fields": [],
+		"methods": [
+			{
+				"name": "toArray",
+				"obfuscated": "toArray",
+				"signature": "()[Ljava/lang/Object;",
+				"static": false
+			}
+		]
+	},
+	"java/util/List": {
+		"obfuscated": "java/util/List",
+		"fields": [],
+		"methods": []
+	},
 	"net/minecraft/client/Minecraft": {
 		"obfuscated": "net/minecraft/client/Minecraft",
 		"fields": [
@@ -70,7 +87,14 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 	},
 	"net/minecraft/world/World": {
 		"obfuscated": "net/minecraft/world/World",
-		"fields": [],
+		"fields": [
+			{
+				"name": "playerEntities",
+				"obfuscated": "playerEntities",
+				"signature": "Ljava/util/List;",
+				"static": false
+			}
+		],
 		"methods": []
 	}
 }

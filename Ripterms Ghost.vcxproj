@@ -168,6 +168,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="java\lang\Object\Object.cpp" />
+    <ClCompile Include="java\util\Collection\Collection.cpp" />
+    <ClCompile Include="java\util\List\List.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="net\minecraft\client\entity\AbstractClientPlayer\AbstractClientPlayer.cpp" />
     <ClCompile Include="net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.cpp" />
@@ -184,6 +186,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="java\lang\Object\Object.h" />
+    <ClInclude Include="java\util\Collection\Collection.h" />
+    <ClInclude Include="java\util\List\List.h" />
     <ClInclude Include="net\minecraft\client\entity\AbstractClientPlayer\AbstractClientPlayer.h" />
     <ClInclude Include="net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.h" />
     <ClInclude Include="net\minecraft\client\Minecraft\Minecraft.h" />
