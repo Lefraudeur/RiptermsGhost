@@ -1,8 +1,9 @@
 #include "Ripterms.h"
 #include "Mappings/mappings_lunar_1_8_9.h"
+#include <iostream>
 #include "../java/lang/Object/Object.h"
 #include "../net/minecraft/client/Minecraft/Minecraft.h"
-#include <iostream>
+#include "../net/minecraft/client/entity/EntityPlayerSP/EntityPlayerSP.h"
 
 Ripterms::JavaClass::JavaClass(const std::string& class_path)
 {
@@ -13,7 +14,7 @@ Ripterms::JavaClass::JavaClass()
 {
 }
 
-Ripterms::JavaClass::JavaClass(JavaClass& otherJavaClass)
+Ripterms::JavaClass::JavaClass(const JavaClass& otherJavaClass)
 {
 	if (otherJavaClass.javaClass) this->javaClass = (jclass)p_env->NewLocalRef(otherJavaClass.javaClass);
 	else this->javaClass = nullptr;
@@ -89,7 +90,12 @@ bool Ripterms::JavaClass::fillAll()
 	}
 	if (!(
 		Object::init() &&
-		Minecraft::init()
+		Minecraft::init() &&
+		Entity::init() &&
+		EntityLivingBase::init() &&
+		EntityPlayer::init() &&
+		AbstractClientPlayer::init() &&
+		EntityPlayerSP::init()
 	)) {
 		return false;
 	}
@@ -98,26 +104,23 @@ bool Ripterms::JavaClass::fillAll()
 
 jclass Ripterms::JavaClass::findClass(const std::string& path)
 {
-	static std::unordered_map<std::string, jclass> classmap{};
-	if (classmap.empty()) {
-		jint class_count = 0;
-		jclass* classes = nullptr;
-		p_tienv->GetLoadedClasses(&class_count, &classes);
-		for (int i = 0; i < class_count; ++i) {
-			char* signature_buffer = nullptr;
-			p_tienv->GetClassSignature(classes[i], &signature_buffer, nullptr);
-			std::string signature = signature_buffer;
-			p_tienv->Deallocate((unsigned char*)signature_buffer);
-			signature = signature.substr(1);
-			signature.pop_back();
-			classmap.insert({signature, classes[i]});
+	jint class_count = 0;
+	jclass* classes = nullptr;
+	jclass foundclass = nullptr;
+	p_tienv->GetLoadedClasses(&class_count, &classes);
+	for (int i = 0; i < class_count; ++i) {
+		char* signature_buffer = nullptr;
+		p_tienv->GetClassSignature(classes[i], &signature_buffer, nullptr);
+		std::string signature = signature_buffer;
+		p_tienv->Deallocate((unsigned char*)signature_buffer);
+		signature = signature.substr(1);
+		signature.pop_back();
+		if (signature == path) {
+			foundclass = classes[i];
+			break;
 		}
-		p_tienv->Deallocate((unsigned char*)classes);
+		p_env->DeleteLocalRef(classes[i]);
 	}
-	try {
-		return classmap[path];
-	}
-	catch (...) {
-		return nullptr;
-	}
+	p_tienv->Deallocate((unsigned char*)classes);
+	return foundclass;
 }

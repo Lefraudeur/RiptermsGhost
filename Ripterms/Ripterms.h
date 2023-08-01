@@ -25,7 +25,7 @@ namespace Ripterms
 		public:
 			JavaClass(const std::string& class_path);
 			JavaClass();
-			JavaClass(JavaClass& otherJavaClass);
+			JavaClass(const JavaClass& otherJavaClass);
 			~JavaClass();
 			static bool fillAll();
 			bool fill(const std::string& class_path);
@@ -36,7 +36,7 @@ namespace Ripterms
 			static jclass findClass(const std::string& path);
 			inline static nlohmann::json mappings{};
 	};
-
+	
 	BOOL init();
 	void clean();
 }

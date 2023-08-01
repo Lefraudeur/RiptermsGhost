@@ -15,6 +15,12 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 				"obfuscated": "theMinecraft",
 				"signature": "Lnet/minecraft/client/Minecraft;",
 				"static": true
+			},
+			{
+				"name": "thePlayer",
+				"obfuscated": "thePlayer",
+				"signature": "Lnet/minecraft/client/entity/EntityPlayerSP;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -26,5 +32,30 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 			}
 		]
 	}
+	"net/minecraft/client/entity/EntityPlayerSP" {
+		"obfuscated": "net/minecraft/client/entity/EntityPlayerSP",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/client/entity/AbstractClientPlayer" {
+		"obfuscated": "net/minecraft/client/entity/AbstractClientPlayer",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/entity/player/EntityPlayer" {
+		"obfuscated": "net/minecraft/entity/player/EntityPlayer",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/entity/EntityLivingBase" {
+		"obfuscated": "net/minecraft/entity/EntityLivingBase",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/entity/Entity" {
+		"obfuscated": "net/minecraft/entity/Entity",
+		"fields": [],
+		"methods": []
+	},
 }
 )";

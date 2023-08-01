@@ -5,27 +5,40 @@ Object::Object(jobject instance)
 	this->instance = instance;
 }
 
-Object::Object(Object& other_Object)
+Object::Object(const Object& other_Object)
 {
 	if (other_Object.instance) this->instance = Ripterms::p_env->NewLocalRef(other_Object.instance);
 	else this->instance = nullptr;
-}
-
-void Object::operator=(Object& other_Object)
-{
-	if (this->instance) Ripterms::p_env->DeleteLocalRef(this->instance);
-	if (other_Object.instance) this->instance = Ripterms::p_env->NewLocalRef(other_Object.instance);
-	else this->instance = nullptr;
-}
-
-void Object::operator=(jobject instance)
-{
-	if (this->instance) Ripterms::p_env->DeleteLocalRef(this->instance);
-	this->instance = instance;
 }
 
 Object::Object()
 {
+}
+
+Object& Object::operator=(const Object& other_Object)
+{
+	if (this->instance) Ripterms::p_env->DeleteLocalRef(this->instance);
+	if (other_Object.instance) this->instance = Ripterms::p_env->NewLocalRef(other_Object.instance);
+	else this->instance = nullptr;
+	return *this;
+}
+
+Object& Object::operator=(jobject instance)
+{
+	if (this->instance) Ripterms::p_env->DeleteLocalRef(this->instance);
+	this->instance = instance;
+	return *this;
+}
+
+bool Object::operator==(const Object& other_Object)
+{
+	if (this->instance == other_Object.instance) {
+		return true;
+	}
+	else if (this->instance && other_Object.instance) {
+		return Ripterms::p_env->IsSameObject(this->instance, other_Object.instance) == JNI_TRUE;
+	}
+	return false;
 }
 
 Object::~Object()

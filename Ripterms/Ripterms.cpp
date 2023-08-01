@@ -1,10 +1,11 @@
 #include "Ripterms.h"
 #include <psapi.h>
 #include <iostream>
+#include "Cache/Cache.h"
 
 void mainLoop()
 {
-
+	if (!Ripterms::Cache::fillCache()) return;
 }
 
 typedef void(*nglClearType)(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer);
@@ -13,13 +14,13 @@ nglClearType originalnglClear = nullptr;
 
 FARPROC targetnglClear = nullptr;
 
-bool tmp_no_hook = false;
-
-bool runMainLoop = false;
-
 void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
 {
+	static bool tmp_no_hook = false;
+	static bool runMainLoop = false;
+
 	if (tmp_no_hook) return originalnglClear(env, clazz, mask, function_pointer);
+
 	static bool runonce = true;
 	if (runonce)
 	{
@@ -72,6 +73,7 @@ std::string getCurrentWindowName()
 	EnumWindows(&EnumWindowsCallback, (LPARAM)&process);
 	return process.windowName;
 }
+
 
 BOOL Ripterms::init()
 {

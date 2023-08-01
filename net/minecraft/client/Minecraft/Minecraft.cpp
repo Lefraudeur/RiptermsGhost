@@ -1,8 +1,8 @@
 #include "Minecraft.h"
 
-jobject Minecraft::getTheMinecraft()
+Minecraft Minecraft::getTheMinecraft()
 {
-	return nullptr;
+	return Minecraft(Ripterms::p_env->GetStaticObjectField(MinecraftClass.javaClass, MinecraftClass.fields["theMinecraft"]));
 }
 
 bool Minecraft::init()

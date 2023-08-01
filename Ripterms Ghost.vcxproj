@@ -166,12 +166,14 @@
     <ClCompile Include="java\lang\Object\Object.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="net\minecraft\client\Minecraft\Minecraft.cpp" />
+    <ClCompile Include="Ripterms\Cache\Cache.cpp" />
     <ClCompile Include="Ripterms\JavaClass.cpp" />
     <ClCompile Include="Ripterms\Ripterms.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="java\lang\Object\Object.h" />
     <ClInclude Include="net\minecraft\client\Minecraft\Minecraft.h" />
+    <ClInclude Include="Ripterms\Cache\Cache.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_8_9.h" />
     <ClInclude Include="Ripterms\Ripterms.h" />
   </ItemGroup>
