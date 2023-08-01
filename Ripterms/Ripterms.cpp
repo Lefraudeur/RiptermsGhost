@@ -18,11 +18,11 @@ FARPROC targetnglClear = nullptr;
 
 void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
 {
-	Ripterms::p_env = env;
 	static bool tmp_no_hook = false;
 	static bool runMainLoop = false;
 
 	if (tmp_no_hook) return originalnglClear(env, clazz, mask, function_pointer);
+	Ripterms::p_env = env;
 
 	static bool runonce = true;
 	if (runonce)
