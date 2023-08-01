@@ -7,6 +7,7 @@ namespace Ripterms
 	namespace Cache
 	{
 		inline Minecraft theMinecraft{};
+		inline EntityPlayerSP thePlayer{};
 		bool fillCache();
 	}
 }

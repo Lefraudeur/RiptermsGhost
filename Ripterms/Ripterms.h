@@ -36,6 +36,16 @@ namespace Ripterms
 			static jclass findClass(const std::string& path);
 			inline static nlohmann::json mappings{};
 	};
+
+	class Timer {
+	public:
+		Timer(std::chrono::milliseconds everyXms);
+		bool isElapsed();
+		void setEvery(std::chrono::milliseconds everyXms);
+	private:
+		std::chrono::steady_clock::time_point timerBegin;
+		std::chrono::milliseconds targetMs;
+	};
 	
 	BOOL init();
 	void clean();

@@ -41,6 +41,11 @@ bool Object::operator==(const Object& other_Object)
 	return false;
 }
 
+bool Object::operator!()
+{
+	return !this->instance;
+}
+
 Object::~Object()
 {
 	if (instance) Ripterms::p_env->DeleteLocalRef(instance);

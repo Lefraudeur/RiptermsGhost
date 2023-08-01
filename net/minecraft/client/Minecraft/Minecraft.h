@@ -1,13 +1,13 @@
 #pragma once
 #include "../../../../java/lang/Object/Object.h"
+#include "../entity/EntityPlayerSP/EntityPlayerSP.h"
 
-class Minecraft : Object {
+class Minecraft : public Object {
 public:
 	using Object::Object;
-	using Object::operator=;
-	using Object::operator==;
 	static Minecraft getTheMinecraft();
+	EntityPlayerSP getThePlayer();
 	static bool init();
-private:
+protected:
 	inline static Ripterms::JavaClass MinecraftClass{};
 };

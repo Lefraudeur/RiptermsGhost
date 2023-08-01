@@ -5,6 +5,8 @@
 
 void mainLoop()
 {
+	static Ripterms::Timer timer(std::chrono::milliseconds(2));
+	if (!timer.isElapsed()) return;
 	if (!Ripterms::Cache::fillCache()) return;
 }
 
@@ -16,6 +18,7 @@ FARPROC targetnglClear = nullptr;
 
 void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
 {
+	Ripterms::p_env = env;
 	static bool tmp_no_hook = false;
 	static bool runMainLoop = false;
 
@@ -24,7 +27,6 @@ void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer
 	static bool runonce = true;
 	if (runonce)
 	{
-		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION);
 		runMainLoop = Ripterms::JavaClass::fillAll();
