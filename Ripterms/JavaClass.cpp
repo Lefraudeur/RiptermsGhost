@@ -4,6 +4,7 @@
 #include "../java/lang/Object/Object.h"
 #include "../net/minecraft/client/Minecraft/Minecraft.h"
 #include "../net/minecraft/client/entity/EntityPlayerSP/EntityPlayerSP.h"
+#include "../net/minecraft/client/multiplayer/WorldClient/WorldClient.h"
 
 Ripterms::JavaClass::JavaClass(const std::string& class_path)
 {
@@ -95,7 +96,9 @@ bool Ripterms::JavaClass::fillAll()
 		EntityLivingBase::init() &&
 		EntityPlayer::init() &&
 		AbstractClientPlayer::init() &&
-		EntityPlayerSP::init()
+		EntityPlayerSP::init() &&
+		World::init() &&
+		WorldClient::init()
 	)) {
 		return false;
 	}

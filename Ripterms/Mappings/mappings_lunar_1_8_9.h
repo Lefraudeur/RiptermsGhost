@@ -21,6 +21,12 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 				"obfuscated": "thePlayer",
 				"signature": "Lnet/minecraft/client/entity/EntityPlayerSP;",
 				"static": false
+			},
+			{
+				"name": "theWorld",
+				"obfuscated": "theWorld",
+				"signature": "Lnet/minecraft/client/multiplayer/WorldClient;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -54,6 +60,16 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 	},
 	"net/minecraft/entity/Entity": {
 		"obfuscated": "net/minecraft/entity/Entity",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/client/multiplayer/WorldClient": {
+		"obfuscated": "net/minecraft/client/multiplayer/WorldClient",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/world/World": {
+		"obfuscated": "net/minecraft/world/World",
 		"fields": [],
 		"methods": []
 	}

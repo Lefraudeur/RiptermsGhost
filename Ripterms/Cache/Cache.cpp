@@ -11,6 +11,7 @@ bool Ripterms::Cache::fillCache()
 	if (!(prev_thePlayer.operator==(thePlayer))) {
 		std::clog << "object updated" << std::endl;
 		prev_thePlayer = thePlayer;
+		theWorld = theMinecraft.getTheWorld();
 	}
 	return true;
 }

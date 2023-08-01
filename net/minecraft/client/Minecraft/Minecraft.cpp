@@ -11,6 +11,12 @@ EntityPlayerSP Minecraft::getThePlayer()
 	return EntityPlayerSP(Ripterms::p_env->GetObjectField(this->instance, MinecraftClass.fields["thePlayer"]));
 }
 
+WorldClient Minecraft::getTheWorld()
+{
+	if (!this->instance) return WorldClient();
+	return WorldClient(Ripterms::p_env->GetObjectField(this->instance, MinecraftClass.fields["theWorld"]));
+}
+
 bool Minecraft::init()
 {
 	return MinecraftClass.fill("net/minecraft/client/Minecraft");

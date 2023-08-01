@@ -92,6 +92,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Include\ImGui;$(SolutionDir)Include\JNI;$(SolutionDir)Include\JNI\win32;$(SolutionDir)Include\JNI\win32\bridge;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -112,6 +113,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Include\ImGui;$(SolutionDir)Include\JNI;$(SolutionDir)Include\JNI\win32;$(SolutionDir)Include\JNI\win32\bridge;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -132,6 +134,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Include\ImGui;$(SolutionDir)Include\JNI;$(SolutionDir)Include\JNI\win32;$(SolutionDir)Include\JNI\win32\bridge;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -152,6 +155,7 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Include\ImGui;$(SolutionDir)Include\JNI;$(SolutionDir)Include\JNI\win32;$(SolutionDir)Include\JNI\win32\bridge;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -168,9 +172,11 @@
     <ClCompile Include="net\minecraft\client\entity\AbstractClientPlayer\AbstractClientPlayer.cpp" />
     <ClCompile Include="net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.cpp" />
     <ClCompile Include="net\minecraft\client\Minecraft\Minecraft.cpp" />
+    <ClCompile Include="net\minecraft\client\multiplayer\WorldClient\WorldClient.cpp" />
     <ClCompile Include="net\minecraft\entity\EntityLivingBase\EntityLivingBase.cpp" />
     <ClCompile Include="net\minecraft\entity\Entity\Entity.cpp" />
     <ClCompile Include="net\minecraft\entity\player\EntityPlayer\EntityPlayer.cpp" />
+    <ClCompile Include="net\minecraft\world\World\World.cpp" />
     <ClCompile Include="Ripterms\Cache\Cache.cpp" />
     <ClCompile Include="Ripterms\JavaClass.cpp" />
     <ClCompile Include="Ripterms\Ripterms.cpp" />
@@ -181,9 +187,11 @@
     <ClInclude Include="net\minecraft\client\entity\AbstractClientPlayer\AbstractClientPlayer.h" />
     <ClInclude Include="net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.h" />
     <ClInclude Include="net\minecraft\client\Minecraft\Minecraft.h" />
+    <ClInclude Include="net\minecraft\client\multiplayer\WorldClient\WorldClient.h" />
     <ClInclude Include="net\minecraft\entity\EntityLivingBase\EntityLivingBase.h" />
     <ClInclude Include="net\minecraft\entity\Entity\Entity.h" />
     <ClInclude Include="net\minecraft\entity\player\EntityPlayer\EntityPlayer.h" />
+    <ClInclude Include="net\minecraft\world\World\World.h" />
     <ClInclude Include="Ripterms\Cache\Cache.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_8_9.h" />
     <ClInclude Include="Ripterms\Ripterms.h" />
