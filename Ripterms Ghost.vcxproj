@@ -167,6 +167,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Include\ImGui\imgui.cpp" />
+    <ClCompile Include="Include\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="Include\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="Include\ImGui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Include\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Include\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="Include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="java\lang\Object\Object.cpp" />
     <ClCompile Include="java\util\Collection\Collection.cpp" />
     <ClCompile Include="java\util\List\List.cpp" />
@@ -180,6 +187,7 @@
     <ClCompile Include="net\minecraft\entity\player\EntityPlayer\EntityPlayer.cpp" />
     <ClCompile Include="net\minecraft\world\World\World.cpp" />
     <ClCompile Include="Ripterms\Cache\Cache.cpp" />
+    <ClCompile Include="Ripterms\GUI\GUI.cpp" />
     <ClCompile Include="Ripterms\JavaClass.cpp" />
     <ClCompile Include="Ripterms\Ripterms.cpp" />
     <ClCompile Include="Ripterms\Timer.cpp" />
@@ -197,6 +205,7 @@
     <ClInclude Include="net\minecraft\entity\player\EntityPlayer\EntityPlayer.h" />
     <ClInclude Include="net\minecraft\world\World\World.h" />
     <ClInclude Include="Ripterms\Cache\Cache.h" />
+    <ClInclude Include="Ripterms\GUI\GUI.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_8_9.h" />
     <ClInclude Include="Ripterms\Ripterms.h" />
   </ItemGroup>

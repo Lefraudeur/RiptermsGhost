@@ -9,6 +9,7 @@ public:
 	static Minecraft getTheMinecraft();
 	EntityPlayerSP getThePlayer();
 	WorldClient getTheWorld();
+	void setIngameNotInFocus();
 	static bool init();
 protected:
 	inline static Ripterms::JavaClass MinecraftClass{};

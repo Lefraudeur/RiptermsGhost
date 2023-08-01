@@ -37,6 +37,7 @@ BOOL WINAPI DllMain(
         {
             break; // do not do cleanup if process termination scenario
         }
+
         Ripterms::clean();
         fclose(fbuffer1);
         fclose(fbuffer2);

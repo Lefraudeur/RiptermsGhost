@@ -2,6 +2,7 @@
 #include <psapi.h>
 #include <iostream>
 #include "Cache/Cache.h"
+#include "GUI/GUI.h"
 
 void mainLoop()
 {
@@ -22,11 +23,11 @@ void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer
 	static bool runMainLoop = false;
 
 	if (tmp_no_hook) return originalnglClear(env, clazz, mask, function_pointer);
-	Ripterms::p_env = env;
 
 	static bool runonce = true;
 	if (runonce)
 	{
+		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION);
 		runMainLoop = Ripterms::JavaClass::fillAll();
@@ -48,7 +49,7 @@ void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer
 struct Process
 {
 	DWORD pid;
-	std::string windowName;
+	HWND window;
 };
 
 BOOL CALLBACK EnumWindowsCallback(_In_ HWND hwnd, _In_ LPARAM lParam)
@@ -61,31 +62,39 @@ BOOL CALLBACK EnumWindowsCallback(_In_ HWND hwnd, _In_ LPARAM lParam)
 		&& IsWindowVisible(hwnd)
 		&& GetConsoleWindow() != hwnd
 	) {
-		char str[64];
-		GetWindowTextA(hwnd, str, 64);
-		p_process->windowName = str;
+		p_process->window = hwnd;
 		return FALSE;
 	}
 	return TRUE;
 }
 
-std::string getCurrentWindowName()
+HWND getCurrentWindow()
 {
 	Process process = { GetProcessId(GetCurrentProcess()) };
 	EnumWindows(&EnumWindowsCallback, (LPARAM)&process);
-	return process.windowName;
+	return process.window;
+}
+
+std::string getWindowName(HWND hwnd)
+{
+	char str[64];
+	GetWindowTextA(hwnd, str, 64);
+	return std::string(str);
 }
 
 
 BOOL Ripterms::init()
 {
-	if (getCurrentWindowName().find("Lunar Client 1.8.9") != std::string::npos) version = LUNAR_1_8_9;
+	Ripterms::window = getCurrentWindow();
+	std::string windowName = getWindowName(window);
+	if (windowName.find("Lunar Client 1.8.9") != std::string::npos) version = LUNAR_1_8_9;
 	if (version == UNDEFINED) {
 		std::cerr << "unknown version" << std::endl;
 		return FALSE;
 	}
 	MH_Initialize();
 	HMODULE lwjgl64dll = GetModuleHandleA("lwjgl64.dll");
+	if (!lwjgl64dll) return FALSE;
 	targetnglClear = GetProcAddress(lwjgl64dll, "Java_org_lwjgl_opengl_GL11_nglClear");
 	MH_STATUS status = MH_CreateHook(targetnglClear, detournglClear, reinterpret_cast<LPVOID*>(&originalnglClear));
 	if (status != MH_OK)
@@ -99,11 +108,13 @@ BOOL Ripterms::init()
 		std::cerr << MH_StatusToString(status) << std::endl;
 		return FALSE;
 	}
+	if (!GUI::init()) return FALSE;
 	return TRUE;
 }
 
 void Ripterms::clean()
 {
+	GUI::clean();
 	if (p_tienv) p_tienv->DisposeEnvironment();
 	MH_DisableHook(targetnglClear);
 	MH_RemoveHook(targetnglClear);

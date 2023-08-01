@@ -10,6 +10,7 @@
 namespace Ripterms
 {
 	inline HINSTANCE module = nullptr;
+	inline HWND window = nullptr;
 	enum Version
 	{
 		UNDEFINED,

@@ -90,6 +90,7 @@ bool Ripterms::JavaClass::fillAll()
 			return false;
 		}
 	}
+	//each class fields/methods needs to be filled
 	if (!(
 		Object::init() &&
 		Minecraft::init() &&
