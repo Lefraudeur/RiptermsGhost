@@ -189,6 +189,7 @@
     <ClCompile Include="Ripterms\Cache\Cache.cpp" />
     <ClCompile Include="Ripterms\GUI\GUI.cpp" />
     <ClCompile Include="Ripterms\JavaClass.cpp" />
+    <ClCompile Include="Ripterms\Modules\AimAssist.cpp" />
     <ClCompile Include="Ripterms\Ripterms.cpp" />
     <ClCompile Include="Ripterms\Timer.cpp" />
   </ItemGroup>
@@ -207,6 +208,7 @@
     <ClInclude Include="Ripterms\Cache\Cache.h" />
     <ClInclude Include="Ripterms\GUI\GUI.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_8_9.h" />
+    <ClInclude Include="Ripterms\Modules\Modules.h" />
     <ClInclude Include="Ripterms\Ripterms.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

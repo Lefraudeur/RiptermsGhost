@@ -47,12 +47,6 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 			}
 		],
 		"methods": [
-			{
-				"name": "setIngameNotInFocus",
-				"obfuscated": "setIngameNotInFocus",
-				"signature": "()V",
-				"static": false
-			}
 		]
 	},
 	"net/minecraft/client/entity/EntityPlayerSP": {

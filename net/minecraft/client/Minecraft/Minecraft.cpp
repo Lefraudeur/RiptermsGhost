@@ -17,12 +17,6 @@ WorldClient Minecraft::getTheWorld()
 	return WorldClient(Ripterms::p_env->GetObjectField(this->instance, MinecraftClass.fields["theWorld"]));
 }
 
-void Minecraft::setIngameNotInFocus()
-{
-	if (!this->instance) return;
-	Ripterms::p_env->CallVoidMethod(instance, MinecraftClass.methods["setIngameNotInFocus"]);
-}
-
 bool Minecraft::init()
 {
 	return MinecraftClass.fill("net/minecraft/client/Minecraft");

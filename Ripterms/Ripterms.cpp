@@ -3,12 +3,14 @@
 #include <iostream>
 #include "Cache/Cache.h"
 #include "GUI/GUI.h"
+#include "Modules/Modules.h"
 
 void mainLoop()
 {
 	static Ripterms::Timer timer(std::chrono::milliseconds(2));
 	if (!timer.isElapsed()) return;
 	if (!Ripterms::Cache::fillCache()) return;
+	Ripterms::Modules::AimAssist::run();
 }
 
 typedef void(*nglClearType)(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer);

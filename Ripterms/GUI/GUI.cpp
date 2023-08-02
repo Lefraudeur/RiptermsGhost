@@ -7,6 +7,7 @@
 #include <ImGui/imgui_impl_win32.h>
 #include <gl/GL.h>
 #include "../Cache/Cache.h"
+#include "../Modules/Modules.h"
 
 typedef BOOL(*type_wglSwapBuffers)(HDC);
 type_wglSwapBuffers original_wglSwapBuffers = nullptr;
@@ -19,6 +20,9 @@ BOOL detour_wglSwapBuffers(HDC unnamedParam1)
 	static GLint last_viewport[4];
 	static HGLRC new_context = nullptr;
 	static HGLRC old_context = nullptr;
+
+	static RECT originalClip;
+	static bool clipped = true;
 
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
@@ -50,11 +54,23 @@ BOOL detour_wglSwapBuffers(HDC unnamedParam1)
 	ImGui::NewFrame();
 
 	if (draw) {
+		if (clipped)
+		{
+			GetClipCursor(&originalClip);
+			ClipCursor(nullptr);
+			clipped = false;
+		}
 		ImGui::Begin("OpenGL-Hk");
 		{
 			ImGui::Text("Hello, World!");
+			Ripterms::Modules::AimAssist::renderGUI();
 		}
 		ImGui::End();
+	}
+	else if (!clipped)
+	{
+		ClipCursor(&originalClip);
+		clipped = true;
 	}
 
 	ImGui::EndFrame();
@@ -69,7 +85,8 @@ LRESULT detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (msg == WM_KEYDOWN && wParam == VK_INSERT) {
 		draw = !draw;
 	}
-	if (draw && ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam)) {
+	if (draw) {
+		ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
 		return true;
 	}
 
