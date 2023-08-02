@@ -9,17 +9,16 @@
 #include "../Cache/Cache.h"
 
 typedef BOOL(*type_wglSwapBuffers)(HDC);
-FARPROC target_wglSwapBuffers = nullptr;
 type_wglSwapBuffers original_wglSwapBuffers = nullptr;
 WNDPROC original_WndProc = nullptr;
 bool draw = false;
 
 BOOL detour_wglSwapBuffers(HDC unnamedParam1)
 {
-	static HGLRC old_context = nullptr;
-	static HGLRC new_context = nullptr;
 	static bool isInit = false;
 	static GLint last_viewport[4];
+	static HGLRC new_context = nullptr;
+	static HGLRC old_context = nullptr;
 
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
@@ -35,24 +34,13 @@ BOOL detour_wglSwapBuffers(HDC unnamedParam1)
 			ImGui::DestroyContext();
 		}
 		new_context = wglCreateContext(unnamedParam1);
-		/*
-		wglMakeCurrent(unnamedParam1, new_context);
-		glViewport(0, 0, viewport[2], viewport[3]);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, viewport[2], viewport[3], 0, -1, 1);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		glDisable(GL_DEPTH_TEST);
-		*/
 
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 		ImGui::StyleColorsDark();
-		ImGui_ImplWin32_Init(Ripterms::window);
 		ImGui_ImplOpenGL3_Init();
+		ImGui_ImplWin32_Init(Ripterms::window);
 		isInit = true;
 	}
 
@@ -72,8 +60,6 @@ BOOL detour_wglSwapBuffers(HDC unnamedParam1)
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	ImGui::UpdatePlatformWindows();
-	ImGui::RenderPlatformWindowsDefault();
 	wglMakeCurrent(unnamedParam1, old_context);
 	return original_wglSwapBuffers(unnamedParam1);
 }
@@ -83,7 +69,9 @@ LRESULT detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (msg == WM_KEYDOWN && wParam == VK_INSERT) {
 		draw = !draw;
 	}
-	if (draw) ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
+	if (draw && ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam)) {
+		return true;
+	}
 
 	return CallWindowProcA(original_WndProc, hWnd, msg, wParam, lParam);
 }
@@ -92,7 +80,7 @@ bool Ripterms::GUI::init()
 {
 	HMODULE opengl32dll = GetModuleHandleA("opengl32.dll");
 	if (!opengl32dll) return false;
-	target_wglSwapBuffers = GetProcAddress(opengl32dll, "wglSwapBuffers");
+	FARPROC target_wglSwapBuffers = GetProcAddress(opengl32dll, "wglSwapBuffers");
 	MH_STATUS status = MH_CreateHook(target_wglSwapBuffers, &detour_wglSwapBuffers, reinterpret_cast<LPVOID*>(&original_wglSwapBuffers));
 	if (status != MH_OK)
 	{
@@ -112,8 +100,6 @@ bool Ripterms::GUI::init()
 void Ripterms::GUI::clean()
 {
 	draw = false;
-	MH_DisableHook(target_wglSwapBuffers);
-	MH_RemoveHook(target_wglSwapBuffers);
 	SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)original_WndProc);
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplWin32_Shutdown();

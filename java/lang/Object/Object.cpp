@@ -48,6 +48,7 @@ bool Object::operator!()
 
 Object::~Object()
 {
+	if (!Ripterms::p_env) return;
 	if (instance) Ripterms::p_env->DeleteLocalRef(instance);
 }
 

@@ -26,6 +26,7 @@ Ripterms::JavaClass::JavaClass(const JavaClass& otherJavaClass)
 
 Ripterms::JavaClass::~JavaClass()
 {
+	if (!Ripterms::p_env) return;
 	if (javaClass) p_env->DeleteLocalRef(javaClass);
 }
 
