@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../Ripterms/Ripterms.h"
+#include "../../../Ripterms/Maths/Maths.h"
 
 class Object {
 public:
@@ -8,11 +9,13 @@ public:
 	Object();
 	Object& operator=(const Object& other_Object);
 	Object& operator=(jobject instance);
-	bool operator==(const Object& other_Object);
+	bool isEqualTo(const Object& other_Object);
 	bool operator!();
+	bool isValid();
 	~Object();
+	void clear();
 	static bool init();
 protected:
-	inline static Ripterms::JavaClass ObjectClass{};
+	inline static Ripterms::JavaClass* ObjectClass = nullptr;
 	jobject instance = nullptr;
 };

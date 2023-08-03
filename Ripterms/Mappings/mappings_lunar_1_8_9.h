@@ -71,7 +71,38 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 	},
 	"net/minecraft/entity/Entity": {
 		"obfuscated": "net/minecraft/entity/Entity",
-		"fields": [],
+		"fields": [
+			{
+				"name": "posX",
+				"obfuscated": "posX",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "posY",
+				"obfuscated": "posY",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "posZ",
+				"obfuscated": "posZ",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "rotationYaw",
+				"obfuscated": "rotationYaw",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "rotationPitch",
+				"obfuscated": "rotationPitch",
+				"signature": "F",
+				"static": false
+			}
+		],
 		"methods": []
 	},
 	"net/minecraft/client/multiplayer/WorldClient": {

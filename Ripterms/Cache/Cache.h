@@ -5,12 +5,13 @@
 
 namespace Ripterms
 {
-	namespace Cache
+	class Cache
 	{
-		inline Minecraft theMinecraft{};
-		inline EntityPlayerSP thePlayer{};
-		inline WorldClient theWorld{};
-		inline std::vector<EntityPlayer> playerEntities;
+	public:
+		Minecraft theMinecraft{};
+		EntityPlayerSP thePlayer{};
+		WorldClient theWorld{};
 		bool fillCache();
-	}
+	};
+	inline Cache* cache = new Cache();
 }

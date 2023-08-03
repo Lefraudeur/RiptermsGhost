@@ -8,11 +8,10 @@ bool Ripterms::Cache::fillCache()
 	if (!theMinecraft) return false;
 	thePlayer = theMinecraft.getThePlayer();
 	if (!thePlayer) return false;
-	if (!(prev_thePlayer.operator==(thePlayer))) {
+	if (!prev_thePlayer.isEqualTo(thePlayer)) {
 		std::clog << "object updated" << std::endl;
 		prev_thePlayer = thePlayer;
 		theWorld = theMinecraft.getTheWorld();
-		playerEntities = theWorld.getPlayerEntities();
 	}
 	return true;
 }

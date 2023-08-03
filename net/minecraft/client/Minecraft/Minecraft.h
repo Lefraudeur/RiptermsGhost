@@ -11,5 +11,5 @@ public:
 	WorldClient getTheWorld();
 	static bool init();
 protected:
-	inline static Ripterms::JavaClass MinecraftClass{};
+	inline static Ripterms::JavaClass* MinecraftClass = nullptr;
 };

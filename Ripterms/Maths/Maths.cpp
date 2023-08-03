@@ -1,5 +1,4 @@
 #include "Maths.h"
-#include <cmath>
 
 Ripterms::Maths::Vector2d Ripterms::Maths::getYawPitch(Vector3d playerPos, Vector3d facingPos)
 {
@@ -21,18 +20,15 @@ Ripterms::Maths::Vector2d Ripterms::Maths::getYawPitch(Vector3d playerPos, Vecto
 	return Vector2d(yawDeg, pitchDeg);
 }
 
-float Ripterms::Maths::cropAngle0_360(float angle)
+float Ripterms::Maths::cropAngle180(float angle)
 {
-	while (angle < 0.0f) angle += 360.0f;
-	while (angle >= 360.0f) angle -= 360.0f;
+	while (angle < -180.0f) angle += 360.0f;
+	while (angle > 180.0f) angle -= 360.0f;
 	return angle;
 }
 
-float Ripterms::Maths::cropAngle180(float angle)
+Ripterms::Maths::Vector3d::Vector3d()
 {
-	while (angle <= -180.0f) angle += 360.0f;
-	while (angle > 180.0f) angle -= 360.0f;
-	return angle;
 }
 
 Ripterms::Maths::Vector3d::Vector3d(float x, float y, float z)
@@ -50,6 +46,10 @@ Ripterms::Maths::Vector3d Ripterms::Maths::Vector3d::operator-(const Vector3d& o
 float Ripterms::Maths::Vector3d::distance()
 {
 	return std::sqrt(x*x + y*y + z*z);
+}
+
+Ripterms::Maths::Vector2d::Vector2d()
+{
 }
 
 Ripterms::Maths::Vector2d::Vector2d(float x, float y)

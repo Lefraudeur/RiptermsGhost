@@ -9,7 +9,7 @@
 
 Ripterms::JavaClass::JavaClass(const std::string& class_path)
 {
-	fill(class_path);
+	isSuccess = fill(class_path);
 }
 
 Ripterms::JavaClass::JavaClass()
@@ -18,16 +18,17 @@ Ripterms::JavaClass::JavaClass()
 
 Ripterms::JavaClass::JavaClass(const JavaClass& otherJavaClass)
 {
-	if (otherJavaClass.javaClass) this->javaClass = (jclass)p_env->NewLocalRef(otherJavaClass.javaClass);
+	if (otherJavaClass.javaClass) this->javaClass = (jclass)p_env->NewGlobalRef(otherJavaClass.javaClass);
 	else this->javaClass = nullptr;
 	this->fields = otherJavaClass.fields;
 	this->methods = otherJavaClass.methods;
+	this->isSuccess = otherJavaClass.isSuccess;
 }
 
 Ripterms::JavaClass::~JavaClass()
 {
 	if (!Ripterms::p_env) return;
-	if (javaClass) p_env->DeleteLocalRef(javaClass);
+	if (javaClass) p_env->DeleteGlobalRef(javaClass);
 }
 
 bool Ripterms::JavaClass::fill(const std::string& class_path)
@@ -124,8 +125,7 @@ jclass Ripterms::JavaClass::findClass(const std::string& path)
 		signature = signature.substr(1);
 		signature.pop_back();
 		if (signature == path) {
-			foundclass = classes[i];
-			break;
+			foundclass = (jclass)p_env->NewGlobalRef(classes[i]);
 		}
 		p_env->DeleteLocalRef(classes[i]);
 	}

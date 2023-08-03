@@ -9,13 +9,14 @@ void mainLoop()
 {
 	static Ripterms::Timer timer(std::chrono::milliseconds(2));
 	if (!timer.isElapsed()) return;
-	if (!Ripterms::Cache::fillCache()) return;
+	if (!Ripterms::cache->fillCache()) return;
 	Ripterms::Modules::AimAssist::run();
 }
 
 typedef void(*nglClearType)(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer);
 
 nglClearType originalnglClear = nullptr;
+nglClearType targetnglClear = nullptr;
 
 bool tmp_no_hook = false;
 
@@ -23,13 +24,22 @@ void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer
 {
 	static bool runMainLoop = false;
 
-	if (tmp_no_hook) return originalnglClear(env, clazz, mask, function_pointer);
-
-	Ripterms::p_env = env;
+	if (tmp_no_hook) {
+		if (Ripterms::cache) {
+			if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
+			delete Ripterms::cache;
+			for (Ripterms::JavaClass* javaclass : Ripterms::classes) {
+				delete javaclass;
+			}
+			Ripterms::cache = nullptr;
+		}
+		return originalnglClear(env, clazz, mask, function_pointer);
+	}
 
 	static bool runonce = true;
 	if (runonce)
 	{
+		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION);
 		runMainLoop = Ripterms::JavaClass::fillAll();
@@ -99,7 +109,7 @@ BOOL Ripterms::init()
 	MH_Initialize();
 	HMODULE lwjgl64dll = GetModuleHandleA("lwjgl64.dll");
 	if (!lwjgl64dll) return FALSE;
-	FARPROC targetnglClear = GetProcAddress(lwjgl64dll, "Java_org_lwjgl_opengl_GL11_nglClear");
+	nglClearType targetnglClear = reinterpret_cast<nglClearType>(GetProcAddress(lwjgl64dll, "Java_org_lwjgl_opengl_GL11_nglClear"));
 	MH_STATUS status = MH_CreateHook(targetnglClear, detournglClear, reinterpret_cast<LPVOID*>(&originalnglClear));
 	if (status != MH_OK)
 	{
@@ -119,9 +129,22 @@ BOOL Ripterms::init()
 void Ripterms::clean()
 {
 	tmp_no_hook = true;
-	MH_DisableHook(MH_ALL_HOOKS);
+	while (cache) {}
+	MH_DisableHook(targetnglClear);
+	MH_RemoveHook(targetnglClear);
 	GUI::clean();
 	MH_Uninitialize();
-	if (p_tienv) p_tienv->DisposeEnvironment();
-	p_env = nullptr;
+}
+
+void Ripterms::partialClean()
+{
+	MH_DisableHook(targetnglClear);
+	MH_RemoveHook(targetnglClear);
+	GUI::clean();
+	MH_Uninitialize();
+	Ripterms::p_env = nullptr;
+	delete Ripterms::cache;
+	for (Ripterms::JavaClass* javaclass : Ripterms::classes) {
+		delete javaclass;
+	}
 }

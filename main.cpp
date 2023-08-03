@@ -40,6 +40,14 @@ BOOL WINAPI DllMain(
         break;
 
     case DLL_PROCESS_DETACH:
+        if (lpvReserved != nullptr) {
+            //process termination
+            Ripterms::partialClean();
+            fclose(fbuffer1);
+            fclose(fbuffer2);
+            FreeConsole();
+            break;
+        }
         Ripterms::clean();
         fclose(fbuffer1);
         fclose(fbuffer2);

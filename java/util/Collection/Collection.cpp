@@ -2,5 +2,7 @@
 
 bool Collection::init()
 {
-	return CollectionClass.fill("java/util/Collection");
+	CollectionClass = new Ripterms::JavaClass("java/util/Collection");
+	Ripterms::classes.push_back(CollectionClass);
+	return CollectionClass->isSuccess;
 }

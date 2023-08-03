@@ -6,5 +6,5 @@ public:
 	using World::World;
 	static bool init();
 protected:
-	inline static Ripterms::JavaClass WorldClientClass{};
+	inline static Ripterms::JavaClass* WorldClientClass = nullptr;
 };

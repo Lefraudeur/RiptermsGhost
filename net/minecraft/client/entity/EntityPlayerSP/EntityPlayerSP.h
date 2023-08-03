@@ -6,5 +6,5 @@ public:
 	using AbstractClientPlayer::AbstractClientPlayer;
 	static bool init();
 protected:
-	inline static Ripterms::JavaClass EntityPlayerSPClass{};
+	inline static Ripterms::JavaClass* EntityPlayerSPClass = nullptr;
 };

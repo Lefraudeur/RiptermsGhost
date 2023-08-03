@@ -2,5 +2,7 @@
 
 bool List::init()
 {
-	return ListClass.fill("java/util/List");
+	ListClass = new Ripterms::JavaClass("java/util/List");
+	Ripterms::classes.push_back(ListClass);
+	return ListClass->isSuccess;
 }

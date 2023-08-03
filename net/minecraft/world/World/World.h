@@ -8,5 +8,5 @@ public:
 	static bool init();
 	std::vector<EntityPlayer> getPlayerEntities();
 protected:
-	inline static Ripterms::JavaClass WorldClass{};
+	inline static Ripterms::JavaClass* WorldClass = nullptr;
 };

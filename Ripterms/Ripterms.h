@@ -33,10 +33,13 @@ namespace Ripterms
 			jclass javaClass = nullptr;
 			std::unordered_map<std::string, jfieldID> fields;
 			std::unordered_map<std::string, jmethodID> methods;
+			bool isSuccess = false;
 		private:
 			static jclass findClass(const std::string& path);
 			inline static nlohmann::json mappings{};
 	};
+
+	inline std::vector<JavaClass*> classes{};
 
 	class Timer {
 	public:
@@ -50,4 +53,5 @@ namespace Ripterms
 	
 	BOOL init();
 	void clean();
+	void partialClean();
 }

@@ -6,5 +6,5 @@ public:
 	using Collection::Collection;
 	static bool init();
 protected:
-	inline static Ripterms::JavaClass ListClass{};
+	inline static Ripterms::JavaClass* ListClass = nullptr;
 };

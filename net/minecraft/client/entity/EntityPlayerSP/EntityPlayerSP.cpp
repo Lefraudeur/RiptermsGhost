@@ -2,5 +2,7 @@
 
 bool EntityPlayerSP::init()
 {
-	return EntityPlayerSPClass.fill("net/minecraft/client/entity/EntityPlayerSP");
+	EntityPlayerSPClass = new Ripterms::JavaClass("net/minecraft/client/entity/EntityPlayerSP");
+	Ripterms::classes.push_back(EntityPlayerSPClass);
+	return EntityPlayerSPClass->isSuccess;
 }
