@@ -7,8 +7,6 @@
 
 void mainLoop()
 {
-	static Ripterms::Timer timer(std::chrono::milliseconds(2));
-	if (!timer.isElapsed()) return;
 	if (!Ripterms::cache->fillCache()) return;
 	Ripterms::Modules::AimAssist::run();
 }
