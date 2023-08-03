@@ -1,4 +1,5 @@
 #pragma once
+#include "../Cache/Cache.h"
 namespace Ripterms
 {
 	namespace Modules
