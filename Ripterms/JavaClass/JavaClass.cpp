@@ -15,7 +15,7 @@ Ripterms::JavaClass::JavaClass()
 
 Ripterms::JavaClass::JavaClass(const JavaClass& otherJavaClass)
 {
-	if (otherJavaClass.javaClass) this->javaClass = (jclass)p_env->NewGlobalRef(otherJavaClass.javaClass);
+	if (otherJavaClass.javaClass) this->javaClass = (jclass)p_env->NewWeakGlobalRef(otherJavaClass.javaClass);
 	else this->javaClass = nullptr;
 	this->fields = otherJavaClass.fields;
 	this->methods = otherJavaClass.methods;
@@ -24,7 +24,7 @@ Ripterms::JavaClass::JavaClass(const JavaClass& otherJavaClass)
 Ripterms::JavaClass::~JavaClass()
 {
 	if (!Ripterms::p_env) return;
-	if (javaClass) p_env->DeleteGlobalRef(javaClass);
+	if (javaClass) p_env->DeleteWeakGlobalRef(javaClass);
 }
 
 bool Ripterms::JavaClass::fill(const std::string& class_path)
@@ -109,7 +109,7 @@ jclass Ripterms::JavaClass::findClass(const std::string& path)
 		signature = signature.substr(1);
 		signature.pop_back();
 		if (signature == path) {
-			foundclass = (jclass)p_env->NewGlobalRef(classes[i]);
+			foundclass = (jclass)p_env->NewWeakGlobalRef(classes[i]);
 		}
 		p_env->DeleteLocalRef(classes[i]);
 	}
