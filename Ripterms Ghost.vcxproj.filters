@@ -155,9 +155,6 @@
     <ClInclude Include="Ripterms\Maths\Maths.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_20_1.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="net\minecraft\util\Vec3\Vec3.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>

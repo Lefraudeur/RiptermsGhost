@@ -213,7 +213,6 @@
     <ClInclude Include="Ripterms\Cache\Cache.h" />
     <ClInclude Include="Ripterms\GUI\GUI.h" />
     <ClInclude Include="Ripterms\JavaClass\JavaClass.h" />
-    <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_20_1.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_8_9.h" />
     <ClInclude Include="Ripterms\Maths\Maths.h" />
     <ClInclude Include="Ripterms\Modules\Modules.h" />

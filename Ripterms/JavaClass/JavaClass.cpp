@@ -1,7 +1,6 @@
 #include "JavaClass.h"
 #include "../Mappings/mappings_lunar_1_8_9.h"
 #include "../Mappings/mappings_lunar_1_16_5.h"
-#include "../Mappings/mappings_lunar_1_20_1.h"
 #include <iostream>
 
 Ripterms::JavaClass::JavaClass(const std::string& class_path)
