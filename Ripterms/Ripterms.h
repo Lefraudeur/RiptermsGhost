@@ -11,10 +11,16 @@ namespace Ripterms
 	enum Version
 	{
 		UNDEFINED,
+		LUNAR_1_7_10,
 		LUNAR_1_8_9,
-		LUNAR_1_16_5
+		LUNAR_1_16_5,
+		FORGE_1_7_10,
+		MAJOR_1_7_10,
+		MAJOR_1_8_9,
+		MAJOR_1_16_5
 	};
 	inline Version version = UNDEFINED;
+	inline Version majorVersion = UNDEFINED;
 	inline JavaVM* p_jvm = nullptr;
 	inline JNIEnv* p_env = nullptr;
 	inline jvmtiEnv* p_tienv = nullptr;

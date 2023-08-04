@@ -161,5 +161,11 @@
     <ClInclude Include="Ripterms\JavaClass\JavaClass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_7_10.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Ripterms\Mappings\mappings_forge_1_7_10.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

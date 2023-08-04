@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-const std::string mappings_lunar_1_8_9 = R"(
+const std::string mappings_lunar_1_7_10 = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -36,7 +36,7 @@ const std::string mappings_lunar_1_8_9 = R"(
 			{
 				"name": "thePlayer",
 				"obfuscated": "thePlayer",
-				"signature": "Lnet/minecraft/client/entity/EntityPlayerSP;",
+				"signature": "Lnet/minecraft/client/entity/EntityClientPlayerMP;",
 				"static": false
 			},
 			{

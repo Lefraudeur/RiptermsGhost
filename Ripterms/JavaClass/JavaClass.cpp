@@ -1,4 +1,6 @@
 #include "JavaClass.h"
+#include "../Mappings/mappings_lunar_1_7_10.h"
+#include "../Mappings/mappings_forge_1_7_10.h"
 #include "../Mappings/mappings_lunar_1_8_9.h"
 #include "../Mappings/mappings_lunar_1_16_5.h"
 #include <iostream>
@@ -76,8 +78,14 @@ bool Ripterms::JavaClass::init()
 			case LUNAR_1_8_9:
 				mappings = nlohmann::json::parse(mappings_lunar_1_8_9);
 				break;
+			case LUNAR_1_7_10:
+				mappings = nlohmann::json::parse(mappings_lunar_1_7_10);
+				break;
 			case LUNAR_1_16_5:
 				mappings = nlohmann::json::parse(mappings_lunar_1_16_5);
+				break;
+			case FORGE_1_7_10:
+				mappings = nlohmann::json::parse(mappings_forge_1_7_10);
 				break;
 			default:
 				std::cerr << "Cannot find mappings for the specified version" << std::endl;

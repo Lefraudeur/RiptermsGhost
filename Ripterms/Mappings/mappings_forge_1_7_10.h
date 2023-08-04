@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-const std::string mappings_lunar_1_8_9 = R"(
+const std::string mappings_forge_1_7_10 = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -29,19 +29,19 @@ const std::string mappings_lunar_1_8_9 = R"(
 		"fields": [
 			{
 				"name": "theMinecraft",
-				"obfuscated": "theMinecraft",
+				"obfuscated": "field_71432_P",
 				"signature": "Lnet/minecraft/client/Minecraft;",
 				"static": true
 			},
 			{
 				"name": "thePlayer",
-				"obfuscated": "thePlayer",
-				"signature": "Lnet/minecraft/client/entity/EntityPlayerSP;",
+				"obfuscated": "field_71439_g",
+				"signature": "Lnet/minecraft/client/entity/EntityClientPlayerMP;",
 				"static": false
 			},
 			{
 				"name": "theWorld",
-				"obfuscated": "theWorld",
+				"obfuscated": "field_71441_e",
 				"signature": "Lnet/minecraft/client/multiplayer/WorldClient;",
 				"static": false
 			}
@@ -74,31 +74,31 @@ const std::string mappings_lunar_1_8_9 = R"(
 		"fields": [
 			{
 				"name": "posX",
-				"obfuscated": "posX",
+				"obfuscated": "field_70165_t",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "posY",
-				"obfuscated": "posY",
+				"obfuscated": "field_70163_u",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "posZ",
-				"obfuscated": "posZ",
+				"obfuscated": "field_70161_v",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "rotationYaw",
-				"obfuscated": "rotationYaw",
+				"obfuscated": "field_70177_z",
 				"signature": "F",
 				"static": false
 			},
 			{
 				"name": "rotationPitch",
-				"obfuscated": "rotationPitch",
+				"obfuscated": "field_70125_A",
 				"signature": "F",
 				"static": false
 			}
@@ -115,7 +115,7 @@ const std::string mappings_lunar_1_8_9 = R"(
 		"fields": [
 			{
 				"name": "playerEntities",
-				"obfuscated": "playerEntities",
+				"obfuscated": "field_73010_i",
 				"signature": "Ljava/util/List;",
 				"static": false
 			}
@@ -127,19 +127,19 @@ const std::string mappings_lunar_1_8_9 = R"(
 		"fields": [
 			{
 				"name": "xCoord",
-				"obfuscated": "xCoord",
+				"obfuscated": "field_72450_a",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "yCoord",
-				"obfuscated": "yCoord",
+				"obfuscated": "field_72448_b",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "zCoord",
-				"obfuscated": "zCoord",
+				"obfuscated": "field_72449_c",
 				"signature": "D",
 				"static": false
 			}

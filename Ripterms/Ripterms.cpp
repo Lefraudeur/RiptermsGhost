@@ -138,14 +138,28 @@ BOOL Ripterms::init()
 {
 	Ripterms::window = getCurrentWindow();
 	std::string windowName = getWindowName(window);
-	if (windowName.find("Lunar Client 1.8.9") != std::string::npos) version = LUNAR_1_8_9;
-	else if (windowName.find("Lunar Client 1.16.5") != std::string::npos) version = LUNAR_1_16_5;
+	if (windowName.find("Lunar Client 1.8.9") != std::string::npos) {
+		version = LUNAR_1_8_9;
+		majorVersion = MAJOR_1_8_9;
+	}
+	else if (windowName.find("Lunar Client 1.7.10") != std::string::npos) {
+		version = LUNAR_1_7_10;
+		majorVersion = MAJOR_1_7_10;
+	}
+	else if (windowName.find("Lunar Client 1.16.5") != std::string::npos) {
+		version = LUNAR_1_16_5;
+		majorVersion = MAJOR_1_16_5;
+	}
+	else if (windowName.find("Paladium") != std::string::npos || windowName.find("Minecraft 1.7.10") != std::string::npos) {
+		version = FORGE_1_7_10;
+		majorVersion = MAJOR_1_7_10;
+	}
 	else {
 		std::cerr << "unknown version" << std::endl;
 		return FALSE;
 	}
 	MH_Initialize();
-	if (version == LUNAR_1_8_9) {
+	if (majorVersion == MAJOR_1_8_9 || majorVersion == MAJOR_1_7_10) {
 		HMODULE lwjgl64dll = GetModuleHandleA("lwjgl64.dll");
 		if (!lwjgl64dll) return FALSE;
 		targetnglClear = reinterpret_cast<nglClearType>(GetProcAddress(lwjgl64dll, "Java_org_lwjgl_opengl_GL11_nglClear"));
@@ -162,7 +176,7 @@ BOOL Ripterms::init()
 			return FALSE;
 		}
 	}
-	else if (version == LUNAR_1_16_5) {
+	else if (majorVersion == MAJOR_1_16_5) {
 		HMODULE lwjgl_opengldll = GetModuleHandleA("lwjgl_opengl.dll");
 		if (!lwjgl_opengldll) return FALSE;
 		targetglClear = reinterpret_cast<glClearType>(GetProcAddress(lwjgl_opengldll, "Java_org_lwjgl_opengl_GL11C_glClear"));
@@ -188,11 +202,11 @@ void Ripterms::clean()
 {
 	tmp_no_hook = true;
 	while (cache) {}
-	if (version == LUNAR_1_8_9) {
+	if (majorVersion == MAJOR_1_8_9 || majorVersion == MAJOR_1_7_10) {
 		MH_DisableHook(targetnglClear);
 		MH_RemoveHook(targetnglClear);
 	}
-	else if (version == LUNAR_1_16_5) {
+	else if (majorVersion == MAJOR_1_16_5) {
 		MH_DisableHook(targetglClear);
 		MH_RemoveHook(targetglClear);
 	}
@@ -203,11 +217,11 @@ void Ripterms::clean()
 
 void Ripterms::partialClean()
 {
-	if (version == LUNAR_1_8_9) {
+	if (majorVersion == MAJOR_1_8_9 || majorVersion == MAJOR_1_7_10) {
 		MH_DisableHook(targetnglClear);
 		MH_RemoveHook(targetnglClear);
 	}
-	else if (version == LUNAR_1_16_5) {
+	else if (majorVersion == MAJOR_1_16_5) {
 		MH_DisableHook(targetglClear);
 		MH_RemoveHook(targetglClear);
 	}
