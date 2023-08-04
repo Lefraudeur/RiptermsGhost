@@ -1,8 +1,10 @@
 #include "WorldClient.h"
+#include "../../../../java/util/List/List.h"
 
-bool WorldClient::init()
+std::vector<EntityPlayer> WorldClient::getPlayerEntities()
 {
-	WorldClientClass = new Ripterms::JavaClass("net/minecraft/client/multiplayer/WorldClient");
-	Ripterms::classes.push_back(WorldClientClass);
-	return WorldClientClass->isSuccess;
+	if (!instance) return {};
+	if (Ripterms::version == Ripterms::Version::LUNAR_1_8_9) return World::getPlayerEntities();
+	List playerEntities(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->WorldClientClass.fields["players"]));
+	return playerEntities.toVector<EntityPlayer>();
 }

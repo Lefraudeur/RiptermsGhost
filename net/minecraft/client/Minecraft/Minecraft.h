@@ -9,7 +9,4 @@ public:
 	static Minecraft getTheMinecraft();
 	EntityPlayerSP getThePlayer();
 	WorldClient getTheWorld();
-	static bool init();
-protected:
-	inline static Ripterms::JavaClass* MinecraftClass = nullptr;
 };

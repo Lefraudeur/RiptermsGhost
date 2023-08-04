@@ -4,7 +4,4 @@
 class AbstractClientPlayer : public EntityPlayer {
 public:
 	using EntityPlayer::EntityPlayer;
-	static bool init();
-protected:
-	inline static Ripterms::JavaClass* AbstractClientPlayerClass = nullptr;
 };

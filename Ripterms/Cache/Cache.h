@@ -1,13 +1,14 @@
 #pragma once
 #include "../../java/lang/Object/Object.h"
 #include "../../net/minecraft/client/Minecraft/Minecraft.h"
-#include <vector>
 
 namespace Ripterms
 {
 	class Cache
 	{
 	public:
+		Cache();
+		~Cache();
 		Minecraft theMinecraft{};
 		EntityPlayerSP thePlayer{};
 		WorldClient theWorld{};

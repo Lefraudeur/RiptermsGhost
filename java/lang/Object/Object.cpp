@@ -59,15 +59,9 @@ Object::~Object()
 
 void Object::clear()
 {
+	if (!Ripterms::p_env) return;
 	if (this->instance) {
 		Ripterms::p_env->DeleteGlobalRef(this->instance);
 		this->instance = nullptr;
 	}
-}
-
-bool Object::init()
-{
-	ObjectClass = new Ripterms::JavaClass("java/lang/Object");
-	Ripterms::classes.push_back(ObjectClass);
-	return ObjectClass->isSuccess;
 }

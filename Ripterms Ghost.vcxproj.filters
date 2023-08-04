@@ -27,7 +27,7 @@
     <ClCompile Include="net\minecraft\client\Minecraft\Minecraft.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Ripterms\JavaClass.cpp">
+    <ClCompile Include="Ripterms\JavaClass\JavaClass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Ripterms\Cache\Cache.cpp">
@@ -93,6 +93,15 @@
     <ClCompile Include="Ripterms\Maths\Maths.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="net\minecraft\util\Vec3\Vec3.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Ripterms\Mappings\mappings_lunar_1_16_5.h">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Ripterms\JavaClass\JavaClassCache.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ripterms\Ripterms.h">
@@ -144,6 +153,15 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Ripterms\Maths\Maths.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_20_1.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="net\minecraft\util\Vec3\Vec3.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Ripterms\JavaClass\JavaClass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

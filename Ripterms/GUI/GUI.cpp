@@ -9,13 +9,16 @@
 #include "../Cache/Cache.h"
 #include "../Modules/Modules.h"
 
-typedef BOOL(*type_wglSwapBuffers)(HDC);
+typedef BOOL(__stdcall* type_wglSwapBuffers)(HDC);
 type_wglSwapBuffers original_wglSwapBuffers = nullptr;
 WNDPROC original_WndProc = nullptr;
 type_wglSwapBuffers target_wglSwapBuffers = nullptr;
 
-BOOL detour_wglSwapBuffers(HDC unnamedParam1)
+bool hook = true;
+
+BOOL __stdcall detour_wglSwapBuffers(HDC unnamedParam1)
 {
+	if (!hook) return original_wglSwapBuffers(unnamedParam1);
 	static bool isInit = false;
 	static GLint last_viewport[4];
 	static HGLRC new_context = nullptr;
@@ -119,11 +122,12 @@ bool Ripterms::GUI::init()
 void Ripterms::GUI::clean()
 {
 	draw = false;
+	hook = false;
 	SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)original_WndProc);
-	MH_DisableHook(target_wglSwapBuffers);
-	MH_RemoveHook(target_wglSwapBuffers);
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+	MH_DisableHook(target_wglSwapBuffers);
+	MH_RemoveHook(target_wglSwapBuffers);
 	return;
 }

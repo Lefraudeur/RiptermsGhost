@@ -4,7 +4,5 @@
 class WorldClient : public World {
 public:
 	using World::World;
-	static bool init();
-protected:
-	inline static Ripterms::JavaClass* WorldClientClass = nullptr;
+	std::vector<EntityPlayer> getPlayerEntities() override;
 };

@@ -7,7 +7,7 @@ BOOL WINAPI DllMain(
     DWORD fdwReason,     // reason for calling function
     LPVOID lpvReserved)  // reserved
 {
-    static FILE* fbuffer1 = nullptr, * fbuffer2 = nullptr;
+    static FILE* fbuffer1 = nullptr, * fbuffer2 = nullptr, *fbuffer3 = nullptr;
     // Perform actions based on the reason for calling.
     switch (fdwReason)
     {
@@ -18,12 +18,14 @@ BOOL WINAPI DllMain(
         AllocConsole();
         freopen_s(&fbuffer1, "CONOUT$", "w", stdout);
         freopen_s(&fbuffer2, "CONOUT$", "w", stderr);
+        freopen_s(&fbuffer3, "CONIN$", "r", stdin);
         Ripterms::module = hinstDLL;
         if (Ripterms::init() == FALSE) {
             std::cin.ignore();
             Ripterms::clean();
             fclose(fbuffer1);
             fclose(fbuffer2);
+            fclose(fbuffer3);
             FreeConsole();
             return FALSE;
         }
@@ -45,12 +47,14 @@ BOOL WINAPI DllMain(
             Ripterms::partialClean();
             fclose(fbuffer1);
             fclose(fbuffer2);
+            fclose(fbuffer3);
             FreeConsole();
             break;
         }
         Ripterms::clean();
         fclose(fbuffer1);
         fclose(fbuffer2);
+        fclose(fbuffer3);
         FreeConsole();
         // Perform any necessary cleanup.
         break;

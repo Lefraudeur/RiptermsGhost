@@ -2,24 +2,17 @@
 
 Minecraft Minecraft::getTheMinecraft()
 {
-	return Minecraft(Ripterms::p_env->GetStaticObjectField(MinecraftClass->javaClass, MinecraftClass->fields["theMinecraft"]));
+	return Minecraft(Ripterms::p_env->GetStaticObjectField(Ripterms::classcache->MinecraftClass.javaClass, Ripterms::classcache->MinecraftClass.fields["theMinecraft"]));
 }
 
 EntityPlayerSP Minecraft::getThePlayer()
 {
 	if (!this->instance) return EntityPlayerSP();
-	return EntityPlayerSP(Ripterms::p_env->GetObjectField(this->instance, MinecraftClass->fields["thePlayer"]));
+	return EntityPlayerSP(Ripterms::p_env->GetObjectField(this->instance, Ripterms::classcache->MinecraftClass.fields["thePlayer"]));
 }
 
 WorldClient Minecraft::getTheWorld()
 {
 	if (!this->instance) return WorldClient();
-	return WorldClient(Ripterms::p_env->GetObjectField(this->instance, MinecraftClass->fields["theWorld"]));
-}
-
-bool Minecraft::init()
-{
-	MinecraftClass = new Ripterms::JavaClass("net/minecraft/client/Minecraft");
-	Ripterms::classes.push_back(MinecraftClass);
-	return MinecraftClass->isSuccess;
+	return WorldClient(Ripterms::p_env->GetObjectField(this->instance, Ripterms::classcache->MinecraftClass.fields["theWorld"]));
 }

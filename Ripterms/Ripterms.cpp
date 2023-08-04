@@ -4,6 +4,8 @@
 #include "Cache/Cache.h"
 #include "GUI/GUI.h"
 #include "Modules/Modules.h"
+#include "JavaClass/JavaClass.h"
+#include <MinHook.h>
 
 void mainLoop()
 {
@@ -11,14 +13,17 @@ void mainLoop()
 	Ripterms::Modules::AimAssist::run();
 }
 
-typedef void(*nglClearType)(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer);
-
+typedef void(JNICALL* nglClearType)(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer);
 nglClearType originalnglClear = nullptr;
 nglClearType targetnglClear = nullptr;
 
+typedef void(JNICALL* glClearType)(JNIEnv* env, jclass clazz, jint mask);
+glClearType originalglClear = nullptr;
+glClearType targetglClear = nullptr;
+
 bool tmp_no_hook = false;
 
-void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
+void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
 {
 	static bool runMainLoop = false;
 
@@ -26,9 +31,7 @@ void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer
 		if (Ripterms::cache) {
 			if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
 			delete Ripterms::cache;
-			for (Ripterms::JavaClass* javaclass : Ripterms::classes) {
-				delete javaclass;
-			}
+			delete Ripterms::classcache;
 			Ripterms::cache = nullptr;
 		}
 		return originalnglClear(env, clazz, mask, function_pointer);
@@ -40,7 +43,7 @@ void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer
 		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION);
-		runMainLoop = Ripterms::JavaClass::fillAll();
+		runMainLoop = Ripterms::classcache->fillCache();
 		runonce = false;
 	}
 	if (GetAsyncKeyState(VK_END)) {
@@ -54,6 +57,42 @@ void detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer
 	}
 	if (runMainLoop) mainLoop();
 	return originalnglClear(env, clazz, mask, function_pointer);
+}
+
+void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
+{
+	static bool runMainLoop = false;
+
+	if (tmp_no_hook) {
+		if (Ripterms::cache) {
+			if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
+			delete Ripterms::cache;
+			delete Ripterms::classcache;
+			Ripterms::cache = nullptr;
+		}
+		return originalglClear(env, clazz, mask);
+	}
+
+	static bool runonce = true;
+	if (runonce)
+	{
+		Ripterms::p_env = env;
+		env->GetJavaVM(&Ripterms::p_jvm);
+		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION);
+		runMainLoop = Ripterms::classcache->fillCache();
+		runonce = false;
+	}
+	if (GetAsyncKeyState(VK_END)) {
+		tmp_no_hook = true;
+		std::thread a([] {
+			std::this_thread::sleep_for(std::chrono::milliseconds(5));
+			FreeLibrary(Ripterms::module);
+		});
+		if (a.joinable()) a.detach();
+		return originalglClear(env, clazz, mask);
+	}
+	if (runMainLoop) mainLoop();
+	return originalglClear(env, clazz, mask);
 }
 
 struct Process
@@ -100,26 +139,48 @@ BOOL Ripterms::init()
 	Ripterms::window = getCurrentWindow();
 	std::string windowName = getWindowName(window);
 	if (windowName.find("Lunar Client 1.8.9") != std::string::npos) version = LUNAR_1_8_9;
-	if (version == UNDEFINED) {
+	else if (windowName.find("Lunar Client 1.20.1") != std::string::npos) version = LUNAR_1_20_1;
+	else if (windowName.find("Lunar Client 1.16.5") != std::string::npos) version = LUNAR_1_16_5;
+	else {
 		std::cerr << "unknown version" << std::endl;
 		return FALSE;
 	}
 	MH_Initialize();
-	HMODULE lwjgl64dll = GetModuleHandleA("lwjgl64.dll");
-	if (!lwjgl64dll) return FALSE;
-	nglClearType targetnglClear = reinterpret_cast<nglClearType>(GetProcAddress(lwjgl64dll, "Java_org_lwjgl_opengl_GL11_nglClear"));
-	MH_STATUS status = MH_CreateHook(targetnglClear, detournglClear, reinterpret_cast<LPVOID*>(&originalnglClear));
-	if (status != MH_OK)
-	{
-		std::cerr << MH_StatusToString(status) << std::endl;
-		return FALSE;
+	if (version == LUNAR_1_8_9) {
+		HMODULE lwjgl64dll = GetModuleHandleA("lwjgl64.dll");
+		if (!lwjgl64dll) return FALSE;
+		targetnglClear = reinterpret_cast<nglClearType>(GetProcAddress(lwjgl64dll, "Java_org_lwjgl_opengl_GL11_nglClear"));
+		MH_STATUS status = MH_CreateHook(targetnglClear, detournglClear, reinterpret_cast<LPVOID*>(&originalnglClear));
+		if (status != MH_OK)
+		{
+			std::cerr << MH_StatusToString(status) << std::endl;
+			return FALSE;
+		}
+		status = MH_EnableHook(targetnglClear);
+		if (status != MH_OK)
+		{
+			std::cerr << MH_StatusToString(status) << std::endl;
+			return FALSE;
+		}
 	}
-	status = MH_EnableHook(targetnglClear);
-	if (status != MH_OK)
-	{
-		std::cerr << MH_StatusToString(status) << std::endl;
-		return FALSE;
+	else if (version == LUNAR_1_20_1 || version == LUNAR_1_16_5) {
+		HMODULE lwjgl_opengldll = GetModuleHandleA("lwjgl_opengl.dll");
+		if (!lwjgl_opengldll) return FALSE;
+		targetglClear = reinterpret_cast<glClearType>(GetProcAddress(lwjgl_opengldll, "Java_org_lwjgl_opengl_GL11C_glClear"));
+		MH_STATUS status = MH_CreateHook(targetglClear, detourglClear, reinterpret_cast<LPVOID*>(&originalglClear));
+		if (status != MH_OK)
+		{
+			std::cerr << MH_StatusToString(status) << std::endl;
+			return FALSE;
+		}
+		status = MH_EnableHook(targetglClear);
+		if (status != MH_OK)
+		{
+			std::cerr << MH_StatusToString(status) << std::endl;
+			return FALSE;
+		}
 	}
+	if (!JavaClass::init()) return FALSE;
 	if (!GUI::init()) return FALSE;
 	return TRUE;
 }
@@ -128,21 +189,32 @@ void Ripterms::clean()
 {
 	tmp_no_hook = true;
 	while (cache) {}
-	MH_DisableHook(targetnglClear);
-	MH_RemoveHook(targetnglClear);
+	if (version == LUNAR_1_8_9) {
+		MH_DisableHook(targetnglClear);
+		MH_RemoveHook(targetnglClear);
+	}
+	else if (version == LUNAR_1_20_1 || version == LUNAR_1_16_5) {
+		MH_DisableHook(targetglClear);
+		MH_RemoveHook(targetglClear);
+	}
 	GUI::clean();
 	MH_Uninitialize();
+	Ripterms::p_env = nullptr;
 }
 
 void Ripterms::partialClean()
 {
-	MH_DisableHook(targetnglClear);
-	MH_RemoveHook(targetnglClear);
+	if (version == LUNAR_1_8_9) {
+		MH_DisableHook(targetnglClear);
+		MH_RemoveHook(targetnglClear);
+	}
+	else if (version == LUNAR_1_20_1 || version == LUNAR_1_16_5) {
+		MH_DisableHook(targetglClear);
+		MH_RemoveHook(targetglClear);
+	}
 	GUI::clean();
 	MH_Uninitialize();
 	Ripterms::p_env = nullptr;
 	delete Ripterms::cache;
-	for (Ripterms::JavaClass* javaclass : Ripterms::classes) {
-		delete javaclass;
-	}
+	delete Ripterms::classcache;
 }

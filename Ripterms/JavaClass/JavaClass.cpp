@@ -1,15 +1,12 @@
-#include "Ripterms.h"
-#include "Mappings/mappings_lunar_1_8_9.h"
+#include "JavaClass.h"
+#include "../Mappings/mappings_lunar_1_8_9.h"
+#include "../Mappings/mappings_lunar_1_16_5.h"
+#include "../Mappings/mappings_lunar_1_20_1.h"
 #include <iostream>
-#include "../java/lang/Object/Object.h"
-#include "../net/minecraft/client/Minecraft/Minecraft.h"
-#include "../net/minecraft/client/entity/EntityPlayerSP/EntityPlayerSP.h"
-#include "../net/minecraft/client/multiplayer/WorldClient/WorldClient.h"
-#include "../java/util/List/List.h"
 
 Ripterms::JavaClass::JavaClass(const std::string& class_path)
 {
-	isSuccess = fill(class_path);
+	if (!fill(class_path)) throw std::exception(("Failed to parse " + class_path).c_str());
 }
 
 Ripterms::JavaClass::JavaClass()
@@ -22,7 +19,6 @@ Ripterms::JavaClass::JavaClass(const JavaClass& otherJavaClass)
 	else this->javaClass = nullptr;
 	this->fields = otherJavaClass.fields;
 	this->methods = otherJavaClass.methods;
-	this->isSuccess = otherJavaClass.isSuccess;
 }
 
 Ripterms::JavaClass::~JavaClass()
@@ -74,38 +70,26 @@ bool Ripterms::JavaClass::fill(const std::string& class_path)
 	return true;
 }
 
-bool Ripterms::JavaClass::fillAll()
+bool Ripterms::JavaClass::init()
 {
-	if (mappings.empty()) {
-		try {
-			switch (version) {
+	try {
+		switch (version) {
 			case LUNAR_1_8_9:
 				mappings = nlohmann::json::parse(mappings_lunar_1_8_9);
+				break;
+			case LUNAR_1_20_1:
+				mappings = nlohmann::json::parse(mappings_lunar_1_20_1);
+				break;
+			case LUNAR_1_16_5:
+				mappings = nlohmann::json::parse(mappings_lunar_1_16_5);
 				break;
 			default:
 				std::cerr << "Cannot find mappings for the specified version" << std::endl;
 				return false;
-			}
-		}
-		catch (const nlohmann::json::exception& e) {
-			std::cerr << e.what() << std::endl;
-			return false;
 		}
 	}
-	//each class fields/methods needs to be filled
-	if (!(
-		Object::init() &&
-		Minecraft::init() &&
-		Entity::init() &&
-		EntityLivingBase::init() &&
-		EntityPlayer::init() &&
-		AbstractClientPlayer::init() &&
-		EntityPlayerSP::init() &&
-		World::init() &&
-		WorldClient::init() &&
-		Collection::init() &&
-		List::init()
-	)) {
+	catch (const nlohmann::json::exception& e) {
+		std::cerr << e.what() << std::endl;
 		return false;
 	}
 	return true;

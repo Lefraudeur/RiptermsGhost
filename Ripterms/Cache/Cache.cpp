@@ -1,9 +1,19 @@
 #include "Cache.h"
 #include <iostream>
 
+EntityPlayerSP prev_thePlayer{};
+
+Ripterms::Cache::Cache()
+{
+}
+
+Ripterms::Cache::~Cache()
+{
+	prev_thePlayer.clear();
+}
+
 bool Ripterms::Cache::fillCache()
 {
-	static EntityPlayerSP prev_thePlayer{};
 	theMinecraft = Minecraft::getTheMinecraft();
 	if (!theMinecraft) return false;
 	thePlayer = theMinecraft.getThePlayer();

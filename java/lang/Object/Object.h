@@ -1,6 +1,7 @@
 #pragma once
 #include "../../../Ripterms/Ripterms.h"
 #include "../../../Ripterms/Maths/Maths.h"
+#include "../../../Ripterms/JavaClass/JavaClass.h"
 
 class Object {
 public:
@@ -14,8 +15,6 @@ public:
 	bool isValid();
 	~Object();
 	void clear();
-	static bool init();
 protected:
-	inline static Ripterms::JavaClass* ObjectClass = nullptr;
 	jobject instance = nullptr;
 };

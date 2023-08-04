@@ -5,8 +5,5 @@
 class World : public Object {
 public:
 	using Object::Object;
-	static bool init();
-	std::vector<EntityPlayer> getPlayerEntities();
-protected:
-	inline static Ripterms::JavaClass* WorldClass = nullptr;
+	virtual std::vector<EntityPlayer> getPlayerEntities();
 };
