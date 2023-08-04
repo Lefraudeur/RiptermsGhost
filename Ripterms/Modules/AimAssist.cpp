@@ -49,9 +49,9 @@ void Ripterms::Modules::AimAssist::run()
 		prev_selected_target = selected_target;
 		if (std::abs(selected_target_YawToAdd) > 3.5f) {
 			std::mt19937 gen(rd());
-			std::uniform_int_distribution<> range_pitch(-8, +8);
+			std::uniform_int_distribution<> range_pitch(-5, +5);
 			thePlayer_rotation.y += range_pitch(gen) / 10.0f;
-			std::uniform_int_distribution<> range_yaw(41, 194);
+			std::uniform_int_distribution<> range_yaw(39, 211);
 			thePlayer_rotation.x += (selected_target_YawToAdd > 0.0f ? range_yaw(gen) / 100.0f : -range_yaw(gen) / 100.0f);
 			cache->thePlayer.setRotation(thePlayer_rotation);
 		}

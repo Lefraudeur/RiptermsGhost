@@ -4,7 +4,7 @@
 Ripterms::Maths::Vector3d Entity::getPosition()
 {
 	if (!instance) return Ripterms::Maths::Vector3d();
-	if (Ripterms::version == Ripterms::Version::LUNAR_1_20_1 || Ripterms::version == Ripterms::Version::LUNAR_1_16_5) {
+	if (Ripterms::version == Ripterms::Version::LUNAR_1_16_5) {
 		return Vec3(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->EntityClass.fields["positionVec"])).getVector();
 	}
 	return Ripterms::Maths::Vector3d(

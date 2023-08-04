@@ -139,7 +139,6 @@ BOOL Ripterms::init()
 	Ripterms::window = getCurrentWindow();
 	std::string windowName = getWindowName(window);
 	if (windowName.find("Lunar Client 1.8.9") != std::string::npos) version = LUNAR_1_8_9;
-	else if (windowName.find("Lunar Client 1.20.1") != std::string::npos) version = LUNAR_1_20_1;
 	else if (windowName.find("Lunar Client 1.16.5") != std::string::npos) version = LUNAR_1_16_5;
 	else {
 		std::cerr << "unknown version" << std::endl;
@@ -163,7 +162,7 @@ BOOL Ripterms::init()
 			return FALSE;
 		}
 	}
-	else if (version == LUNAR_1_20_1 || version == LUNAR_1_16_5) {
+	else if (version == LUNAR_1_16_5) {
 		HMODULE lwjgl_opengldll = GetModuleHandleA("lwjgl_opengl.dll");
 		if (!lwjgl_opengldll) return FALSE;
 		targetglClear = reinterpret_cast<glClearType>(GetProcAddress(lwjgl_opengldll, "Java_org_lwjgl_opengl_GL11C_glClear"));
@@ -193,7 +192,7 @@ void Ripterms::clean()
 		MH_DisableHook(targetnglClear);
 		MH_RemoveHook(targetnglClear);
 	}
-	else if (version == LUNAR_1_20_1 || version == LUNAR_1_16_5) {
+	else if (version == LUNAR_1_16_5) {
 		MH_DisableHook(targetglClear);
 		MH_RemoveHook(targetglClear);
 	}
@@ -208,7 +207,7 @@ void Ripterms::partialClean()
 		MH_DisableHook(targetnglClear);
 		MH_RemoveHook(targetnglClear);
 	}
-	else if (version == LUNAR_1_20_1 || version == LUNAR_1_16_5) {
+	else if (version == LUNAR_1_16_5) {
 		MH_DisableHook(targetglClear);
 		MH_RemoveHook(targetglClear);
 	}

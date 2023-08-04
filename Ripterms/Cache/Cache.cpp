@@ -1,8 +1,6 @@
 #include "Cache.h"
 #include <iostream>
 
-EntityPlayerSP prev_thePlayer{};
-
 Ripterms::Cache::Cache()
 {
 }

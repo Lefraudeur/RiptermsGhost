@@ -77,9 +77,6 @@ bool Ripterms::JavaClass::init()
 			case LUNAR_1_8_9:
 				mappings = nlohmann::json::parse(mappings_lunar_1_8_9);
 				break;
-			case LUNAR_1_20_1:
-				mappings = nlohmann::json::parse(mappings_lunar_1_20_1);
-				break;
 			case LUNAR_1_16_5:
 				mappings = nlohmann::json::parse(mappings_lunar_1_16_5);
 				break;

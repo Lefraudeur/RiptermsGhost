@@ -13,6 +13,8 @@ namespace Ripterms
 		EntityPlayerSP thePlayer{};
 		WorldClient theWorld{};
 		bool fillCache();
+	private:
+		EntityPlayerSP prev_thePlayer{};
 	};
 	inline Cache* cache = new Cache();
 }

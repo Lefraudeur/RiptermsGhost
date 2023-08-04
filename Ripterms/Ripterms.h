@@ -12,8 +12,7 @@ namespace Ripterms
 	{
 		UNDEFINED,
 		LUNAR_1_8_9,
-		LUNAR_1_16_5,
-		LUNAR_1_20_1
+		LUNAR_1_16_5
 	};
 	inline Version version = UNDEFINED;
 	inline JavaVM* p_jvm = nullptr;
