@@ -15,7 +15,6 @@ namespace Ripterms
 		LUNAR_1_8_9,
 		LUNAR_1_16_5,
 		FORGE_1_7_10,
-		MAJOR_1_7_10,
 		MAJOR_1_8_9,
 		MAJOR_1_16_5
 	};

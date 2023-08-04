@@ -3,6 +3,7 @@
 Object::Object(jobject instance)
 {
 	this->instance = Ripterms::p_env->NewWeakGlobalRef(instance);
+	Ripterms::p_env->DeleteLocalRef(instance);
 }
 
 Object::Object(const Object& other_Object)
@@ -26,7 +27,10 @@ Object& Object::operator=(const Object& other_Object)
 Object& Object::operator=(jobject instance)
 {
 	if (this->instance) Ripterms::p_env->DeleteWeakGlobalRef(this->instance);
-	if (instance) this->instance = Ripterms::p_env->NewWeakGlobalRef(instance);
+	if (instance) {
+		this->instance = Ripterms::p_env->NewWeakGlobalRef(instance);
+		Ripterms::p_env->DeleteLocalRef(instance);
+	}
 	else this->instance = nullptr;
 	return *this;
 }
@@ -65,4 +69,9 @@ void Object::clear()
 		Ripterms::p_env->DeleteWeakGlobalRef(this->instance);
 		this->instance = nullptr;
 	}
+}
+
+jobject Object::getInstance()
+{
+	return instance;
 }
