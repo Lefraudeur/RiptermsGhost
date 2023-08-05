@@ -42,7 +42,7 @@ void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function
 	{
 		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
-		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION);
+		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::classcache->fillCache();
 		runonce = false;
 	}

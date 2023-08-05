@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-const std::string mappings_lunar_1_8_9 = R"(
+inline const std::string mappings_lunar_1_8_9 = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
