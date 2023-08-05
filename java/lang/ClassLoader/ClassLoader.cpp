@@ -50,3 +50,8 @@ bool ClassLoader::defineClass(const jbyte* classBytes, jsize size)
 	Ripterms::p_env->DeleteLocalRef(jaclass);
 	return true;
 }
+
+ClassLoader ClassLoader::newObject()
+{
+	return ClassLoader(Ripterms::p_env->NewObject(Ripterms::classcache->ClassLoaderClass.javaClass, Ripterms::classcache->ClassLoaderClass.methods["<init>"]));
+}

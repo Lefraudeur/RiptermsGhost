@@ -38,6 +38,7 @@ namespace Ripterms
 		JavaClass EntityPlayerClass{};
 		JavaClass Vec3Class{};
 		JavaClass WorldClass{};
+		JavaClass ClassLoaderClass{};
 	};
 
 	inline JavaClassCache* classcache = new JavaClassCache();

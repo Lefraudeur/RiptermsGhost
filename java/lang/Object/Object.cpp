@@ -2,8 +2,11 @@
 
 Object::Object(jobject instance)
 {
-	this->instance = Ripterms::p_env->NewWeakGlobalRef(instance);
-	Ripterms::p_env->DeleteLocalRef(instance);
+	if (instance) {
+		this->instance = Ripterms::p_env->NewWeakGlobalRef(instance);
+		Ripterms::p_env->DeleteLocalRef(instance);
+	}
+	else this->instance = nullptr;
 }
 
 Object::Object(const Object& other_Object)

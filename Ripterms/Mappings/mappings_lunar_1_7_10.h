@@ -7,6 +7,18 @@ const std::string mappings_lunar_1_7_10 = R"(
 		"fields": [],
 		"methods": []
 	},
+	"java/lang/ClassLoader": {
+		"obfuscated": "java/lang/ClassLoader",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "()V",
+				"static": false
+			}
+		]
+	},
 	"java/util/Collection": {
 		"obfuscated": "java/util/Collection",
 		"fields": [],
