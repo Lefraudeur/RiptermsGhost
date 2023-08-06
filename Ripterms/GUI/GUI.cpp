@@ -9,12 +9,14 @@
 #include "../Cache/Cache.h"
 #include "../Modules/Modules.h"
 
-typedef BOOL(__stdcall* type_wglSwapBuffers)(HDC);
-type_wglSwapBuffers original_wglSwapBuffers = nullptr;
-WNDPROC original_WndProc = nullptr;
-type_wglSwapBuffers target_wglSwapBuffers = nullptr;
+namespace {
+	typedef BOOL(__stdcall* type_wglSwapBuffers)(HDC);
+	type_wglSwapBuffers original_wglSwapBuffers = nullptr;
+	WNDPROC original_WndProc = nullptr;
+	type_wglSwapBuffers target_wglSwapBuffers = nullptr;
 
-bool hook = true;
+	bool hook = true;
+}
 
 BOOL __stdcall detour_wglSwapBuffers(HDC unnamedParam1)
 {

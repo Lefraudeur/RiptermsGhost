@@ -12,6 +12,7 @@ namespace Ripterms
 		Minecraft theMinecraft{};
 		EntityPlayerSP thePlayer{};
 		WorldClient theWorld{};
+		List playerEntities{};
 		bool fillCache();
 	private:
 		EntityPlayerSP prev_thePlayer{};

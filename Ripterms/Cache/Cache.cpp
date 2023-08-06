@@ -20,6 +20,7 @@ bool Ripterms::Cache::fillCache()
 		std::clog << "object updated" << std::endl;
 		prev_thePlayer = thePlayer;
 		theWorld = theMinecraft.getTheWorld();
+		playerEntities = theWorld.getPlayerEntities();
 	}
 	return true;
 }

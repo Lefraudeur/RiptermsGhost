@@ -13,15 +13,17 @@ void mainLoop()
 	Ripterms::Modules::AimAssist::run();
 }
 
-typedef void(JNICALL* nglClearType)(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer);
-nglClearType originalnglClear = nullptr;
-nglClearType targetnglClear = nullptr;
+namespace {
+	typedef void(JNICALL* nglClearType)(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer);
+	nglClearType originalnglClear = nullptr;
+	nglClearType targetnglClear = nullptr;
 
-typedef void(JNICALL* glClearType)(JNIEnv* env, jclass clazz, jint mask);
-glClearType originalglClear = nullptr;
-glClearType targetglClear = nullptr;
+	typedef void(JNICALL* glClearType)(JNIEnv* env, jclass clazz, jint mask);
+	glClearType originalglClear = nullptr;
+	glClearType targetglClear = nullptr;
 
-bool tmp_no_hook = false;
+	bool tmp_no_hook = false;
+}
 
 void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
 {
@@ -78,7 +80,7 @@ void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 	{
 		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
-		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION);
+		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::classcache->fillCache();
 		runonce = false;
 	}

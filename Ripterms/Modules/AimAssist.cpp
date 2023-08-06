@@ -1,9 +1,11 @@
 #include "Modules.h"
 #include <ImGui/imgui.h>
 
-bool enabled = false;
-float max_distance = 6.0f;
-float max_angle = 120.0f;
+namespace {
+	bool enabled = false;
+	float max_distance = 6.0f;
+	float max_angle = 120.0f;
+}
 
 void Ripterms::Modules::AimAssist::run()
 {
@@ -22,7 +24,7 @@ void Ripterms::Modules::AimAssist::run()
 	EntityPlayer selected_target{};
 	float selected_target_YawToAdd = 0.0f;
 
-	for (EntityPlayer& target : Ripterms::cache->theWorld.getPlayerEntities()) {
+	for (EntityPlayer& target : Ripterms::cache->playerEntities.toVector<EntityPlayer>()) {
 		if (target.isEqualTo(cache->thePlayer)) continue;
 		Maths::Vector3d target_position = target.getPosition();
 		Maths::Vector2d target_required_rotation = Maths::getYawPitch(thePlayer_position, target_position);

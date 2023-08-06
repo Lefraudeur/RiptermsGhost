@@ -1,9 +1,9 @@
 #pragma once
 #include "../../../../java/lang/Object/Object.h"
-#include "../../entity/player/EntityPlayer/EntityPlayer.h"
+#include "../../../../java/util/List/List.h"
 
 class World : public Object {
 public:
 	using Object::Object;
-	virtual std::vector<EntityPlayer> getPlayerEntities();
+	virtual List getPlayerEntities();
 };

@@ -4,5 +4,5 @@
 class WorldClient : public World {
 public:
 	using World::World;
-	std::vector<EntityPlayer> getPlayerEntities() override;
+	List getPlayerEntities() override;
 };
