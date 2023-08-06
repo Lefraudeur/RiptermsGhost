@@ -219,15 +219,6 @@ void Ripterms::clean()
 
 void Ripterms::partialClean()
 {
-	if (majorVersion == MAJOR_1_8_9) {
-		MH_DisableHook(targetnglClear);
-		MH_RemoveHook(targetnglClear);
-	}
-	else if (majorVersion == MAJOR_1_16_5) {
-		MH_DisableHook(targetglClear);
-		MH_RemoveHook(targetglClear);
-	}
-	GUI::clean();
 	MH_Uninitialize();
 	Ripterms::p_env = nullptr;
 	delete Ripterms::cache;
