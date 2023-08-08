@@ -36,6 +36,18 @@ inline const std::string mappings_lunar_1_16_5 = R"(
 		"fields": [],
 		"methods": []
 	},
+	"io/github/lefraudeur/ClassPatcher": {
+		"obfuscated": "io/github/lefraudeur/ClassPatcher",
+		"fields": [],
+		"methods": [
+			{
+				"name": "patchGetMouseOver",
+				"obfuscated": "patchGetMouseOver",
+				"signature": "([BLjava/lang/String;D)[B",
+				"static": true
+			}
+		]
+	},
 	"net/minecraft/client/Minecraft": {
 		"obfuscated": "net/minecraft/client/Minecraft",
 		"fields": [
@@ -146,6 +158,18 @@ inline const std::string mappings_lunar_1_16_5 = R"(
 			}
 		],
 		"methods": []
+	},
+	"net/minecraft/client/renderer/EntityRenderer": {
+		"obfuscated": "net/minecraft/client/renderer/GameRenderer",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getMouseOver",
+				"obfuscated": "pick",
+				"signature": "(F)V",
+				"static": false
+			}
+		]
 	}
 }
 )";

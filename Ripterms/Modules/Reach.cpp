@@ -14,6 +14,7 @@ void Ripterms::Modules::Reach::run()
 	if (!enabled) {
 		if (prev_enabled) {
 			Ripterms::p_tienv->RetransformClasses(1, &Ripterms::classcache->EntityRendererClass.javaClass);
+			prev_reach = 0.0;
 		}
 		prev_enabled = enabled;
 		return;
