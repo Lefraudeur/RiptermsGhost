@@ -10,3 +10,4 @@ Included Example Features :
 - AimAssist
 - Reach
 - Left Clicker
+- Full Bright
