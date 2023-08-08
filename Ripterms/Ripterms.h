@@ -3,6 +3,7 @@
 #include <JNI/jvmti.h>
 #include <chrono>
 #include <Windows.h>
+#include <iostream>
 
 namespace Ripterms
 {

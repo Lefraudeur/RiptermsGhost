@@ -28,8 +28,15 @@ Ripterms::JavaClass::~JavaClass()
 	if (javaClass) p_env->DeleteWeakGlobalRef(javaClass);
 }
 
+void Ripterms::JavaClass::clear()
+{
+	if (javaClass) p_env->DeleteWeakGlobalRef(javaClass);
+	javaClass = nullptr;
+}
+
 bool Ripterms::JavaClass::fill(const std::string& class_path)
 {
+	this->class_path = class_path;
 	auto classjson = mappings[class_path];
 	if (classjson.empty()) {
 		std::cerr << "Can not find info for class " << class_path << " in mappings" << std::endl;
@@ -69,6 +76,15 @@ bool Ripterms::JavaClass::fill(const std::string& class_path)
 		this->methods.insert({ std::string(method["name"]), methodID });
 	}
 	return true;
+}
+
+std::string Ripterms::JavaClass::getObfuscatedMethodName(const std::string& unobf_name)
+{
+	auto classjson = mappings[class_path];
+	for (auto& method : classjson["methods"]) {
+		if (method["name"] == unobf_name) return method["obfuscated"];
+	}
+	return std::string();
 }
 
 bool Ripterms::JavaClass::init()

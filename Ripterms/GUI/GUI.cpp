@@ -16,14 +16,23 @@ namespace {
 	type_wglSwapBuffers target_wglSwapBuffers = nullptr;
 
 	bool hook = true;
+	bool stop = false;
 }
 
 BOOL __stdcall detour_wglSwapBuffers(HDC unnamedParam1)
 {
-	if (!hook) return original_wglSwapBuffers(unnamedParam1);
+	static HGLRC new_context = nullptr;
+	if (!hook) {
+		if (stop) {
+			ImGui_ImplOpenGL3_Shutdown();
+			ImGui_ImplWin32_Shutdown();
+			ImGui::DestroyContext();
+			stop = false;
+		}
+		return original_wglSwapBuffers(unnamedParam1);
+	}
 	static bool isInit = false;
 	static GLint last_viewport[4];
-	static HGLRC new_context = nullptr;
 	static HGLRC old_context = nullptr;
 
 	static RECT originalClip;
@@ -47,6 +56,7 @@ BOOL __stdcall detour_wglSwapBuffers(HDC unnamedParam1)
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		io.IniFilename = nullptr;
 		ImGui::StyleColorsDark();
 		ImGui_ImplOpenGL3_Init();
 		ImGui_ImplWin32_Init(Ripterms::window);
@@ -71,6 +81,8 @@ BOOL __stdcall detour_wglSwapBuffers(HDC unnamedParam1)
 			ImGui::SetWindowSize(ImVec2(400.0f, 300.0f));
 			ImGui::Text("Hi !");
 			Ripterms::Modules::AimAssist::renderGUI();
+			Ripterms::Modules::Reach::renderGUI();
+			Ripterms::Modules::Test::renderGUI();
 		}
 		ImGui::End();
 	}
@@ -125,10 +137,9 @@ void Ripterms::GUI::clean()
 {
 	draw = false;
 	hook = false;
+	stop = true;
 	SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)original_WndProc);
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	while(stop) {}
 	MH_DisableHook(target_wglSwapBuffers);
 	MH_RemoveHook(target_wglSwapBuffers);
 	return;

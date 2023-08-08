@@ -5,12 +5,14 @@
 #include "GUI/GUI.h"
 #include "Modules/Modules.h"
 #include "JavaClass/JavaClass.h"
+#include "Patcher/Patcher.h"
 #include <MinHook.h>
 
 void mainLoop()
 {
 	if (!Ripterms::cache->fillCache()) return;
 	Ripterms::Modules::AimAssist::run();
+	Ripterms::Modules::Reach::run();
 }
 
 namespace {
@@ -30,12 +32,6 @@ void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function
 	static bool runMainLoop = false;
 
 	if (tmp_no_hook) {
-		if (Ripterms::cache) {
-			if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
-			delete Ripterms::cache;
-			delete Ripterms::classcache;
-			Ripterms::cache = nullptr;
-		}
 		return originalnglClear(env, clazz, mask, function_pointer);
 	}
 
@@ -46,10 +42,15 @@ void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::classcache->fillCache();
+		runMainLoop = Ripterms::Patcher::init();
 		runonce = false;
 	}
 	if (GetAsyncKeyState(VK_END)) {
 		tmp_no_hook = true;
+		Ripterms::Patcher::clean();
+		delete Ripterms::cache;
+		delete Ripterms::classcache;
+		if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
 		std::thread a([] {
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			FreeLibrary(Ripterms::module);
@@ -66,12 +67,6 @@ void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 	static bool runMainLoop = false;
 
 	if (tmp_no_hook) {
-		if (Ripterms::cache) {
-			if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
-			delete Ripterms::cache;
-			delete Ripterms::classcache;
-			Ripterms::cache = nullptr;
-		}
 		return originalglClear(env, clazz, mask);
 	}
 
@@ -82,12 +77,17 @@ void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::classcache->fillCache();
+		runMainLoop = Ripterms::Patcher::init();
 		runonce = false;
 	}
 	if (GetAsyncKeyState(VK_END)) {
 		tmp_no_hook = true;
+		Ripterms::Patcher::clean();
+		delete Ripterms::cache;
+		delete Ripterms::classcache;
+		if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
 		std::thread a([] {
-			std::this_thread::sleep_for(std::chrono::milliseconds(5));
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			FreeLibrary(Ripterms::module);
 		});
 		if (a.joinable()) a.detach();
@@ -203,7 +203,6 @@ BOOL Ripterms::init()
 void Ripterms::clean()
 {
 	tmp_no_hook = true;
-	while (cache) {}
 	if (majorVersion == MAJOR_1_8_9) {
 		MH_DisableHook(targetnglClear);
 		MH_RemoveHook(targetnglClear);

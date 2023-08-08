@@ -1,7 +1,7 @@
 #include "Modules.h"
-#include <ImGui/imgui.h>
 
-namespace {
+namespace
+{
 	bool enabled = false;
 	float max_distance = 6.0f;
 	float max_angle = 120.0f;

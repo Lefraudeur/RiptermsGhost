@@ -196,6 +196,9 @@
     <ClCompile Include="Ripterms\Mappings\mappings_lunar_1_16_5.h" />
     <ClCompile Include="Ripterms\Maths\Maths.cpp" />
     <ClCompile Include="Ripterms\Modules\AimAssist.cpp" />
+    <ClCompile Include="Ripterms\Modules\Reach.cpp" />
+    <ClCompile Include="Ripterms\Modules\Test.cpp" />
+    <ClCompile Include="Ripterms\Patcher\Patcher.cpp" />
     <ClCompile Include="Ripterms\Ripterms.cpp" />
     <ClCompile Include="Ripterms\Timer.cpp" />
   </ItemGroup>
@@ -220,7 +223,9 @@
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_7_10.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_8_9.h" />
     <ClInclude Include="Ripterms\Maths\Maths.h" />
+    <ClInclude Include="Ripterms\Patcher\ClassPatcherJar.h" />
     <ClInclude Include="Ripterms\Modules\Modules.h" />
+    <ClInclude Include="Ripterms\Patcher\Patcher.h" />
     <ClInclude Include="Ripterms\Ripterms.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

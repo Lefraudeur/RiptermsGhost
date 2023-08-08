@@ -19,5 +19,6 @@ bool Ripterms::JavaClassCache::fillCache()
 		EntityPlayerClass.fill("net/minecraft/entity/player/EntityPlayer") &&
 		Vec3Class.fill("net/minecraft/util/Vec3") &&
 		WorldClass.fill("net/minecraft/world/World") &&
-		ClassLoaderClass.fill("java/lang/ClassLoader");
+		ClassLoaderClass.fill("java/lang/ClassLoader") &&
+		EntityRendererClass.fill("net/minecraft/client/renderer/EntityRenderer");
 }
