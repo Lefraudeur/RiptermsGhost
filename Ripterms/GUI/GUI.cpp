@@ -10,7 +10,7 @@
 #include "../Modules/Modules.h"
 
 namespace {
-	typedef BOOL(__stdcall* type_wglSwapBuffers)(HDC);
+	typedef BOOL(WINAPI* type_wglSwapBuffers)(HDC);
 	type_wglSwapBuffers original_wglSwapBuffers = nullptr;
 	WNDPROC original_WndProc = nullptr;
 	type_wglSwapBuffers target_wglSwapBuffers = nullptr;
@@ -19,7 +19,7 @@ namespace {
 	bool stop = false;
 }
 
-BOOL __stdcall detour_wglSwapBuffers(HDC unnamedParam1)
+BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 {
 	static HGLRC new_context = nullptr;
 	if (!hook) {
@@ -87,7 +87,7 @@ BOOL __stdcall detour_wglSwapBuffers(HDC unnamedParam1)
 }
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-LRESULT detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (msg == WM_KEYDOWN && wParam == VK_INSERT) {
 		Ripterms::GUI::draw = !Ripterms::GUI::draw;
 	}
