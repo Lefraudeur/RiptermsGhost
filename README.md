@@ -9,3 +9,4 @@ compatible with lunarclient 1.7.10, 1.8.9, 1.16.5 and forge 1.7.10 (tested on pa
 Included Example Features :
 - AimAssist
 - Reach
+- Left Clicker
