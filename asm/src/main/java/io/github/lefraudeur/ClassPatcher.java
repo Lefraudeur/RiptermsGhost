@@ -4,7 +4,7 @@ import org.objectweb.asm.*;
 
 public class ClassPatcher {
     public static byte[] patchGetMouseOver(byte[] classBytes, String methodName, double reach){
-        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassWriter classWriter = new ClassWriter(0);
         ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM4, classWriter) {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
