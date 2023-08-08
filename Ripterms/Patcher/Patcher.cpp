@@ -2,6 +2,7 @@
 #include "../Ripterms.h"
 #include "ClassPatcherJar.h"
 #include "../../java/lang/ClassLoader/ClassLoader.h"
+#include <fstream>
 
 namespace
 {
@@ -24,6 +25,11 @@ namespace
 	{
 		if (should_patchGetMouseOver && jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->EntityRendererClass.javaClass)) {
 			std::cout << "Patching getMouseOver" << std::endl;
+			/*
+				std::ofstream file("c:/Dump/dump.class", std::ios::binary);
+				file.write((const char*)class_data, class_data_len);
+				file.close();
+			*/
 			should_patchGetMouseOver = false;
 			jbyteArray original_class_bytes = jni_env->NewByteArray(class_data_len);
 			jni_env->SetByteArrayRegion(original_class_bytes, 0, class_data_len, (const jbyte*)class_data);

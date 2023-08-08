@@ -5,11 +5,11 @@ import org.objectweb.asm.*;
 public class ClassPatcher {
     public static byte[] patchGetMouseOver(byte[] classBytes, String methodName, double reach){
         ClassWriter classWriter = new ClassWriter(0);
-        ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM4, classWriter) {
+        ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM9, classWriter) {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
                 if (name.equals(methodName)) {
-                    return new MethodVisitor(Opcodes.ASM4, cv.visitMethod(access, name, descriptor, signature, exceptions)) {
+                    return new MethodVisitor(Opcodes.ASM9, cv.visitMethod(access, name, descriptor, signature, exceptions)) {
                         @Override
                         public void visitLdcInsn(Object value) {
                             if (value instanceof Double) {

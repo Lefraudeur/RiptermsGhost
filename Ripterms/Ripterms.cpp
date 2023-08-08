@@ -202,16 +202,8 @@ BOOL Ripterms::init()
 
 void Ripterms::clean()
 {
-	tmp_no_hook = true;
-	if (majorVersion == MAJOR_1_8_9) {
-		MH_DisableHook(targetnglClear);
-		MH_RemoveHook(targetnglClear);
-	}
-	else if (majorVersion == MAJOR_1_16_5) {
-		MH_DisableHook(targetglClear);
-		MH_RemoveHook(targetglClear);
-	}
 	GUI::clean();
+	MH_DisableHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
 	Ripterms::p_env = nullptr;
 }

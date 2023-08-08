@@ -23,12 +23,6 @@ BOOL __stdcall detour_wglSwapBuffers(HDC unnamedParam1)
 {
 	static HGLRC new_context = nullptr;
 	if (!hook) {
-		if (stop) {
-			ImGui_ImplOpenGL3_Shutdown();
-			ImGui_ImplWin32_Shutdown();
-			ImGui::DestroyContext();
-			stop = false;
-		}
 		return original_wglSwapBuffers(unnamedParam1);
 	}
 	static bool isInit = false;
@@ -137,10 +131,9 @@ void Ripterms::GUI::clean()
 {
 	draw = false;
 	hook = false;
-	stop = true;
 	SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)original_WndProc);
-	while(stop) {}
-	MH_DisableHook(target_wglSwapBuffers);
-	MH_RemoveHook(target_wglSwapBuffers);
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 	return;
 }
