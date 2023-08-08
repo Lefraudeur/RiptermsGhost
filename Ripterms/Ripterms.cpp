@@ -10,10 +10,12 @@
 
 void mainLoop()
 {
-	if (!Ripterms::cache->fillCache()) return;
+	static Ripterms::Timer timer(std::chrono::milliseconds(1));
+	if (!timer.isElapsed() || !Ripterms::cache->fillCache()) return;
 	Ripterms::Modules::AimAssist::run();
 	Ripterms::Modules::Reach::run();
 	Ripterms::Modules::LeftClicker::run();
+	Ripterms::Modules::FullBright::run();
 }
 
 namespace {
@@ -203,6 +205,7 @@ BOOL Ripterms::init()
 
 void Ripterms::clean()
 {
+	Ripterms::Modules::FullBright::disable();
 	GUI::clean();
 	MH_DisableHook(MH_ALL_HOOKS);
 	MH_Uninitialize();

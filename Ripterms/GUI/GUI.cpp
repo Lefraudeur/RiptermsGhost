@@ -69,6 +69,7 @@ BOOL __stdcall detour_wglSwapBuffers(HDC unnamedParam1)
 			Ripterms::Modules::Reach::renderGUI();
 			Ripterms::Modules::Test::renderGUI();
 			Ripterms::Modules::LeftClicker::renderGUI();
+			Ripterms::Modules::FullBright::renderGUI();
 		}
 		ImGui::End();
 	}

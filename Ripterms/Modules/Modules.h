@@ -30,5 +30,11 @@ namespace Ripterms
 			void run();
 			void renderGUI();
 		}
+		namespace FullBright
+		{
+			void run();
+			void renderGUI();
+			void disable();
+		}
 	}
 }

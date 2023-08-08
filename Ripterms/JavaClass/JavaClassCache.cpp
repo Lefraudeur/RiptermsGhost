@@ -20,5 +20,6 @@ bool Ripterms::JavaClassCache::fillCache()
 		Vec3Class.fill("net/minecraft/util/Vec3") &&
 		WorldClass.fill("net/minecraft/world/World") &&
 		ClassLoaderClass.fill("java/lang/ClassLoader") &&
-		EntityRendererClass.fill("net/minecraft/client/renderer/EntityRenderer");
+		EntityRendererClass.fill("net/minecraft/client/renderer/EntityRenderer") &&
+		GameSettingsClass.fill("net/minecraft/client/settings/GameSettings");
 }

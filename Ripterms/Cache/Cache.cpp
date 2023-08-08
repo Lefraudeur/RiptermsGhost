@@ -21,6 +21,7 @@ bool Ripterms::Cache::fillCache()
 		prev_thePlayer = thePlayer;
 		theWorld = theMinecraft.getTheWorld();
 		playerEntities = theWorld.getPlayerEntities();
+		gameSettings = theMinecraft.getGameSettings();
 	}
 	return true;
 }

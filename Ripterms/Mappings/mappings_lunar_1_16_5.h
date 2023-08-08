@@ -68,6 +68,12 @@ inline const std::string mappings_lunar_1_16_5 = R"(
 				"obfuscated": "level",
 				"signature": "Lnet/minecraft/client/multiplayer/ClientLevel;",
 				"static": false
+			},
+			{
+				"name": "gameSettings",
+				"obfuscated": "options",
+				"signature": "Lnet/minecraft/client/Options;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -170,6 +176,18 @@ inline const std::string mappings_lunar_1_16_5 = R"(
 				"static": false
 			}
 		]
+	},
+	"net/minecraft/client/settings/GameSettings": {
+		"obfuscated": "net/minecraft/client/Options",
+		"fields": [
+			{
+				"name": "gammaSetting",
+				"obfuscated": "gamma",
+				"signature": "D",
+				"static": false
+			}
+		],
+		"methods": []
 	}
 }
 )";

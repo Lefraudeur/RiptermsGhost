@@ -2,6 +2,7 @@
 #include "../../../../java/lang/Object/Object.h"
 #include "../entity/EntityPlayerSP/EntityPlayerSP.h"
 #include "../multiplayer/WorldClient/WorldClient.h"
+#include "../settings/GameSettings/GameSettings.h"
 
 class Minecraft : public Object {
 public:
@@ -9,4 +10,5 @@ public:
 	static Minecraft getTheMinecraft();
 	EntityPlayerSP getThePlayer();
 	WorldClient getTheWorld();
+	GameSettings getGameSettings();
 };

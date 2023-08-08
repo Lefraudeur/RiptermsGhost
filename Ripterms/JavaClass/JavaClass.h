@@ -44,6 +44,7 @@ namespace Ripterms
 		JavaClass ClassLoaderClass{};
 		JavaClass EntityRendererClass{};
 		JavaClass ClassPatcherClass{};
+		JavaClass GameSettingsClass{};
 	};
 
 	inline JavaClassCache* classcache = new JavaClassCache();

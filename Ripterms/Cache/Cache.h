@@ -13,6 +13,7 @@ namespace Ripterms
 		EntityPlayerSP thePlayer{};
 		WorldClient theWorld{};
 		List playerEntities{};
+		GameSettings gameSettings{};
 		bool fillCache();
 	private:
 		EntityPlayerSP prev_thePlayer{};

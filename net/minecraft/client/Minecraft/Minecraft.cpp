@@ -16,3 +16,9 @@ WorldClient Minecraft::getTheWorld()
 	if (!this->instance) return WorldClient();
 	return WorldClient(Ripterms::p_env->GetObjectField(this->instance, Ripterms::classcache->MinecraftClass.fields["theWorld"]));
 }
+
+GameSettings Minecraft::getGameSettings()
+{
+	if (!instance) return GameSettings();
+	return GameSettings(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->MinecraftClass.fields["gameSettings"]));
+}

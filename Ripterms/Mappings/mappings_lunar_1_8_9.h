@@ -68,6 +68,12 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 				"obfuscated": "theWorld",
 				"signature": "Lnet/minecraft/client/multiplayer/WorldClient;",
 				"static": false
+			},
+			{
+				"name": "gameSettings",
+				"obfuscated": "gameSettings",
+				"signature": "Lnet/minecraft/client/settings/GameSettings;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -181,6 +187,18 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 				"static": false
 			}
 		]
+	},
+	"net/minecraft/client/settings/GameSettings": {
+		"obfuscated": "net/minecraft/client/settings/GameSettings",
+		"fields": [
+			{
+				"name": "gammaSetting",
+				"obfuscated": "gammaSetting",
+				"signature": "F",
+				"static": false
+			}
+		],
+		"methods": []
 	}
 }
 )";

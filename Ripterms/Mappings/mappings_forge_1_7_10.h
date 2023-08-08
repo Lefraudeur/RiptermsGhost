@@ -68,6 +68,12 @@ inline const std::string mappings_forge_1_7_10 = R"(
 				"obfuscated": "field_71441_e",
 				"signature": "Lnet/minecraft/client/multiplayer/WorldClient;",
 				"static": false
+			},
+			{
+				"name": "gameSettings",
+				"obfuscated": "field_71474_y",
+				"signature": "Lnet/minecraft/client/settings/GameSettings;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -181,6 +187,18 @@ inline const std::string mappings_forge_1_7_10 = R"(
 				"static": false
 			}
 		]
+	},
+	"net/minecraft/client/settings/GameSettings": {
+		"obfuscated": "net/minecraft/client/settings/GameSettings",
+		"fields": [
+			{
+				"name": "gammaSetting",
+				"obfuscated": "field_74333_Y",
+				"signature": "F",
+				"static": false
+			}
+		],
+		"methods": []
 	}
 }
 )";
