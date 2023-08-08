@@ -196,6 +196,7 @@
     <ClCompile Include="Ripterms\Mappings\mappings_lunar_1_16_5.h" />
     <ClCompile Include="Ripterms\Maths\Maths.cpp" />
     <ClCompile Include="Ripterms\Modules\AimAssist.cpp" />
+    <ClCompile Include="Ripterms\Modules\LeftClicker.cpp" />
     <ClCompile Include="Ripterms\Modules\Reach.cpp" />
     <ClCompile Include="Ripterms\Modules\Test.cpp" />
     <ClCompile Include="Ripterms\Patcher\Patcher.cpp" />

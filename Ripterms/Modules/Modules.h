@@ -25,5 +25,10 @@ namespace Ripterms
 			void run();
 			void renderGUI();
 		}
+		namespace LeftClicker
+		{
+			void run();
+			void renderGUI();
+		}
 	}
 }

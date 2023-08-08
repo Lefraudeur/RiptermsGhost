@@ -117,6 +117,9 @@
     <ClCompile Include="Ripterms\Modules\Reach.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Ripterms\Modules\LeftClicker.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ripterms\Ripterms.h">

@@ -13,6 +13,7 @@ void mainLoop()
 	if (!Ripterms::cache->fillCache()) return;
 	Ripterms::Modules::AimAssist::run();
 	Ripterms::Modules::Reach::run();
+	Ripterms::Modules::LeftClicker::run();
 }
 
 namespace {
