@@ -10,7 +10,7 @@ namespace
 void Ripterms::Modules::AimAssist::run()
 {
 	static EntityPlayer prev_selected_target{};
-	if (!enabled || !GetAsyncKeyState(VK_LBUTTON) || GUI::draw) {
+	if (!enabled || !(GetKeyState(VK_LBUTTON) & 0x8000) || GUI::draw) {
 		prev_selected_target.clear();
 		return;
 	}
@@ -49,11 +49,9 @@ void Ripterms::Modules::AimAssist::run()
 
 	if (selected_target.isValid()) {
 		prev_selected_target = selected_target;
-		if (std::abs(selected_target_YawToAdd) > 3.5f) {
+		if (std::abs(selected_target_YawToAdd) > 4.0f) {
 			std::mt19937 gen(rd());
-			std::uniform_int_distribution<> range_pitch(-5, +5);
-			thePlayer_rotation.y += range_pitch(gen) / 10.0f;
-			std::uniform_int_distribution<> range_yaw(39, 211);
+			std::uniform_int_distribution<> range_yaw(-8, 198);
 			thePlayer_rotation.x += (selected_target_YawToAdd > 0.0f ? range_yaw(gen) / 100.0f : -range_yaw(gen) / 100.0f);
 			cache->thePlayer.setRotation(thePlayer_rotation);
 		}

@@ -10,7 +10,7 @@ namespace
 void Ripterms::Modules::LeftClicker::run()
 {
 	static Timer timer(std::chrono::milliseconds(1000/min_cps));
-	if (!enabled || Ripterms::GUI::draw || !GetAsyncKeyState(VK_LBUTTON) || !timer.isElapsed()) return;
+	if (!enabled || Ripterms::GUI::draw || !(GetKeyState(VK_LBUTTON) & 0x8000) || !timer.isElapsed()) return;
 	POINT cursorPos{};
 	GetCursorPos(&cursorPos);
 	SendMessageA(Ripterms::window, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));

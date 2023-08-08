@@ -26,7 +26,6 @@ BOOL __stdcall detour_wglSwapBuffers(HDC unnamedParam1)
 		return original_wglSwapBuffers(unnamedParam1);
 	}
 	static bool isInit = false;
-	static GLint last_viewport[4];
 	static HGLRC old_context = nullptr;
 
 	static RECT originalClip;
@@ -35,16 +34,8 @@ BOOL __stdcall detour_wglSwapBuffers(HDC unnamedParam1)
 	GLint viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
 
-	if (!isInit || viewport[2] != last_viewport[2] || viewport[3] != last_viewport[3]) {
-		memcpy(last_viewport, viewport, sizeof(GLint) * 4);
+	if (!isInit) {
 		old_context = wglGetCurrentContext();
-		if (new_context) {
-			wglDeleteContext(new_context);
-			new_context = nullptr;
-			ImGui_ImplOpenGL3_Shutdown();
-			ImGui_ImplWin32_Shutdown();
-			ImGui::DestroyContext();
-		}
 		new_context = wglCreateContext(unnamedParam1);
 
 		ImGui::CreateContext();
