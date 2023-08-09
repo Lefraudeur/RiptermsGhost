@@ -15,3 +15,6 @@ Included Example Features :
 - Reach (takes up to 10s to apply, because uses jvmti to patch loaded classes, which makes the game lag, and can sometime crash)
 - Left Clicker
 - Full Bright
+
+insert to open the gui
+end key to self destruct
