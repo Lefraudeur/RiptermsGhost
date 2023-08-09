@@ -8,6 +8,6 @@ compatible with lunarclient 1.7.10, 1.8.9, 1.16.5 and forge 1.7.10 (tested on pa
 
 Included Example Features :
 - AimAssist
-- Reach
+- Reach (takes 10s to apply, because uses jvmti to patch loaded classes, which makes the game lag, and can sometime crash)
 - Left Clicker
 - Full Bright
