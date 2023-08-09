@@ -10,7 +10,7 @@ void Ripterms::Modules::Test::run()
 	else {
 		std::cout << "not found" << std::endl;
 	}
-	if (lol) Ripterms::p_env->DeleteWeakGlobalRef(lol);
+	if (lol) Ripterms::p_env->DeleteGlobalRef(lol);
 }
 
 void Ripterms::Modules::Test::renderGUI()

@@ -3,7 +3,7 @@
 Object::Object(jobject instance)
 {
 	if (instance) {
-		this->instance = Ripterms::p_env->NewWeakGlobalRef(instance);
+		this->instance = Ripterms::p_env->NewGlobalRef(instance);
 		Ripterms::p_env->DeleteLocalRef(instance);
 	}
 	else this->instance = nullptr;
@@ -11,7 +11,7 @@ Object::Object(jobject instance)
 
 Object::Object(const Object& other_Object)
 {
-	if (other_Object.instance) this->instance = Ripterms::p_env->NewWeakGlobalRef(other_Object.instance);
+	if (other_Object.instance) this->instance = Ripterms::p_env->NewGlobalRef(other_Object.instance);
 	else this->instance = nullptr;
 }
 
@@ -21,17 +21,17 @@ Object::Object()
 
 Object& Object::operator=(const Object& other_Object)
 {
-	if (this->instance) Ripterms::p_env->DeleteWeakGlobalRef(this->instance);
-	if (other_Object.instance) this->instance = Ripterms::p_env->NewWeakGlobalRef(other_Object.instance);
+	if (this->instance) Ripterms::p_env->DeleteGlobalRef(this->instance);
+	if (other_Object.instance) this->instance = Ripterms::p_env->NewGlobalRef(other_Object.instance);
 	else this->instance = nullptr;
 	return *this;
 }
 
 Object& Object::operator=(jobject instance)
 {
-	if (this->instance) Ripterms::p_env->DeleteWeakGlobalRef(this->instance);
+	if (this->instance) Ripterms::p_env->DeleteGlobalRef(this->instance);
 	if (instance) {
-		this->instance = Ripterms::p_env->NewWeakGlobalRef(instance);
+		this->instance = Ripterms::p_env->NewGlobalRef(instance);
 		Ripterms::p_env->DeleteLocalRef(instance);
 	}
 	else this->instance = nullptr;
@@ -62,14 +62,14 @@ bool Object::isValid()
 Object::~Object()
 {
 	if (!Ripterms::p_env) return;
-	if (instance) Ripterms::p_env->DeleteWeakGlobalRef(instance);
+	if (instance) Ripterms::p_env->DeleteGlobalRef(instance);
 }
 
 void Object::clear()
 {
 	if (!Ripterms::p_env) return;
 	if (this->instance) {
-		Ripterms::p_env->DeleteWeakGlobalRef(this->instance);
+		Ripterms::p_env->DeleteGlobalRef(this->instance);
 		this->instance = nullptr;
 	}
 }

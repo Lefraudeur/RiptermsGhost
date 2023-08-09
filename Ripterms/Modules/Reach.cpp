@@ -9,7 +9,7 @@ namespace
 
 void Ripterms::Modules::Reach::run()
 {
-	static Timer timer(std::chrono::milliseconds(10000));
+	static Timer timer(std::chrono::milliseconds(5000));
 	static bool prev_enabled = false;
 	static double prev_reach = 0.0;
 	if (!enabled) {

@@ -10,6 +10,6 @@ Change mappings json to add new versions
 
 Included Example Features :
 - AimAssist
-- Reach (takes 10s to apply, because uses jvmti to patch loaded classes, which makes the game lag, and can sometime crash)
+- Reach (takes up to 10s to apply, because uses jvmti to patch loaded classes, which makes the game lag, and can sometime crash)
 - Left Clicker
 - Full Bright
