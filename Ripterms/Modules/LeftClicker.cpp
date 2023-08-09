@@ -24,14 +24,14 @@ void Ripterms::Modules::LeftClicker::renderGUI()
 {
 	static bool display_options = false;
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(220.0f, ImGui::GetStyle().FramePadding.y));
 	ImGui::Checkbox("Left Clicker", &enabled);
 	ImGui::PopStyleVar();
 	ImGui::PopStyleVar();
 	if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) display_options = !display_options;
 	ImGui::SameLine();
 	ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30.0f);
-	if (ImGui::ArrowButton("test", ImGuiDir_Down)) display_options = !display_options;
+	if (ImGui::ArrowButton("lc", ImGuiDir_Down)) display_options = !display_options;
 	if (display_options) {
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 		ImGui::BeginGroup();

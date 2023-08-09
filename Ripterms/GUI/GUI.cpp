@@ -67,9 +67,9 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 			ImGui::Text("Hi !");
 			Ripterms::Modules::AimAssist::renderGUI();
 			Ripterms::Modules::Reach::renderGUI();
-			Ripterms::Modules::Test::renderGUI();
 			Ripterms::Modules::LeftClicker::renderGUI();
 			Ripterms::Modules::FullBright::renderGUI();
+			Ripterms::Modules::Test::renderGUI();
 		}
 		ImGui::End();
 	}
