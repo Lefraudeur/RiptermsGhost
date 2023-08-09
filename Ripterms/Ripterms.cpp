@@ -67,10 +67,11 @@ void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 		return originalglClear(env, clazz, mask);
 	}
 
+	Ripterms::p_env = env;
+
 	static bool runonce = true;
 	if (runonce)
 	{
-		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::classcache->fillCache();
