@@ -141,7 +141,11 @@ BOOL Ripterms::init(HMODULE dll, FILE* fbuffer1, FILE* fbuffer2, FILE* fbuffer3)
 		version = LUNAR_1_7_10;
 		majorVersion = MAJOR_1_8_9;
 	}
-	else if (windowName.find("Lunar Client 1.16.5") != std::string::npos) {
+	else if (
+		windowName.find("Lunar Client 1.16.5") != std::string::npos ||
+		windowName.find("Lunar Client 1.17.1") != std::string::npos ||
+		windowName.find("Lunar Client 1.18.2") != std::string::npos
+	) {
 		version = LUNAR_1_16_5;
 		majorVersion = MAJOR_1_16_5;
 	}
