@@ -13,8 +13,8 @@ void Ripterms::Modules::FullBright::run()
 		return;
 	}
 	float gamma = Ripterms::cache->gameSettings.getGammaSetting();
-	if ( gamma != 100.0f) {
-		Ripterms::cache->gameSettings.setGammaSetting(100.0f);
+	if ( gamma != 80.0f) {
+		Ripterms::cache->gameSettings.setGammaSetting(80.0f);
 		old_gamma = gamma;
 	}
 }
