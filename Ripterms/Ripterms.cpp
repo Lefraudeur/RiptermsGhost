@@ -28,6 +28,8 @@ namespace {
 	glClearType targetglClear = nullptr;
 
 	bool tmp_no_hook = false;
+
+	FILE* console_buffer1 = nullptr, * console_buffer2 = nullptr, * console_buffer3 = nullptr;
 }
 
 void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
@@ -38,10 +40,11 @@ void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function
 		return originalnglClear(env, clazz, mask, function_pointer);
 	}
 
+	Ripterms::p_env = env;
+
 	static bool runonce = true;
 	if (runonce)
 	{
-		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::classcache->fillCache();
@@ -49,16 +52,7 @@ void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function
 		runonce = false;
 	}
 	if (GetAsyncKeyState(VK_END)) {
-		tmp_no_hook = true;
-		Ripterms::Patcher::clean();
-		delete Ripterms::cache;
-		delete Ripterms::classcache;
-		if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
-		std::thread a([] {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-			FreeLibrary(Ripterms::module);
-		});
-		if (a.joinable()) a.detach();
+		Ripterms::clean();
 		return originalnglClear(env, clazz, mask, function_pointer);
 	}
 	if (runMainLoop) mainLoop();
@@ -84,16 +78,7 @@ void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 		runonce = false;
 	}
 	if (GetAsyncKeyState(VK_END)) {
-		tmp_no_hook = true;
-		Ripterms::Patcher::clean();
-		delete Ripterms::cache;
-		delete Ripterms::classcache;
-		if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
-		std::thread a([] {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
-			FreeLibrary(Ripterms::module);
-		});
-		if (a.joinable()) a.detach();
+		Ripterms::clean();
 		return originalglClear(env, clazz, mask);
 	}
 	if (runMainLoop) mainLoop();
@@ -139,8 +124,12 @@ std::string getWindowName(HWND hwnd)
 }
 
 
-BOOL Ripterms::init()
+BOOL Ripterms::init(HMODULE dll, FILE* fbuffer1, FILE* fbuffer2, FILE* fbuffer3)
 {
+	Ripterms::module = dll;
+	console_buffer1 = fbuffer1;
+	console_buffer2 = fbuffer2;
+	console_buffer3 = fbuffer3;
 	Ripterms::window = getCurrentWindow();
 	std::string windowName = getWindowName(window);
 	if (windowName.find("Lunar Client 1.8.9") != std::string::npos) {
@@ -205,11 +194,25 @@ BOOL Ripterms::init()
 
 void Ripterms::clean()
 {
+	tmp_no_hook = true;
 	Ripterms::Modules::FullBright::disable();
-	GUI::clean();
-	MH_DisableHook(MH_ALL_HOOKS);
-	MH_Uninitialize();
-	Ripterms::p_env = nullptr;
+	Ripterms::Patcher::clean();
+	delete Ripterms::cache;
+	delete Ripterms::classcache;
+	if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
+	std::thread a([] {
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		GUI::clean();
+		MH_DisableHook(MH_ALL_HOOKS);
+		MH_Uninitialize();
+		fclose(console_buffer1);
+		fclose(console_buffer2);
+		fclose(console_buffer3);
+		FreeConsole();
+		Ripterms::p_env = nullptr;
+		FreeLibrary(Ripterms::module);
+	});
+	a.detach();
 }
 
 void Ripterms::partialClean()

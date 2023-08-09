@@ -35,7 +35,7 @@ namespace Ripterms
 		std::chrono::milliseconds targetMs;
 	};
 	
-	BOOL init();
+	BOOL init(HMODULE dll, FILE* fbuffer1, FILE* fbuffer2, FILE* fbuffer3);
 	void clean();
 	void partialClean();
 }

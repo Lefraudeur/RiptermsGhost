@@ -30,7 +30,6 @@ namespace
 				file.write((const char*)class_data, class_data_len);
 				file.close();
 			*/
-			should_patchGetMouseOver = false;
 			jbyteArray original_class_bytes = jni_env->NewByteArray(class_data_len);
 			jni_env->SetByteArrayRegion(original_class_bytes, 0, class_data_len, (const jbyte*)class_data);
 			jstring methodName = jni_env->NewStringUTF(Ripterms::classcache->EntityRendererClass.getObfuscatedMethodName("getMouseOver").c_str());
@@ -47,6 +46,7 @@ namespace
 			jvmti_env->Allocate(*new_class_data_len, new_class_data);
 			jni_env->GetByteArrayRegion(new_class_bytes, 0, *new_class_data_len, (jbyte*)*new_class_data);
 			jni_env->DeleteLocalRef(new_class_bytes);
+			should_patchGetMouseOver = false;
 		}
 	}
 }
@@ -99,5 +99,5 @@ void Ripterms::Patcher::patchGetMouseOver(double reach)
 	should_patchGetMouseOver = true;
 	desired_reach = reach;
 	Ripterms::p_tienv->RetransformClasses(1, &Ripterms::classcache->EntityRendererClass.javaClass);
-	should_patchGetMouseOver = false;
+	while (should_patchGetMouseOver);
 }

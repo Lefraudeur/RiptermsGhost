@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Ripterms/Ripterms.h"
 
+
 BOOL WINAPI DllMain(
     HINSTANCE hinstDLL,  // handle to DLL module
     DWORD fdwReason,     // reason for calling function
@@ -19,10 +20,8 @@ BOOL WINAPI DllMain(
         freopen_s(&fbuffer1, "CONOUT$", "w", stdout);
         freopen_s(&fbuffer2, "CONOUT$", "w", stderr);
         freopen_s(&fbuffer3, "CONIN$", "r", stdin);
-        Ripterms::module = hinstDLL;
-        if (Ripterms::init() == FALSE) {
+        if (Ripterms::init(hinstDLL, fbuffer1, fbuffer2, fbuffer3) == FALSE) {
             std::cin.ignore();
-            Ripterms::clean();
             fclose(fbuffer1);
             fclose(fbuffer2);
             fclose(fbuffer3);
@@ -51,11 +50,6 @@ BOOL WINAPI DllMain(
             FreeConsole();
             break;
         }
-        Ripterms::clean();
-        fclose(fbuffer1);
-        fclose(fbuffer2);
-        fclose(fbuffer3);
-        FreeConsole();
         // Perform any necessary cleanup.
         break;
     }

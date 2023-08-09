@@ -4,11 +4,12 @@
 namespace
 {
 	bool enabled = false;
-	float reach_distance = 5.0f;
+	float reach_distance = 4.0f;
 }
 
 void Ripterms::Modules::Reach::run()
 {
+	static Timer timer(std::chrono::milliseconds(10000));
 	static bool prev_enabled = false;
 	static double prev_reach = 0.0;
 	if (!enabled) {
@@ -20,7 +21,6 @@ void Ripterms::Modules::Reach::run()
 		return;
 	}
 	prev_enabled = enabled;
-	static Timer timer(std::chrono::milliseconds(3000));
 	if (!timer.isElapsed() || prev_reach == reach_distance) return;
 	prev_reach = reach_distance;
 	Ripterms::Patcher::patchGetMouseOver(reach_distance);
@@ -41,7 +41,7 @@ void Ripterms::Modules::Reach::renderGUI()
 	if (display_options) {
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderFloat("Reach Distance", &reach_distance, 3.0f, 5.0f, "%.1f");
+		ImGui::SliderFloat("Reach Distance", &reach_distance, 3.0f, 4.0f, "%.1f");
 		ImGui::EndGroup();
 	}
 }
