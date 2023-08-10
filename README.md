@@ -12,7 +12,8 @@ Change mappings to add new versions
 
 Included Example Features :
 - AimAssist
-- Reach (takes up to 10s to apply, because uses jvmti to patch loaded classes, which makes the game lag, and can sometime crash)
+- Reach (takes up to 10s to apply, because uses jvmti to patch loaded classes, which makes the game lag, and can sometime crash) see asm folder.
+ The loaded class is patched each time you change reach, that's the only way I found to unload the Patcher class on self distruct
 - Left Clicker
 - Full Bright
 
