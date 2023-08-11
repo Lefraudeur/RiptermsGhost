@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-inline const std::string mappings_lunar_1_8_9 = R"(
+const std::string mappings_lunar_1_8_9 = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -36,6 +36,23 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 		"fields": [],
 		"methods": []
 	},
+	"java/util/Map": {
+		"obfuscated": "java/util/Map",
+		"fields": [],
+		"methods": [
+			{
+				"name": "put",
+				"obfuscated": "put",
+				"signature": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+				"static": false
+			}
+		]
+	},
+	"java/lang/String": {
+		"obfuscated": "java/lang/String",
+		"fields": [],
+		"methods": []
+	},
 	"io/github/lefraudeur/ClassPatcher": {
 		"obfuscated": "io/github/lefraudeur/ClassPatcher",
 		"fields": [],
@@ -44,6 +61,12 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 				"name": "patchGetMouseOver",
 				"obfuscated": "patchGetMouseOver",
 				"signature": "([BLjava/lang/String;D)[B",
+				"static": true
+			},
+			{
+				"name": "patchGetClientModName",
+				"obfuscated": "patchGetClientModName",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;)[B",
 				"static": true
 			}
 		]
@@ -74,10 +97,15 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 				"obfuscated": "gameSettings",
 				"signature": "Lnet/minecraft/client/settings/GameSettings;",
 				"static": false
+			},
+			{
+				"name": "usageSnooper",
+				"obfuscated": "usageSnooper",
+				"signature": "Lnet/minecraft/profiler/PlayerUsageSnooper;",
+				"static": false
 			}
 		],
-		"methods": [
-		]
+		"methods": []
 	},
 	"net/minecraft/client/entity/EntityPlayerSP": {
 		"obfuscated": "net/minecraft/client/entity/EntityPlayerSP",
@@ -195,6 +223,30 @@ inline const std::string mappings_lunar_1_8_9 = R"(
 				"name": "gammaSetting",
 				"obfuscated": "gammaSetting",
 				"signature": "F",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/client/ClientBrandRetriever": {
+		"obfuscated": "net/minecraft/client/ClientBrandRetriever",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getClientModName",
+				"obfuscated": "getClientModName",
+				"signature": "()Ljava/lang/String;",
+				"static": true
+			}
+		]
+	},
+	"net/minecraft/profiler/PlayerUsageSnooper": {
+		"obfuscated": "net/minecraft/profiler/PlayerUsageSnooper",
+		"fields": [
+			{
+				"name": "snooperStats",
+				"obfuscated": "snooperStats",
+				"signature": "Ljava/util/Map;",
 				"static": false
 			}
 		],

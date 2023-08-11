@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-inline const std::string mappings_forge_1_7_10 = R"(
+const std::string mappings_forge_1_7_10 = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -36,6 +36,23 @@ inline const std::string mappings_forge_1_7_10 = R"(
 		"fields": [],
 		"methods": []
 	},
+	"java/util/Map": {
+		"obfuscated": "java/util/Map",
+		"fields": [],
+		"methods": [
+			{
+				"name": "put",
+				"obfuscated": "put",
+				"signature": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+				"static": false
+			}
+		]
+	},
+	"java/lang/String": {
+		"obfuscated": "java/lang/String",
+		"fields": [],
+		"methods": []
+	},
 	"io/github/lefraudeur/ClassPatcher": {
 		"obfuscated": "io/github/lefraudeur/ClassPatcher",
 		"fields": [],
@@ -44,6 +61,12 @@ inline const std::string mappings_forge_1_7_10 = R"(
 				"name": "patchGetMouseOver",
 				"obfuscated": "patchGetMouseOver",
 				"signature": "([BLjava/lang/String;D)[B",
+				"static": true
+			},
+			{
+				"name": "patchGetClientModName",
+				"obfuscated": "patchGetClientModName",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;)[B",
 				"static": true
 			}
 		]
@@ -73,6 +96,12 @@ inline const std::string mappings_forge_1_7_10 = R"(
 				"name": "gameSettings",
 				"obfuscated": "field_71474_y",
 				"signature": "Lnet/minecraft/client/settings/GameSettings;",
+				"static": false
+			},
+			{
+				"name": "usageSnooper",
+				"obfuscated": "field_71427_U",
+				"signature": "Lnet/minecraft/profiler/PlayerUsageSnooper;",
 				"static": false
 			}
 		],
@@ -195,6 +224,30 @@ inline const std::string mappings_forge_1_7_10 = R"(
 				"name": "gammaSetting",
 				"obfuscated": "field_74333_Y",
 				"signature": "F",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/client/ClientBrandRetriever": {
+		"obfuscated": "net/minecraft/client/ClientBrandRetriever",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getClientModName",
+				"obfuscated": "getClientModName",
+				"signature": "()Ljava/lang/String;",
+				"static": true
+			}
+		]
+	},
+	"net/minecraft/profiler/PlayerUsageSnooper": {
+		"obfuscated": "net/minecraft/profiler/PlayerUsageSnooper",
+		"fields": [
+			{
+				"name": "snooperStats",
+				"obfuscated": "field_152774_b",
+				"signature": "Ljava/util/Map;",
 				"static": false
 			}
 		],

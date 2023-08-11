@@ -74,7 +74,7 @@ void Object::clear()
 	}
 }
 
-jobject Object::getInstance()
+jobject Object::getInstance() const
 {
 	return instance;
 }

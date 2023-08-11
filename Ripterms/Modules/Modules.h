@@ -36,5 +36,10 @@ namespace Ripterms
 			void renderGUI();
 			void disable();
 		}
+		namespace ClientBrandChanger
+		{
+			void renderGUI();
+			void disable();
+		}
 	}
 }

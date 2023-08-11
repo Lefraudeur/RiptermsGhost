@@ -7,13 +7,18 @@
 namespace
 {
 	bool should_patchGetMouseOver = false;
+	bool should_patchGetClientModName = false;
+
 	double desired_reach = 0.0;
+	std::string desired_client_name{};
+
 	ClassLoader classLoader{};
+
 	void JNICALL ClassFileLoadHook
 	(
 		jvmtiEnv* jvmti_env, 
-		JNIEnv* jni_env, jclass 
-		class_being_redefined, 
+		JNIEnv* jni_env, 
+		jclass class_being_redefined, 
 		jobject loader, 
 		const char* name, 
 		jobject protection_domain, 
@@ -47,6 +52,29 @@ namespace
 			jni_env->GetByteArrayRegion(new_class_bytes, 0, *new_class_data_len, (jbyte*)*new_class_data);
 			jni_env->DeleteLocalRef(new_class_bytes);
 			should_patchGetMouseOver = false;
+		}
+		else if (should_patchGetClientModName && jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->ClientBrandRetrieverClass.javaClass)) {
+			std::cout << "Patching getClientModName" << std::endl;
+			std::cout << desired_client_name << std::endl;
+			jbyteArray original_class_bytes = jni_env->NewByteArray(class_data_len);
+			jni_env->SetByteArrayRegion(original_class_bytes, 0, class_data_len, (const jbyte*)class_data);
+			jstring methodName = jni_env->NewStringUTF(Ripterms::classcache->ClientBrandRetrieverClass.getObfuscatedMethodName("getClientModName").c_str());
+			jstring clientName = jni_env->NewStringUTF(desired_client_name.c_str());
+			jbyteArray new_class_bytes = (jbyteArray)jni_env->CallStaticObjectMethod(
+				Ripterms::classcache->ClassPatcherClass.javaClass,
+				Ripterms::classcache->ClassPatcherClass.methods["patchGetClientModName"],
+				original_class_bytes,
+				methodName,
+				clientName
+			);
+			jni_env->DeleteLocalRef(clientName);
+			jni_env->DeleteLocalRef(original_class_bytes);
+			jni_env->DeleteLocalRef(methodName);
+			*new_class_data_len = jni_env->GetArrayLength(new_class_bytes);
+			jvmti_env->Allocate(*new_class_data_len, new_class_data);
+			jni_env->GetByteArrayRegion(new_class_bytes, 0, *new_class_data_len, (jbyte*)*new_class_data);
+			jni_env->DeleteLocalRef(new_class_bytes);
+			should_patchGetClientModName = false;
 		}
 	}
 }
@@ -90,7 +118,8 @@ bool Ripterms::Patcher::init()
 void Ripterms::Patcher::clean()
 {
 	Ripterms::p_tienv->SetEventNotificationMode(JVMTI_DISABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);
-	Ripterms::p_tienv->RetransformClasses(1, &Ripterms::classcache->EntityRendererClass.javaClass);
+	jclass classes[] = { Ripterms::classcache->EntityRendererClass.javaClass, Ripterms::classcache->ClientBrandRetrieverClass.javaClass };
+	Ripterms::p_tienv->RetransformClasses(sizeof(classes) / sizeof(jclass), classes);
 	classLoader.clear();
 }
 
@@ -100,4 +129,12 @@ void Ripterms::Patcher::patchGetMouseOver(double reach)
 	desired_reach = reach;
 	Ripterms::p_tienv->RetransformClasses(1, &Ripterms::classcache->EntityRendererClass.javaClass);
 	while (should_patchGetMouseOver);
+}
+
+void Ripterms::Patcher::patchGetClientModName(const std::string& client_name)
+{
+	should_patchGetClientModName = true;
+	desired_client_name = client_name;
+	Ripterms::p_tienv->RetransformClasses(1, &Ripterms::classcache->ClientBrandRetrieverClass.javaClass);
+	while (should_patchGetClientModName);
 }

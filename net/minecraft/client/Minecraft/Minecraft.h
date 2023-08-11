@@ -3,6 +3,7 @@
 #include "../entity/EntityPlayerSP/EntityPlayerSP.h"
 #include "../multiplayer/WorldClient/WorldClient.h"
 #include "../settings/GameSettings/GameSettings.h"
+#include "../../profiler/PlayerUsageSnooper/PlayerUsageSnooper.h"
 
 class Minecraft : public Object {
 public:
@@ -11,4 +12,5 @@ public:
 	EntityPlayerSP getThePlayer();
 	WorldClient getTheWorld();
 	GameSettings getGameSettings();
+	PlayerUsageSnooper getUsageSnooper();
 };

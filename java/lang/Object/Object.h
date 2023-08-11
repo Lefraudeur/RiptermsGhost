@@ -16,7 +16,7 @@ public:
 	bool isValid();
 	~Object();
 	void clear();
-	jobject getInstance();
+	jobject getInstance() const;
 protected:
 	jobject instance = nullptr;
 };

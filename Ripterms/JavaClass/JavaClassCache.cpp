@@ -21,5 +21,9 @@ bool Ripterms::JavaClassCache::fillCache()
 		WorldClass.fill("net/minecraft/world/World") &&
 		ClassLoaderClass.fill("java/lang/ClassLoader") &&
 		EntityRendererClass.fill("net/minecraft/client/renderer/EntityRenderer") &&
-		GameSettingsClass.fill("net/minecraft/client/settings/GameSettings");
+		GameSettingsClass.fill("net/minecraft/client/settings/GameSettings") &&
+		ClientBrandRetrieverClass.fill("net/minecraft/client/ClientBrandRetriever") &&
+		PlayerUsageSnooperClass.fill("net/minecraft/profiler/PlayerUsageSnooper") &&
+		MapClass.fill("java/util/Map") &&
+		StringClass.fill("java/lang/String");
 }

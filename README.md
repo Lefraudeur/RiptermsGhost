@@ -16,7 +16,10 @@ Included Example Features :
  The loaded class is patched each time you change reach, that's the only way I found to unload the Patcher class on self destruct
 - Left Clicker
 - Full Bright
+- Client Brand Changer (to troll staffs lol, sent to the server on login and displayed by some anticheats)
 
 insert to open the gui
 
 end key to self destruct
+
+In 1.16.5 + versions, you have to inject while in game (otherwise some classes are not loaded)

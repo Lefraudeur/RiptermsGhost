@@ -40,15 +40,14 @@ void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function
 		return originalnglClear(env, clazz, mask, function_pointer);
 	}
 
-	Ripterms::p_env = env;
-
 	static bool runonce = true;
 	if (runonce)
 	{
+		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::classcache->fillCache();
-		runMainLoop = Ripterms::Patcher::init();
+		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
 		runonce = false;
 	}
 	if (GetAsyncKeyState(VK_END)) {
@@ -67,15 +66,14 @@ void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 		return originalglClear(env, clazz, mask);
 	}
 
-	Ripterms::p_env = env;
-
 	static bool runonce = true;
 	if (runonce)
 	{
+		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::classcache->fillCache();
-		runMainLoop = Ripterms::Patcher::init();
+		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
 		runonce = false;
 	}
 	if (GetAsyncKeyState(VK_END)) {
@@ -201,6 +199,7 @@ void Ripterms::clean()
 {
 	tmp_no_hook = true;
 	Ripterms::Modules::FullBright::disable();
+	Ripterms::Modules::ClientBrandChanger::disable();
 	Ripterms::Patcher::clean();
 	delete Ripterms::cache;
 	delete Ripterms::classcache;
