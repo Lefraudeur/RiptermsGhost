@@ -38,12 +38,10 @@ bool Ripterms::JavaClass::fill(const std::string& class_path)
 {
 	this->class_path = class_path;
 	auto classjson = mappings[class_path];
-	/*
 	if (classjson.empty()) {
 		std::cerr << "Can not find info for class " << class_path << " in mappings" << std::endl;
 		return false;
 	}
-	*/
 	this->javaClass = findClass(classjson["obfuscated"]);
 	if (!this->javaClass) {
 		std::cerr << "Can't find class " << std::string(classjson["obfuscated"]) << std::endl;
