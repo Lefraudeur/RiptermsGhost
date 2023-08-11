@@ -22,6 +22,10 @@ Included Example Features :
 
 insert to open the gui / end key to self destruct
 
+![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/ec706308-84f5-4c4b-83a8-b506fd6f8d57)
+
+I won't take time to make a good looking gui
+
 Huh sometimes you will get an error "can't find info for object class"
 I think that happens because my code is shit, or because not enough ram, just try again
 I'll fix it once I find the solution
