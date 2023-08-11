@@ -21,6 +21,7 @@ Included Example Features :
 insert to open the gui
 
 end key to self destruct
+
 ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/39690baa-859a-4ea2-a9b0-dfbc8cbfe472)
 
 In 1.16.5 + versions, you have to inject while in game (otherwise some classes are not loaded)
