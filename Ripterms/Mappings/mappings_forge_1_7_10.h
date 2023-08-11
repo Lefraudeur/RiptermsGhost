@@ -1,6 +1,5 @@
 #pragma once
-#include <string>
-const std::string mappings_forge_1_7_10 = R"(
+const char mappings_forge_1_7_10[] = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
