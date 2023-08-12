@@ -22,9 +22,3 @@ GameSettings Minecraft::getGameSettings()
 	if (!instance) return GameSettings();
 	return GameSettings(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->MinecraftClass.fields["gameSettings"]));
 }
-
-PlayerUsageSnooper Minecraft::getUsageSnooper()
-{
-	if (!instance) return PlayerUsageSnooper();
-	return PlayerUsageSnooper(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->MinecraftClass.fields["usageSnooper"]));
-}

@@ -47,7 +47,6 @@ namespace Ripterms
 		JavaClass EntityRendererClass{};
 		JavaClass GameSettingsClass{};
 		JavaClass ClientBrandRetrieverClass{};
-		JavaClass PlayerUsageSnooperClass{};
 		JavaClass MapClass{};
 		JavaClass StringClass{};
 		JavaClass ModelBakeryClass{};

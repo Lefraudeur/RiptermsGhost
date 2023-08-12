@@ -20,7 +20,6 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 	ImGui::InputText("name", name, sizeof(name));
 	ImGui::SameLine();
 	if (ImGui::Button("change")) {
-		Ripterms::cache->theMinecraft.getUsageSnooper().getSnooperStats().put(String("client_brand"), String(name));
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("reset")) {

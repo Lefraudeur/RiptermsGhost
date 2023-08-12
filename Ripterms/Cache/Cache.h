@@ -1,6 +1,7 @@
 #pragma once
 #include "../../java/lang/Object/Object.h"
 #include "../../net/minecraft/client/Minecraft/Minecraft.h"
+#include "../../java/util/Map/Map.h"
 
 namespace Ripterms
 {

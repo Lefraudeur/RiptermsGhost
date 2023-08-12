@@ -96,12 +96,6 @@ const char mappings_lunar_1_16_5[] = R"(
 				"obfuscated": "options",
 				"signature": "Lnet/minecraft/client/Options;",
 				"static": false
-			},
-			{
-				"name": "usageSnooper",
-				"obfuscated": "snooper",
-				"signature": "Lnet/minecraft/world/Snooper;",
-				"static": false
 			}
 		],
 		"methods": [
@@ -228,18 +222,6 @@ const char mappings_lunar_1_16_5[] = R"(
 				"static": true
 			}
 		]
-	},
-	"net/minecraft/profiler/PlayerUsageSnooper": {
-		"obfuscated": "net/minecraft/world/Snooper",
-		"fields": [
-			{
-				"name": "snooperStats",
-				"obfuscated": "fixedData",
-				"signature": "Ljava/util/Map;",
-				"static": false
-			}
-		],
-		"methods": []
 	}
 }
 )";

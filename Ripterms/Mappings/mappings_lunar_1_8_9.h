@@ -102,12 +102,6 @@ const char mappings_lunar_1_8_9[] = R"(
 				"obfuscated": "gameSettings",
 				"signature": "Lnet/minecraft/client/settings/GameSettings;",
 				"static": false
-			},
-			{
-				"name": "usageSnooper",
-				"obfuscated": "usageSnooper",
-				"signature": "Lnet/minecraft/profiler/PlayerUsageSnooper;",
-				"static": false
 			}
 		],
 		"methods": []
@@ -244,18 +238,6 @@ const char mappings_lunar_1_8_9[] = R"(
 				"static": true
 			}
 		]
-	},
-	"net/minecraft/profiler/PlayerUsageSnooper": {
-		"obfuscated": "net/minecraft/profiler/PlayerUsageSnooper",
-		"fields": [
-			{
-				"name": "snooperStats",
-				"obfuscated": "snooperStats",
-				"signature": "Ljava/util/Map;",
-				"static": false
-			}
-		],
-		"methods": []
 	},
 	"net/minecraft/client/resources/model/ModelBakery": {
 		"obfuscated": "net/minecraft/client/resources/model/ModelBakery",

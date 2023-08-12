@@ -96,12 +96,6 @@ const char mappings_forge_1_7_10[] = R"(
 				"obfuscated": "field_71474_y",
 				"signature": "Lnet/minecraft/client/settings/GameSettings;",
 				"static": false
-			},
-			{
-				"name": "usageSnooper",
-				"obfuscated": "field_71427_U",
-				"signature": "Lnet/minecraft/profiler/PlayerUsageSnooper;",
-				"static": false
 			}
 		],
 		"methods": [
@@ -239,18 +233,6 @@ const char mappings_forge_1_7_10[] = R"(
 				"static": true
 			}
 		]
-	},
-	"net/minecraft/profiler/PlayerUsageSnooper": {
-		"obfuscated": "net/minecraft/profiler/PlayerUsageSnooper",
-		"fields": [
-			{
-				"name": "snooperStats",
-				"obfuscated": "field_152774_b",
-				"signature": "Ljava/util/Map;",
-				"static": false
-			}
-		],
-		"methods": []
 	}
 }
 )";
