@@ -178,6 +178,7 @@
     <ClCompile Include="java\lang\ClassLoader\ClassLoader.cpp" />
     <ClCompile Include="java\lang\Object\Object.cpp" />
     <ClCompile Include="java\lang\String\String.cpp" />
+    <ClCompile Include="java\lang\System\System.cpp" />
     <ClCompile Include="java\util\Collection\Collection.cpp" />
     <ClCompile Include="java\util\List\List.cpp" />
     <ClCompile Include="java\util\Map\Map.cpp" />
@@ -214,6 +215,7 @@
     <ClInclude Include="java\lang\ClassLoader\ClassLoader.h" />
     <ClInclude Include="java\lang\Object\Object.h" />
     <ClInclude Include="java\lang\String\String.h" />
+    <ClInclude Include="java\lang\System\System.h" />
     <ClInclude Include="java\util\Collection\Collection.h" />
     <ClInclude Include="java\util\List\List.h" />
     <ClInclude Include="java\util\Map\Map.h" />

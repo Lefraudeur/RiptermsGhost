@@ -20,7 +20,6 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 	ImGui::InputText("name", name, sizeof(name));
 	ImGui::SameLine();
 	if (ImGui::Button("change")) {
-		Ripterms::Patcher::patchGetClientModName(name);
 		Ripterms::cache->theMinecraft.getUsageSnooper().getSnooperStats().put(String("client_brand"), String(name));
 	}
 	ImGui::SameLine();
@@ -31,8 +30,4 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 
 void Ripterms::Modules::ClientBrandChanger::disable()
 {
-	Ripterms::p_tienv->RetransformClasses(1, &Ripterms::classcache->ClientBrandRetrieverClass.javaClass);
-	String clientname = getClientModName();
-	Ripterms::cache->theMinecraft.getUsageSnooper().getSnooperStats().put(String("client_brand"), clientname);
-	std::strcpy(name, clientname.toString().c_str());
 }

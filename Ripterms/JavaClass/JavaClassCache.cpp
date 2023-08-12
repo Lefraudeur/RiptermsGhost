@@ -25,5 +25,7 @@ bool Ripterms::JavaClassCache::fillCache()
 		ClientBrandRetrieverClass.fill("net/minecraft/client/ClientBrandRetriever") &&
 		PlayerUsageSnooperClass.fill("net/minecraft/profiler/PlayerUsageSnooper") &&
 		MapClass.fill("java/util/Map") &&
-		StringClass.fill("java/lang/String");
+		StringClass.fill("java/lang/String") &&
+		ModelBakeryClass.fill("net/minecraft/client/resources/model/ModelBakery") &&
+		SystemClass.fill("java/lang/System");
 }

@@ -6,6 +6,7 @@
 #include "Modules/Modules.h"
 #include "JavaClass/JavaClass.h"
 #include "Patcher/Patcher.h"
+#include "../java/lang/System/System.h"
 #include <MinHook.h>
 
 void mainLoop()
@@ -202,6 +203,7 @@ void Ripterms::clean()
 	Ripterms::Modules::ClientBrandChanger::disable();
 	Ripterms::Patcher::clean();
 	delete Ripterms::cache;
+	System::gc();
 	delete Ripterms::classcache;
 	if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
 	std::thread a([] {

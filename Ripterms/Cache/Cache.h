@@ -14,6 +14,7 @@ namespace Ripterms
 		WorldClient theWorld{};
 		List playerEntities{};
 		GameSettings gameSettings{};
+		Map BUILT_IN_MODELS{};
 		bool fillCache();
 	private:
 		EntityPlayerSP prev_thePlayer{};

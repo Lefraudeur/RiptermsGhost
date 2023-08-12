@@ -15,6 +15,8 @@ namespace Ripterms
 		static bool init();
 		bool fill(const std::string& class_path);
 		std::string getObfuscatedMethodName(const std::string& unobf_name);
+		std::string getObfuscatedFieldName(const std::string& unobf_name);
+		std::string getObfuscatedClassName();
 		jclass javaClass = nullptr;
 		std::unordered_map<std::string, jfieldID> fields{};
 		std::unordered_map<std::string, jmethodID> methods{};
@@ -43,12 +45,13 @@ namespace Ripterms
 		JavaClass WorldClass{};
 		JavaClass ClassLoaderClass{};
 		JavaClass EntityRendererClass{};
-		JavaClass ClassPatcherClass{};
 		JavaClass GameSettingsClass{};
 		JavaClass ClientBrandRetrieverClass{};
 		JavaClass PlayerUsageSnooperClass{};
 		JavaClass MapClass{};
 		JavaClass StringClass{};
+		JavaClass ModelBakeryClass{};
+		JavaClass SystemClass{};
 	};
 
 	inline JavaClassCache* classcache = new JavaClassCache();

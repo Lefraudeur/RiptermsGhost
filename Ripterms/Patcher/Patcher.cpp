@@ -1,18 +1,25 @@
 #include "Patcher.h"
 #include "../Ripterms.h"
+#include "../Cache/Cache.h"
 #include "ClassPatcherJar.h"
 #include "../../java/lang/ClassLoader/ClassLoader.h"
+#include "../../java/lang/System/System.h"
+#include "../../java/lang/String/String.h"
 #include <fstream>
 
 namespace
 {
-	bool should_patchGetMouseOver = false;
-	bool should_patchGetClientModName = false;
-
-	double desired_reach = 0.0;
-	std::string desired_client_name{};
-
-	ClassLoader classLoader{};
+	void retransformClasses()
+	{
+		jclass classes[] = { Ripterms::classcache->EntityRendererClass.javaClass };
+		jvmtiError error = Ripterms::p_tienv->RetransformClasses(sizeof(classes) / sizeof(jclass), classes);
+		if (error) {
+			char* err = nullptr;
+			Ripterms::p_tienv->GetErrorName(error, &err);
+			std::cout << err << std::endl;
+			std::cout << "Failed Retransform" << std::endl;
+		}
+	}
 
 	void JNICALL ClassFileLoadHook
 	(
@@ -28,53 +35,25 @@ namespace
 		unsigned char** new_class_data
 	)
 	{
-		if (should_patchGetMouseOver && jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->EntityRendererClass.javaClass)) {
-			std::cout << "Patching getMouseOver" << std::endl;
-			/*
-				std::ofstream file("c:/Dump/dump.class", std::ios::binary);
-				file.write((const char*)class_data, class_data_len);
-				file.close();
-			*/
+		if (jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->EntityRendererClass.javaClass)) {
+			Ripterms::JavaClass ClassPatcherClass("io/github/lefraudeur/ClassPatcher");
 			jbyteArray original_class_bytes = jni_env->NewByteArray(class_data_len);
 			jni_env->SetByteArrayRegion(original_class_bytes, 0, class_data_len, (const jbyte*)class_data);
-			jstring methodName = jni_env->NewStringUTF(Ripterms::classcache->EntityRendererClass.getObfuscatedMethodName("getMouseOver").c_str());
+
 			jbyteArray new_class_bytes = (jbyteArray)jni_env->CallStaticObjectMethod(
-				Ripterms::classcache->ClassPatcherClass.javaClass,
-				Ripterms::classcache->ClassPatcherClass.methods["patchGetMouseOver"],
+				ClassPatcherClass.javaClass,
+				ClassPatcherClass.methods["patchEntityRenderer"],
 				original_class_bytes,
-				methodName,
-				(jdouble)desired_reach
+				String(Ripterms::classcache->EntityRendererClass.getObfuscatedMethodName("getMouseOver")).getInstance(),
+				String(Ripterms::classcache->ModelBakeryClass.getObfuscatedClassName()).getInstance(),
+				String(Ripterms::classcache->ModelBakeryClass.getObfuscatedFieldName("BUILT_IN_MODELS")).getInstance()
 			);
+
 			jni_env->DeleteLocalRef(original_class_bytes);
-			jni_env->DeleteLocalRef(methodName);
 			*new_class_data_len = jni_env->GetArrayLength(new_class_bytes);
 			jvmti_env->Allocate(*new_class_data_len, new_class_data);
 			jni_env->GetByteArrayRegion(new_class_bytes, 0, *new_class_data_len, (jbyte*)*new_class_data);
 			jni_env->DeleteLocalRef(new_class_bytes);
-			should_patchGetMouseOver = false;
-		}
-		else if (should_patchGetClientModName && jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->ClientBrandRetrieverClass.javaClass)) {
-			std::cout << "Patching getClientModName" << std::endl;
-			std::cout << desired_client_name << std::endl;
-			jbyteArray original_class_bytes = jni_env->NewByteArray(class_data_len);
-			jni_env->SetByteArrayRegion(original_class_bytes, 0, class_data_len, (const jbyte*)class_data);
-			jstring methodName = jni_env->NewStringUTF(Ripterms::classcache->ClientBrandRetrieverClass.getObfuscatedMethodName("getClientModName").c_str());
-			jstring clientName = jni_env->NewStringUTF(desired_client_name.c_str());
-			jbyteArray new_class_bytes = (jbyteArray)jni_env->CallStaticObjectMethod(
-				Ripterms::classcache->ClassPatcherClass.javaClass,
-				Ripterms::classcache->ClassPatcherClass.methods["patchGetClientModName"],
-				original_class_bytes,
-				methodName,
-				clientName
-			);
-			jni_env->DeleteLocalRef(clientName);
-			jni_env->DeleteLocalRef(original_class_bytes);
-			jni_env->DeleteLocalRef(methodName);
-			*new_class_data_len = jni_env->GetArrayLength(new_class_bytes);
-			jvmti_env->Allocate(*new_class_data_len, new_class_data);
-			jni_env->GetByteArrayRegion(new_class_bytes, 0, *new_class_data_len, (jbyte*)*new_class_data);
-			jni_env->DeleteLocalRef(new_class_bytes);
-			should_patchGetClientModName = false;
 		}
 	}
 }
@@ -109,32 +88,18 @@ bool Ripterms::Patcher::init()
 		Ripterms::p_tienv->Deallocate((unsigned char*)errstr);
 		return false;
 	}
-	classLoader = ClassLoader::newObject();
+	Ripterms::cache->BUILT_IN_MODELS = Ripterms::p_env->GetStaticObjectField(Ripterms::classcache->ModelBakeryClass.javaClass, Ripterms::classcache->ModelBakeryClass.fields["BUILT_IN_MODELS"]);
+	Ripterms::cache->BUILT_IN_MODELS.put(String("reach_distance"), String("3.0"));
+	ClassLoader classLoader(ClassLoader::newObject());
 	if(!classLoader.loadJar(ClassPatcherJar, sizeof(ClassPatcherJar))) return false;
-	Ripterms::classcache->ClassPatcherClass.fill("io/github/lefraudeur/ClassPatcher");
+	retransformClasses();
+	classLoader.clear();
+	System::gc();
 	return true;
 }
 
 void Ripterms::Patcher::clean()
 {
 	Ripterms::p_tienv->SetEventNotificationMode(JVMTI_DISABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);
-	jclass classes[] = { Ripterms::classcache->EntityRendererClass.javaClass, Ripterms::classcache->ClientBrandRetrieverClass.javaClass };
-	Ripterms::p_tienv->RetransformClasses(sizeof(classes) / sizeof(jclass), classes);
-	classLoader.clear();
-}
-
-void Ripterms::Patcher::patchGetMouseOver(double reach)
-{
-	should_patchGetMouseOver = true;
-	desired_reach = reach;
-	Ripterms::p_tienv->RetransformClasses(1, &Ripterms::classcache->EntityRendererClass.javaClass);
-	while (should_patchGetMouseOver);
-}
-
-void Ripterms::Patcher::patchGetClientModName(const std::string& client_name)
-{
-	should_patchGetClientModName = true;
-	desired_client_name = client_name;
-	Ripterms::p_tienv->RetransformClasses(1, &Ripterms::classcache->ClientBrandRetrieverClass.javaClass);
-	while (should_patchGetClientModName);
+	retransformClasses();
 }
