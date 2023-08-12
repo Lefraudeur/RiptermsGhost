@@ -29,3 +29,5 @@ I think that happens because my code is shit, or because not enough ram, just tr
 I'll fix it once I find the solution
 
 In 1.16.5 + versions, you have to inject while in game (otherwise some classes are not loaded)
+
+Help would be appreciated 
