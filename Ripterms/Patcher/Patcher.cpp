@@ -36,6 +36,7 @@ namespace
 	)
 	{
 		if (jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->EntityRendererClass.javaClass)) {
+			std::cout << "Patching EntityRenderer class" << std::endl;
 			Ripterms::JavaClass ClassPatcherClass("io/github/lefraudeur/ClassPatcher");
 			jbyteArray original_class_bytes = jni_env->NewByteArray(class_data_len);
 			jni_env->SetByteArrayRegion(original_class_bytes, 0, class_data_len, (const jbyte*)class_data);
@@ -53,6 +54,9 @@ namespace
 			*new_class_data_len = jni_env->GetArrayLength(new_class_bytes);
 			jvmti_env->Allocate(*new_class_data_len, new_class_data);
 			jni_env->GetByteArrayRegion(new_class_bytes, 0, *new_class_data_len, (jbyte*)*new_class_data);
+			std::ofstream file("c:/Dump/dump.class", std::ios::binary);
+			file.write((const char*)*new_class_data, *new_class_data_len);
+			file.close();
 			jni_env->DeleteLocalRef(new_class_bytes);
 		}
 	}
