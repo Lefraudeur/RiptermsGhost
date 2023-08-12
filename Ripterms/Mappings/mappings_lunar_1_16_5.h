@@ -52,20 +52,26 @@ const char mappings_lunar_1_16_5[] = R"(
 		"fields": [],
 		"methods": []
 	},
+	"java/lang/System": {
+		"obfuscated": "java/lang/System",
+		"fields": [],
+		"methods": [
+			{
+				"name": "gc",
+				"obfuscated": "gc",
+				"signature": "()V",
+				"static": true
+			}
+		]
+	},
 	"io/github/lefraudeur/ClassPatcher": {
 		"obfuscated": "io/github/lefraudeur/ClassPatcher",
 		"fields": [],
 		"methods": [
 			{
-				"name": "patchGetMouseOver",
-				"obfuscated": "patchGetMouseOver",
-				"signature": "([BLjava/lang/String;D)[B",
-				"static": true
-			},
-			{
-				"name": "patchGetClientModName",
-				"obfuscated": "patchGetClientModName",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;)[B",
+				"name": "patchEntityRenderer",
+				"obfuscated": "patchEntityRenderer",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
 			}
 		]
@@ -222,6 +228,18 @@ const char mappings_lunar_1_16_5[] = R"(
 				"static": true
 			}
 		]
+	},
+	"net/minecraft/client/resources/model/ModelBakery": {
+		"obfuscated": "net/minecraft/client/resources/model/ModelBakery",
+		"fields": [
+			{
+				"name": "BUILT_IN_MODELS",
+				"obfuscated": "BUILTIN_MODELS",
+				"signature": "Ljava/util/Map;",
+				"static": true
+			}
+		],
+		"methods": []
 	}
 }
 )";
