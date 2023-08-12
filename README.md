@@ -6,7 +6,7 @@ Uses weird jni export function hooking for better compatibility with clients tha
 
 Compatible with lunarclient 1.7.10, 1.8.9, 1.16.5, 1.17.1
 
-and forge 1.7.10 (tested on palladium)
+and forge 1.7.10
 
 Change mappings to add new versions
 
