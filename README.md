@@ -30,4 +30,5 @@ I'll fix it once I find the solution
 In 1.16.5 + versions, you have to inject while in game (otherwise some classes are not loaded)
 
 Help would be appreciated (I don't care about pasted modules)
+
 Thanks to t0r-onion for the GUI
