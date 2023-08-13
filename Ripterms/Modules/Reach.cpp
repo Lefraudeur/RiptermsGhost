@@ -13,13 +13,13 @@ void Ripterms::Modules::Reach::run()
 	static float prev_reach_distance = -1.0f;
 	if (!enabled) {
 		if (prev_reach_distance != -1.0f) {
-			Ripterms::cache->BUILT_IN_MODELS.put(String("reach_distance"), String("3.0")); //we use this random Map as storage
+			Ripterms::cache->EMPTY_MAP.put(String("reach_distance"), String("3.0")); //we use this random Map as storage
 			prev_reach_distance = -1.0f;
 		}
 		return;
 	}
 	if (prev_reach_distance == reach_distance) return;
-	Ripterms::cache->BUILT_IN_MODELS.put(String("reach_distance"), String(std::to_string(reach_distance)));
+	Ripterms::cache->EMPTY_MAP.put(String("reach_distance"), String(std::to_string(reach_distance)));
 	prev_reach_distance = reach_distance;
 }
 

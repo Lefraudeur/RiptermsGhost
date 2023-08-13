@@ -9,6 +9,8 @@
 
 namespace
 {
+	Object original_EmptyMap{};
+
 	void retransformClasses()
 	{
 		jclass classes[] = { Ripterms::classcache->EntityRendererClass.javaClass };
@@ -18,6 +20,7 @@ namespace
 			Ripterms::p_tienv->GetErrorName(error, &err);
 			std::cout << err << std::endl;
 			std::cout << "Failed Retransform" << std::endl;
+			Ripterms::p_tienv->Deallocate((unsigned char*)err);
 		}
 	}
 
@@ -46,8 +49,8 @@ namespace
 				ClassPatcherClass.methods["patchEntityRenderer"],
 				original_class_bytes,
 				String(Ripterms::classcache->EntityRendererClass.getObfuscatedMethodName("getMouseOver")).getInstance(),
-				String(Ripterms::classcache->ModelBakeryClass.getObfuscatedClassName()).getInstance(),
-				String(Ripterms::classcache->ModelBakeryClass.getObfuscatedFieldName("BUILT_IN_MODELS")).getInstance()
+				String(Ripterms::classcache->ThreadContextClass.getObfuscatedClassName()).getInstance(),
+				String(Ripterms::classcache->ThreadContextClass.getObfuscatedFieldName("EMPTY_MAP")).getInstance()
 			);
 
 			jni_env->DeleteLocalRef(original_class_bytes);
@@ -92,14 +95,16 @@ bool Ripterms::Patcher::init()
 		Ripterms::p_tienv->Deallocate((unsigned char*)errstr);
 		return false;
 	}
-	Ripterms::cache->BUILT_IN_MODELS = Ripterms::p_env->GetStaticObjectField(Ripterms::classcache->ModelBakeryClass.javaClass, Ripterms::classcache->ModelBakeryClass.fields["BUILT_IN_MODELS"]);
-	jclass hashmapClass = Ripterms::p_env->FindClass("java/util/HashMap");
-	jmethodID constructor = Ripterms::p_env->GetMethodID(hashmapClass, "<init>", "()V");
-	jobject hashmap = Ripterms::p_env->NewObject(hashmapClass, constructor);
-	Ripterms::p_env->SetStaticObjectField(Ripterms::classcache->ModelBakeryClass.javaClass, Ripterms::classcache->ModelBakeryClass.fields["BUILT_IN_MODELS"], hashmap);
-	Ripterms::cache->BUILT_IN_MODELS = hashmap;
-	Ripterms::p_env->DeleteLocalRef(hashmapClass);
-	Ripterms::cache->BUILT_IN_MODELS.put(String("reach_distance"), String("3.0"));
+
+	//here I am using an empty map, already in th game, to hide and store my cheat data, the getMouseOver than accesses this map (see asm folder)
+	original_EmptyMap = Ripterms::p_env->GetStaticObjectField(Ripterms::classcache->ThreadContextClass.javaClass, Ripterms::classcache->ThreadContextClass.fields["EMPTY_MAP"]);
+	Object hashmapClass = Ripterms::p_env->FindClass("java/util/HashMap");
+	jmethodID constructor = Ripterms::p_env->GetMethodID((jclass)hashmapClass.getInstance(), "<init>", "()V");
+	jobject hashmap = Ripterms::p_env->NewObject((jclass)hashmapClass.getInstance(), constructor);
+	Ripterms::p_env->SetStaticObjectField(Ripterms::classcache->ThreadContextClass.javaClass, Ripterms::classcache->ThreadContextClass.fields["EMPTY_MAP"], hashmap);
+	Ripterms::cache->EMPTY_MAP = hashmap;
+	Ripterms::cache->EMPTY_MAP.put(String("reach_distance"), String("3.0"));
+
 	ClassLoader classLoader(ClassLoader::newObject());
 	if(!classLoader.loadJar(ClassPatcherJar, sizeof(ClassPatcherJar))) return false;
 	retransformClasses();
@@ -110,6 +115,10 @@ bool Ripterms::Patcher::init()
 
 void Ripterms::Patcher::clean()
 {
+	//cleaning the data we stored
+	Ripterms::p_env->SetStaticObjectField(Ripterms::classcache->ThreadContextClass.javaClass, Ripterms::classcache->ThreadContextClass.fields["EMPTY_MAP"], original_EmptyMap.getInstance());
+	original_EmptyMap.clear();
+	//restoring old classes
 	Ripterms::p_tienv->SetEventNotificationMode(JVMTI_DISABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);
 	retransformClasses();
 }

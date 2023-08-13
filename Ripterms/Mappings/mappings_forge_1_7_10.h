@@ -240,11 +240,11 @@ const char mappings_forge_1_7_10[] = R"(
 			}
 		]
 	},
-	"net/minecraft/client/resources/model/ModelBakery": {
+	"org/apache/logging/log4j/ThreadContext": {
 		"obfuscated": "org/apache/logging/log4j/ThreadContext",
 		"fields": [
 			{
-				"name": "BUILT_IN_MODELS",
+				"name": "EMPTY_MAP",
 				"obfuscated": "EMPTY_MAP",
 				"signature": "Ljava/util/Map;",
 				"static": true

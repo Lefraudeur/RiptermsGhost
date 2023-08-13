@@ -49,7 +49,7 @@ namespace Ripterms
 		JavaClass ClientBrandRetrieverClass{};
 		JavaClass MapClass{};
 		JavaClass StringClass{};
-		JavaClass ModelBakeryClass{};
+		JavaClass ThreadContextClass{};
 		JavaClass SystemClass{};
 	};
 

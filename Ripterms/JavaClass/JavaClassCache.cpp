@@ -25,6 +25,6 @@ bool Ripterms::JavaClassCache::fillCache()
 		ClientBrandRetrieverClass.fill("net/minecraft/client/ClientBrandRetriever") &&
 		MapClass.fill("java/util/Map") &&
 		StringClass.fill("java/lang/String") &&
-		ModelBakeryClass.fill("net/minecraft/client/resources/model/ModelBakery") &&
+		ThreadContextClass.fill("org/apache/logging/log4j/ThreadContext") &&
 		SystemClass.fill("java/lang/System");
 }

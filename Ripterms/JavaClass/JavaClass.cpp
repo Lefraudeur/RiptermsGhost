@@ -70,7 +70,7 @@ bool Ripterms::JavaClass::fill(const std::string& class_path)
 			methodID = p_env->GetMethodID(this->javaClass, std::string(method["obfuscated"]).c_str(), std::string(method["signature"]).c_str());
 		}
 		if (!methodID) {
-			std::cerr << "Failed to find field " << std::string(method["obfuscated"]) << std::endl;
+			std::cerr << "Failed to find method " << std::string(method["obfuscated"]) << std::endl;
 			return false;
 		}
 		this->methods.insert({ std::string(method["name"]), methodID });

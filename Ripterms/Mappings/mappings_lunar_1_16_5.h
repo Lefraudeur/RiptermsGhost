@@ -229,12 +229,12 @@ const char mappings_lunar_1_16_5[] = R"(
 			}
 		]
 	},
-	"net/minecraft/client/resources/model/ModelBakery": {
-		"obfuscated": "net/minecraft/world/item/Item",
+	"org/apache/logging/log4j/ThreadContext": {
+		"obfuscated": "org/apache/logging/log4j/ThreadContext",
 		"fields": [
 			{
-				"name": "BUILT_IN_MODELS",
-				"obfuscated": "BY_BLOCK",
+				"name": "EMPTY_MAP",
+				"obfuscated": "EMPTY_MAP",
 				"signature": "Ljava/util/Map;",
 				"static": true
 			}
