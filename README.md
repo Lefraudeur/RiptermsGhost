@@ -12,12 +12,10 @@ Change mappings to add new versions
 
 Included Example Features :
 - AimAssist
-- Reach (takes some time to apply, because uses jvmti to patch loaded classes, which makes the game lag) see asm folder.
- The loaded class is patched each time you change reach, that's the only way I found to unload the Patcher class on self destruct.
-  <br/>dev branch has a better reach, but works only on 1.8.9
+- Reach (see asm folder) Does not work on 1.16.5+ for now
 - Left Clicker
 - Full Bright
-- Client Brand Changer (to troll staffs lol, sent to the server on login and displayed by some anticheats)
+- Client Brand Changer (see asm folder) (to troll staffs lol, sent to the server on login and displayed by some anticheats)
 
 ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/39690baa-859a-4ea2-a9b0-dfbc8cbfe472)
 
@@ -32,3 +30,4 @@ I'll fix it once I find the solution
 In 1.16.5 + versions, you have to inject while in game (otherwise some classes are not loaded)
 
 Help would be appreciated (I don't care about pasted modules)
+Thanks to t0r-onion for the GUI
