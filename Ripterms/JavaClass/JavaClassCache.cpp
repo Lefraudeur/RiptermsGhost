@@ -23,7 +23,8 @@ bool Ripterms::JavaClassCache::fillCache()
 		EntityRendererClass.fill("net/minecraft/client/renderer/EntityRenderer") &&
 		GameSettingsClass.fill("net/minecraft/client/settings/GameSettings") &&
 		ClientBrandRetrieverClass.fill("net/minecraft/client/ClientBrandRetriever") &&
-		PlayerUsageSnooperClass.fill("net/minecraft/profiler/PlayerUsageSnooper") &&
 		MapClass.fill("java/util/Map") &&
-		StringClass.fill("java/lang/String");
+		StringClass.fill("java/lang/String") &&
+		ThreadContextClass.fill("org/apache/logging/log4j/ThreadContext") &&
+		SystemClass.fill("java/lang/System");
 }

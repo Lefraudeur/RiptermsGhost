@@ -132,13 +132,13 @@
     <ClCompile Include="Ripterms\Modules\ClientBrandChanger.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="net\minecraft\profiler\PlayerUsageSnooper\PlayerUsageSnooper.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="java\util\Map\Map.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="java\lang\String\String.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="java\lang\System\System.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -218,13 +218,16 @@
     <ClInclude Include="net\minecraft\client\settings\GameSettings\GameSettings.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="net\minecraft\profiler\PlayerUsageSnooper\PlayerUsageSnooper.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="java\util\Map\Map.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="java\lang\String\String.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Ripterms\GUI\font.h">
+      <Filter>Fichiers d%27en-tête</Filter>    
+    </ClInclude>
+    <ClInclude Include="java\lang\System\System.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

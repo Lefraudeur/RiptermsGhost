@@ -178,6 +178,7 @@
     <ClCompile Include="java\lang\ClassLoader\ClassLoader.cpp" />
     <ClCompile Include="java\lang\Object\Object.cpp" />
     <ClCompile Include="java\lang\String\String.cpp" />
+    <ClCompile Include="java\lang\System\System.cpp" />
     <ClCompile Include="java\util\Collection\Collection.cpp" />
     <ClCompile Include="java\util\List\List.cpp" />
     <ClCompile Include="java\util\Map\Map.cpp" />
@@ -190,7 +191,6 @@
     <ClCompile Include="net\minecraft\entity\EntityLivingBase\EntityLivingBase.cpp" />
     <ClCompile Include="net\minecraft\entity\Entity\Entity.cpp" />
     <ClCompile Include="net\minecraft\entity\player\EntityPlayer\EntityPlayer.cpp" />
-    <ClCompile Include="net\minecraft\profiler\PlayerUsageSnooper\PlayerUsageSnooper.cpp" />
     <ClCompile Include="net\minecraft\util\Vec3\Vec3.cpp" />
     <ClCompile Include="net\minecraft\world\World\World.cpp" />
     <ClCompile Include="Ripterms\Cache\Cache.cpp" />
@@ -214,6 +214,7 @@
     <ClInclude Include="java\lang\ClassLoader\ClassLoader.h" />
     <ClInclude Include="java\lang\Object\Object.h" />
     <ClInclude Include="java\lang\String\String.h" />
+    <ClInclude Include="java\lang\System\System.h" />
     <ClInclude Include="java\util\Collection\Collection.h" />
     <ClInclude Include="java\util\List\List.h" />
     <ClInclude Include="java\util\Map\Map.h" />
@@ -225,10 +226,10 @@
     <ClInclude Include="net\minecraft\entity\EntityLivingBase\EntityLivingBase.h" />
     <ClInclude Include="net\minecraft\entity\Entity\Entity.h" />
     <ClInclude Include="net\minecraft\entity\player\EntityPlayer\EntityPlayer.h" />
-    <ClInclude Include="net\minecraft\profiler\PlayerUsageSnooper\PlayerUsageSnooper.h" />
     <ClInclude Include="net\minecraft\util\Vec3\Vec3.h" />
     <ClInclude Include="net\minecraft\world\World\World.h" />
     <ClInclude Include="Ripterms\Cache\Cache.h" />
+    <ClInclude Include="Ripterms\GUI\font.h" />
     <ClInclude Include="Ripterms\GUI\GUI.h" />
     <ClInclude Include="Ripterms\JavaClass\JavaClass.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_forge_1_7_10.h" />

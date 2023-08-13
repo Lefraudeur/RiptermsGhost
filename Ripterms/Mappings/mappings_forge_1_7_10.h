@@ -52,20 +52,32 @@ const char mappings_forge_1_7_10[] = R"(
 		"fields": [],
 		"methods": []
 	},
+	"java/lang/System": {
+		"obfuscated": "java/lang/System",
+		"fields": [],
+		"methods": [
+			{
+				"name": "gc",
+				"obfuscated": "gc",
+				"signature": "()V",
+				"static": true
+			}
+		]
+	},
 	"io/github/lefraudeur/ClassPatcher": {
 		"obfuscated": "io/github/lefraudeur/ClassPatcher",
 		"fields": [],
 		"methods": [
 			{
-				"name": "patchGetMouseOver",
-				"obfuscated": "patchGetMouseOver",
-				"signature": "([BLjava/lang/String;D)[B",
+				"name": "patchEntityRenderer",
+				"obfuscated": "patchEntityRenderer",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
 			},
 			{
-				"name": "patchGetClientModName",
-				"obfuscated": "patchGetClientModName",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;)[B",
+				"name": "patchClientBrandRetriever",
+				"obfuscated": "patchClientBrandRetriever",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
 			}
 		]
@@ -95,12 +107,6 @@ const char mappings_forge_1_7_10[] = R"(
 				"name": "gameSettings",
 				"obfuscated": "field_71474_y",
 				"signature": "Lnet/minecraft/client/settings/GameSettings;",
-				"static": false
-			},
-			{
-				"name": "usageSnooper",
-				"obfuscated": "field_71427_U",
-				"signature": "Lnet/minecraft/profiler/PlayerUsageSnooper;",
 				"static": false
 			}
 		],
@@ -240,14 +246,14 @@ const char mappings_forge_1_7_10[] = R"(
 			}
 		]
 	},
-	"net/minecraft/profiler/PlayerUsageSnooper": {
-		"obfuscated": "net/minecraft/profiler/PlayerUsageSnooper",
+	"org/apache/logging/log4j/ThreadContext": {
+		"obfuscated": "org/apache/logging/log4j/ThreadContext",
 		"fields": [
 			{
-				"name": "snooperStats",
-				"obfuscated": "field_152774_b",
+				"name": "EMPTY_MAP",
+				"obfuscated": "EMPTY_MAP",
 				"signature": "Ljava/util/Map;",
-				"static": false
+				"static": true
 			}
 		],
 		"methods": []

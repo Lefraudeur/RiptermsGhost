@@ -70,7 +70,7 @@ bool Ripterms::JavaClass::fill(const std::string& class_path)
 			methodID = p_env->GetMethodID(this->javaClass, std::string(method["obfuscated"]).c_str(), std::string(method["signature"]).c_str());
 		}
 		if (!methodID) {
-			std::cerr << "Failed to find field " << std::string(method["obfuscated"]) << std::endl;
+			std::cerr << "Failed to find method " << std::string(method["obfuscated"]) << std::endl;
 			return false;
 		}
 		this->methods.insert({ std::string(method["name"]), methodID });
@@ -85,6 +85,20 @@ std::string Ripterms::JavaClass::getObfuscatedMethodName(const std::string& unob
 		if (method["name"] == unobf_name) return method["obfuscated"];
 	}
 	return std::string();
+}
+
+std::string Ripterms::JavaClass::getObfuscatedFieldName(const std::string& unobf_name)
+{
+	auto classjson = mappings[class_path];
+	for (auto& method : classjson["fields"]) {
+		if (method["name"] == unobf_name) return method["obfuscated"];
+	}
+	return std::string();
+}
+
+std::string Ripterms::JavaClass::getObfuscatedClassName()
+{
+	return mappings[class_path]["obfuscated"];
 }
 
 bool Ripterms::JavaClass::init()
