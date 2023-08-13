@@ -14,6 +14,7 @@ Included Example Features :
 - AimAssist
 - Reach (takes some time to apply, because uses jvmti to patch loaded classes, which makes the game lag) see asm folder.
  The loaded class is patched each time you change reach, that's the only way I found to unload the Patcher class on self destruct
+dev branch has a better reach, but works only on 1.8.9
 - Left Clicker
 - Full Bright
 - Client Brand Changer (to troll staffs lol, sent to the server on login and displayed by some anticheats)
