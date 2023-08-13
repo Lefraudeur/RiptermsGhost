@@ -229,6 +229,7 @@
     <ClInclude Include="net\minecraft\util\Vec3\Vec3.h" />
     <ClInclude Include="net\minecraft\world\World\World.h" />
     <ClInclude Include="Ripterms\Cache\Cache.h" />
+    <ClInclude Include="Ripterms\GUI\font.h" />
     <ClInclude Include="Ripterms\GUI\GUI.h" />
     <ClInclude Include="Ripterms\JavaClass\JavaClass.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_forge_1_7_10.h" />

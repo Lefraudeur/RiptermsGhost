@@ -18,7 +18,7 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 	}
 	ImGui::Text("Client Brand Changer:");
 	ImGui::InputText("name", name, sizeof(name));
-	ImGui::SameLine();
+	ImGui::NewLine();
 	if (ImGui::Button("change")) {
 	}
 	ImGui::SameLine();

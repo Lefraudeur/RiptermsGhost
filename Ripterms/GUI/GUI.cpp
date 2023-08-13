@@ -8,6 +8,7 @@
 #include <gl/GL.h>
 #include "../Cache/Cache.h"
 #include "../Modules/Modules.h"
+#include "font.h"
 
 namespace {
 	typedef BOOL(WINAPI* type_wglSwapBuffers)(HDC);
@@ -42,7 +43,19 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.IniFilename = nullptr;
-		ImGui::StyleColorsDark();
+		io.LogFilename = nullptr;
+
+
+		ImFontConfig CustomFont;
+		CustomFont.FontDataOwnedByAtlas = false;
+
+		io.Fonts->AddFontFromMemoryTTF(const_cast<std::uint8_t*>(Custom), sizeof(Custom), 17.5f, &CustomFont);
+		io.Fonts->AddFontDefault(); ImGui::StyleColorsDark();
+
+		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		//   io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+	//	ImGui::StyleColorsDark();
 		ImGui_ImplOpenGL3_Init();
 		ImGui_ImplWin32_Init(Ripterms::window);
 		isInit = true;
@@ -53,7 +66,38 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	if (Ripterms::GUI::draw) {
+	if (Ripterms::GUI::draw)
+	{
+		/* colors  */
+
+		ImGuiStyle& style = ImGui::GetStyle();
+		style.Colors[ImGuiCol_CheckMark] = ImColor(173, 55, 65);
+		style.Colors[ImGuiCol_CheckMarkOn] = ImColor(10, 150, 10);
+		style.Colors[ImGuiCol_SliderGrab] = ImColor(10, 150, 10);
+		style.Colors[ImGuiCol_SliderGrabActive] = ImColor(10, 150, 10);
+		style.Colors[ImGuiCol_SliderLine] = ImColor(173, 55, 65);
+		style.Colors[ImGuiCol_FrameBg] = ImColor(25, 25, 25);
+		style.Colors[ImGuiCol_FrameBgActive] = ImColor(25, 25, 25);
+		style.Colors[ImGuiCol_FrameBgHovered] = ImColor(25, 25, 25);
+		style.Colors[ImGuiCol_WindowBg] = ImColor(11, 14, 15);
+		style.Colors[ImGuiCol_Button] = ImColor(31, 30, 31);
+		style.Colors[ImGuiCol_ButtonHovered] = ImColor(173, 55, 65);
+		style.Colors[ImGuiCol_ButtonActive] = ImColor(239, 73, 88);
+		style.Colors[ImGuiCol_Header] = ImColor(78, 78, 78);
+		style.Colors[ImGuiCol_Text] = ImColor(200, 200, 200);
+		style.Colors[ImGuiCol_HeaderActive] = ImColor(78, 78, 78);
+		style.Colors[ImGuiCol_HeaderHovered] = ImColor(78, 78, 78);
+
+		/*  rounding */
+
+		style.FrameRounding = 10.f;
+		style.WindowRounding = 5.f;
+		style.ChildRounding = 5.f;
+		style.GrabRounding = 5.f;
+		style.PopupRounding = 5.f;
+		style.ScrollbarRounding = 5.f;
+		style.TabRounding = 5.f;
+
 		if (clipped)
 		{
 			GetClipCursor(&originalClip);
@@ -64,7 +108,7 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 		ImGui::Begin("Ripterms Ghost", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
 		{
 			ImGui::SetWindowSize(ImVec2(400.0f, 300.0f));
-			ImGui::Text("Hi !");
+			
 			Ripterms::Modules::AimAssist::renderGUI();
 			Ripterms::Modules::Reach::renderGUI();
 			Ripterms::Modules::LeftClicker::renderGUI();
