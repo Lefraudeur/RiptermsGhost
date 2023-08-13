@@ -52,20 +52,26 @@ const char mappings_lunar_1_8_9[] = R"(
 		"fields": [],
 		"methods": []
 	},
+	"java/lang/System": {
+		"obfuscated": "java/lang/System",
+		"fields": [],
+		"methods": [
+			{
+				"name": "gc",
+				"obfuscated": "gc",
+				"signature": "()V",
+				"static": true
+			}
+		]
+	},
 	"io/github/lefraudeur/ClassPatcher": {
 		"obfuscated": "io/github/lefraudeur/ClassPatcher",
 		"fields": [],
 		"methods": [
 			{
-				"name": "patchGetMouseOver",
-				"obfuscated": "patchGetMouseOver",
-				"signature": "([BLjava/lang/String;D)[B",
-				"static": true
-			},
-			{
-				"name": "patchGetClientModName",
-				"obfuscated": "patchGetClientModName",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;)[B",
+				"name": "patchEntityRenderer",
+				"obfuscated": "patchEntityRenderer",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
 			}
 		]
@@ -95,12 +101,6 @@ const char mappings_lunar_1_8_9[] = R"(
 				"name": "gameSettings",
 				"obfuscated": "gameSettings",
 				"signature": "Lnet/minecraft/client/settings/GameSettings;",
-				"static": false
-			},
-			{
-				"name": "usageSnooper",
-				"obfuscated": "usageSnooper",
-				"signature": "Lnet/minecraft/profiler/PlayerUsageSnooper;",
 				"static": false
 			}
 		],
@@ -239,14 +239,14 @@ const char mappings_lunar_1_8_9[] = R"(
 			}
 		]
 	},
-	"net/minecraft/profiler/PlayerUsageSnooper": {
-		"obfuscated": "net/minecraft/profiler/PlayerUsageSnooper",
+	"net/minecraft/client/resources/model/ModelBakery": {
+		"obfuscated": "net/minecraft/client/resources/model/ModelBakery",
 		"fields": [
 			{
-				"name": "snooperStats",
-				"obfuscated": "snooperStats",
+				"name": "BUILT_IN_MODELS",
+				"obfuscated": "BUILT_IN_MODELS",
 				"signature": "Ljava/util/Map;",
-				"static": false
+				"static": true
 			}
 		],
 		"methods": []

@@ -87,6 +87,20 @@ std::string Ripterms::JavaClass::getObfuscatedMethodName(const std::string& unob
 	return std::string();
 }
 
+std::string Ripterms::JavaClass::getObfuscatedFieldName(const std::string& unobf_name)
+{
+	auto classjson = mappings[class_path];
+	for (auto& method : classjson["fields"]) {
+		if (method["name"] == unobf_name) return method["obfuscated"];
+	}
+	return std::string();
+}
+
+std::string Ripterms::JavaClass::getObfuscatedClassName()
+{
+	return mappings[class_path]["obfuscated"];
+}
+
 bool Ripterms::JavaClass::init()
 {
 	try {

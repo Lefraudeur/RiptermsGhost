@@ -1,5 +1,6 @@
 #include "Modules.h"
 #include "../Patcher/Patcher.h"
+#include "../../java/lang/String/String.h"
 
 namespace
 {
@@ -9,21 +10,17 @@ namespace
 
 void Ripterms::Modules::Reach::run()
 {
-	static Timer timer(std::chrono::milliseconds(5000));
-	static bool prev_enabled = false;
-	static double prev_reach = 0.0;
+	static float prev_reach_distance = -1.0f;
 	if (!enabled) {
-		if (prev_enabled) {
-			Ripterms::p_tienv->RetransformClasses(1, &Ripterms::classcache->EntityRendererClass.javaClass);
-			prev_reach = 0.0;
+		if (prev_reach_distance != -1.0f) {
+			Ripterms::cache->BUILT_IN_MODELS.put(String("reach_distance"), String("3.0")); //we use this random Map as storage
+			prev_reach_distance = -1.0f;
 		}
-		prev_enabled = enabled;
 		return;
 	}
-	prev_enabled = enabled;
-	if (!timer.isElapsed() || prev_reach == reach_distance) return;
-	prev_reach = reach_distance;
-	Ripterms::Patcher::patchGetMouseOver(reach_distance);
+	if (prev_reach_distance == reach_distance) return;
+	Ripterms::cache->BUILT_IN_MODELS.put(String("reach_distance"), String(std::to_string(reach_distance)));
+	prev_reach_distance = reach_distance;
 }
 
 void Ripterms::Modules::Reach::renderGUI()

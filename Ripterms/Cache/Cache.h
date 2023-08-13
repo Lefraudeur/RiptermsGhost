@@ -1,6 +1,7 @@
 #pragma once
 #include "../../java/lang/Object/Object.h"
 #include "../../net/minecraft/client/Minecraft/Minecraft.h"
+#include "../../java/util/Map/Map.h"
 
 namespace Ripterms
 {
@@ -14,6 +15,7 @@ namespace Ripterms
 		WorldClient theWorld{};
 		List playerEntities{};
 		GameSettings gameSettings{};
+		Map BUILT_IN_MODELS{};
 		bool fillCache();
 	private:
 		EntityPlayerSP prev_thePlayer{};
