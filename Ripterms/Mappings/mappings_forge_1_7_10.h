@@ -73,6 +73,12 @@ const char mappings_forge_1_7_10[] = R"(
 				"obfuscated": "patchEntityRenderer",
 				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
+			},
+			{
+				"name": "patchClientBrandRetriever",
+				"obfuscated": "patchClientBrandRetriever",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
+				"static": true
 			}
 		]
 	},
