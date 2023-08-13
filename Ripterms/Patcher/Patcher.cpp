@@ -93,6 +93,12 @@ bool Ripterms::Patcher::init()
 		return false;
 	}
 	Ripterms::cache->BUILT_IN_MODELS = Ripterms::p_env->GetStaticObjectField(Ripterms::classcache->ModelBakeryClass.javaClass, Ripterms::classcache->ModelBakeryClass.fields["BUILT_IN_MODELS"]);
+	jclass hashmapClass = Ripterms::p_env->FindClass("java/util/HashMap");
+	jmethodID constructor = Ripterms::p_env->GetMethodID(hashmapClass, "<init>", "()V");
+	jobject hashmap = Ripterms::p_env->NewObject(hashmapClass, constructor);
+	Ripterms::p_env->SetStaticObjectField(Ripterms::classcache->ModelBakeryClass.javaClass, Ripterms::classcache->ModelBakeryClass.fields["BUILT_IN_MODELS"], hashmap);
+	Ripterms::cache->BUILT_IN_MODELS = hashmap;
+	Ripterms::p_env->DeleteLocalRef(hashmapClass);
 	Ripterms::cache->BUILT_IN_MODELS.put(String("reach_distance"), String("3.0"));
 	ClassLoader classLoader(ClassLoader::newObject());
 	if(!classLoader.loadJar(ClassPatcherJar, sizeof(ClassPatcherJar))) return false;
