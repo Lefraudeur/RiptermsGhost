@@ -23,8 +23,6 @@ Included Example Features :
 
 insert to open the gui / end key to self destruct
 
-I won't take time to make a good looking gui
-
 Huh sometimes you will get an error "can't find info for object class"
 I think that happens because my code is shit, or because not enough ram, just try again
 I'll fix it once I find the solution
