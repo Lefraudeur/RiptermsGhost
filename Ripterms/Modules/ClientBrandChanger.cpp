@@ -18,8 +18,11 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 		std::strcpy(name, old_ClientModName.toString().c_str());
 		runonce = false;
 	}
+	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 	ImGui::Text("Client Brand Changer:");
+	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 	ImGui::InputText("name", name, sizeof(name));
+	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 	if (ImGui::Button("change")) {
 		Ripterms::cache->EMPTY_MAP.put(
 			String("client_brand"),
