@@ -15,5 +15,6 @@ void Ripterms::Modules::Test::run()
 
 void Ripterms::Modules::Test::renderGUI()
 {
+	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 	if (ImGui::Button("Run Test")) run();
 }

@@ -87,6 +87,7 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 		style.Colors[ImGuiCol_Text] = ImColor(200, 200, 200);
 		style.Colors[ImGuiCol_HeaderActive] = ImColor(78, 78, 78);
 		style.Colors[ImGuiCol_HeaderHovered] = ImColor(78, 78, 78);
+		style.Colors[ImGuiCol_ChildBg] = ImVec4(.1f, .1f, .1f, .55f); 
 
 		/*  rounding */
 
@@ -104,17 +105,116 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 			ClipCursor(nullptr);
 			clipped = false;
 		}
-		ImGui::SetNextWindowSizeConstraints(ImVec2(400.0f, 300.0f), ImVec2(400.0f, 1000.0f));
-		ImGui::Begin("Ripterms Ghost", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
+
+		ImGui::SetNextWindowBgAlpha(.8f);
+		ImGui::SetWindowSize(ImVec2(600.0f, 400.0f));
+		ImGui::SetNextWindowSizeConstraints(ImVec2(600.0f, 400.0f), ImVec2(600.0f, 1000.0f));
+		ImGui::Begin("Ripterms Ghost", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
 		{
-			ImGui::SetWindowSize(ImVec2(400.0f, 300.0f));
+			ImGui::SetWindowSize(ImVec2(600.0f, 400.0f));
+		
+			static float alpha = 255;
+			static bool tick = false;
+			static float speed = .25f;
+			static ImVec2 category_button_size = ImVec2(100, 30);
+
+			ImVec4 active_tab_color = ImVec4(1.f, 0.0f, 0.0f, 1.f); 
+			ImVec4 inactive_tab_color = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
+
+			ImVec2 window_size = ImGui::GetWindowSize();
+			ImVec2 center_pos = ImVec2(window_size.x * 0.5f, window_size.y * 0.5f);
+
+			ImGui::BeginChild("##header", (ImVec2(583, 40)));
 			
-			Ripterms::Modules::AimAssist::renderGUI();
-			Ripterms::Modules::Reach::renderGUI();
-			Ripterms::Modules::LeftClicker::renderGUI();
-			Ripterms::Modules::FullBright::renderGUI();
-			Ripterms::Modules::ClientBrandChanger::renderGUI();
-			Ripterms::Modules::Test::renderGUI();
+			/* text animation */
+
+			if (tick || alpha >= 255)
+			{
+				tick = true;
+				if (!(alpha <= 0))
+					alpha -= speed;
+				else if (alpha <= 0)
+					tick ^= 1;
+			}
+
+			else if (!tick || alpha != 255)
+			{
+				tick = false;
+				if (!(alpha >= 255))
+					alpha += speed;
+				else if (alpha >= 255)
+					tick ^= 1;
+			}
+
+			ImGui::SetCursorPosY(10);
+			ImGui::SetCursorPosX(center_pos.x - 55);
+			ImGui::TextColored(ImColor(111, 0, 255, (int)alpha), "r i p t e r m s    g h o s t"); /* nice spacing*/
+
+			ImGui::EndChild();
+
+			ImGui::SetCursorPosY(55);
+			ImGui::BeginChild("##categories", ImVec2(100, 345), 0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+			/* shush ik headers exist  :) */
+
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.f);
+
+			if (Ripterms::GUI::current_tab == 1) { ImGui::PushStyleColor(ImGuiCol_Button, active_tab_color); }
+			if (ImGui::Button("Combat", category_button_size)) { Ripterms::GUI::current_tab = 1; 	}
+			if (Ripterms::GUI::current_tab == 1) { ImGui::PopStyleColor(); }
+
+			if (Ripterms::GUI::current_tab == 2) { ImGui::PushStyleColor(ImGuiCol_Button, active_tab_color); }
+			if (ImGui::Button("Misc", category_button_size)) { Ripterms::GUI::current_tab = 2; }
+			if (Ripterms::GUI::current_tab == 2) { ImGui::PopStyleColor(); }
+
+			ImGui::SetCursorPos(ImVec2(0, ImGui::GetCursorPosY() + 245));
+
+			if (Ripterms::GUI::current_tab == 3) { ImGui::PushStyleColor(ImGuiCol_Button, active_tab_color); }
+			if (ImGui::Button("Settings", category_button_size)) { Ripterms::GUI::current_tab = 3; }
+			if (Ripterms::GUI::current_tab == 3) {ImGui::PopStyleColor();	}
+
+			ImGui::PopStyleVar();
+		
+			ImGui::EndChild();
+
+			ImGui::SameLine();
+		
+			ImGui::SetCursorPosX(115);
+			ImGui::BeginChild("##modules");
+
+			if (Ripterms::GUI::current_tab == 1)
+			{
+				ImGui::SetCursorPos(ImVec2(4, 2));
+				ImGui::Text("Combat");
+				ImGui::Separator();
+
+				Ripterms::Modules::AimAssist::renderGUI();
+				Ripterms::Modules::Reach::renderGUI();
+				Ripterms::Modules::LeftClicker::renderGUI();
+			}
+
+			if (Ripterms::GUI::current_tab == 2)
+			{
+				ImGui::SetCursorPos(ImVec2(4, 2));
+				ImGui::Text("Misc");
+				ImGui::Separator();
+
+				Ripterms::Modules::FullBright::renderGUI();
+				ImGui::NewLine();
+				Ripterms::Modules::ClientBrandChanger::renderGUI();
+				Ripterms::Modules::Test::renderGUI();
+			}
+
+			if (Ripterms::GUI::current_tab == 3)
+			{
+				ImGui::SetCursorPos(ImVec2(4, 2));
+				ImGui::Text("Settings");
+				ImGui::Separator();
+
+				/* i'll make this later most likely tmrw i gotta sleep its 11 fuckin pm and i'm tired */
+			}
+
+			ImGui::EndChild();
 		}
 		ImGui::End();
 	}

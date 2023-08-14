@@ -33,4 +33,8 @@ In 1.16.5 + versions, you have to inject while in game (otherwise some classes a
 
 Help would be appreciated (I don't care about pasted modules), I need help mainly for the gui, or code redesigns. You can also make suggestions.
 
-Thanks to t0r for the GUI
+Thanks to t0r-onion for the GUI
+
+Current Contributors:
+Lefraudeur,
+t0r-onion
