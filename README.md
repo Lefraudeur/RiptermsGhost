@@ -37,6 +37,6 @@ Help would be appreciated (I don't care about pasted modules), help with code re
 
 Thanks to t0r for the GUI
 
-Current Developers:
-Lefraudeur
+Current Contributors:
+Lefraudeur,
 t0r
