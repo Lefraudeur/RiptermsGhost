@@ -1,7 +1,7 @@
 # RiptermsGhost
 An example injectable cheat for minecraft using java native interface and jvmti.
 
-Currently in developement.
+Currently in development.
 Uses weird jni export function hooking for better compatibility with clients that doesn't allow the creation of new JNIEnv*. That's why there is a weird init/exit system, I might change this weird code in the future
 
 This cheat is open source, mainly to show you a combination of all the techniques I found to make injectable cheats for minecraft java, it is the only open source client that uses java asm to edit class bytecode, and that can completely unload itself. I also wanted to publish a jni cheat that was not a copy paste of gasper lol.
