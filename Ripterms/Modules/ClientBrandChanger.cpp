@@ -1,14 +1,5 @@
 #include "Modules.h"
 #include "../Patcher/Patcher.h"
-#include "../../java/lang/String/String.h"
-
-namespace {
-	char name[128] = { 0 };
-	String old_ClientModName{};
-	String getClientModName() {
-		return Ripterms::p_env->CallStaticObjectMethod(Ripterms::classcache->ClientBrandRetrieverClass.javaClass, Ripterms::classcache->ClientBrandRetrieverClass.methods["getClientModName"]);
-	}
-}
 
 void Ripterms::Modules::ClientBrandChanger::renderGUI()
 {
@@ -43,4 +34,9 @@ void Ripterms::Modules::ClientBrandChanger::disable()
 		old_ClientModName
 	);
 	old_ClientModName.clear();
+}
+
+String Ripterms::Modules::ClientBrandChanger::getClientModName()
+{
+	return Ripterms::p_env->CallStaticObjectMethod(Ripterms::classcache->ClientBrandRetrieverClass.javaClass, Ripterms::classcache->ClientBrandRetrieverClass.methods["getClientModName"]);
 }

@@ -1,12 +1,5 @@
 #include "Modules.h"
 
-namespace
-{
-	bool enabled = false;
-	int min_cps = 7;
-	int max_cps = 14;
-}
-
 void Ripterms::Modules::LeftClicker::run()
 {
 	static Timer timer(std::chrono::milliseconds(1000/min_cps));

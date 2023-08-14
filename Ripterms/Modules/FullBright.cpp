@@ -1,11 +1,5 @@
 #include "Modules.h"
 
-namespace
-{
-	bool enabled = false;
-	float old_gamma = -1.0f;
-}
-
 void Ripterms::Modules::FullBright::run()
 {
 	if (!enabled) {
