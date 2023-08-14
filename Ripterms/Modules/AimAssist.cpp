@@ -4,7 +4,7 @@ namespace
 {
 	bool enabled = false;
 	float max_distance = 6.0f;
-	float max_angle = 120.0f;
+	float max_angle = 180.0f;
 }
 
 void Ripterms::Modules::AimAssist::run()
