@@ -36,3 +36,7 @@ Help would be appreciated
 Help would be appreciated (I don't care about pasted modules), help with code redesigns. You can also make suggestions.
 
 Thanks to t0r for the GUI
+
+Current Developers:
+Lefraudeur
+t0r
