@@ -207,34 +207,34 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 
 					ImGui::Separator();
 
-					ImGui::ColorEdit4("Active Tab", (float*)&Ripterms::GUI::color_active_tab, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Active Tab", &Ripterms::GUI::color_active_tab.x, ImGuiColorEditFlags_NoInputs);
 					//ImGui::ColorEdit4("Inactive Tab", (float*)&Ripterms::GUI::color_inactive_tab, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Child Background", (float*)&Ripterms::GUI::color_child_bg, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Bool Enabled", (float*)&Ripterms::GUI::color_bool_enabled, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Bool Disabled", (float*)&Ripterms::GUI::color_bool_disabled, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Slider Grab", (float*)&Ripterms::GUI::color_slider_grab, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Slider Line", (float*)&Ripterms::GUI::color_slider_line, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Frame Background", (float*)&Ripterms::GUI::color_frame_bg, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Frame Background Active", (float*)&Ripterms::GUI::color_frame_bg_active, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Frame Background Hovered", (float*)&Ripterms::GUI::color_frame_bg_hovered, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Window Background", (float*)&Ripterms::GUI::color_window_bg, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Button", (float*)&Ripterms::GUI::color_button, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Button  Active", (float*)&Ripterms::GUI::color_button_active, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Button Hovered", (float*)&Ripterms::GUI::color_button_hovered, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Text", (float*)&Ripterms::GUI::color_text, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Header", (float*)&Ripterms::GUI::color_header, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Header Active", (float*)&Ripterms::GUI::color_header_active, ImGuiColorEditFlags_NoInputs);
-					ImGui::ColorEdit4("Header Hovered", (float*)&Ripterms::GUI::color_header_hovered, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Child Background", &Ripterms::GUI::color_child_bg.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Bool Enabled", &Ripterms::GUI::color_bool_enabled.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Bool Disabled", &Ripterms::GUI::color_bool_disabled.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Slider Grab", &Ripterms::GUI::color_slider_grab.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Slider Line", &Ripterms::GUI::color_slider_line.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Frame Background", &Ripterms::GUI::color_frame_bg.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Frame Background Active", &Ripterms::GUI::color_frame_bg_active.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Frame Background Hovered", &Ripterms::GUI::color_frame_bg_hovered.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Window Background", &Ripterms::GUI::color_window_bg.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Button", &Ripterms::GUI::color_button.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Button  Active", &Ripterms::GUI::color_button_active.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Button Hovered", &Ripterms::GUI::color_button_hovered.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Text", &Ripterms::GUI::color_text.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Header", &Ripterms::GUI::color_header.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Header Active", &Ripterms::GUI::color_header_active.Value.x, ImGuiColorEditFlags_NoInputs);
+					ImGui::ColorEdit4("Header Hovered", &Ripterms::GUI::color_header_hovered.Value.x, ImGuiColorEditFlags_NoInputs);
 					
 					ImGui::Separator();
 
-					ImGui::SliderInt("Frame ##Rounding", &Ripterms::GUI::rounding_frame, 0, 100);
-					ImGui::SliderInt("Window ##Rounding", &Ripterms::GUI::rounding_window, 0, 100);
-					ImGui::SliderInt("Child ##Rounding", &Ripterms::GUI::rounding_child, 0, 100);
-					ImGui::SliderInt("Grab ##Rounding", &Ripterms::GUI::rounding_grab, 0, 100);
-					ImGui::SliderInt("Popup ##Rounding", &Ripterms::GUI::rounding_popup, 0, 100);
-					ImGui::SliderInt("Scrollbar ##Rounding", &Ripterms::GUI::rounding_scrollbar, 0, 100);
-					ImGui::SliderInt("Tab ##Rounding", &Ripterms::GUI::rounding_tab, 0, 100);
+					ImGui::SliderFloat("Frame ##Rounding", &Ripterms::GUI::rounding_frame, 0, 100, "%1.0f");
+					ImGui::SliderFloat("Window ##Rounding", &Ripterms::GUI::rounding_window, 0, 100, "%1.0f");
+					ImGui::SliderFloat("Child ##Rounding", &Ripterms::GUI::rounding_child, 0, 100, "%1.0f");
+					ImGui::SliderFloat("Grab ##Rounding", &Ripterms::GUI::rounding_grab, 0, 100, "%1.0f");
+					ImGui::SliderFloat("Popup ##Rounding", &Ripterms::GUI::rounding_popup, 0, 100, "%1.0f");
+					ImGui::SliderFloat("Scrollbar ##Rounding", &Ripterms::GUI::rounding_scrollbar, 0, 100, "%1.0f");
+					ImGui::SliderFloat("Tab ##Rounding", &Ripterms::GUI::rounding_tab, 0, 100, "%1.0f");
 
 					ImGui::PopStyleVar(2);
 				}
