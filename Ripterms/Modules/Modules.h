@@ -81,8 +81,11 @@ namespace Ripterms
 			void renderGUI() override;
 		};
 
-		inline IModule* combat[] = { new AimAssist(), new Reach(), new LeftClicker() };
-		inline IModule* misc[] = { new FullBright(), new ClientBrandChanger(), new Test() };
+		inline std::map<std::string, std::vector<IModule*>> categories =
+		{
+			{"Combat", {new AimAssist(), new Reach(), new LeftClicker()}},
+			{"MISC", {new FullBright(), new ClientBrandChanger(), new Test()}}
+		};
 
 		void runAll();
 		void cleanAll();
