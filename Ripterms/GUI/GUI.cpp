@@ -208,7 +208,7 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 					ImGui::Separator();
 
 					ImGui::ColorEdit4("Active Tab", &Ripterms::GUI::color_active_tab.x, ImGuiColorEditFlags_NoInputs);
-					//ImGui::ColorEdit4("Inactive Tab", (float*)&Ripterms::GUI::color_inactive_tab, ImGuiColorEditFlags_NoInputs);
+					//ImGui::ColorEdit4("Inactive Tab", &Ripterms::GUI::color_inactive_tab.x, ImGuiColorEditFlags_NoInputs);
 					ImGui::ColorEdit4("Child Background", &Ripterms::GUI::color_child_bg.Value.x, ImGuiColorEditFlags_NoInputs);
 					ImGui::ColorEdit4("Bool Enabled", &Ripterms::GUI::color_bool_enabled.Value.x, ImGuiColorEditFlags_NoInputs);
 					ImGui::ColorEdit4("Bool Disabled", &Ripterms::GUI::color_bool_disabled.Value.x, ImGuiColorEditFlags_NoInputs);
