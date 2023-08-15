@@ -18,6 +18,9 @@ namespace Ripterms
 		/* other style*/
 
 		inline bool ripterms_title = true;
+ 		/* both are false by default but eh why not */
+		inline bool show_color_theming = false;
+		inline bool show_rounding_theming = false;
 
 		/* color picker colors */
 		inline ImVec4 color_active_tab = ImVec4(.6f, .0f, .0f, 1.f);
