@@ -82,6 +82,18 @@ const char mappings_forge_1_7_10[] = R"(
 			}
 		]
 	},
+	"org/apache/logging/log4j/ThreadContext": {
+		"obfuscated": "org/apache/logging/log4j/ThreadContext",
+		"fields": [
+			{
+				"name": "EMPTY_MAP",
+				"obfuscated": "EMPTY_MAP",
+				"signature": "Ljava/util/Map;",
+				"static": true
+			}
+		],
+		"methods": []
+	},
 	"net/minecraft/client/Minecraft": {
 		"obfuscated": "net/minecraft/client/Minecraft",
 		"fields": [

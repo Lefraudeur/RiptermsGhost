@@ -25,7 +25,8 @@ void Ripterms::Modules::LeftClicker::renderGUI()
 	ImGui::SameLine();
 	ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30.0f);
 	if (ImGui::ArrowButton("lc", ImGuiDir_Down)) display_options = !display_options;
-	if (display_options) {
+	if (display_options)
+	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 		ImGui::BeginGroup();
 		ImGui::SliderInt("Min CPS", &min_cps, 1, 150);

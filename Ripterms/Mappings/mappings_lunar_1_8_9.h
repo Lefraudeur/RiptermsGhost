@@ -82,6 +82,18 @@ const char mappings_lunar_1_8_9[] = R"(
 			}
 		]
 	},
+	"org/apache/logging/log4j/ThreadContext": {
+		"obfuscated": "org/apache/logging/log4j/ThreadContext",
+		"fields": [
+			{
+				"name": "EMPTY_MAP",
+				"obfuscated": "EMPTY_MAP",
+				"signature": "Ljava/util/Map;",
+				"static": true
+			}
+		],
+		"methods": []
+	},
 	"net/minecraft/client/Minecraft": {
 		"obfuscated": "net/minecraft/client/Minecraft",
 		"fields": [
@@ -244,18 +256,6 @@ const char mappings_lunar_1_8_9[] = R"(
 				"static": true
 			}
 		]
-	},
-	"org/apache/logging/log4j/ThreadContext": {
-		"obfuscated": "org/apache/logging/log4j/ThreadContext",
-		"fields": [
-			{
-				"name": "EMPTY_MAP",
-				"obfuscated": "EMPTY_MAP",
-				"signature": "Ljava/util/Map;",
-				"static": true
-			}
-		],
-		"methods": []
 	}
 }
 )";
