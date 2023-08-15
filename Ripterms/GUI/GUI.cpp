@@ -111,6 +111,7 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 		ImGui::SetNextWindowSizeConstraints(ImVec2(600.0f, 400.0f), ImVec2(600.0f, 1000.0f));
 		ImGui::Begin("Ripterms Ghost", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
 		{
+
 			ImGui::SetWindowSize(ImVec2(600.0f, 400.0f));
 		
 			static float alpha = 255;
@@ -152,68 +153,54 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 
 			ImGui::EndChild();
 
+			static std::string current_tab = "Combat";
 			ImGui::SetCursorPosY(55);
 			ImGui::BeginChild("##categories", ImVec2(100, 345), 0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+			{
+				ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.f);
 
-			/* shush ik headers exist  :) */
+				for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+				{
+					bool is_selected = category.first == current_tab;
+					if(is_selected) 
+						ImGui::PushStyleColor(ImGuiCol_Button, active_tab_color);
+					if (ImGui::Button(category.first.c_str(), category_button_size))
+						current_tab = category.first;
+					if (is_selected)
+						ImGui::PopStyleColor();
+				}
 
-			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.f);
+				ImGui::SetCursorPos(ImVec2(0, ImGui::GetCursorPosY() + 245));
 
-			if (Ripterms::GUI::current_tab == 1) { ImGui::PushStyleColor(ImGuiCol_Button, active_tab_color); }
-			if (ImGui::Button("Combat", category_button_size)) { Ripterms::GUI::current_tab = 1; 	}
-			if (Ripterms::GUI::current_tab == 1) { ImGui::PopStyleColor(); }
+				if (current_tab == "Settings") { ImGui::PushStyleColor(ImGuiCol_Button, active_tab_color); }
+				if (ImGui::Button("Settings", category_button_size)) { current_tab = 3; }
+				if (current_tab == "Settings") { ImGui::PopStyleColor(); }
 
-			if (Ripterms::GUI::current_tab == 2) { ImGui::PushStyleColor(ImGuiCol_Button, active_tab_color); }
-			if (ImGui::Button("Misc", category_button_size)) { Ripterms::GUI::current_tab = 2; }
-			if (Ripterms::GUI::current_tab == 2) { ImGui::PopStyleColor(); }
-
-			ImGui::SetCursorPos(ImVec2(0, ImGui::GetCursorPosY() + 245));
-
-			if (Ripterms::GUI::current_tab == 3) { ImGui::PushStyleColor(ImGuiCol_Button, active_tab_color); }
-			if (ImGui::Button("Settings", category_button_size)) { Ripterms::GUI::current_tab = 3; }
-			if (Ripterms::GUI::current_tab == 3) {ImGui::PopStyleColor();	}
-
-			ImGui::PopStyleVar();
-		
+				ImGui::PopStyleVar();
+			}
 			ImGui::EndChild();
 
 			ImGui::SameLine();
 		
 			ImGui::SetCursorPosX(115);
 			ImGui::BeginChild("##modules");
-
-			if (Ripterms::GUI::current_tab == 1)
 			{
-				ImGui::SetCursorPos(ImVec2(4, 2));
-				ImGui::Text("Combat");
-				ImGui::Separator();
+				if (current_tab == "Settings")
+				{
+					ImGui::SetCursorPos(ImVec2(4, 2));
+					ImGui::Text("Settings");
+					ImGui::Separator();
 
-				Ripterms::Modules::AimAssist::renderGUI();
-				Ripterms::Modules::Reach::renderGUI();
-				Ripterms::Modules::LeftClicker::renderGUI();
+					/* i'll make this later most likely tmrw i gotta sleep its 11 fuckin pm and i'm tired */
+				}
+				else
+				{
+					for (Ripterms::Modules::IModule* module : Ripterms::Modules::categories[current_tab])
+					{
+						module->renderGUI();
+					}
+				}
 			}
-
-			if (Ripterms::GUI::current_tab == 2)
-			{
-				ImGui::SetCursorPos(ImVec2(4, 2));
-				ImGui::Text("Misc");
-				ImGui::Separator();
-
-				Ripterms::Modules::FullBright::renderGUI();
-				ImGui::NewLine();
-				Ripterms::Modules::ClientBrandChanger::renderGUI();
-				Ripterms::Modules::Test::renderGUI();
-			}
-
-			if (Ripterms::GUI::current_tab == 3)
-			{
-				ImGui::SetCursorPos(ImVec2(4, 2));
-				ImGui::Text("Settings");
-				ImGui::Separator();
-
-				/* i'll make this later most likely tmrw i gotta sleep its 11 fuckin pm and i'm tired */
-			}
-
 			ImGui::EndChild();
 		}
 		ImGui::End();

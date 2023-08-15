@@ -121,6 +121,7 @@ bool Ripterms::Patcher::init()
 	ClassLoader classLoader(ClassLoader::newObject());
 	if(!classLoader.loadJar(ClassPatcherJar, sizeof(ClassPatcherJar))) return false;
 	retransformClasses();
+	Ripterms::p_tienv->SetEventNotificationMode(JVMTI_DISABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);
 	classLoader.clear();
 	System::gc();
 	return true;
@@ -132,6 +133,5 @@ void Ripterms::Patcher::clean()
 	Ripterms::p_env->SetStaticObjectField(Ripterms::classcache->ThreadContextClass.javaClass, Ripterms::classcache->ThreadContextClass.fields["EMPTY_MAP"], original_EmptyMap.getInstance());
 	original_EmptyMap.clear();
 	//restoring old classes
-	Ripterms::p_tienv->SetEventNotificationMode(JVMTI_DISABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);
 	retransformClasses();
 }

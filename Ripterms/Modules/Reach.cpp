@@ -2,11 +2,6 @@
 #include "../Patcher/Patcher.h"
 #include "../../java/lang/String/String.h"
 
-namespace
-{
-	bool enabled = false;
-	float reach_distance = 4.0f;
-}
 
 void Ripterms::Modules::Reach::run()
 {

@@ -13,10 +13,7 @@ void mainLoop()
 {
 	static Ripterms::Timer timer(std::chrono::milliseconds(1));
 	if (!timer.isElapsed() || !Ripterms::cache->fillCache()) return;
-	Ripterms::Modules::AimAssist::run();
-	Ripterms::Modules::Reach::run();
-	Ripterms::Modules::LeftClicker::run();
-	Ripterms::Modules::FullBright::run();
+	Ripterms::Modules::runAll();
 }
 
 namespace {
@@ -199,8 +196,7 @@ BOOL Ripterms::init(HMODULE dll, FILE* fbuffer1, FILE* fbuffer2, FILE* fbuffer3)
 void Ripterms::clean()
 {
 	tmp_no_hook = true;
-	Ripterms::Modules::FullBright::disable();
-	Ripterms::Modules::ClientBrandChanger::disable();
+	Ripterms::Modules::cleanAll();
 	Ripterms::Patcher::clean();
 	delete Ripterms::cache;
 	System::gc();
@@ -225,6 +221,7 @@ void Ripterms::partialClean()
 {
 	MH_Uninitialize();
 	Ripterms::p_env = nullptr;
+	Ripterms::Modules::cleanAll();
 	delete Ripterms::cache;
 	delete Ripterms::classcache;
 }
