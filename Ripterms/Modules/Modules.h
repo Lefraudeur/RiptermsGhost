@@ -84,7 +84,7 @@ namespace Ripterms
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
 			{"Combat", {new AimAssist(), new Reach(), new LeftClicker()}},
-			{"MISC", {new FullBright(), new ClientBrandChanger(), new Test()}}
+			{"Misc", {new FullBright(), new ClientBrandChanger(), new Test()}}
 		};
 
 		void runAll();
