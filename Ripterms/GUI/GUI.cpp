@@ -173,7 +173,7 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 				ImGui::SetCursorPos(ImVec2(0, ImGui::GetCursorPosY() + 245));
 
 				if (current_tab == "Settings") { ImGui::PushStyleColor(ImGuiCol_Button, active_tab_color); }
-				if (ImGui::Button("Settings", category_button_size)) { current_tab = 3; }
+				if (ImGui::Button("Settings", category_button_size)) { current_tab = "Settings"; }
 				if (current_tab == "Settings") { ImGui::PopStyleColor(); }
 
 				ImGui::PopStyleVar();
