@@ -2,9 +2,9 @@
 An example injectable cheat for minecraft using java native interface and jvmti.
 
 Currently in development.
-Uses weird jni export function hooking for better compatibility with clients that doesn't allow the creation of new JNIEnv*. That's why there is a weird init/exit system, I might change this weird code in the future
+Uses weird jni export function hooking for better compatibility with clients that doesn't allow the creation of new JNIEnv*. That's why there is a weird init/exit system.
 
-This cheat is open source, mainly to show you a combination of all the techniques I found to make injectable cheats for minecraft java, it is the only open source client that uses java asm to edit class bytecode, and that can completely unload itself. I also wanted to publish a jni cheat that was not a copy paste of gasper lol.
+This cheat is open source, mainly to show you a combination of all the techniques I found to make injectable cheats for minecraft java, it is one of the only open source client that uses java asm to edit class bytecode, and that can completely unload itself. I also wanted to publish a jni cheat that was not a copy paste of gasper lol.
 
 Compatible with lunarclient 1.7.10, 1.8.9, 1.16.5, 1.17.1
 
@@ -14,7 +14,7 @@ Change mappings to add new versions
 
 Included Example Features :
 - AimAssist
-- Reach (see asm folder) Does not work on 1.16.5+ for now
+- Reach (see asm folder)
 - Left Clicker
 - Full Bright
 - Client Brand Changer (see asm folder) (to troll staffs lol, sent to the server on login and displayed by some anticheats)
