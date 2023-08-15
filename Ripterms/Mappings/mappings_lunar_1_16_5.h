@@ -70,7 +70,7 @@ const char mappings_lunar_1_16_5[] = R"(
 		"methods": [
 			{
 				"name": "patchEntityRenderer",
-				"obfuscated": "patchEntityRenderer",
+				"obfuscated": "patchEntityRenderer1_16_5",
 				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
 			},
