@@ -28,7 +28,7 @@ Insert to open the gui / end key to self destruct
 
 
 
-To test it, just build visual studio project ON RELEASE CONFIG, and inject it using any injector. (Extreme Injector manual map technique is recommended)
+To test it, just build visual studio project, and inject it using any injector. (Extreme Injector manual map technique is recommended)
 
 Huh sometimes you will get an error "can't find info for object class"
 I think that happens because my code is shit, or because not enough ram, just try again
