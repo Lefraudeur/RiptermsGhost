@@ -105,7 +105,8 @@ bool Ripterms::Patcher::init()
 	Ripterms::p_env->SetStaticObjectField(Ripterms::classcache->ThreadContextClass.javaClass, Ripterms::classcache->ThreadContextClass.fields["EMPTY_MAP"], hashmap);
 	Ripterms::cache->EMPTY_MAP = hashmap;
 	Ripterms::cache->EMPTY_MAP.put(String("reach_distance"), String("3.0"));
-	Ripterms::cache->EMPTY_MAP.put(
+	Ripterms::cache->EMPTY_MAP.put
+	(
 		String("client_brand"),
 		String(Ripterms::p_env->CallStaticObjectMethod(Ripterms::classcache->ClientBrandRetrieverClass.javaClass, Ripterms::classcache->ClientBrandRetrieverClass.methods["getClientModName"]))
 	);

@@ -2,7 +2,8 @@
 
 void Ripterms::Modules::FullBright::run()
 {
-	if (!enabled) {
+	if (!enabled)
+	{
 		disable();
 		return;
 	}

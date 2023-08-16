@@ -7,10 +7,12 @@ void Ripterms::Modules::Test::renderGUI()
 	if (ImGui::Button("Run Test"))
 	{
 		jclass lol = Ripterms::JavaClass::findClass("io/github/lefraudeur/ClassPatcher");
-		if (lol) {
+		if (lol)
+		{
 			std::cout << "found" << std::endl;
 		}
-		else {
+		else 
+		{
 			std::cout << "not found" << std::endl;
 		}
 		if (lol) Ripterms::p_env->DeleteGlobalRef(lol);
