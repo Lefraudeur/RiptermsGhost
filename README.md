@@ -8,7 +8,7 @@ This cheat is open source, mainly to show you a combination of all the technique
 
 ### Supported versions :
 - Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1, 1.18.2
-- Forge: 1.7.10
+- Forge: 1.7.10 (ex: Paladium https://paladium-pvp.fr/)
 
 Change mappings to add new versions
 
