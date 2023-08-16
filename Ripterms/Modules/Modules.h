@@ -92,6 +92,7 @@ namespace Ripterms
 			float motionY = 0.0f;
 			float motionZ = 0.0f;
 			int tickDelay = 1;
+			bool only_facing = true;
 		};
 
 		inline std::map<std::string, std::vector<IModule*>> categories =

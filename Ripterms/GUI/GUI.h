@@ -30,9 +30,9 @@ namespace Ripterms
 		inline ImColor color_bool_disabled = ImColor(173, 55, 65, 255);
 		inline ImColor color_slider_grab = ImColor(10, 150, 10, 255);
 		inline ImColor color_slider_line = ImColor(173, 55, 65, 255);
-		inline ImColor color_frame_bg = ImColor(25, 25, 25, 255);
-		inline ImColor color_frame_bg_active = ImColor(25, 25, 25, 255);
-		inline ImColor color_frame_bg_hovered = ImColor(25, 25, 25, 255);
+		inline ImColor color_frame_bg = ImColor(35, 35, 35, 255);
+		inline ImColor color_frame_bg_active = ImColor(35, 35, 35, 255);
+		inline ImColor color_frame_bg_hovered = ImColor(35, 35, 35, 255);
 		inline ImColor color_window_bg = ImColor(11, 14, 15, 255);
 		inline ImColor color_button = ImColor(31, 30, 31, 255);
 		inline ImColor color_button_active = ImColor(239, 73, 88, 255);

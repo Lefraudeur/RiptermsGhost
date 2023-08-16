@@ -28,7 +28,7 @@ Insert to open the gui / end key to self destruct
 
 
 
-To test it, just build visual studio project ON RELEASE CONFIG, and inject it using any injector. (Extreme Injector manual map technique is recommended)
+To test it, just build visual studio project, and inject it using any injector. (Extreme Injector manual map technique is recommended)
 
 Huh sometimes you will get an error "can't find info for object class"
 I think that happens because my code is shit, or because not enough ram, just try again
@@ -36,7 +36,7 @@ I'll fix it once I find the solution
 
 In 1.16.5 + versions, you have to inject while in game (otherwise some classes are not loaded)
 
-Help would be appreciated (I don't care about pasted modules), I need help mainly for the gui, or code redesigns. You can also make suggestions.
+Help would be appreciated (I don't care about pasted modules), I need help mainly for the gui, or code redesigns. You can also make suggestions. (open an issue or a pull request to dev branch)
 
 Thanks to t0r-onion for the GUI
 
