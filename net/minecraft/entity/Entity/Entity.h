@@ -1,10 +1,16 @@
 #pragma once
 #include "../../../../java/lang/Object/Object.h"
 
-class Entity : public Object {
+class Entity : public Object
+{
 public:
 	using Object::Object;
-	Ripterms::Maths::Vector3d getPosition();
-	Ripterms::Maths::Vector2d getRotation();
+
+	Ripterms::Maths::Vector3d getPosition() const;
+	Ripterms::Maths::Vector2d getRotation() const;
+	Ripterms::Maths::Vector3d getMotion() const;
+	int getHurtResistantTime() const;
+
+	void setMotion(const Ripterms::Maths::Vector3d& motion);
 	void setRotation(const Ripterms::Maths::Vector2d& yawPitch);
 };

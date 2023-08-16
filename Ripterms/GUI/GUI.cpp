@@ -179,7 +179,7 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 						ImGui::PopStyleColor();
 				}
 
-				ImGui::SetCursorPos(ImVec2(0, ImGui::GetCursorPosY() + 247));
+				ImGui::SetCursorPos(ImVec2(0, ImGui::GetWindowSize()[1] - Ripterms::GUI::category_button_size[1]));
 
 				if (current_tab == "Settings") { ImGui::PushStyleColor(ImGuiCol_Button, Ripterms::GUI::color_active_tab); }
 				if (ImGui::Button("Settings", Ripterms::GUI::category_button_size)) { current_tab = "Settings"; }
@@ -276,10 +276,12 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-	if (msg == WM_KEYDOWN && wParam == VK_INSERT) {
+	if (msg == WM_KEYDOWN && wParam == VK_INSERT)
+	{
 		Ripterms::GUI::draw = !Ripterms::GUI::draw;
 	}
-	if (Ripterms::GUI::draw) {
+	if (Ripterms::GUI::draw)
+	{
 		ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
 		return true;
 	}
