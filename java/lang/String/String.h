@@ -6,6 +6,6 @@ public:
 	using Object::Object;
 	String(const std::string& str);
 	String(const char* str);
-	int size();
-	std::string toString();
+	int size() const;
+	std::string toString() const;
 };

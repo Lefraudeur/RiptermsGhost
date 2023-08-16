@@ -4,7 +4,8 @@
 void Ripterms::Modules::ClientBrandChanger::renderGUI()
 {
 	static bool runonce = true;
-	if (runonce) {
+	if (runonce)
+	{
 		old_ClientModName = getClientModName();
 		std::strcpy(name, old_ClientModName.toString().c_str());
 		runonce = false;
@@ -14,14 +15,17 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 	ImGui::InputText("name", name, sizeof(name));
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
-	if (ImGui::Button("change")) {
-		Ripterms::cache->EMPTY_MAP.put(
+	if (ImGui::Button("change"))
+	{
+		Ripterms::cache->EMPTY_MAP.put
+		(
 			String("client_brand"),
 			String(name)
 		);
 	}
 	ImGui::SameLine();
-	if (ImGui::Button("reset")) {
+	if (ImGui::Button("reset"))
+	{
 		std::strcpy(name, old_ClientModName.toString().c_str());
 		disable();
 	}
@@ -29,7 +33,8 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 
 void Ripterms::Modules::ClientBrandChanger::disable()
 {
-	Ripterms::cache->EMPTY_MAP.put(
+	Ripterms::cache->EMPTY_MAP.put
+	(
 		String("client_brand"),
 		old_ClientModName
 	);

@@ -11,17 +11,23 @@ namespace
 {
 	Object original_EmptyMap{};
 
+	bool errCheck(jvmtiError error)
+	{
+		if (error == JVMTI_ERROR_NONE)
+		{
+			return true;
+		}
+		char* err = nullptr;
+		Ripterms::p_tienv->GetErrorName(error, &err);
+		std::cout << err << std::endl;
+		Ripterms::p_tienv->Deallocate((unsigned char*)err);
+		return false;
+	}
+
 	void retransformClasses()
 	{
 		jclass classes[] = { Ripterms::classcache->EntityRendererClass.javaClass, Ripterms::classcache->ClientBrandRetrieverClass.javaClass };
-		jvmtiError error = Ripterms::p_tienv->RetransformClasses(sizeof(classes) / sizeof(jclass), classes);
-		if (error) {
-			char* err = nullptr;
-			Ripterms::p_tienv->GetErrorName(error, &err);
-			std::cout << err << std::endl;
-			std::cout << "Failed Retransform" << std::endl;
-			Ripterms::p_tienv->Deallocate((unsigned char*)err);
-		}
+		errCheck(Ripterms::p_tienv->RetransformClasses(sizeof(classes) / sizeof(jclass), classes));
 	}
 
 	void JNICALL ClassFileLoadHook
@@ -38,7 +44,8 @@ namespace
 		unsigned char** new_class_data
 	)
 	{
-		std::function<void(const std::string&, const std::string&)> patchClass = [=](const std::string& patchMethod, const std::string& methodToPatch) {
+		std::function<void(const std::string&, const std::string&)> patchClass = [=](const std::string& patchMethod, const std::string& methodToPatch)
+		{
 			Ripterms::JavaClass ClassPatcherClass("io/github/lefraudeur/ClassPatcher");
 			jbyteArray original_class_bytes = jni_env->NewByteArray(class_data_len);
 			jni_env->SetByteArrayRegion(original_class_bytes, 0, class_data_len, (const jbyte*)class_data);
@@ -64,10 +71,12 @@ namespace
 			jni_env->DeleteLocalRef(new_class_bytes);
 		};
 
-		if (jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->EntityRendererClass.javaClass)) {
+		if (jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->EntityRendererClass.javaClass))
+		{
 			patchClass("patchEntityRenderer", Ripterms::classcache->EntityRendererClass.getObfuscatedMethodName("getMouseOver"));
 		}
-		else if (jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->ClientBrandRetrieverClass.javaClass)) {
+		else if (jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->ClientBrandRetrieverClass.javaClass))
+		{
 			patchClass("patchClientBrandRetriever", Ripterms::classcache->ClientBrandRetrieverClass.getObfuscatedMethodName("getClientModName"));
 		}
 
@@ -78,32 +87,15 @@ bool Ripterms::Patcher::init()
 {
 	jvmtiCapabilities capabilities{};
 	capabilities.can_retransform_classes = JVMTI_ENABLE;
-	jvmtiError error = Ripterms::p_tienv->AddCapabilities(&capabilities);
-	if (error) {
-		char* errstr = nullptr;
-		Ripterms::p_tienv->GetErrorName(error, &errstr);
-		std::cerr << errstr << std::endl;
-		Ripterms::p_tienv->Deallocate((unsigned char*)errstr);
+	if(!errCheck(Ripterms::p_tienv->AddCapabilities(&capabilities)))
 		return false;
-	}
+
 	jvmtiEventCallbacks callbacks{};
 	callbacks.ClassFileLoadHook = &ClassFileLoadHook;
-	error = Ripterms::p_tienv->SetEventCallbacks(&callbacks, sizeof(jvmtiEventCallbacks));
-	if (error) {
-		char* errstr = nullptr;
-		Ripterms::p_tienv->GetErrorName(error, &errstr);
-		std::cerr << errstr << std::endl;
-		Ripterms::p_tienv->Deallocate((unsigned char*)errstr);
+	if(!errCheck(Ripterms::p_tienv->SetEventCallbacks(&callbacks, sizeof(jvmtiEventCallbacks))))
 		return false;
-	}
-	error = Ripterms::p_tienv->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);
-	if (error) {
-		char* errstr = nullptr;
-		Ripterms::p_tienv->GetErrorName(error, &errstr);
-		std::cerr << errstr << std::endl;
-		Ripterms::p_tienv->Deallocate((unsigned char*)errstr);
-		return false;
-	}
+
+	if(!errCheck(Ripterms::p_tienv->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL))) return false;
 
 	//here I am using an empty map, already in th game, to hide and store my cheat data, the getMouseOver than accesses this map (see asm folder)
 	original_EmptyMap = Ripterms::p_env->GetStaticObjectField(Ripterms::classcache->ThreadContextClass.javaClass, Ripterms::classcache->ThreadContextClass.fields["EMPTY_MAP"]);
@@ -113,7 +105,8 @@ bool Ripterms::Patcher::init()
 	Ripterms::p_env->SetStaticObjectField(Ripterms::classcache->ThreadContextClass.javaClass, Ripterms::classcache->ThreadContextClass.fields["EMPTY_MAP"], hashmap);
 	Ripterms::cache->EMPTY_MAP = hashmap;
 	Ripterms::cache->EMPTY_MAP.put(String("reach_distance"), String("3.0"));
-	Ripterms::cache->EMPTY_MAP.put(
+	Ripterms::cache->EMPTY_MAP.put
+	(
 		String("client_brand"),
 		String(Ripterms::p_env->CallStaticObjectMethod(Ripterms::classcache->ClientBrandRetrieverClass.javaClass, Ripterms::classcache->ClientBrandRetrieverClass.methods["getClientModName"]))
 	);

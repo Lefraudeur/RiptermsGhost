@@ -103,36 +103,33 @@ std::string Ripterms::JavaClass::getObfuscatedClassName()
 
 bool Ripterms::JavaClass::init()
 {
-	try {
-		switch (version) {
-			case LUNAR_1_8_9:
-			{
-				mappings = nlohmann::json::parse(mappings_lunar_1_8_9);
-				break;
-			}
-			case LUNAR_1_7_10:
-			{
-				mappings = nlohmann::json::parse(mappings_lunar_1_7_10);
-				break;
-			}
-			case LUNAR_1_16_5:
-			{
-				mappings = nlohmann::json::parse(mappings_lunar_1_16_5);
-				break;
-			}
-			case FORGE_1_7_10:
-			{
-				mappings = nlohmann::json::parse(mappings_forge_1_7_10);
-				break;
-			}
-			default:
-				std::cerr << "Cannot find mappings for the specified version" << std::endl;
-				return false;
+	switch (version)
+	{
+		case LUNAR_1_8_9:
+		{
+			mappings = mappings_lunar_1_8_9;
+			break;
 		}
-	}
-	catch (const nlohmann::json::exception& e) {
-		std::cerr << e.what() << std::endl;
-		return false;
+		case LUNAR_1_7_10:
+		{
+			mappings = mappings_lunar_1_7_10;
+			break;
+		}
+		case LUNAR_1_16_5:
+		{
+			mappings = mappings_lunar_1_16_5;
+			break;
+		}
+		case FORGE_1_7_10:
+		{
+			mappings = mappings_forge_1_7_10;
+			break;
+		}
+		default:
+		{
+			std::cerr << "Cannot find mappings for the specified version" << std::endl;
+			return false;
+		}
 	}
 	return true;
 }
@@ -143,14 +140,16 @@ jclass Ripterms::JavaClass::findClass(const std::string& path)
 	jclass* classes = nullptr;
 	jclass foundclass = nullptr;
 	p_tienv->GetLoadedClasses(&class_count, &classes);
-	for (int i = 0; i < class_count; ++i) {
+	for (int i = 0; i < class_count; ++i)
+	{
 		char* signature_buffer = nullptr;
 		p_tienv->GetClassSignature(classes[i], &signature_buffer, nullptr);
 		std::string signature = signature_buffer;
 		p_tienv->Deallocate((unsigned char*)signature_buffer);
 		signature = signature.substr(1);
 		signature.pop_back();
-		if (signature == path) {
+		if (signature == path)
+		{
 			foundclass = (jclass)p_env->NewGlobalRef(classes[i]);
 		}
 		p_env->DeleteLocalRef(classes[i]);

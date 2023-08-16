@@ -196,6 +196,7 @@ BOOL Ripterms::init(HMODULE dll, FILE* fbuffer1, FILE* fbuffer2, FILE* fbuffer3)
 void Ripterms::clean()
 {
 	tmp_no_hook = true;
+	GUI::clean();
 	Ripterms::Modules::cleanAll();
 	Ripterms::Patcher::clean();
 	delete Ripterms::cache;
@@ -204,7 +205,6 @@ void Ripterms::clean()
 	if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
 	std::thread a([] {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		GUI::clean();
 		MH_DisableHook(MH_ALL_HOOKS);
 		MH_Uninitialize();
 		fclose(console_buffer1);
