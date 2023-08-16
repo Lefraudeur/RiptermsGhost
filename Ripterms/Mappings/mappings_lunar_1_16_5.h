@@ -165,6 +165,18 @@ const char mappings_lunar_1_16_5[] = R"(
 				"obfuscated": "xRot",
 				"signature": "F",
 				"static": false
+			},
+			{
+				"name": "motion",
+				"obfuscated": "deltaMovement",
+				"signature": "Lnet/minecraft/world/phys/Vec3;",
+				"static": false
+			},
+			{
+				"name": "hurtResistantTime",
+				"obfuscated": "invulnerableTime",
+				"signature": "I",
+				"static": false
 			}
 		],
 		"methods": []

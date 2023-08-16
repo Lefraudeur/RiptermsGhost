@@ -206,6 +206,7 @@
     <ClCompile Include="Ripterms\Modules\Modules.cpp" />
     <ClCompile Include="Ripterms\Modules\Reach.cpp" />
     <ClCompile Include="Ripterms\Modules\Test.cpp" />
+    <ClCompile Include="Ripterms\Modules\Velocity.cpp" />
     <ClCompile Include="Ripterms\Patcher\Patcher.cpp" />
     <ClCompile Include="Ripterms\Ripterms.cpp" />
     <ClCompile Include="Ripterms\Timer.cpp" />

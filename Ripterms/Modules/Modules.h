@@ -81,9 +81,23 @@ namespace Ripterms
 			void renderGUI() override;
 		};
 
+		//Category Player
+		class Velocity : public IModule
+		{
+		public:
+			void run() override;
+			void renderGUI() override;
+		private:
+			float motionX = 0.0f;
+			float motionY = 0.0f;
+			float motionZ = 0.0f;
+			int tickDelay = 1;
+		};
+
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
 			{"Combat", {new AimAssist(), new Reach(), new LeftClicker()}},
+			{"Player", {new Velocity()}},
 			{"Misc", {new FullBright(), new ClientBrandChanger(), new Test()}}
 		};
 
