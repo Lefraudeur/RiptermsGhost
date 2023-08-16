@@ -41,9 +41,11 @@ bool ClassLoader::loadJar(const unsigned char* jarBytes, size_t size)
 bool ClassLoader::defineClass(const jbyte* classBytes, jsize size)
 {
 	jclass jaclass = Ripterms::p_env->DefineClass(nullptr, instance, classBytes, size);
-	if (!jaclass) {
+	if (!jaclass)
+	{
 		std::cerr << "Failed to define class" << std::endl;
-		if (Ripterms::p_env->ExceptionCheck() == JNI_TRUE) {
+		if (Ripterms::p_env->ExceptionCheck() == JNI_TRUE)
+		{
 			Ripterms::p_env->ExceptionDescribe();
 			Ripterms::p_env->ExceptionClear();
 		}
