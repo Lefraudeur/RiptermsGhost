@@ -26,11 +26,15 @@ Ripterms::Maths::Vector2d Entity::getRotation() const
 Ripterms::Maths::Vector3d Entity::getMotion() const
 {
 	if (!instance) return Ripterms::Maths::Vector3d();
+	if (Ripterms::majorVersion == Ripterms::Version::MAJOR_1_16_5)
+	{
+		return Vec3(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->EntityClass.fields["motion"])).getVector();
+	}
 	return Ripterms::Maths::Vector3d
 	(
-		Ripterms::p_env->GetDoubleField(instance, Ripterms::classcache->EntityClass.fields["motionX"]),
-		Ripterms::p_env->GetDoubleField(instance, Ripterms::classcache->EntityClass.fields["motionY"]),
-		Ripterms::p_env->GetDoubleField(instance, Ripterms::classcache->EntityClass.fields["motionZ"])
+		(float)Ripterms::p_env->GetDoubleField(instance, Ripterms::classcache->EntityClass.fields["motionX"]),
+		(float)Ripterms::p_env->GetDoubleField(instance, Ripterms::classcache->EntityClass.fields["motionY"]),
+		(float)Ripterms::p_env->GetDoubleField(instance, Ripterms::classcache->EntityClass.fields["motionZ"])
 	);
 }
 
@@ -43,6 +47,12 @@ int Entity::getHurtResistantTime() const
 void Entity::setMotion(const Ripterms::Maths::Vector3d& motion)
 {
 	if (!instance) return;
+	if (Ripterms::majorVersion == Ripterms::Version::MAJOR_1_16_5)
+	{
+		Vec3 motion_obj(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->EntityClass.fields["motion"]));
+		motion_obj.setVector(motion);
+		return;
+	}
 	Ripterms::p_env->SetDoubleField(instance, Ripterms::classcache->EntityClass.fields["motionX"], motion.x);
 	Ripterms::p_env->SetDoubleField(instance, Ripterms::classcache->EntityClass.fields["motionY"], motion.y);
 	Ripterms::p_env->SetDoubleField(instance, Ripterms::classcache->EntityClass.fields["motionZ"], motion.z);

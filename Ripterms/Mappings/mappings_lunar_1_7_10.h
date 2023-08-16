@@ -177,6 +177,30 @@ const char mappings_lunar_1_7_10[] = R"(
 				"obfuscated": "rotationPitch",
 				"signature": "F",
 				"static": false
+			},
+			{
+				"name": "motionX",
+				"obfuscated": "motionX",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "motionY",
+				"obfuscated": "motionY",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "motionZ",
+				"obfuscated": "motionZ",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "hurtResistantTime",
+				"obfuscated": "hurtResistantTime",
+				"signature": "I",
+				"static": false
 			}
 		],
 		"methods": []

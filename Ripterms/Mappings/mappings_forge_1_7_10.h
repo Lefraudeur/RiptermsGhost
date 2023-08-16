@@ -177,6 +177,30 @@ const char mappings_forge_1_7_10[] = R"(
 				"obfuscated": "field_70125_A",
 				"signature": "F",
 				"static": false
+			},
+			{
+				"name": "motionX",
+				"obfuscated": "field_70159_w",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "motionY",
+				"obfuscated": "field_70181_x",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "motionZ",
+				"obfuscated": "field_70179_y",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "hurtResistantTime",
+				"obfuscated": "field_70172_ad",
+				"signature": "I",
+				"static": false
 			}
 		],
 		"methods": []
