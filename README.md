@@ -40,3 +40,5 @@ Thanks to t0r-onion for the GUI
 Current Contributors:
 Lefraudeur,
 t0r-onion
+
+Feel free to use this project how ever you want. Credits would be appreciated
