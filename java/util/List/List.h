@@ -4,4 +4,5 @@
 class List : public Collection {
 public:
 	using Collection::Collection;
+	static List newObject();
 };

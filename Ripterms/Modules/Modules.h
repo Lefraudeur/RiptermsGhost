@@ -95,10 +95,18 @@ namespace Ripterms
 			bool only_facing = true;
 		};
 
+		class Blink : public IModule
+		{
+		public:
+			void run() override;
+			void renderGUI() override;
+			void disable() override;
+		};
+
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
 			{"Combat", {new AimAssist(), new Reach(), new LeftClicker()}},
-			{"Player", {new Velocity()}},
+			{"Player", {new Velocity(), new Blink()}},
 			{"Misc", {new FullBright(), new ClientBrandChanger(), new Test()}}
 		};
 

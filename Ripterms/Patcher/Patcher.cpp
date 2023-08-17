@@ -26,7 +26,12 @@ namespace
 
 	void retransformClasses()
 	{
-		jclass classes[] = { Ripterms::classcache->EntityRendererClass.javaClass, Ripterms::classcache->ClientBrandRetrieverClass.javaClass };
+		jclass classes[] = 
+		{ 
+			Ripterms::classcache->EntityRendererClass.javaClass, 
+			Ripterms::classcache->ClientBrandRetrieverClass.javaClass, 
+			Ripterms::classcache->NetworkManagerClass.javaClass 
+		};
 		errCheck(Ripterms::p_tienv->RetransformClasses(sizeof(classes) / sizeof(jclass), classes));
 	}
 
@@ -79,7 +84,30 @@ namespace
 		{
 			patchClass("patchClientBrandRetriever", Ripterms::classcache->ClientBrandRetrieverClass.getObfuscatedMethodName("getClientModName"));
 		}
+		else if (jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->NetworkManagerClass.javaClass))
+		{
+			Ripterms::JavaClass ClassPatcherClass("io/github/lefraudeur/ClassPatcher");
+			jbyteArray original_class_bytes = jni_env->NewByteArray(class_data_len);
+			jni_env->SetByteArrayRegion(original_class_bytes, 0, class_data_len, (const jbyte*)class_data);
 
+			jbyteArray new_class_bytes = (jbyteArray)jni_env->CallStaticObjectMethod(
+				ClassPatcherClass.javaClass,
+				ClassPatcherClass.methods["patchNetworkManager"],
+				original_class_bytes,
+				String(Ripterms::classcache->NetworkManagerClass.getObfuscatedMethodName("sendPacket")).getInstance(),
+				String(Ripterms::classcache->ThreadContextClass.getObfuscatedClassName()).getInstance(),
+				String(Ripterms::classcache->ThreadContextClass.getObfuscatedFieldName("EMPTY_MAP")).getInstance(),
+				String(Ripterms::classcache->PacketClass.getObfuscatedClassName()).getInstance(),
+				String(Ripterms::classcache->C03PacketPlayerClass.getObfuscatedClassName()).getInstance(),
+				String(Ripterms::classcache->NetworkManagerClass.getObfuscatedClassName()).getInstance()
+			);
+
+			jni_env->DeleteLocalRef(original_class_bytes);
+			*new_class_data_len = jni_env->GetArrayLength(new_class_bytes);
+			jvmti_env->Allocate(*new_class_data_len, new_class_data);
+			jni_env->GetByteArrayRegion(new_class_bytes, 0, *new_class_data_len, (jbyte*)*new_class_data);
+			jni_env->DeleteLocalRef(new_class_bytes);
+		}
 	}
 }
 
@@ -110,6 +138,21 @@ bool Ripterms::Patcher::init()
 		String("client_brand"),
 		String(Ripterms::p_env->CallStaticObjectMethod(Ripterms::classcache->ClientBrandRetrieverClass.javaClass, Ripterms::classcache->ClientBrandRetrieverClass.methods["getClientModName"]))
 	);
+	Ripterms::cache->EMPTY_MAP.put
+	(
+		String("blink_enabled"),
+		String("0")
+	);
+	Ripterms::cache->EMPTY_MAP.put
+	(
+		String("blink_send"),
+		String("0")
+	);
+	Ripterms::cache->EMPTY_MAP.put
+	(
+		String("blink_packets"),
+		List::newObject()
+	);
 
 	ClassLoader classLoader(ClassLoader::newObject());
 	if(!classLoader.loadJar(ClassPatcherJar, sizeof(ClassPatcherJar))) return false;
@@ -122,9 +165,8 @@ bool Ripterms::Patcher::init()
 
 void Ripterms::Patcher::clean()
 {
-	//cleaning the data we stored
-	Ripterms::p_env->SetStaticObjectField(Ripterms::classcache->ThreadContextClass.javaClass, Ripterms::classcache->ThreadContextClass.fields["EMPTY_MAP"], original_EmptyMap.getInstance());
-	original_EmptyMap.clear();
 	//restoring old classes
 	retransformClasses();
+	Ripterms::p_env->SetStaticObjectField(Ripterms::classcache->ThreadContextClass.javaClass, Ripterms::classcache->ThreadContextClass.fields["EMPTY_MAP"], original_EmptyMap.getInstance());
+	original_EmptyMap.clear();
 }

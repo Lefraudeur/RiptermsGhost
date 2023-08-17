@@ -51,6 +51,9 @@ namespace Ripterms
 		JavaClass StringClass{};
 		JavaClass ThreadContextClass{};
 		JavaClass SystemClass{};
+		JavaClass NetworkManagerClass{};
+		JavaClass PacketClass{};
+		JavaClass C03PacketPlayerClass{};
 	};
 
 	inline JavaClassCache* classcache = new JavaClassCache();
