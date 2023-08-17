@@ -8,7 +8,7 @@ This cheat is open source, mainly to show you a combination of all the technique
 
 ### Supported versions :
 - Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1, 1.18.2
-- Forge: 1.7.10
+- Forge: 1.7.10 (ex: Paladium https://paladium-pvp.fr/)
 
 Change mappings to add new versions
 
@@ -30,16 +30,15 @@ Insert to open the gui / end key to self destruct
 
 To test it, just build visual studio project, and inject it using any injector. (Extreme Injector manual map technique is recommended)
 
-Huh sometimes you will get an error "can't find info for object class"
-I think that happens because my code is shit, or because not enough ram, just try again
-I'll fix it once I find the solution
 
 In 1.16.5 + versions, you have to inject while in game (otherwise some classes are not loaded)
 
-Help would be appreciated (I don't care about pasted modules), I need help mainly for the gui, or code redesigns. You can also make suggestions. (open an issue or a pull request to dev branch)
+Help would be appreciated, I need help mainly for the gui, or code redesigns. You can also make suggestions. (open an issue or a pull request to dev branch)
 
 Thanks to t0r-onion for the GUI
 
 Current Contributors:
 Lefraudeur,
 t0r-onion
+
+Feel free to use this project how ever you want. Credits would be appreciated
