@@ -101,6 +101,8 @@ namespace Ripterms
 			void run() override;
 			void renderGUI() override;
 			void disable() override;
+		private:
+			int keyBind = 0x42;
 		};
 
 		inline std::map<std::string, std::vector<IModule*>> categories =

@@ -4,7 +4,7 @@ import org.objectweb.asm.*;
 
 public class ClassPatcher {
     public static byte[] patchEntityRenderer(byte[] classBytes, String getMouseOver, String ThreadContext, String EMPTY_MAP) {
-        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM5, classWriter) {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
@@ -37,7 +37,7 @@ public class ClassPatcher {
     }
 
     public static byte[] patchEntityRenderer1_16_5(byte[] classBytes, String getMouseOver, String ThreadContext, String EMPTY_MAP) {
-        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM5, classWriter) {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
@@ -76,7 +76,7 @@ public class ClassPatcher {
     }
 
     public static byte[] patchClientBrandRetriever(byte[] classBytes, String getClientModName, String ThreadContext, String EMPTY_MAP) {
-        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM5, classWriter) {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
@@ -105,13 +105,13 @@ public class ClassPatcher {
         return classWriter.toByteArray();
     }
 
-    public static byte[] patchNetworkManager(byte[] classBytes, String sendPacket, String ThreadContext, String EMPTY_MAP, String PacketClass, String C03PacketPlayer, String NetworkManager) {
+    public static byte[] patchNetworkManager(byte[] classBytes, String sendPacket, String ThreadContext, String EMPTY_MAP, String PacketClass, String NetworkManager) {
         ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-        ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM5, classWriter) {
+        ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM6, classWriter) {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
                 if (name.equals(sendPacket) && descriptor.equals("(L" + PacketClass + ";)V")) {
-                    return new MethodVisitor(Opcodes.ASM5, cv.visitMethod(access, name, descriptor, signature, exceptions)) {
+                    return new MethodVisitor(Opcodes.ASM6, cv.visitMethod(access, name, descriptor, signature, exceptions)) {
                         @Override
                         public void visitCode() {
                             //intercept player packets and put them in a list
@@ -122,12 +122,6 @@ public class ClassPatcher {
                             mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Integer", "parseInt", "(Ljava/lang/String;)I", false);
                             Label skip = new Label();
                             mv.visitJumpInsn(Opcodes.IFEQ, skip);
-                            /*
-                                mv.visitVarInsn(Opcodes.ALOAD, 1);
-                                mv.visitTypeInsn(Opcodes.INSTANCEOF, C03PacketPlayer);
-                                mv.visitJumpInsn(Opcodes.IFEQ, skip);
-
-                             */
                                     mv.visitFieldInsn(Opcodes.GETSTATIC, ThreadContext, EMPTY_MAP, "Ljava/util/Map;");
                                     mv.visitLdcInsn("blink_packets");
                                     mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "get", "(Ljava/lang/Object;)Ljava/lang/Object;", true);

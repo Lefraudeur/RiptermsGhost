@@ -8,6 +8,9 @@
 #include "Patcher/Patcher.h"
 #include "../java/lang/System/System.h"
 #include <MinHook.h>
+#include <ImGui/imgui.h>
+#include <ImGui/imgui_impl_opengl3.h>
+#include <ImGui/imgui_impl_win32.h>
 
 void mainLoop()
 {
@@ -207,6 +210,9 @@ void Ripterms::clean()
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		MH_DisableHook(MH_ALL_HOOKS);
 		MH_Uninitialize();
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
 		fclose(console_buffer1);
 		fclose(console_buffer2);
 		fclose(console_buffer3);
@@ -219,7 +225,11 @@ void Ripterms::clean()
 
 void Ripterms::partialClean()
 {
+	MH_DisableHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 	Ripterms::p_env = nullptr;
 	Ripterms::Modules::cleanAll();
 	delete Ripterms::cache;

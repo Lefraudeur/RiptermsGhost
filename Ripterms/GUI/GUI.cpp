@@ -315,8 +315,5 @@ void Ripterms::GUI::clean()
 	draw = false;
 	hook = false;
 	SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)original_WndProc);
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
 	return;
 }

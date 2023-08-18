@@ -97,7 +97,7 @@ inline const nlohmann::json mappings_lunar_1_8_9 = R"(
 			{
 				"name": "patchNetworkManager",
 				"obfuscated": "patchNetworkManager",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
 			}
 		]
@@ -315,11 +315,6 @@ inline const nlohmann::json mappings_lunar_1_8_9 = R"(
 	},
 	"net/minecraft/network/Packet": {
 		"obfuscated": "net/minecraft/network/Packet",
-		"fields": [],
-		"methods": []
-	},
-	"net/minecraft/network/play/client/C03PacketPlayer": {
-		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer",
 		"fields": [],
 		"methods": []
 	}
