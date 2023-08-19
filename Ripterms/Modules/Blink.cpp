@@ -3,7 +3,7 @@
 void Ripterms::Modules::Blink::run()
 {
 	static Timer timer(std::chrono::milliseconds(300));
-	if (GetAsyncKeyState(keyBind) && timer.isElapsed())
+	if (GetAsyncKeyState(keyBind) && timer.isElapsed() && GetActiveWindow() == Ripterms::window)
 	{
 		enabled = !enabled;
 	}
