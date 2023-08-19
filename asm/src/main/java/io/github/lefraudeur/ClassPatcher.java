@@ -108,12 +108,24 @@ public class ClassPatcher {
     }
 
     public static byte[] patchNetworkManager(byte[] classBytes, String sendPacket, String ThreadContext, String EMPTY_MAP, String PacketClass, String NetworkManager) {
-        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-        ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM6, classWriter) {
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES) {
+            @Override
+            protected String getCommonSuperClass(String type1, String type2) {
+                try
+                {
+                    return super.getCommonSuperClass(type1, type2);
+                }
+                catch (TypeNotPresentException e)
+                {
+                    return PacketClass;
+                }
+            }
+        };
+        ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM9, classWriter) {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
                 if (name.equals(sendPacket) && descriptor.equals("(L" + PacketClass + ";)V") ) {
-                    return new MethodVisitor(Opcodes.ASM6, cv.visitMethod(access, name, descriptor, signature, exceptions)) {
+                    return new MethodVisitor(Opcodes.ASM9, cv.visitMethod(access, name, descriptor, signature, exceptions)) {
                         @Override
                         public void visitCode() {
                             //intercept player packets and put them in a list
@@ -180,7 +192,7 @@ public class ClassPatcher {
             }
         };
         ClassReader classReader = new ClassReader(classBytes);
-        classReader.accept(classVisitor, 0);
+        classReader.accept(classVisitor,0);
         return classWriter.toByteArray();
     }
 
