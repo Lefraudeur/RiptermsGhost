@@ -19,6 +19,7 @@ Change mappings to add new versions
 - Full Bright
 - Velocity
 - Client Brand Changer (see asm folder) (to troll staffs lol, sent to the server on login and displayed by some anticheats)
+- Blink (keybind b) (see asm folder) this was such a pain to make
 
 ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/39690baa-859a-4ea2-a9b0-dfbc8cbfe472)
 
