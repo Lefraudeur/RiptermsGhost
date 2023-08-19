@@ -35,6 +35,7 @@ To test it, just build visual studio project, and inject it using any injector. 
 In 1.16.5 + versions, you have to inject while in game (otherwise some classes are not loaded)
 
 Help would be appreciated, I need help mainly for the gui, or code redesigns. You can also make suggestions. (open an issue or a pull request to dev branch)
+You can also test the cheat and tell me about bugs you find, you can try the dev branch, it contains unstable modules that only works with lunar 1.8.9
 
 Thanks to t0r-onion for the GUI
 
