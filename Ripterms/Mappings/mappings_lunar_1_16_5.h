@@ -29,6 +29,12 @@ inline const nlohmann::json mappings_lunar_1_16_5 = R"(
 				"obfuscated": "toArray",
 				"signature": "()[Ljava/lang/Object;",
 				"static": false
+			},
+			{
+				"name": "clear",
+				"obfuscated": "clear",
+				"signature": "()V",
+				"static": false
 			}
 		]
 	},
@@ -45,6 +51,12 @@ inline const nlohmann::json mappings_lunar_1_16_5 = R"(
 				"name": "put",
 				"obfuscated": "put",
 				"signature": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+				"static": false
+			},
+			{
+				"name": "get",
+				"obfuscated": "get",
+				"signature": "(Ljava/lang/Object;)Ljava/lang/Object;",
 				"static": false
 			}
 		]
@@ -80,6 +92,12 @@ inline const nlohmann::json mappings_lunar_1_16_5 = R"(
 				"name": "patchClientBrandRetriever",
 				"obfuscated": "patchClientBrandRetriever",
 				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
+				"static": true
+			},
+			{
+				"name": "patchNetworkManager",
+				"obfuscated": "patchNetworkManager",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
 			}
 		]
@@ -260,6 +278,23 @@ inline const nlohmann::json mappings_lunar_1_16_5 = R"(
 				"static": true
 			}
 		]
+	},
+	"net/minecraft/network/NetworkManager": {
+		"obfuscated": "net/minecraft/network/Connection",
+		"fields": [],
+		"methods": [
+			{
+				"name": "sendPacket",
+				"obfuscated": "send",
+				"signature": "(Lnet/minecraft/network/protocol/Packet;)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/network/Packet": {
+		"obfuscated": "net/minecraft/network/protocol/Packet",
+		"fields": [],
+		"methods": []
 	}
 }
 )"_json;

@@ -29,6 +29,12 @@ inline const nlohmann::json mappings_forge_1_7_10 = R"(
 				"obfuscated": "toArray",
 				"signature": "()[Ljava/lang/Object;",
 				"static": false
+			},
+			{
+				"name": "clear",
+				"obfuscated": "clear",
+				"signature": "()V",
+				"static": false
 			}
 		]
 	},
@@ -45,6 +51,12 @@ inline const nlohmann::json mappings_forge_1_7_10 = R"(
 				"name": "put",
 				"obfuscated": "put",
 				"signature": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+				"static": false
+			},
+			{
+				"name": "get",
+				"obfuscated": "get",
+				"signature": "(Ljava/lang/Object;)Ljava/lang/Object;",
 				"static": false
 			}
 		]
@@ -80,6 +92,12 @@ inline const nlohmann::json mappings_forge_1_7_10 = R"(
 				"name": "patchClientBrandRetriever",
 				"obfuscated": "patchClientBrandRetriever",
 				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
+				"static": true
+			},
+			{
+				"name": "patchNetworkManager",
+				"obfuscated": "patchNetworkManager1_7_10",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
 			}
 		]
@@ -294,6 +312,23 @@ inline const nlohmann::json mappings_forge_1_7_10 = R"(
 				"static": true
 			}
 		],
+		"methods": []
+	},
+	"net/minecraft/network/NetworkManager": {
+		"obfuscated": "net/minecraft/network/NetworkManager",
+		"fields": [],
+		"methods": [
+			{
+				"name": "sendPacket",
+				"obfuscated": "func_150732_b",
+				"signature": "(Lnet/minecraft/network/Packet;[Lio/netty/util/concurrent/GenericFutureListener;)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/network/Packet": {
+		"obfuscated": "net/minecraft/network/Packet",
+		"fields": [],
 		"methods": []
 	}
 }

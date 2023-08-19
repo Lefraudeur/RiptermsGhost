@@ -26,5 +26,7 @@ bool Ripterms::JavaClassCache::fillCache()
 		MapClass.fill("java/util/Map") &&
 		StringClass.fill("java/lang/String") &&
 		ThreadContextClass.fill("org/apache/logging/log4j/ThreadContext") &&
-		SystemClass.fill("java/lang/System");
+		SystemClass.fill("java/lang/System") &&
+		NetworkManagerClass.fill("net/minecraft/network/NetworkManager") &&
+		PacketClass.fill("net/minecraft/network/Packet");
 }

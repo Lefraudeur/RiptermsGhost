@@ -200,6 +200,7 @@
     <ClCompile Include="Ripterms\Mappings\mappings_lunar_1_16_5.h" />
     <ClCompile Include="Ripterms\Maths\Maths.cpp" />
     <ClCompile Include="Ripterms\Modules\AimAssist.cpp" />
+    <ClCompile Include="Ripterms\Modules\Blink.cpp" />
     <ClCompile Include="Ripterms\Modules\ClientBrandChanger.cpp" />
     <ClCompile Include="Ripterms\Modules\FullBright.cpp" />
     <ClCompile Include="Ripterms\Modules\LeftClicker.cpp" />
