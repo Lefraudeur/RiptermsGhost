@@ -3,6 +3,7 @@
 #include "../entity/EntityPlayerSP/EntityPlayerSP.h"
 #include "../multiplayer/WorldClient/WorldClient.h"
 #include "../settings/GameSettings/GameSettings.h"
+#include "../../util/MovingObjectPosition/MovingObjectPosition.h"
 
 class Minecraft : public Object {
 public:
@@ -11,4 +12,5 @@ public:
 	EntityPlayerSP getThePlayer();
 	WorldClient getTheWorld();
 	GameSettings getGameSettings();
+	MovingObjectPosition getObjectMouseOver();
 };

@@ -22,3 +22,9 @@ GameSettings Minecraft::getGameSettings()
 	if (!instance) return GameSettings();
 	return GameSettings(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->MinecraftClass.fields["gameSettings"]));
 }
+
+MovingObjectPosition Minecraft::getObjectMouseOver()
+{
+	if(!instance) return MovingObjectPosition();
+	return MovingObjectPosition(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->MinecraftClass.fields["objectMouseOver"]));
+}

@@ -53,6 +53,8 @@ namespace Ripterms
 		JavaClass SystemClass{};
 		JavaClass NetworkManagerClass{};
 		JavaClass PacketClass{};
+		JavaClass MovingObjectPositionClass{};
+		JavaClass MovingObjectTypeClass{};
 	};
 
 	inline JavaClassCache* classcache = new JavaClassCache();

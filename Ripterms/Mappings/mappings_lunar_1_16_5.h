@@ -140,6 +140,12 @@ inline const nlohmann::json mappings_lunar_1_16_5 = R"(
 				"obfuscated": "options",
 				"signature": "Lnet/minecraft/client/Options;",
 				"static": false
+			},
+			{
+				"name": "objectMouseOver",
+				"obfuscated": "hitResult",
+				"signature": "Lnet/minecraft/world/phys/HitResult;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -294,6 +300,30 @@ inline const nlohmann::json mappings_lunar_1_16_5 = R"(
 	"net/minecraft/network/Packet": {
 		"obfuscated": "net/minecraft/network/protocol/Packet",
 		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/util/MovingObjectPosition": {
+		"obfuscated": "net/minecraft/world/phys/HitResult",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getType",
+				"obfuscated": "getType",
+				"signature": "()Lnet/minecraft/world/phys/HitResult$Type;",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/util/MovingObjectPosition$MovingObjectType": {
+		"obfuscated": "net/minecraft/world/phys/HitResult$Type",
+		"fields": [
+			{
+				"name": "BLOCK",
+				"obfuscated": "BLOCK",
+				"signature": "Lnet/minecraft/world/phys/HitResult$Type;",
+				"static": true
+			}
+		],
 		"methods": []
 	}
 }

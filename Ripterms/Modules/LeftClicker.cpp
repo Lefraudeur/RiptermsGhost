@@ -3,7 +3,12 @@
 void Ripterms::Modules::LeftClicker::run()
 {
 	static Timer timer(std::chrono::milliseconds(1000/min_cps));
-	if (!enabled || Ripterms::GUI::draw || !(GetKeyState(VK_LBUTTON) & 0x8000) || !timer.isElapsed()) return;
+	if (!enabled || Ripterms::GUI::draw || !(GetKeyState(VK_LBUTTON) & 0x8000)) 
+		return;
+	if (!timer.isElapsed()) 
+		return;
+	if (Ripterms::cache->theMinecraft.getObjectMouseOver().getType().isEqualTo(MovingObjectType::getType("BLOCK")))
+		return;
 	POINT cursorPos{};
 	GetCursorPos(&cursorPos);
 	SendMessageA(Ripterms::window, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
@@ -21,10 +26,12 @@ void Ripterms::Modules::LeftClicker::renderGUI()
 	ImGui::Checkbox("Left Clicker", &enabled);
 	ImGui::PopStyleVar();
 	ImGui::PopStyleVar();
-	if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) display_options = !display_options;
+	if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) 
+		display_options = !display_options;
 	ImGui::SameLine();
 	ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30.0f);
-	if (ImGui::ArrowButton("lc", ImGuiDir_Down)) display_options = !display_options;
+	if (ImGui::ArrowButton("lc", ImGuiDir_Down)) 
+		display_options = !display_options;
 	if (display_options)
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);

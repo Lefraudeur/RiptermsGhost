@@ -28,5 +28,7 @@ bool Ripterms::JavaClassCache::fillCache()
 		ThreadContextClass.fill("org/apache/logging/log4j/ThreadContext") &&
 		SystemClass.fill("java/lang/System") &&
 		NetworkManagerClass.fill("net/minecraft/network/NetworkManager") &&
-		PacketClass.fill("net/minecraft/network/Packet");
+		PacketClass.fill("net/minecraft/network/Packet") &&
+		MovingObjectPositionClass.fill("net/minecraft/util/MovingObjectPosition") &&
+		MovingObjectTypeClass.fill("net/minecraft/util/MovingObjectPosition$MovingObjectType");
 }
