@@ -148,6 +148,12 @@ namespace Mappings
 				"obfuscated": "s",
 				"signature": "Lauh;",
 				"static": false
+			},
+			{
+				"name": "rightClickDelayTimer",
+				"obfuscated": "ad",
+				"signature": "I",
+				"static": false
 			}
 		],
 		"methods": []

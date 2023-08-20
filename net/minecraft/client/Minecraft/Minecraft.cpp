@@ -28,3 +28,15 @@ MovingObjectPosition Minecraft::getObjectMouseOver()
 	if(!instance) return MovingObjectPosition();
 	return MovingObjectPosition(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->MinecraftClass.fields["objectMouseOver"]));
 }
+
+int Minecraft::getRightClickDelayTimer()
+{
+	if (!instance) return 0;
+	return Ripterms::p_env->GetIntField(instance, Ripterms::classcache->MinecraftClass.fields["rightClickDelayTimer"]);
+}
+
+void Minecraft::setRightClickDelayTimer(int value)
+{
+	if (!instance) return;
+	Ripterms::p_env->SetIntField(instance, Ripterms::classcache->MinecraftClass.fields["rightClickDelayTimer"], value);
+}

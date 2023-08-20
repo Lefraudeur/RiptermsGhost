@@ -13,4 +13,6 @@ public:
 	WorldClient getTheWorld();
 	GameSettings getGameSettings();
 	MovingObjectPosition getObjectMouseOver();
+	int getRightClickDelayTimer();
+	void setRightClickDelayTimer(int value);
 };

@@ -95,6 +95,15 @@ namespace Ripterms
 			bool only_facing = true;
 		};
 
+		class FastPlace : public IModule
+		{
+		public:
+			void run() override;
+			void renderGUI() override;
+		private:
+			int tickDelay = 0;
+		};
+
 		class Blink : public IModule
 		{
 		public:
@@ -108,7 +117,7 @@ namespace Ripterms
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
 			{"Combat", {new AimAssist(), new Reach(), new LeftClicker()}},
-			{"Player", {new Velocity(), new Blink()}},
+			{"Player", {new Velocity(), new FastPlace(), new Blink()}},
 			{"Misc", {new FullBright(), new ClientBrandChanger(), new Test()}}
 		};
 
