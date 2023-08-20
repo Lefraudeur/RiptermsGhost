@@ -1,7 +1,9 @@
 #pragma once
 #include <json.hpp>
-using namespace nlohmann::literals;
-inline const nlohmann::json mappings_lunar_1_7_10 = R"(
+namespace Mappings
+{
+	using namespace nlohmann::literals;
+	static const nlohmann::json mappings_lunar_1_7_10 = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -351,3 +353,4 @@ inline const nlohmann::json mappings_lunar_1_7_10 = R"(
 	}
 }
 )"_json;
+}
