@@ -140,6 +140,12 @@ inline const nlohmann::json mappings_forge_1_7_10 = R"(
 				"obfuscated": "field_71474_y",
 				"signature": "Lnet/minecraft/client/settings/GameSettings;",
 				"static": false
+			},
+			{
+				"name": "objectMouseOver",
+				"obfuscated": "field_71476_x",
+				"signature": "Lnet/minecraft/util/MovingObjectPosition;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -329,6 +335,30 @@ inline const nlohmann::json mappings_forge_1_7_10 = R"(
 	"net/minecraft/network/Packet": {
 		"obfuscated": "net/minecraft/network/Packet",
 		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/util/MovingObjectPosition": {
+		"obfuscated": "net/minecraft/util/MovingObjectPosition",
+		"fields": [
+			{
+				"name": "typeOfHit",
+				"obfuscated": "field_72313_a",
+				"signature": "Lnet/minecraft/util/MovingObjectPosition$MovingObjectType;",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/util/MovingObjectPosition$MovingObjectType": {
+		"obfuscated": "net/minecraft/util/MovingObjectPosition$MovingObjectType",
+		"fields": [
+			{
+				"name": "BLOCK",
+				"obfuscated": "BLOCK",
+				"signature": "Lnet/minecraft/util/MovingObjectPosition$MovingObjectType;",
+				"static": true
+			}
+		],
 		"methods": []
 	}
 }
