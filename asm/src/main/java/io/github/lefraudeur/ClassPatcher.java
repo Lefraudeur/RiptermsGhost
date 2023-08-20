@@ -121,11 +121,11 @@ public class ClassPatcher {
                 }
             }
         };
-        ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM6, classWriter) {
+        ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM5, classWriter) {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
                 if (name.equals(sendPacket) && descriptor.equals("(L" + PacketClass + ";)V") ) {
-                    return new MethodVisitor(Opcodes.ASM6, cv.visitMethod(access, name, descriptor, signature, exceptions)) {
+                    return new MethodVisitor(Opcodes.ASM5, cv.visitMethod(access, name, descriptor, signature, exceptions)) {
                         @Override
                         public void visitCode() {
                             //intercept player packets and put them in a list

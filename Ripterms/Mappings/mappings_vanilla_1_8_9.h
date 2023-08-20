@@ -3,7 +3,7 @@
 namespace Mappings
 {
 	using namespace nlohmann::literals;
-	static const nlohmann::json mappings_lunar_1_8_9 = R"(
+	static const nlohmann::json mappings_vanilla_1_8_9 = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -117,115 +117,115 @@ namespace Mappings
 		"methods": []
 	},
 	"net/minecraft/client/Minecraft": {
-		"obfuscated": "net/minecraft/client/Minecraft",
+		"obfuscated": "ave",
 		"fields": [
 			{
 				"name": "theMinecraft",
-				"obfuscated": "theMinecraft",
-				"signature": "Lnet/minecraft/client/Minecraft;",
+				"obfuscated": "S",
+				"signature": "Lave;",
 				"static": true
 			},
 			{
 				"name": "thePlayer",
-				"obfuscated": "thePlayer",
-				"signature": "Lnet/minecraft/client/entity/EntityPlayerSP;",
+				"obfuscated": "h",
+				"signature": "Lbew;",
 				"static": false
 			},
 			{
 				"name": "theWorld",
-				"obfuscated": "theWorld",
-				"signature": "Lnet/minecraft/client/multiplayer/WorldClient;",
+				"obfuscated": "f",
+				"signature": "Lbdb;",
 				"static": false
 			},
 			{
 				"name": "gameSettings",
-				"obfuscated": "gameSettings",
-				"signature": "Lnet/minecraft/client/settings/GameSettings;",
+				"obfuscated": "t",
+				"signature": "Lavh;",
 				"static": false
 			},
 			{
 				"name": "objectMouseOver",
-				"obfuscated": "objectMouseOver",
-				"signature": "Lnet/minecraft/util/MovingObjectPosition;",
+				"obfuscated": "s",
+				"signature": "Lauh;",
 				"static": false
 			}
 		],
 		"methods": []
 	},
 	"net/minecraft/client/entity/EntityPlayerSP": {
-		"obfuscated": "net/minecraft/client/entity/EntityPlayerSP",
+		"obfuscated": "bew",
 		"fields": [],
 		"methods": []
 	},
 	"net/minecraft/client/entity/AbstractClientPlayer": {
-		"obfuscated": "net/minecraft/client/entity/AbstractClientPlayer",
+		"obfuscated": "bet",
 		"fields": [],
 		"methods": []
 	},
 	"net/minecraft/entity/player/EntityPlayer": {
-		"obfuscated": "net/minecraft/entity/player/EntityPlayer",
+		"obfuscated": "wn",
 		"fields": [],
 		"methods": []
 	},
 	"net/minecraft/entity/EntityLivingBase": {
-		"obfuscated": "net/minecraft/entity/EntityLivingBase",
+		"obfuscated": "pr",
 		"fields": [],
 		"methods": []
 	},
 	"net/minecraft/entity/Entity": {
-		"obfuscated": "net/minecraft/entity/Entity",
+		"obfuscated": "pk",
 		"fields": [
 			{
 				"name": "posX",
-				"obfuscated": "posX",
+				"obfuscated": "s",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "posY",
-				"obfuscated": "posY",
+				"obfuscated": "t",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "posZ",
-				"obfuscated": "posZ",
+				"obfuscated": "u",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "rotationYaw",
-				"obfuscated": "rotationYaw",
+				"obfuscated": "y",
 				"signature": "F",
 				"static": false
 			},
 			{
 				"name": "rotationPitch",
-				"obfuscated": "rotationPitch",
+				"obfuscated": "z",
 				"signature": "F",
 				"static": false
 			},
 			{
 				"name": "motionX",
-				"obfuscated": "motionX",
+				"obfuscated": "v",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "motionY",
-				"obfuscated": "motionY",
+				"obfuscated": "w",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "motionZ",
-				"obfuscated": "motionZ",
+				"obfuscated": "x",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "hurtResistantTime",
-				"obfuscated": "hurtResistantTime",
+				"obfuscated": "Z",
 				"signature": "I",
 				"static": false
 			}
@@ -233,16 +233,16 @@ namespace Mappings
 		"methods": []
 	},
 	"net/minecraft/client/multiplayer/WorldClient": {
-		"obfuscated": "net/minecraft/client/multiplayer/WorldClient",
+		"obfuscated": "bdb",
 		"fields": [],
 		"methods": []
 	},
 	"net/minecraft/world/World": {
-		"obfuscated": "net/minecraft/world/World",
+		"obfuscated": "adm",
 		"fields": [
 			{
 				"name": "playerEntities",
-				"obfuscated": "playerEntities",
+				"obfuscated": "j",
 				"signature": "Ljava/util/List;",
 				"static": false
 			}
@@ -250,23 +250,23 @@ namespace Mappings
 		"methods": []
 	},
 	"net/minecraft/util/Vec3": {
-		"obfuscated": "net/minecraft/util/Vec3",
+		"obfuscated": "aui",
 		"fields": [
 			{
 				"name": "xCoord",
-				"obfuscated": "xCoord",
+				"obfuscated": "a",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "yCoord",
-				"obfuscated": "yCoord",
+				"obfuscated": "b",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "zCoord",
-				"obfuscated": "zCoord",
+				"obfuscated": "c",
 				"signature": "D",
 				"static": false
 			}
@@ -274,23 +274,23 @@ namespace Mappings
 		"methods": []
 	},
 	"net/minecraft/client/renderer/EntityRenderer": {
-		"obfuscated": "net/minecraft/client/renderer/EntityRenderer",
+		"obfuscated": "bfk",
 		"fields": [],
 		"methods": [
 			{
 				"name": "getMouseOver",
-				"obfuscated": "getMouseOver",
+				"obfuscated": "a",
 				"signature": "(F)V",
 				"static": false
 			}
 		]
 	},
 	"net/minecraft/client/settings/GameSettings": {
-		"obfuscated": "net/minecraft/client/settings/GameSettings",
+		"obfuscated": "avh",
 		"fields": [
 			{
 				"name": "gammaSetting",
-				"obfuscated": "gammaSetting",
+				"obfuscated": "aJ",
 				"signature": "F",
 				"static": false
 			}
@@ -310,41 +310,41 @@ namespace Mappings
 		]
 	},
 	"net/minecraft/network/NetworkManager": {
-		"obfuscated": "net/minecraft/network/NetworkManager",
+		"obfuscated": "ek",
 		"fields": [],
 		"methods": [
 			{
 				"name": "sendPacket",
-				"obfuscated": "sendPacket",
-				"signature": "(Lnet/minecraft/network/Packet;)V",
+				"obfuscated": "a",
+				"signature": "(Lff;)V",
 				"static": false
 			}
 		]
 	},
 	"net/minecraft/network/Packet": {
-		"obfuscated": "net/minecraft/network/Packet",
+		"obfuscated": "ff",
 		"fields": [],
 		"methods": []
 	},
 	"net/minecraft/util/MovingObjectPosition": {
-		"obfuscated": "net/minecraft/util/MovingObjectPosition",
+		"obfuscated": "auh",
 		"fields": [
 			{
 				"name": "typeOfHit",
-				"obfuscated": "typeOfHit",
-				"signature": "Lnet/minecraft/util/MovingObjectPosition$MovingObjectType;",
+				"obfuscated": "a",
+				"signature": "Lauh$a;",
 				"static": false
 			}
 		],
 		"methods": []
 	},
 	"net/minecraft/util/MovingObjectPosition$MovingObjectType": {
-		"obfuscated": "net/minecraft/util/MovingObjectPosition$MovingObjectType",
+		"obfuscated": "auh$a",
 		"fields": [
 			{
 				"name": "BLOCK",
-				"obfuscated": "BLOCK",
-				"signature": "Lnet/minecraft/util/MovingObjectPosition$MovingObjectType;",
+				"obfuscated": "b",
+				"signature": "Lauh$a;",
 				"static": true
 			}
 		],

@@ -2,6 +2,7 @@
 #include "../Mappings/mappings_lunar_1_7_10.h"
 #include "../Mappings/mappings_forge_1_7_10.h"
 #include "../Mappings/mappings_lunar_1_8_9.h"
+#include "../Mappings/mappings_vanilla_1_8_9.h"
 #include "../Mappings/mappings_lunar_1_16_5.h"
 #include <iostream>
 
@@ -107,22 +108,27 @@ bool Ripterms::JavaClass::init()
 	{
 		case LUNAR_1_8_9:
 		{
-			mappings = mappings_lunar_1_8_9;
+			mappings = Mappings::mappings_lunar_1_8_9;
+			break;
+		}
+		case VANILLA_1_8_9:
+		{
+			mappings = Mappings::mappings_vanilla_1_8_9;
 			break;
 		}
 		case LUNAR_1_7_10:
 		{
-			mappings = mappings_lunar_1_7_10;
+			mappings = Mappings::mappings_lunar_1_7_10;
 			break;
 		}
 		case LUNAR_1_16_5:
 		{
-			mappings = mappings_lunar_1_16_5;
+			mappings = Mappings::mappings_lunar_1_16_5;
 			break;
 		}
 		case FORGE_1_7_10:
 		{
-			mappings = mappings_forge_1_7_10;
+			mappings = Mappings::mappings_forge_1_7_10;
 			break;
 		}
 		default:

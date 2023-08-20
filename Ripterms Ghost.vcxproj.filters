@@ -248,5 +248,8 @@
     <ClInclude Include="net\minecraft\util\MovingObjectPosition\MovingObjectType\MovingObjectType.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Ripterms\Mappings\mappings_vanilla_1_8_9.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

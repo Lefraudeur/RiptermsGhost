@@ -14,6 +14,7 @@ namespace Ripterms
 		UNDEFINED,
 		LUNAR_1_7_10,
 		LUNAR_1_8_9,
+		VANILLA_1_8_9,
 		LUNAR_1_16_5,
 		FORGE_1_7_10,
 		MAJOR_1_8_9,
