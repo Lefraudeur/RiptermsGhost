@@ -148,6 +148,12 @@ namespace Mappings
 				"obfuscated": "objectMouseOver",
 				"signature": "Lnet/minecraft/util/MovingObjectPosition;",
 				"static": false
+			},
+			{
+				"name": "rightClickDelayTimer",
+				"obfuscated": "rightClickDelayTimer",
+				"signature": "I",
+				"static": false
 			}
 		],
 		"methods": [
@@ -333,19 +339,19 @@ namespace Mappings
 			{
 				"name": "typeOfHit",
 				"obfuscated": "typeOfHit",
-				"signature": "Lnet/minecraft/util/MovingObjectPosition$MovingObjectType;",
+				"signature": "Lnet/minecraft/util/MovingObjectPosition_MovingObjectType;",
 				"static": false
 			}
 		],
 		"methods": []
 	},
 	"net/minecraft/util/MovingObjectPosition$MovingObjectType": {
-		"obfuscated": "net/minecraft/util/MovingObjectPosition$MovingObjectType",
+		"obfuscated": "net/minecraft/util/MovingObjectPosition_MovingObjectType",
 		"fields": [
 			{
 				"name": "BLOCK",
 				"obfuscated": "BLOCK",
-				"signature": "Lnet/minecraft/util/MovingObjectPosition$MovingObjectType;",
+				"signature": "Lnet/minecraft/util/MovingObjectPosition_MovingObjectType;",
 				"static": true
 			}
 		],

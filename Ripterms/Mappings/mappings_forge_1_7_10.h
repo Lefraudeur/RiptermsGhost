@@ -148,6 +148,12 @@ namespace Mappings
 				"obfuscated": "field_71476_x",
 				"signature": "Lnet/minecraft/util/MovingObjectPosition;",
 				"static": false
+			},
+			{
+				"name": "rightClickDelayTimer",
+				"obfuscated": "field_71467_ac",
+				"signature": "I",
+				"static": false
 			}
 		],
 		"methods": [

@@ -148,6 +148,12 @@ namespace Mappings
 				"obfuscated": "hitResult",
 				"signature": "Lnet/minecraft/world/phys/HitResult;",
 				"static": false
+			},
+			{
+				"name": "rightClickDelayTimer",
+				"obfuscated": "rightClickDelay",
+				"signature": "I",
+				"static": false
 			}
 		],
 		"methods": [
