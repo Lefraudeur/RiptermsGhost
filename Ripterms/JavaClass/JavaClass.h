@@ -15,7 +15,9 @@ namespace Ripterms
 		static bool init();
 		bool fill(const std::string& class_path);
 		std::string getObfuscatedMethodName(const std::string& unobf_name);
+		std::string getObfuscatedMethodSig(const std::string& unobf_name);
 		std::string getObfuscatedFieldName(const std::string& unobf_name);
+		std::string getObfuscatedFieldSig(const std::string& unobf_name);
 		std::string getObfuscatedClassName();
 		jclass javaClass = nullptr;
 		std::unordered_map<std::string, jfieldID> fields{};
@@ -55,6 +57,8 @@ namespace Ripterms
 		JavaClass PacketClass{};
 		JavaClass MovingObjectPositionClass{};
 		JavaClass MovingObjectTypeClass{};
+		JavaClass BlockClass{};
+		JavaClass RegistryNamespacedClass{};
 	};
 
 	inline JavaClassCache* classcache = new JavaClassCache();

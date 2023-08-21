@@ -64,6 +64,14 @@ namespace Ripterms
 			float old_gamma = -1.0f;
 		};
 
+		class Xray : public IModule
+		{
+		public:
+			void run() override;
+			void renderGUI() override;
+			void disable() override;
+		};
+
 		class ClientBrandChanger : public IModule
 		{
 		public:
@@ -118,7 +126,7 @@ namespace Ripterms
 		{
 			{"Combat", {new AimAssist(), new Reach(), new LeftClicker()}},
 			{"Player", {new Velocity(), new FastPlace(), new Blink()}},
-			{"Misc", {new FullBright(), new ClientBrandChanger(), new Test()}}
+			{"Misc", {new FullBright(), new Xray(), new ClientBrandChanger(), new Test()}}
 		};
 
 		void runAll();

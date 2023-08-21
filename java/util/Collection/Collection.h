@@ -6,6 +6,7 @@ class Collection : public Object {
 public:
 	using Object::Object;
 	void clear();
+	bool add(Object element);
 	template<class T>
 	std::vector<T> toVector();
 };

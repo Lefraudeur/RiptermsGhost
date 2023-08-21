@@ -88,11 +88,29 @@ std::string Ripterms::JavaClass::getObfuscatedMethodName(const std::string& unob
 	return std::string();
 }
 
+std::string Ripterms::JavaClass::getObfuscatedMethodSig(const std::string& unobf_name)
+{
+	auto classjson = mappings[class_path];
+	for (auto& method : classjson["methods"]) {
+		if (method["name"] == unobf_name) return method["signature"];
+	}
+	return std::string();
+}
+
 std::string Ripterms::JavaClass::getObfuscatedFieldName(const std::string& unobf_name)
 {
 	auto classjson = mappings[class_path];
 	for (auto& method : classjson["fields"]) {
 		if (method["name"] == unobf_name) return method["obfuscated"];
+	}
+	return std::string();
+}
+
+std::string Ripterms::JavaClass::getObfuscatedFieldSig(const std::string& unobf_name)
+{
+	auto classjson = mappings[class_path];
+	for (auto& method : classjson["fields"]) {
+		if (method["name"] == unobf_name) return method["signature"];
 	}
 	return std::string();
 }

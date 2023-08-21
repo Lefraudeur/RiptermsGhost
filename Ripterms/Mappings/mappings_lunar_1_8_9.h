@@ -37,6 +37,12 @@ namespace Mappings
 				"obfuscated": "clear",
 				"signature": "()V",
 				"static": false
+			},
+			{
+				"name": "add",
+				"obfuscated": "add",
+				"signature": "(Ljava/lang/Object;)Z",
+				"static": false
 			}
 		]
 	},
@@ -100,6 +106,12 @@ namespace Mappings
 				"name": "patchNetworkManager",
 				"obfuscated": "patchNetworkManager",
 				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
+				"static": true
+			},
+			{
+				"name": "patchBlock",
+				"obfuscated": "patchBlock",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
 			}
 		]
@@ -354,6 +366,47 @@ namespace Mappings
 				"static": true
 			}
 		],
+		"methods": []
+	},
+	"net/minecraft/block/Block": {
+		"obfuscated": "net/minecraft/block/Block",
+		"fields": [],
+		"methods": [
+			{
+				"name": "shouldSideBeRendered",
+				"obfuscated": "shouldSideBeRendered",
+				"signature": "(Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/util/BlockPos;Lnet/minecraft/util/EnumFacing;)Z",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/util/registry/Registry": {
+		"obfuscated": "net/minecraft/block/Block",
+		"fields": [
+			{
+				"name": "blockRegistry",
+				"obfuscated": "blockRegistry",
+				"signature": "Lnet/minecraft/util/RegistryNamespacedDefaultedByKey;",
+				"static": true
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/util/RegistryNamespaced": {
+		"obfuscated": "net/minecraft/util/RegistryNamespaced",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getNameForObject",
+				"obfuscated": "getNameForObject",
+				"signature": "(Ljava/lang/Object;)Ljava/lang/Object;",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/util/ResourceLocation": {
+		"obfuscated": "net/minecraft/util/ResourceLocation",
+		"fields": [],
 		"methods": []
 	}
 }

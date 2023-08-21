@@ -27,10 +27,11 @@ namespace
 	void retransformClasses()
 	{
 		jclass classes[] = 
-		{ 
-			Ripterms::classcache->EntityRendererClass.javaClass, 
-			Ripterms::classcache->ClientBrandRetrieverClass.javaClass, 
-			Ripterms::classcache->NetworkManagerClass.javaClass 
+		{
+			Ripterms::classcache->EntityRendererClass.javaClass,
+			Ripterms::classcache->ClientBrandRetrieverClass.javaClass,
+			Ripterms::classcache->NetworkManagerClass.javaClass,
+			Ripterms::classcache->BlockClass.javaClass
 		};
 		errCheck(Ripterms::p_tienv->RetransformClasses(sizeof(classes) / sizeof(jclass), classes));
 	}
@@ -106,6 +107,33 @@ namespace
 				NetworkManager.getInstance()
 			});
 		}
+		else if (jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->BlockClass.javaClass))
+		{
+			Ripterms::JavaClass RegistryClass("net/minecraft/util/registry/Registry");
+			String BlockRegistryOwner(RegistryClass.getObfuscatedClassName());
+			String blockRegistry(RegistryClass.getObfuscatedFieldName("blockRegistry"));
+			String blockRegistrySig(RegistryClass.getObfuscatedFieldSig("blockRegistry"));
+			String RegistryNamespaced(Ripterms::classcache->RegistryNamespacedClass.getObfuscatedClassName());
+			String getNameForObject(Ripterms::classcache->RegistryNamespacedClass.getObfuscatedMethodName("getNameForObject"));
+			String RessourceLocation
+			(
+				(
+					Ripterms::version == Ripterms::Version::LUNAR_1_7_10 ||
+					Ripterms::version == Ripterms::Version::FORGE_1_7_10
+					? "none"
+					: Ripterms::JavaClass("net/minecraft/util/ResourceLocation").getObfuscatedClassName()
+				)
+			);
+			patchClass("patchBlock", Ripterms::classcache->BlockClass.getObfuscatedMethodName("shouldSideBeRendered"), 
+			{
+					BlockRegistryOwner.getInstance(),
+					blockRegistry.getInstance(),
+					blockRegistrySig.getInstance(),
+					RegistryNamespaced.getInstance(),
+					getNameForObject.getInstance(),
+					RessourceLocation.getInstance(),
+			});
+		}
 	}
 }
 
@@ -151,6 +179,26 @@ bool Ripterms::Patcher::init()
 	(
 		String("blink_packets"),
 		List::newObject()
+	);
+	Ripterms::cache->EMPTY_MAP.put
+	(
+		String("xray_enabled"),
+		String("0")
+	);
+	List blocks = List::newObject();
+	blocks.add(String("minecraft:iron_ore"));
+	blocks.add(String("minecraft:gold_ore"));
+	blocks.add(String("minecraft:coal_ore"));
+	blocks.add(String("minecraft:emerald_ore"));
+	blocks.add(String("minecraft:quartz_ore"));
+	blocks.add(String("minecraft:redstone_ore"));
+	blocks.add(String("minecraft:lit_redstone_ore"));
+	blocks.add(String("minecraft:lapis_ore"));
+	blocks.add(String("minecraft:diamond_ore"));
+	Ripterms::cache->EMPTY_MAP.put
+	(
+		String("xray_blocks"),
+		blocks
 	);
 
 	ClassLoader classLoader(ClassLoader::newObject());
