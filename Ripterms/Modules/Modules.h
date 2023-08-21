@@ -119,7 +119,7 @@ namespace Ripterms
 			void renderGUI() override;
 			void disable() override;
 		private:
-			int keyBind = 0x42;
+			int keyBind = VK_NUMPAD1;
 		};
 
 		inline std::map<std::string, std::vector<IModule*>> categories =
