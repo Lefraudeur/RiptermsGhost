@@ -23,9 +23,9 @@ namespace Ripterms
 		std::unordered_map<std::string, jfieldID> fields{};
 		std::unordered_map<std::string, jmethodID> methods{};
 		static jclass findClass(const std::string& path);
+		inline static const nlohmann::json* mappings = nullptr;
 	private:
 		std::string class_path{};
-		inline static nlohmann::json mappings{};
 	};
 
 	class JavaClassCache

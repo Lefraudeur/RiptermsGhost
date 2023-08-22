@@ -218,6 +218,7 @@ void Ripterms::clean()
 	delete Ripterms::cache;
 	System::gc();
 	delete Ripterms::classcache;
+	if (Ripterms::JavaClass::mappings) delete Ripterms::JavaClass::mappings;
 	if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
 	std::thread a([] {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -238,6 +239,8 @@ void Ripterms::clean()
 
 void Ripterms::partialClean()
 {
+	tmp_no_hook = true;
+	GUI::clean();
 	MH_DisableHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
 	ImGui_ImplOpenGL3_Shutdown();
@@ -247,4 +250,5 @@ void Ripterms::partialClean()
 	Ripterms::Modules::cleanAll();
 	delete Ripterms::cache;
 	delete Ripterms::classcache;
+	if (Ripterms::JavaClass::mappings) delete Ripterms::JavaClass::mappings;
 }

@@ -1,9 +1,8 @@
 #pragma once
-#include <json.hpp>
 namespace Mappings
 {
 	using namespace nlohmann::literals;
-	static const nlohmann::json mappings_vanilla_1_8_9 = R"(
+	const nlohmann::json* const mappings_vanilla_1_8_9 = new const nlohmann::json(R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -357,5 +356,5 @@ namespace Mappings
 		"methods": []
 	}
 }
-)"_json;
+)"_json);
 }

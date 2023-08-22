@@ -195,6 +195,12 @@ bool Ripterms::Patcher::init()
 	blocks.add(String("minecraft:lit_redstone_ore"));
 	blocks.add(String("minecraft:lapis_ore"));
 	blocks.add(String("minecraft:diamond_ore"));
+	blocks.add(String("palamod:tile.paladium.ore"));
+	blocks.add(String("palamod:tile.amethyst.ore"));
+	blocks.add(String("palamod:tile.titane.ore"));
+	blocks.add(String("palamod:tile.trixium.ore"));
+	blocks.add(String("palamod:tile.findium.ore"));
+	blocks.add(String("palamod:tile.paladium.green.ore"));
 	Ripterms::cache->EMPTY_MAP.put
 	(
 		String("xray_blocks"),

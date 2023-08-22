@@ -84,7 +84,7 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 		ImFontConfig CustomFont;
 		CustomFont.FontDataOwnedByAtlas = false;
 
-		io.Fonts->AddFontFromMemoryTTF(const_cast<std::uint8_t*>(Custom), sizeof(Custom), 17.5f, &CustomFont);
+		io.Fonts->AddFontFromMemoryTTF((void*)Custom, 140732, 17.5f, &CustomFont);
 		io.Fonts->AddFontDefault(); ImGui::StyleColorsDark();
 
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;

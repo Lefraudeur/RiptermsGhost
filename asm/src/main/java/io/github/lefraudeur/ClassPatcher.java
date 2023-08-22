@@ -339,6 +339,12 @@ public class ClassPatcher {
                             }
                             mv.visitVarInsn(Opcodes.ASTORE, 5);
 
+                            /*
+                            mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+                            mv.visitVarInsn(Opcodes.ALOAD, 5);
+                            mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/io/PrintStream", "print", "(Ljava/lang/String;)V", false);
+                             */
+
                             mv.visitLdcInsn(0);
                             mv.visitVarInsn(Opcodes.ISTORE, 6);
 

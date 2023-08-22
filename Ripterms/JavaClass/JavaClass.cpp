@@ -4,7 +4,6 @@
 #include "../Mappings/mappings_lunar_1_8_9.h"
 #include "../Mappings/mappings_vanilla_1_8_9.h"
 #include "../Mappings/mappings_lunar_1_16_5.h"
-#include <iostream>
 
 Ripterms::JavaClass::JavaClass(const std::string& class_path)
 {
@@ -38,7 +37,7 @@ void Ripterms::JavaClass::clear()
 bool Ripterms::JavaClass::fill(const std::string& class_path)
 {
 	this->class_path = class_path;
-	auto classjson = mappings[class_path];
+	auto& classjson = mappings[0][class_path];
 	if (classjson.empty()) {
 		std::cerr << "Can not find info for class " << class_path << " in mappings" << std::endl;
 		return false;
@@ -81,7 +80,7 @@ bool Ripterms::JavaClass::fill(const std::string& class_path)
 
 std::string Ripterms::JavaClass::getObfuscatedMethodName(const std::string& unobf_name)
 {
-	auto classjson = mappings[class_path];
+	auto& classjson = mappings[0][class_path];
 	for (auto& method : classjson["methods"]) {
 		if (method["name"] == unobf_name) return method["obfuscated"];
 	}
@@ -90,7 +89,7 @@ std::string Ripterms::JavaClass::getObfuscatedMethodName(const std::string& unob
 
 std::string Ripterms::JavaClass::getObfuscatedMethodSig(const std::string& unobf_name)
 {
-	auto classjson = mappings[class_path];
+	auto& classjson = mappings[0][class_path];
 	for (auto& method : classjson["methods"]) {
 		if (method["name"] == unobf_name) return method["signature"];
 	}
@@ -99,7 +98,7 @@ std::string Ripterms::JavaClass::getObfuscatedMethodSig(const std::string& unobf
 
 std::string Ripterms::JavaClass::getObfuscatedFieldName(const std::string& unobf_name)
 {
-	auto classjson = mappings[class_path];
+	auto& classjson = mappings[0][class_path];
 	for (auto& method : classjson["fields"]) {
 		if (method["name"] == unobf_name) return method["obfuscated"];
 	}
@@ -108,7 +107,7 @@ std::string Ripterms::JavaClass::getObfuscatedFieldName(const std::string& unobf
 
 std::string Ripterms::JavaClass::getObfuscatedFieldSig(const std::string& unobf_name)
 {
-	auto classjson = mappings[class_path];
+	auto& classjson = mappings[0][class_path];
 	for (auto& method : classjson["fields"]) {
 		if (method["name"] == unobf_name) return method["signature"];
 	}
@@ -117,45 +116,65 @@ std::string Ripterms::JavaClass::getObfuscatedFieldSig(const std::string& unobf_
 
 std::string Ripterms::JavaClass::getObfuscatedClassName()
 {
-	return mappings[class_path]["obfuscated"];
+	return mappings[0][class_path]["obfuscated"];
 }
 
 bool Ripterms::JavaClass::init()
 {
+	bool isSuccess = true;
+	int selected_version_index = -1;
+	const nlohmann::json* const allmaps[] =
+	{
+		Mappings::mappings_lunar_1_8_9,
+		Mappings::mappings_vanilla_1_8_9,
+		Mappings::mappings_lunar_1_7_10,
+		Mappings::mappings_lunar_1_16_5,
+		Mappings::mappings_forge_1_7_10
+	};
 	switch (version)
 	{
 		case LUNAR_1_8_9:
 		{
 			mappings = Mappings::mappings_lunar_1_8_9;
+			selected_version_index = 0;
 			break;
 		}
 		case VANILLA_1_8_9:
 		{
 			mappings = Mappings::mappings_vanilla_1_8_9;
+			selected_version_index = 1;
 			break;
 		}
 		case LUNAR_1_7_10:
 		{
 			mappings = Mappings::mappings_lunar_1_7_10;
+			selected_version_index = 2;
 			break;
 		}
 		case LUNAR_1_16_5:
 		{
 			mappings = Mappings::mappings_lunar_1_16_5;
+			selected_version_index = 3;
 			break;
 		}
 		case FORGE_1_7_10:
 		{
 			mappings = Mappings::mappings_forge_1_7_10;
+			selected_version_index = 4;
 			break;
 		}
 		default:
 		{
 			std::cerr << "Cannot find mappings for the specified version" << std::endl;
-			return false;
+			isSuccess = false;
 		}
 	}
-	return true;
+	for (int i = 0; i < sizeof(allmaps) / sizeof(nlohmann::json*); ++i)
+	{
+		if (i == selected_version_index) continue;
+		delete allmaps[i];
+	}
+	return isSuccess;
 }
 
 jclass Ripterms::JavaClass::findClass(const std::string& path)
