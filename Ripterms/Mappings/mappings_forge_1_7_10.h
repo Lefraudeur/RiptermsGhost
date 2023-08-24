@@ -2,7 +2,7 @@
 namespace Mappings
 {
 	using namespace nlohmann::literals;
-	const nlohmann::json* const mappings_forge_1_7_10 = new const nlohmann::json(R"(
+	static const nlohmann::json* const mappings_forge_1_7_10 = new const nlohmann::json(R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -244,6 +244,12 @@ namespace Mappings
 			{
 				"name": "hurtResistantTime",
 				"obfuscated": "field_70172_ad",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "ticksExisted",
+				"obfuscated": "field_70173_aa",
 				"signature": "I",
 				"static": false
 			}

@@ -25,6 +25,7 @@ namespace Ripterms
 	inline JavaVM* p_jvm = nullptr;
 	inline JNIEnv* p_env = nullptr;
 	inline jvmtiEnv* p_tienv = nullptr;
+	inline int ticksExisted = 0;
 
 	class Timer {
 	public:

@@ -3,7 +3,7 @@
 namespace Mappings
 {
 	using namespace nlohmann::literals;
-	const nlohmann::json* const mappings_lunar_1_16_5 = new const nlohmann::json(R"(
+	static const nlohmann::json* const mappings_lunar_1_16_5 = new const nlohmann::json(R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",

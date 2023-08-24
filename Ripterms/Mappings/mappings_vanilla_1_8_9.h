@@ -2,7 +2,7 @@
 namespace Mappings
 {
 	using namespace nlohmann::literals;
-	const nlohmann::json* const mappings_vanilla_1_8_9 = new const nlohmann::json(R"(
+	static const nlohmann::json* const mappings_vanilla_1_8_9 = new const nlohmann::json(R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",

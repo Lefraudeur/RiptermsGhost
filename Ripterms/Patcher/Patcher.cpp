@@ -201,6 +201,7 @@ bool Ripterms::Patcher::init()
 	blocks.add(String("palamod:tile.trixium.ore"));
 	blocks.add(String("palamod:tile.findium.ore"));
 	blocks.add(String("palamod:tile.paladium.green.ore"));
+	blocks.add(String("palamod:tile.paladium_green.ore"));
 	Ripterms::cache->EMPTY_MAP.put
 	(
 		String("xray_blocks"),

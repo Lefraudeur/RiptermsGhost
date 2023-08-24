@@ -14,7 +14,7 @@ int String::size() const
 	return Ripterms::p_env->GetStringUTFLength((jstring)instance);
 }
 
-std::string String::toString() const
+std::string String::toStdString() const
 {
 	if (!instance) return std::string();
 	int sz = size();

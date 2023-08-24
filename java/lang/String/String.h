@@ -7,5 +7,5 @@ public:
 	String(const std::string& str);
 	String(const char* str);
 	int size() const;
-	std::string toString() const;
+	std::string toStdString() const;
 };

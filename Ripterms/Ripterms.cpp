@@ -14,9 +14,14 @@
 
 void mainLoop()
 {
-	static Ripterms::Timer timer(std::chrono::milliseconds(1));
-	if (!timer.isElapsed() || !Ripterms::cache->fillCache()) return;
-	Ripterms::Modules::runAll();
+	static int prev_ticksExisted = 0;
+	if (!Ripterms::cache->fillCache()) return;
+	Ripterms::ticksExisted = Ripterms::cache->thePlayer.getTicksExisted();
+	if (Ripterms::ticksExisted != prev_ticksExisted)
+	{
+		Ripterms::Modules::runAll();
+		prev_ticksExisted = Ripterms::ticksExisted;
+	}
 }
 
 namespace {

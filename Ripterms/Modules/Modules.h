@@ -70,6 +70,9 @@ namespace Ripterms
 			void run() override;
 			void renderGUI() override;
 			void disable() override;
+		private:
+			int keyBind = VK_NUMPAD2;
+			void sendF3_A();
 		};
 
 		class ClientBrandChanger : public IModule

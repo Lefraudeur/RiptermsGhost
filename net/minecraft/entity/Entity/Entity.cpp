@@ -44,6 +44,12 @@ int Entity::getHurtResistantTime() const
 	return Ripterms::p_env->GetIntField(instance, Ripterms::classcache->EntityClass.fields["hurtResistantTime"]);
 }
 
+int Entity::getTicksExisted() const
+{
+	if (!instance) return 0;
+	return Ripterms::p_env->GetIntField(instance, Ripterms::classcache->EntityClass.fields["ticksExisted"]);
+}
+
 void Entity::setMotion(const Ripterms::Maths::Vector3d& motion)
 {
 	if (!instance) return;
