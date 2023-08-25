@@ -71,6 +71,21 @@ bool Ripterms::JavaClass::fill(const std::string& class_path)
 		}
 		if (!methodID) {
 			std::cerr << "Failed to find method " << std::string(method["obfuscated"]) << std::endl;
+			jint count = 0;
+			jmethodID* methods = nullptr;
+			Ripterms::p_tienv->GetClassMethods(this->javaClass, &count, &methods);
+			for (int i = 0; i < count; ++i)
+			{
+				char* name = nullptr;
+				char* signature = nullptr;
+				Ripterms::p_tienv->GetMethodName(methods[i], &name, &signature, nullptr);
+				std::cout << "name: " << name << std::endl;
+				std::cout << "signature: " << signature << std::endl;
+				Ripterms::p_tienv->Deallocate((unsigned char*)name);
+				Ripterms::p_tienv->Deallocate((unsigned char*)signature);
+			}
+			Ripterms::p_tienv->Deallocate((unsigned char*)methods);
+			std::cin.ignore();
 			return false;
 		}
 		this->methods.insert({ std::string(method["name"]), methodID });
