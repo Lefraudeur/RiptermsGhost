@@ -115,6 +115,12 @@ void Ripterms::Modules::Xray::sendF3_A()
 {
 	std::thread([]
 	{
+		bool should_reopen_gui = false;
+		if (Ripterms::GUI::draw)
+		{
+			Ripterms::GUI::draw = false;
+			should_reopen_gui = true;
+		}
 		SendMessageA(Ripterms::window, WM_KEYDOWN, VK_F3, 0);
 		SendMessageA(Ripterms::window, WM_KEYDOWN, 0x41, 0);
 		struct LParam
@@ -135,5 +141,6 @@ void Ripterms::Modules::Xray::sendF3_A()
 		SendMessageA(Ripterms::window, WM_KEYUP, 0x41, lparam);
 		SendMessageA(Ripterms::window, WM_KEYDOWN, VK_F3, 0);
 		SendMessageA(Ripterms::window, WM_KEYUP, VK_F3, lparam);
+		if (should_reopen_gui) Ripterms::GUI::draw = true;
 	}).detach();
 }

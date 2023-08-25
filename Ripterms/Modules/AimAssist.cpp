@@ -8,6 +8,9 @@ void Ripterms::Modules::AimAssist::run()
 		return;
 	}
 
+	static Ripterms::Timer timer = std::chrono::milliseconds(10);
+	if (!timer.isElapsed()) return;
+
 	Maths::Vector3d thePlayer_position = cache->thePlayer.getPosition();
 	Maths::Vector2d thePlayer_rotation = cache->thePlayer.getRotation();
 	float cropped_thePlayer_yaw = Ripterms::Maths::cropAngle180(thePlayer_rotation.x);
