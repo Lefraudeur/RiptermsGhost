@@ -8,11 +8,14 @@
 class Minecraft : public Object {
 public:
 	using Object::Object;
+
 	static Minecraft getTheMinecraft();
 	EntityPlayerSP getThePlayer();
 	WorldClient getTheWorld();
 	GameSettings getGameSettings();
 	MovingObjectPosition getObjectMouseOver();
+	Entity getPointedEntity();
 	int getRightClickDelayTimer();
+
 	void setRightClickDelayTimer(int value);
 };

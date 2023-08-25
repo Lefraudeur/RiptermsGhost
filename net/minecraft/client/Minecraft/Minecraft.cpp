@@ -29,6 +29,12 @@ MovingObjectPosition Minecraft::getObjectMouseOver()
 	return MovingObjectPosition(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->MinecraftClass.fields["objectMouseOver"]));
 }
 
+Entity Minecraft::getPointedEntity()
+{
+	if (!instance) return Entity();
+	return Entity(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->MinecraftClass.fields["pointedEntity"]));
+}
+
 int Minecraft::getRightClickDelayTimer()
 {
 	if (!instance) return 0;

@@ -165,6 +165,12 @@ namespace Mappings
 				"obfuscated": "rightClickDelayTimer",
 				"signature": "I",
 				"static": false
+			},
+			{
+				"name": "pointedEntity",
+				"obfuscated": "pointedEntity",
+				"signature": "Lnet/minecraft/entity/Entity;",
+				"static": false
 			}
 		],
 		"methods": []
