@@ -199,7 +199,6 @@
     <ClCompile Include="Ripterms\GUI\GUI.cpp" />
     <ClCompile Include="Ripterms\JavaClass\JavaClass.cpp" />
     <ClCompile Include="Ripterms\JavaClass\JavaClassCache.cpp" />
-    <ClCompile Include="Ripterms\Mappings\mappings_lunar_1_16_5.h" />
     <ClCompile Include="Ripterms\Maths\Maths.cpp" />
     <ClCompile Include="Ripterms\Modules\AimAssist.cpp" />
     <ClCompile Include="Ripterms\Modules\Blink.cpp" />
@@ -239,6 +238,7 @@
     <ClInclude Include="Ripterms\GUI\GUI.h" />
     <ClInclude Include="Ripterms\JavaClass\JavaClass.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_forge_1_7_10.h" />
+    <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_16_5.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_7_10.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_8_9.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_vanilla_1_8_9.h" />

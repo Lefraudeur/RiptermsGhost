@@ -1,9 +1,8 @@
 #pragma once
-#include <json.hpp>
 namespace Mappings
 {
 	using namespace nlohmann::literals;
-	static const nlohmann::json mappings_forge_1_7_10 = R"(
+	static const nlohmann::json* const mappings_forge_1_7_10 = new const nlohmann::json(R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -36,6 +35,12 @@ namespace Mappings
 				"name": "clear",
 				"obfuscated": "clear",
 				"signature": "()V",
+				"static": false
+			},
+			{
+				"name": "add",
+				"obfuscated": "add",
+				"signature": "(Ljava/lang/Object;)Z",
 				"static": false
 			}
 		]
@@ -100,6 +105,12 @@ namespace Mappings
 				"name": "patchNetworkManager",
 				"obfuscated": "patchNetworkManager1_7_10",
 				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
+				"static": true
+			},
+			{
+				"name": "patchBlock",
+				"obfuscated": "patchBlock",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
 			}
 		]
@@ -235,6 +246,12 @@ namespace Mappings
 				"obfuscated": "field_70172_ad",
 				"signature": "I",
 				"static": false
+			},
+			{
+				"name": "ticksExisted",
+				"obfuscated": "field_70173_aa",
+				"signature": "I",
+				"static": false
 			}
 		],
 		"methods": []
@@ -368,7 +385,43 @@ namespace Mappings
 			}
 		],
 		"methods": []
+	},
+	"net/minecraft/block/Block": {
+		"obfuscated": "net/minecraft/block/Block",
+		"fields": [],
+		"methods": [
+			{
+				"name": "shouldSideBeRendered",
+				"obfuscated": "func_149646_a",
+				"signature": "(Lnet/minecraft/world/IBlockAccess;IIII)Z",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/util/registry/Registry": {
+		"obfuscated": "net/minecraft/block/Block",
+		"fields": [
+			{
+				"name": "blockRegistry",
+				"obfuscated": "field_149771_c",
+				"signature": "Lnet/minecraft/util/RegistryNamespaced;",
+				"static": true
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/util/RegistryNamespaced": {
+		"obfuscated": "net/minecraft/util/RegistryNamespaced",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getNameForObject",
+				"obfuscated": "func_148750_c",
+				"signature": "(Ljava/lang/Object;)Ljava/lang/String;",
+				"static": false
+			}
+		]
 	}
 }
-)"_json;
+)"_json);
 }

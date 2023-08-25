@@ -1,9 +1,8 @@
 #pragma once
-#include <json.hpp>
 namespace Mappings
 {
 	using namespace nlohmann::literals;
-	static const nlohmann::json mappings_vanilla_1_8_9 = R"(
+	static const nlohmann::json* const mappings_vanilla_1_8_9 = new const nlohmann::json(R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -36,6 +35,12 @@ namespace Mappings
 				"name": "clear",
 				"obfuscated": "clear",
 				"signature": "()V",
+				"static": false
+			},
+			{
+				"name": "add",
+				"obfuscated": "add",
+				"signature": "(Ljava/lang/Object;)Z",
 				"static": false
 			}
 		]
@@ -101,6 +106,12 @@ namespace Mappings
 				"obfuscated": "patchNetworkManager",
 				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
+			},
+			{
+				"name": "patchBlock",
+				"obfuscated": "patchBlock",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
+				"static": true
 			}
 		]
 	},
@@ -151,7 +162,7 @@ namespace Mappings
 			},
 			{
 				"name": "rightClickDelayTimer",
-				"obfuscated": "ad",
+				"obfuscated": "ap",
 				"signature": "I",
 				"static": false
 			}
@@ -232,6 +243,12 @@ namespace Mappings
 			{
 				"name": "hurtResistantTime",
 				"obfuscated": "Z",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "ticksExisted",
+				"obfuscated": "W",
 				"signature": "I",
 				"static": false
 			}
@@ -355,7 +372,48 @@ namespace Mappings
 			}
 		],
 		"methods": []
+	},
+	"net/minecraft/block/Block": {
+		"obfuscated": "afh",
+		"fields": [],
+		"methods": [
+			{
+				"name": "shouldSideBeRendered",
+				"obfuscated": "a",
+				"signature": "(Ladq;Lcj;Lcq;)Z",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/util/registry/Registry": {
+		"obfuscated": "afh",
+		"fields": [
+			{
+				"name": "blockRegistry",
+				"obfuscated": "c",
+				"signature": "Lco;",
+				"static": true
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/util/RegistryNamespaced": {
+		"obfuscated": "cx",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getNameForObject",
+				"obfuscated": "c",
+				"signature": "(Ljava/lang/Object;)Ljava/lang/Object;",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/util/ResourceLocation": {
+		"obfuscated": "jy",
+		"fields": [],
+		"methods": []
 	}
 }
-)"_json;
+)"_json);
 }

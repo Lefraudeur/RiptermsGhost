@@ -7,7 +7,7 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 	if (runonce)
 	{
 		old_ClientModName = getClientModName();
-		std::strcpy(name, old_ClientModName.toString().c_str());
+		std::strcpy(name, old_ClientModName.toStdString().c_str());
 		runonce = false;
 	}
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
@@ -26,7 +26,7 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 	ImGui::SameLine();
 	if (ImGui::Button("reset"))
 	{
-		std::strcpy(name, old_ClientModName.toString().c_str());
+		std::strcpy(name, old_ClientModName.toStdString().c_str());
 		disable();
 	}
 }

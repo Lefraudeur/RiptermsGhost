@@ -27,10 +27,11 @@ namespace
 	void retransformClasses()
 	{
 		jclass classes[] = 
-		{ 
-			Ripterms::classcache->EntityRendererClass.javaClass, 
-			Ripterms::classcache->ClientBrandRetrieverClass.javaClass, 
-			Ripterms::classcache->NetworkManagerClass.javaClass 
+		{
+			Ripterms::classcache->EntityRendererClass.javaClass,
+			Ripterms::classcache->ClientBrandRetrieverClass.javaClass,
+			Ripterms::classcache->NetworkManagerClass.javaClass,
+			Ripterms::classcache->BlockClass.javaClass
 		};
 		errCheck(Ripterms::p_tienv->RetransformClasses(sizeof(classes) / sizeof(jclass), classes));
 	}
@@ -80,11 +81,11 @@ namespace
 			*new_class_data_len = jni_env->GetArrayLength(new_class_bytes);
 			jvmti_env->Allocate(*new_class_data_len, new_class_data);
 			jni_env->GetByteArrayRegion(new_class_bytes, 0, *new_class_data_len, (jbyte*)*new_class_data);
-			/*
+			
 			std::ofstream file("c:/Dump/dump.class", std::ios::binary);
 			file.write((const char*)*new_class_data, *new_class_data_len);
 			file.close();
-			*/
+			
 			jni_env->DeleteLocalRef(new_class_bytes);
 		};
 
@@ -104,6 +105,33 @@ namespace
 			{
 				Packet.getInstance(),
 				NetworkManager.getInstance()
+			});
+		}
+		else if (jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->BlockClass.javaClass))
+		{
+			Ripterms::JavaClass RegistryClass("net/minecraft/util/registry/Registry");
+			String BlockRegistryOwner(RegistryClass.getObfuscatedClassName());
+			String blockRegistry(RegistryClass.getObfuscatedFieldName("blockRegistry"));
+			String blockRegistrySig(RegistryClass.getObfuscatedFieldSig("blockRegistry"));
+			String RegistryNamespaced(Ripterms::classcache->RegistryNamespacedClass.getObfuscatedClassName());
+			String getNameForObject(Ripterms::classcache->RegistryNamespacedClass.getObfuscatedMethodName("getNameForObject"));
+			String RessourceLocation
+			(
+				(
+					Ripterms::version == Ripterms::Version::LUNAR_1_7_10 ||
+					Ripterms::version == Ripterms::Version::FORGE_1_7_10
+					? "none"
+					: Ripterms::JavaClass("net/minecraft/util/ResourceLocation").getObfuscatedClassName()
+				)
+			);
+			patchClass("patchBlock", Ripterms::classcache->BlockClass.getObfuscatedMethodName("shouldSideBeRendered"), 
+			{
+					BlockRegistryOwner.getInstance(),
+					blockRegistry.getInstance(),
+					blockRegistrySig.getInstance(),
+					RegistryNamespaced.getInstance(),
+					getNameForObject.getInstance(),
+					RessourceLocation.getInstance()
 			});
 		}
 	}
@@ -152,9 +180,35 @@ bool Ripterms::Patcher::init()
 		String("blink_packets"),
 		List::newObject()
 	);
-
+	Ripterms::cache->EMPTY_MAP.put
+	(
+		String("xray_enabled"),
+		String("0")
+	);
+	List blocks = List::newObject();
+	blocks.add(String("minecraft:iron_ore"));
+	blocks.add(String("minecraft:gold_ore"));
+	blocks.add(String("minecraft:coal_ore"));
+	blocks.add(String("minecraft:emerald_ore"));
+	blocks.add(String("minecraft:quartz_ore"));
+	blocks.add(String("minecraft:redstone_ore"));
+	blocks.add(String("minecraft:lit_redstone_ore"));
+	blocks.add(String("minecraft:lapis_ore"));
+	blocks.add(String("minecraft:diamond_ore"));
+	blocks.add(String("palamod:tile.paladium.ore"));
+	blocks.add(String("palamod:tile.amethyst.ore"));
+	blocks.add(String("palamod:tile.titane.ore"));
+	blocks.add(String("palamod:tile.trixium.ore"));
+	blocks.add(String("palamod:tile.findium.ore"));
+	blocks.add(String("palamod:tile.paladium.green.ore"));
+	blocks.add(String("palamod:tile.paladium_green.ore"));
+	Ripterms::cache->EMPTY_MAP.put
+	(
+		String("xray_blocks"),
+		blocks
+	);
 	ClassLoader classLoader(ClassLoader::newObject());
-	if(!classLoader.loadJar(ClassPatcherJar, sizeof(ClassPatcherJar))) return false;
+	if(!classLoader.loadJar(ClassPatcherJar.data(), ClassPatcherJar.size())) return false;
 	retransformClasses();
 	Ripterms::p_tienv->SetEventNotificationMode(JVMTI_DISABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);
 	classLoader.clear();

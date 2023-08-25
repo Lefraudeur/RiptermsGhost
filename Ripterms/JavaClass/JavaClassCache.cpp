@@ -30,5 +30,7 @@ bool Ripterms::JavaClassCache::fillCache()
 		NetworkManagerClass.fill("net/minecraft/network/NetworkManager") &&
 		PacketClass.fill("net/minecraft/network/Packet") &&
 		MovingObjectPositionClass.fill("net/minecraft/util/MovingObjectPosition") &&
-		MovingObjectTypeClass.fill("net/minecraft/util/MovingObjectPosition$MovingObjectType");
+		MovingObjectTypeClass.fill("net/minecraft/util/MovingObjectPosition$MovingObjectType") &&
+		BlockClass.fill("net/minecraft/block/Block") &&
+		RegistryNamespacedClass.fill("net/minecraft/util/RegistryNamespaced");
 }

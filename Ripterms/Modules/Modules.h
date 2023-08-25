@@ -64,6 +64,16 @@ namespace Ripterms
 			float old_gamma = -1.0f;
 		};
 
+		class Xray : public IModule
+		{
+		public:
+			void run() override;
+			void renderGUI() override;
+			void disable() override;
+		private:
+			int keyBind = VK_NUMPAD2;
+		};
+
 		class ClientBrandChanger : public IModule
 		{
 		public:
@@ -111,14 +121,14 @@ namespace Ripterms
 			void renderGUI() override;
 			void disable() override;
 		private:
-			int keyBind = 0x42;
+			int keyBind = VK_NUMPAD1;
 		};
 
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
 			{"Combat", {new AimAssist(), new Reach(), new LeftClicker()}},
 			{"Player", {new Velocity(), new FastPlace(), new Blink()}},
-			{"Misc", {new FullBright(), new ClientBrandChanger(), new Test()}}
+			{"Misc", {new FullBright(), new Xray(), new ClientBrandChanger(), new Test()}}
 		};
 
 		void runAll();

@@ -295,4 +295,105 @@ public class ClassPatcher {
         classReader.accept(classVisitor, 0);
         return classWriter.toByteArray();
     }
+
+    public static byte[] patchBlock(byte[] classBytes, String shouldSideBeRendered, String ThreadContext, String EMPTY_MAP, String BlockRegistryOwner, String blockRegistry, String blockRegistrySig, String RegistryNamespaced, String getNameForObject, String RessourceLocation) {
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM5, classWriter) {
+            @Override
+            public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
+                if (name.equals(shouldSideBeRendered) && descriptor.endsWith("Z") && (RessourceLocation.equals("none") || getArgsNumber(descriptor) == 3)) {
+                    return new MethodVisitor(Opcodes.ASM5, cv.visitMethod(access, name, descriptor, signature, exceptions)) {
+                        @Override
+                        public void visitCode() {
+                            Label skip = new Label();
+
+                            mv.visitFieldInsn(Opcodes.GETSTATIC, ThreadContext, EMPTY_MAP, "Ljava/util/Map;");
+                            mv.visitLdcInsn("xray_enabled");
+                            mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "get", "(Ljava/lang/Object;)Ljava/lang/Object;", true);
+                            mv.visitTypeInsn(Opcodes.CHECKCAST, "java/lang/String");
+                            mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/lang/Integer", "parseInt", "(Ljava/lang/String;)I", false);
+                            mv.visitJumpInsn(Opcodes.IFEQ, skip);
+
+                            mv.visitFieldInsn(Opcodes.GETSTATIC, ThreadContext, EMPTY_MAP, "Ljava/util/Map;");
+                            mv.visitLdcInsn("xray_blocks");
+                            mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/Map", "get", "(Ljava/lang/Object;)Ljava/lang/Object;", true);
+                            mv.visitTypeInsn(Opcodes.CHECKCAST, "java/util/List");
+                            mv.visitVarInsn(Opcodes.ASTORE, 4);
+
+                            /*
+                            mv.visitVarInsn(Opcodes.ALOAD, 0);
+                            mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "toString", "()Ljava/lang/String;", false);
+                            mv.visitVarInsn(Opcodes.ASTORE, 5);
+                             */
+                            mv.visitFieldInsn(Opcodes.GETSTATIC, BlockRegistryOwner, blockRegistry, blockRegistrySig);
+                            mv.visitVarInsn(Opcodes.ALOAD, 0);
+                            if (RessourceLocation.equals("none"))
+                            {
+                                mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, RegistryNamespaced, getNameForObject, "(Ljava/lang/Object;)Ljava/lang/String;", false);
+                            }
+                            else
+                            {
+                                mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, RegistryNamespaced, getNameForObject, "(Ljava/lang/Object;)Ljava/lang/Object;", false);
+                                mv.visitTypeInsn(Opcodes.CHECKCAST, RessourceLocation);
+                                mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/Object", "toString", "()Ljava/lang/String;", false);
+                            }
+                            mv.visitVarInsn(Opcodes.ASTORE, 5);
+
+                            /*
+                            mv.visitFieldInsn(Opcodes.GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+                            mv.visitVarInsn(Opcodes.ALOAD, 5);
+                            mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/io/PrintStream", "print", "(Ljava/lang/String;)V", false);
+                             */
+
+                            mv.visitLdcInsn(0);
+                            mv.visitVarInsn(Opcodes.ISTORE, 6);
+
+                            Label norender = new Label();
+                            Label loopStart = new Label();
+                            mv.visitLabel(loopStart);
+                            mv.visitVarInsn(Opcodes.ILOAD, 6);
+                            mv.visitVarInsn(Opcodes.ALOAD, 4);
+                            mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "size", "()I", true);
+                            mv.visitJumpInsn(Opcodes.IF_ICMPGE, norender);
+                            mv.visitVarInsn(Opcodes.ALOAD, 4);
+                            mv.visitVarInsn(Opcodes.ILOAD, 6);
+                            mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, "java/util/List", "get", "(I)Ljava/lang/Object;", true);
+                            mv.visitTypeInsn(Opcodes.CHECKCAST, "java/lang/String");
+                            mv.visitVarInsn(Opcodes.ALOAD, 5);
+                            mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "equals", "(Ljava/lang/Object;)Z", false);
+                            Label skip2 = new Label();
+                            mv.visitJumpInsn(Opcodes.IFEQ, skip2);
+                            mv.visitInsn(Opcodes.ICONST_1);
+                            mv.visitInsn(Opcodes.IRETURN);
+                            mv.visitLabel(skip2);
+                            mv.visitIincInsn(6, 1);
+                            mv.visitJumpInsn(Opcodes.GOTO, loopStart);
+
+                            mv.visitLabel(norender);
+                            mv.visitInsn(Opcodes.ICONST_0);
+                            mv.visitInsn(Opcodes.IRETURN);
+
+                            mv.visitLabel(skip);
+                            mv.visitCode();
+                        }
+                    };
+                }
+                return cv.visitMethod(access, name, descriptor, signature, exceptions);
+            }
+        };
+        ClassReader classReader = new ClassReader(classBytes);
+        classReader.accept(classVisitor, 0);
+        return classWriter.toByteArray();
+    }
+
+    public static int getArgsNumber(String descriptor)
+    {
+        int count = 0;
+        for (char c : descriptor.toCharArray())
+        {
+            if (c == ';') count++;
+            if (c == ')') break;
+        }
+        return count;
+    }
 }
