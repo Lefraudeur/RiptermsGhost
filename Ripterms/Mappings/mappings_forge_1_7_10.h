@@ -165,6 +165,12 @@ namespace Mappings
 				"obfuscated": "field_71467_ac",
 				"signature": "I",
 				"static": false
+			},
+			{
+				"name": "pointedEntity",
+				"obfuscated": "field_147125_j",
+				"signature": "Lnet/minecraft/entity/Entity;",
+				"static": false
 			}
 		],
 		"methods": [

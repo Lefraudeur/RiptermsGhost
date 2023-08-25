@@ -165,6 +165,12 @@ namespace Mappings
 				"obfuscated": "ap",
 				"signature": "I",
 				"static": false
+			},
+			{
+				"name": "pointedEntity",
+				"obfuscated": "i",
+				"signature": "Lpk;",
+				"static": false
 			}
 		],
 		"methods": []
