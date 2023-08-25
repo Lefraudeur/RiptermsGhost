@@ -301,7 +301,7 @@ public class ClassPatcher {
         ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM5, classWriter) {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-                if (name.equals(shouldSideBeRendered)) {
+                if (name.equals(shouldSideBeRendered) && descriptor.endsWith("Z") && (RessourceLocation.equals("none") || getArgsNumber(descriptor) == 3)) {
                     return new MethodVisitor(Opcodes.ASM5, cv.visitMethod(access, name, descriptor, signature, exceptions)) {
                         @Override
                         public void visitCode() {
@@ -384,5 +384,16 @@ public class ClassPatcher {
         ClassReader classReader = new ClassReader(classBytes);
         classReader.accept(classVisitor, 0);
         return classWriter.toByteArray();
+    }
+
+    public static int getArgsNumber(String descriptor)
+    {
+        int count = 0;
+        for (char c : descriptor.toCharArray())
+        {
+            if (c == ';') count++;
+            if (c == ')') break;
+        }
+        return count;
     }
 }

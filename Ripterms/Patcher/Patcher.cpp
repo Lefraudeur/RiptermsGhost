@@ -81,11 +81,11 @@ namespace
 			*new_class_data_len = jni_env->GetArrayLength(new_class_bytes);
 			jvmti_env->Allocate(*new_class_data_len, new_class_data);
 			jni_env->GetByteArrayRegion(new_class_bytes, 0, *new_class_data_len, (jbyte*)*new_class_data);
-			/*
+			
 			std::ofstream file("c:/Dump/dump.class", std::ios::binary);
 			file.write((const char*)*new_class_data, *new_class_data_len);
 			file.close();
-			*/
+			
 			jni_env->DeleteLocalRef(new_class_bytes);
 		};
 
@@ -131,7 +131,7 @@ namespace
 					blockRegistrySig.getInstance(),
 					RegistryNamespaced.getInstance(),
 					getNameForObject.getInstance(),
-					RessourceLocation.getInstance(),
+					RessourceLocation.getInstance()
 			});
 		}
 	}
@@ -207,9 +207,8 @@ bool Ripterms::Patcher::init()
 		String("xray_blocks"),
 		blocks
 	);
-
 	ClassLoader classLoader(ClassLoader::newObject());
-	if(!classLoader.loadJar(ClassPatcherJar, sizeof(ClassPatcherJar))) return false;
+	if(!classLoader.loadJar(ClassPatcherJar.data(), ClassPatcherJar.size())) return false;
 	retransformClasses();
 	Ripterms::p_tienv->SetEventNotificationMode(JVMTI_DISABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);
 	classLoader.clear();
