@@ -165,6 +165,12 @@ namespace Mappings
 				"obfuscated": "rightClickDelay",
 				"signature": "I",
 				"static": false
+			},
+			{
+				"name": "pointedEntity",
+				"obfuscated": "crosshairPickEntity",
+				"signature": "Lnet/minecraft/world/entity/Entity;",
+				"static": false
 			}
 		],
 		"methods": [
