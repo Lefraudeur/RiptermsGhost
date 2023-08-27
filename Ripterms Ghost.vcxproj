@@ -198,8 +198,6 @@
     <ClCompile Include="Ripterms\Cache\Cache.cpp" />
     <ClCompile Include="Ripterms\Event\Event.cpp" />
     <ClCompile Include="Ripterms\GUI\GUI.cpp" />
-    <ClCompile Include="Ripterms\JavaClass\JavaClass.cpp" />
-    <ClCompile Include="Ripterms\JavaClass\JavaClassCache.cpp" />
     <ClCompile Include="Ripterms\JavaClass\JavaClassV2.cpp" />
     <ClCompile Include="Ripterms\Maths\Maths.cpp" />
     <ClCompile Include="Ripterms\Modules\AimAssist.cpp" />

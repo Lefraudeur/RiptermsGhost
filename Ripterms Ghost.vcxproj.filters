@@ -27,9 +27,6 @@
     <ClCompile Include="net\minecraft\client\Minecraft\Minecraft.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Ripterms\JavaClass\JavaClass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Ripterms\Cache\Cache.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -94,9 +91,6 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="net\minecraft\util\Vec3\Vec3.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Ripterms\JavaClass\JavaClassCache.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="java\lang\ClassLoader\ClassLoader.cpp">

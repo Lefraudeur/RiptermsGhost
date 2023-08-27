@@ -18,7 +18,7 @@ public:
 	bool isEqualTo(const Object& other_Object);
 	bool isValid();
 	void clear(); //delete ref
-	jobject getInstance() const;
+	const jobject& getInstance() const;
 protected:
 	inline static Ripterms::JavaClassV2 ObjectClass{ "java/lang/Object" };
 	JNIEnv* env = Ripterms::p_env;

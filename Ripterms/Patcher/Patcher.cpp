@@ -26,12 +26,16 @@ namespace
 
 	void retransformClasses()
 	{
+		Ripterms::JavaClassV2 EntityRendererClass("net/minecraft/client/renderer/EntityRenderer");
+		Ripterms::JavaClassV2 ClientBrandRetrieverClass("net/minecraft/client/ClientBrandRetriever");
+		Ripterms::JavaClassV2 NetworkManagerClass("net/minecraft/network/NetworkManager");
+		Ripterms::JavaClassV2 BlockClass("net/minecraft/block/Block");
 		jclass classes[] = 
 		{
-			Ripterms::classcache->EntityRendererClass.javaClass,
-			Ripterms::classcache->ClientBrandRetrieverClass.javaClass,
-			Ripterms::classcache->NetworkManagerClass.javaClass,
-			Ripterms::classcache->BlockClass.javaClass
+			EntityRendererClass.getJClass(),
+			ClientBrandRetrieverClass.getJClass(),
+			NetworkManagerClass.getJClass(),
+			BlockClass.getJClass()
 		};
 		errCheck(Ripterms::p_tienv->RetransformClasses(sizeof(classes) / sizeof(jclass), classes));
 	}
@@ -53,13 +57,15 @@ namespace
 		std::function<void(const std::string&, const std::string&, const std::vector<jobject>&)> patchClass = 
 		[=](const std::string& patchMethod, const std::string& methodToPatch, const std::vector<jobject>& additional)
 		{
-			Ripterms::JavaClass ClassPatcherClass("io/github/lefraudeur/ClassPatcher");
+			Ripterms::JavaClassV2 ClassPatcherClass("io/github/lefraudeur/ClassPatcher");
+			Ripterms::JavaClassV2 ThreadContextClass("org/apache/logging/log4j/ThreadContext");
+
 			jbyteArray original_class_bytes = jni_env->NewByteArray(class_data_len);
 			jni_env->SetByteArrayRegion(original_class_bytes, 0, class_data_len, (const jbyte*)class_data);
 
-			String methodToPatch_str(methodToPatch);
-			String ThreadContext(Ripterms::classcache->ThreadContextClass.getObfuscatedClassName());
-			String EMPTY_MAP(Ripterms::classcache->ThreadContextClass.getObfuscatedFieldName("EMPTY_MAP"));
+			String methodToPatch_str(methodToPatch, jni_env);
+			String ThreadContext(ThreadContextClass.getObfuscatedClassName(), jni_env);
+			String EMPTY_MAP(ThreadContextClass.getObfuscatedFieldName("EMPTY_MAP"), jni_env);
 
 			jobject* args = new jobject[additional.size() + 4];
 			args[0] = original_class_bytes;
@@ -71,8 +77,8 @@ namespace
 				std::copy(additional.begin(), additional.end(), args + 4);
 
 			jbyteArray new_class_bytes = (jbyteArray)jni_env->CallStaticObjectMethodA(
-				ClassPatcherClass.javaClass,
-				ClassPatcherClass.methods[patchMethod],
+				ClassPatcherClass.getJClass(jni_env),
+				ClassPatcherClass.getMethodID(patchMethod),
 				(jvalue*)args
 			);
 
@@ -90,42 +96,54 @@ namespace
 			jni_env->DeleteLocalRef(new_class_bytes);
 		};
 
-		if (jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->EntityRendererClass.javaClass))
+		Ripterms::JavaClassV2 EntityRendererClass("net/minecraft/client/renderer/EntityRenderer");
+		Ripterms::JavaClassV2 ClientBrandRetrieverClass("net/minecraft/client/ClientBrandRetriever");
+		Ripterms::JavaClassV2 NetworkManagerClass("net/minecraft/network/NetworkManager");
+		Ripterms::JavaClassV2 BlockClass("net/minecraft/block/Block");
+
+		Ripterms::JavaClassV2::JClass redefinedClass(class_being_redefined, jni_env);
+
+		if (redefinedClass.isEqualTo(EntityRendererClass.getJClass(jni_env)))
 		{
-			patchClass("patchEntityRenderer", Ripterms::classcache->EntityRendererClass.getObfuscatedMethodName("getMouseOver"), {});
+			Ripterms::JavaClassV2 EntityRendererClass("net/minecraft/client/renderer/EntityRenderer");
+			patchClass("patchEntityRenderer", EntityRendererClass.getObfuscatedMethodName("getMouseOver"), {});
 		}
-		else if (jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->ClientBrandRetrieverClass.javaClass))
+		else if (redefinedClass.isEqualTo(ClientBrandRetrieverClass.getJClass(jni_env)))
 		{
-			patchClass("patchClientBrandRetriever", Ripterms::classcache->ClientBrandRetrieverClass.getObfuscatedMethodName("getClientModName"), {});
+			patchClass("patchClientBrandRetriever", ClientBrandRetrieverClass.getObfuscatedMethodName("getClientModName"), {});
 		}
-		else if (jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->NetworkManagerClass.javaClass))
+		else if (redefinedClass.isEqualTo(NetworkManagerClass.getJClass(jni_env)))
 		{
-			String Packet(Ripterms::classcache->PacketClass.getObfuscatedClassName());
-			String NetworkManager(Ripterms::classcache->NetworkManagerClass.getObfuscatedClassName());
-			patchClass("patchNetworkManager", Ripterms::classcache->NetworkManagerClass.getObfuscatedMethodName("sendPacket"), 
+			Ripterms::JavaClassV2 PacketClass("net/minecraft/network/Packet");
+
+			String Packet(PacketClass.getObfuscatedClassName(), jni_env);
+			String NetworkManager(NetworkManagerClass.getObfuscatedClassName(), jni_env);
+			patchClass("patchNetworkManager", NetworkManagerClass.getObfuscatedMethodName("sendPacket"), 
 			{
 				Packet.getInstance(),
 				NetworkManager.getInstance()
 			});
 		}
-		else if (jni_env->IsSameObject(class_being_redefined, Ripterms::classcache->BlockClass.javaClass))
+		else if (redefinedClass.isEqualTo(BlockClass.getJClass(jni_env)))
 		{
-			Ripterms::JavaClass RegistryClass("net/minecraft/util/registry/Registry");
-			String BlockRegistryOwner(RegistryClass.getObfuscatedClassName());
-			String blockRegistry(RegistryClass.getObfuscatedFieldName("blockRegistry"));
-			String blockRegistrySig(RegistryClass.getObfuscatedFieldSig("blockRegistry"));
-			String RegistryNamespaced(Ripterms::classcache->RegistryNamespacedClass.getObfuscatedClassName());
-			String getNameForObject(Ripterms::classcache->RegistryNamespacedClass.getObfuscatedMethodName("getNameForObject"));
+			Ripterms::JavaClassV2 RegistryClass("net/minecraft/util/registry/Registry");
+			Ripterms::JavaClassV2 RegistryNamespacedClass("net/minecraft/util/RegistryNamespaced");
+
+			String BlockRegistryOwner(RegistryClass.getObfuscatedClassName(), jni_env);
+			String blockRegistry(RegistryClass.getObfuscatedFieldName("blockRegistry"), jni_env);
+			String blockRegistrySig(RegistryClass.getObfuscatedFieldSig("blockRegistry"), jni_env);
+			String RegistryNamespaced(RegistryNamespacedClass.getObfuscatedClassName(), jni_env);
+			String getNameForObject(RegistryNamespacedClass.getObfuscatedMethodName("getNameForObject"), jni_env);
 			String RessourceLocation
 			(
 				(
 					Ripterms::version == Ripterms::Version::LUNAR_1_7_10 ||
 					Ripterms::version == Ripterms::Version::FORGE_1_7_10
 					? "none"
-					: Ripterms::JavaClass("net/minecraft/util/ResourceLocation").getObfuscatedClassName()
-				)
+					: Ripterms::JavaClassV2("net/minecraft/util/ResourceLocation").getObfuscatedClassName()
+				), jni_env
 			);
-			patchClass("patchBlock", Ripterms::classcache->BlockClass.getObfuscatedMethodName("shouldSideBeRendered"), 
+			patchClass("patchBlock", BlockClass.getObfuscatedMethodName("shouldSideBeRendered"), 
 			{
 					BlockRegistryOwner.getInstance(),
 					blockRegistry.getInstance(),
@@ -152,19 +170,22 @@ bool Ripterms::Patcher::init()
 
 	if(!errCheck(Ripterms::p_tienv->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL))) return false;
 
+
+	Ripterms::JavaClassV2 ThreadContextClass("org/apache/logging/log4j/ThreadContext");
 	//here I am using an empty map, already in th game, to hide and store my cheat data, the getMouseOver than accesses this map (see asm folder)
-	original_EmptyMap = Ripterms::p_env->GetStaticObjectField(Ripterms::classcache->ThreadContextClass.javaClass, Ripterms::classcache->ThreadContextClass.fields["EMPTY_MAP"]);
+	original_EmptyMap = Ripterms::p_env->GetStaticObjectField(ThreadContextClass.getJClass(), ThreadContextClass.getFieldID("EMPTY_MAP"));
 	Object hashmapClass = Ripterms::p_env->FindClass("java/util/HashMap");
 	jmethodID constructor = Ripterms::p_env->GetMethodID((jclass)hashmapClass.getInstance(), "<init>", "()V");
 	jobject hashmap = Ripterms::p_env->NewObject((jclass)hashmapClass.getInstance(), constructor);
-	Ripterms::p_env->SetStaticObjectField(Ripterms::classcache->ThreadContextClass.javaClass, Ripterms::classcache->ThreadContextClass.fields["EMPTY_MAP"], hashmap);
+	Ripterms::p_env->SetStaticObjectField(ThreadContextClass.getJClass(), ThreadContextClass.getFieldID("EMPTY_MAP"), hashmap);
 	Ripterms::cache->EMPTY_MAP = hashmap;
 
 	Ripterms::cache->EMPTY_MAP.put(String("reach_distance"), String("3.0"));
+	Ripterms::JavaClassV2 ClientBrandRetrieverClass("net/minecraft/client/ClientBrandRetriever");
 	Ripterms::cache->EMPTY_MAP.put
 	(
 		String("client_brand"),
-		String(Ripterms::p_env->CallStaticObjectMethod(Ripterms::classcache->ClientBrandRetrieverClass.javaClass, Ripterms::classcache->ClientBrandRetrieverClass.methods["getClientModName"]))
+		String(Ripterms::p_env->CallStaticObjectMethod(ClientBrandRetrieverClass.getJClass(), ClientBrandRetrieverClass.getMethodID("getClientModName")))
 	);
 	Ripterms::cache->EMPTY_MAP.put
 	(
@@ -210,8 +231,11 @@ bool Ripterms::Patcher::init()
 	);
 	ClassLoader classLoader(ClassLoader::newObject());
 	if(!classLoader.loadJar(ClassPatcherJar.data(), ClassPatcherJar.size())) return false;
+	Ripterms::JavaClassV2 ClassPatcherClass("io/github/lefraudeur/ClassPatcher");
+	ClassPatcherClass.reload();
 	retransformClasses();
 	Ripterms::p_tienv->SetEventNotificationMode(JVMTI_DISABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);
+	ClassPatcherClass.removeFromJClassCache();
 	classLoader.clear();
 	System::gc();
 	return true;
@@ -219,8 +243,9 @@ bool Ripterms::Patcher::init()
 
 void Ripterms::Patcher::clean()
 {
+	Ripterms::JavaClassV2 ThreadContextClass("org/apache/logging/log4j/ThreadContext");
 	//restoring old classes
 	retransformClasses();
-	Ripterms::p_env->SetStaticObjectField(Ripterms::classcache->ThreadContextClass.javaClass, Ripterms::classcache->ThreadContextClass.fields["EMPTY_MAP"], original_EmptyMap.getInstance());
+	Ripterms::p_env->SetStaticObjectField(ThreadContextClass.getJClass(), ThreadContextClass.getFieldID("EMPTY_MAP"), original_EmptyMap.getInstance());
 	original_EmptyMap.clear();
 }

@@ -53,8 +53,7 @@ void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function
 		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
-		runMainLoop = Ripterms::classcache->fillCache();
-		Ripterms::JavaClassV2::init();
+		runMainLoop = Ripterms::JavaClassV2::init();
 		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
 		runonce = false;
 	}
@@ -85,8 +84,7 @@ void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
-		runMainLoop = Ripterms::classcache->fillCache();
-		Ripterms::JavaClassV2::init();
+		runMainLoop = Ripterms::JavaClassV2::init();
 		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
 		runonce = false;
 	}
@@ -184,7 +182,6 @@ BOOL Ripterms::init(HMODULE dll, FILE* fbuffer1, FILE* fbuffer2, FILE* fbuffer3)
 		std::cerr << "unknown version" << std::endl;
 		return FALSE;
 	}
-	if (!JavaClass::init()) return FALSE;
 	MH_Initialize();
 	if (majorVersion == MAJOR_1_8_9)
 	{
@@ -234,8 +231,7 @@ void Ripterms::clean()
 	Ripterms::Patcher::clean();
 	delete Ripterms::cache;
 	System::gc();
-	delete Ripterms::classcache;
-	if (Ripterms::JavaClass::mappings) delete Ripterms::JavaClass::mappings;
+	Ripterms::JavaClassV2::clean();
 	if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
 	std::thread a([] {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -262,7 +258,6 @@ void Ripterms::partialClean()
 	MH_Uninitialize();
 	Ripterms::p_env = nullptr;
 	Ripterms::Modules::cleanAll();
+	Ripterms::JavaClassV2::clean();
 	delete Ripterms::cache;
-	delete Ripterms::classcache;
-	if (Ripterms::JavaClass::mappings) delete Ripterms::JavaClass::mappings;
 }
