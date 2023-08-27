@@ -1,48 +1,48 @@
 #include "Minecraft.h"
 
-Minecraft Minecraft::getTheMinecraft()
+Minecraft Minecraft::getTheMinecraft(JNIEnv* env)
 {
-	return Minecraft(Ripterms::p_env->GetStaticObjectField(Ripterms::classcache->MinecraftClass.javaClass, Ripterms::classcache->MinecraftClass.fields["theMinecraft"]));
+	return Minecraft(env->GetStaticObjectField(MinecraftClass.getJClass(), MinecraftClass.getFieldID("theMinecraft")), env);
 }
 
 EntityPlayerSP Minecraft::getThePlayer()
 {
-	if (!this->instance) return EntityPlayerSP();
-	return EntityPlayerSP(Ripterms::p_env->GetObjectField(this->instance, Ripterms::classcache->MinecraftClass.fields["thePlayer"]));
+	if (!this->instance) return EntityPlayerSP(nullptr, env);
+	return EntityPlayerSP(env->GetObjectField(this->instance, MinecraftClass.getFieldID("thePlayer")), env);
 }
 
 WorldClient Minecraft::getTheWorld()
 {
-	if (!this->instance) return WorldClient();
-	return WorldClient(Ripterms::p_env->GetObjectField(this->instance, Ripterms::classcache->MinecraftClass.fields["theWorld"]));
+	if (!this->instance) return WorldClient(nullptr, env);
+	return WorldClient(env->GetObjectField(this->instance, MinecraftClass.getFieldID("theWorld")), env);
 }
 
 GameSettings Minecraft::getGameSettings()
 {
-	if (!instance) return GameSettings();
-	return GameSettings(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->MinecraftClass.fields["gameSettings"]));
+	if (!instance) return GameSettings(nullptr, env);
+	return GameSettings(env->GetObjectField(instance, MinecraftClass.getFieldID("gameSettings")), env);
 }
 
 MovingObjectPosition Minecraft::getObjectMouseOver()
 {
-	if(!instance) return MovingObjectPosition();
-	return MovingObjectPosition(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->MinecraftClass.fields["objectMouseOver"]));
+	if(!instance) return MovingObjectPosition(nullptr, env);
+	return MovingObjectPosition(env->GetObjectField(instance, MinecraftClass.getFieldID("objectMouseOver")), env);
 }
 
 Entity Minecraft::getPointedEntity()
 {
-	if (!instance) return Entity();
-	return Entity(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->MinecraftClass.fields["pointedEntity"]));
+	if (!instance) return Entity(nullptr, env);
+	return Entity(env->GetObjectField(instance, MinecraftClass.getFieldID("pointedEntity")), env);
 }
 
 int Minecraft::getRightClickDelayTimer()
 {
 	if (!instance) return 0;
-	return Ripterms::p_env->GetIntField(instance, Ripterms::classcache->MinecraftClass.fields["rightClickDelayTimer"]);
+	return env->GetIntField(instance, MinecraftClass.getFieldID("rightClickDelayTimer"));
 }
 
 void Minecraft::setRightClickDelayTimer(int value)
 {
 	if (!instance) return;
-	Ripterms::p_env->SetIntField(instance, Ripterms::classcache->MinecraftClass.fields["rightClickDelayTimer"], value);
+	env->SetIntField(instance, MinecraftClass.getFieldID("rightClickDelayTimer"), value);
 }

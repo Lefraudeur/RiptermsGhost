@@ -6,17 +6,21 @@
 
 class Object {
 public:
-	Object(jobject instance);
+	Object(jobject instance, JNIEnv* env = Ripterms::p_env);
 	Object(const Object& other_Object);
 	Object();
+	~Object();
+
 	Object& operator=(const Object& other_Object);
 	Object& operator=(jobject instance);
+	operator jobject();
+
 	bool isEqualTo(const Object& other_Object);
-	bool operator!();
 	bool isValid();
-	~Object();
-	void clear();
-	jobject getInstance() const;
+	void clear(); //delete ref
+	const jobject& getInstance() const;
 protected:
+	inline static Ripterms::JavaClassV2 ObjectClass{ "java/lang/Object" };
+	JNIEnv* env = Ripterms::p_env;
 	jobject instance = nullptr;
 };

@@ -4,6 +4,6 @@ MovingObjectType MovingObjectPosition::getType()
 {
 	if (!instance) return MovingObjectType();
 	if (Ripterms::majorVersion == Ripterms::MAJOR_1_16_5)
-		return MovingObjectType(Ripterms::p_env->CallObjectMethod(instance, Ripterms::classcache->MovingObjectPositionClass.methods["getType"]));
-	return MovingObjectType(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->MovingObjectPositionClass.fields["typeOfHit"]));
+		return MovingObjectType(env->CallObjectMethod(instance, MovingObjectPositionClass.getMethodID("getType")), env);
+	return MovingObjectType(env->GetObjectField(instance, MovingObjectPositionClass.getFieldID("typeOfHit")), env);
 }

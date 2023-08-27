@@ -11,6 +11,7 @@
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_impl_opengl3.h>
 #include <ImGui/imgui_impl_win32.h>
+#include "Event/Event.h"
 
 void mainLoop()
 {
@@ -36,20 +37,27 @@ namespace {
 
 void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
 {
+	static bool runonce = true;
+	Event event(env, mask);
+	if (event.isEvent())
+	{
+		if (!runonce && runMainLoop && !tmp_no_hook) event.dispatch();
+		return;
+	}
 	if (tmp_no_hook) {
 		return originalnglClear(env, clazz, mask, function_pointer);
 	}
 
-	static bool runonce = true;
 	if (runonce)
 	{
 		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
-		runMainLoop = Ripterms::classcache->fillCache();
+		runMainLoop = Ripterms::JavaClassV2::init();
 		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
 		runonce = false;
 	}
+
 	if (GetAsyncKeyState(VK_END)) {
 		Ripterms::clean();
 		return originalnglClear(env, clazz, mask, function_pointer);
@@ -60,20 +68,27 @@ void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function
 
 void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 {
+	static bool runonce = true;
+	Event event(env, mask);
+	if (event.isEvent())
+	{
+		if (!runonce && runMainLoop && !tmp_no_hook) event.dispatch();
+		return;
+	}
 	if (tmp_no_hook) {
 		return originalglClear(env, clazz, mask);
 	}
 
-	static bool runonce = true;
 	if (runonce)
 	{
 		Ripterms::p_env = env;
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
-		runMainLoop = Ripterms::classcache->fillCache();
+		runMainLoop = Ripterms::JavaClassV2::init();
 		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
 		runonce = false;
 	}
+
 	if (GetAsyncKeyState(VK_END)) {
 		Ripterms::clean();
 		return originalglClear(env, clazz, mask);
@@ -204,7 +219,6 @@ BOOL Ripterms::init(HMODULE dll, FILE* fbuffer1, FILE* fbuffer2, FILE* fbuffer3)
 			return FALSE;
 		}
 	}
-	if (!JavaClass::init()) return FALSE;
 	if (!GUI::init()) return FALSE;
 	return TRUE;
 }
@@ -217,8 +231,7 @@ void Ripterms::clean()
 	Ripterms::Patcher::clean();
 	delete Ripterms::cache;
 	System::gc();
-	delete Ripterms::classcache;
-	if (Ripterms::JavaClass::mappings) delete Ripterms::JavaClass::mappings;
+	Ripterms::JavaClassV2::clean();
 	if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
 	std::thread a([] {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -243,12 +256,8 @@ void Ripterms::partialClean()
 	GUI::clean();
 	MH_DisableHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
 	Ripterms::p_env = nullptr;
 	Ripterms::Modules::cleanAll();
+	Ripterms::JavaClassV2::clean();
 	delete Ripterms::cache;
-	delete Ripterms::classcache;
-	if (Ripterms::JavaClass::mappings) delete Ripterms::JavaClass::mappings;
 }

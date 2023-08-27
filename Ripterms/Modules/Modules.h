@@ -5,6 +5,7 @@
 #include <ImGui/imgui.h>
 #include <iostream>
 #include <random>
+#include "../Event/Event.h"
 
 namespace Ripterms
 {
@@ -16,6 +17,7 @@ namespace Ripterms
 			virtual void run();
 			virtual void renderGUI();
 			virtual void disable();
+			virtual void onEvent(Event* event);
 		protected:
 			inline static std::random_device rd{};
 			bool enabled = false;
@@ -29,7 +31,7 @@ namespace Ripterms
 			void run() override;
 			void renderGUI() override;
 		private:
-			float max_distance = 5.0f;
+			float max_distance = 3.0f;
 			float max_angle = 120.0f;
 		};
 

@@ -40,39 +40,39 @@ bool ClassLoader::loadJar(const unsigned char* jarBytes, size_t size)
 
 bool ClassLoader::defineClass(const jbyte* classBytes, jsize size)
 {
-	jclass jaclass = Ripterms::p_env->DefineClass(nullptr, instance, classBytes, size);
+	jclass jaclass = env->DefineClass(nullptr, instance, classBytes, size);
 	if (!jaclass)
 	{
 		std::cerr << "Failed to define class" << std::endl;
-		if (Ripterms::p_env->ExceptionCheck() == JNI_TRUE)
+		if (env->ExceptionCheck() == JNI_TRUE)
 		{
-			Ripterms::p_env->ExceptionDescribe();
-			Ripterms::p_env->ExceptionClear();
+			env->ExceptionDescribe();
+			env->ExceptionClear();
 		}
 		return false;
 	}
-	Ripterms::p_env->DeleteLocalRef(jaclass);
+	env->DeleteLocalRef(jaclass);
 	return true;
 }
 
-ClassLoader ClassLoader::newObject()
+ClassLoader ClassLoader::newObject(JNIEnv* env)
 {
 	//for some reason impossible to create a ClassLoader object
 	//So I was lazy and used a URLClassLoader instead with a random url
-	jclass urlClass = Ripterms::p_env->FindClass("java/net/URL");
-	jmethodID urlContructor = Ripterms::p_env->GetMethodID(urlClass, "<init>", "(Ljava/lang/String;)V");
-	jstring str = Ripterms::p_env->NewStringUTF("file://ftp.yoyodyne.com/pub/files/foobar.txt");
-	jobject url = Ripterms::p_env->NewObject(urlClass, urlContructor, str);
-	jobjectArray urls = Ripterms::p_env->NewObjectArray(1, urlClass, url);
-	jclass URLClassLoaderClass = Ripterms::p_env->FindClass("java/net/URLClassLoader");
-	jmethodID URLClassLoaderContructor = Ripterms::p_env->GetMethodID(URLClassLoaderClass, "<init>", "([Ljava/net/URL;)V");
-	jobject URLClassLoader = Ripterms::p_env->NewObject(URLClassLoaderClass, URLClassLoaderContructor, urls);
+	jclass urlClass = env->FindClass("java/net/URL");
+	jmethodID urlContructor = env->GetMethodID(urlClass, "<init>", "(Ljava/lang/String;)V");
+	jstring str = env->NewStringUTF("file://ftp.yoyodyne.com/pub/files/foobar.txt");
+	jobject url = env->NewObject(urlClass, urlContructor, str);
+	jobjectArray urls = env->NewObjectArray(1, urlClass, url);
+	jclass URLClassLoaderClass = env->FindClass("java/net/URLClassLoader");
+	jmethodID URLClassLoaderContructor = env->GetMethodID(URLClassLoaderClass, "<init>", "([Ljava/net/URL;)V");
+	jobject URLClassLoader = env->NewObject(URLClassLoaderClass, URLClassLoaderContructor, urls);
 
-	Ripterms::p_env->DeleteLocalRef(urlClass);
-	Ripterms::p_env->DeleteLocalRef(url);
-	Ripterms::p_env->DeleteLocalRef(str);
-	Ripterms::p_env->DeleteLocalRef(urls);
-	Ripterms::p_env->DeleteLocalRef(URLClassLoaderClass);
+	env->DeleteLocalRef(urlClass);
+	env->DeleteLocalRef(url);
+	env->DeleteLocalRef(str);
+	env->DeleteLocalRef(urls);
+	env->DeleteLocalRef(URLClassLoaderClass);
 
-	return ClassLoader(URLClassLoader);
+	return ClassLoader(URLClassLoader, env);
 }

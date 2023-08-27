@@ -6,8 +6,8 @@ void Ripterms::Modules::Test::renderGUI()
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 	if (ImGui::Button("Run Test"))
 	{
-		jclass lol = Ripterms::JavaClass::findClass("io/github/lefraudeur/ClassPatcher");
-		if (lol)
+		Ripterms::JavaClassV2::JClass lol(Ripterms::JavaClassV2::findClass("io/github/lefraudeur/ClassPatcher"));
+		if (lol.isValid())
 		{
 			std::cout << "found" << std::endl;
 		}
@@ -15,6 +15,5 @@ void Ripterms::Modules::Test::renderGUI()
 		{
 			std::cout << "not found" << std::endl;
 		}
-		if (lol) Ripterms::p_env->DeleteGlobalRef(lol);
 	}
 }

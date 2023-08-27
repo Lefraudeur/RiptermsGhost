@@ -1,13 +1,13 @@
 #include "MovingObjectType.h"
 
-MovingObjectType MovingObjectType::getType(const std::string& name)
+MovingObjectType MovingObjectType::getType(const std::string& name, JNIEnv* env)
 {
 	return MovingObjectType
 	(
-		Ripterms::p_env->GetStaticObjectField
+		env->GetStaticObjectField
 		(
-			Ripterms::classcache->MovingObjectTypeClass.javaClass,
-			Ripterms::classcache->MovingObjectTypeClass.fields[name]
-		)
+			MovingObjectTypeClass.getJClass(),
+			MovingObjectTypeClass.getFieldID(name)
+		), env
 	);
 }

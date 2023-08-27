@@ -27,9 +27,6 @@
     <ClCompile Include="net\minecraft\client\Minecraft\Minecraft.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Ripterms\JavaClass\JavaClass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Ripterms\Cache\Cache.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -96,9 +93,6 @@
     <ClCompile Include="net\minecraft\util\Vec3\Vec3.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Ripterms\JavaClass\JavaClassCache.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="java\lang\ClassLoader\ClassLoader.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -148,6 +142,12 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="net\minecraft\util\MovingObjectPosition\MovingObjectType\MovingObjectType.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Ripterms\JavaClass\JavaClassV2.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Ripterms\Event\Event.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -249,6 +249,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_16_5.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Ripterms\Event\Event.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

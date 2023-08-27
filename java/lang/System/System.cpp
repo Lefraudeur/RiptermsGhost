@@ -1,6 +1,6 @@
 #include "System.h"
 
-void System::gc()
+void System::gc(JNIEnv* env)
 {
-	Ripterms::p_env->CallStaticVoidMethod(Ripterms::classcache->SystemClass.javaClass, Ripterms::classcache->SystemClass.methods["gc"]);
+	env->CallStaticVoidMethod(SystemClass.getJClass(), SystemClass.getMethodID("gc"));
 }

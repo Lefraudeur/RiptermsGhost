@@ -13,9 +13,9 @@ Ripterms::Cache::~Cache()
 bool Ripterms::Cache::fillCache()
 {
 	theMinecraft = Minecraft::getTheMinecraft();
-	if (!theMinecraft) return false;
+	if (!theMinecraft.isValid()) return false;
 	thePlayer = theMinecraft.getThePlayer();
-	if (!thePlayer) return false;
+	if (!thePlayer.isValid()) return false;
 	if (!prev_thePlayer.isEqualTo(thePlayer)) {
 		std::clog << "object updated" << std::endl;
 		prev_thePlayer = thePlayer;

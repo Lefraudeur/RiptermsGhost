@@ -4,5 +4,5 @@
 List World::getPlayerEntities()
 {
 	if (!instance) return {};
-	return List(Ripterms::p_env->GetObjectField(instance, Ripterms::classcache->WorldClass.fields["playerEntities"]));
+	return List(env->GetObjectField(instance, WorldClass.getFieldID("playerEntities")), env);
 }

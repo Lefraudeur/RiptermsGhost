@@ -4,8 +4,10 @@
 class String : public Object {
 public:
 	using Object::Object;
-	String(const std::string& str);
-	String(const char* str);
+	String(const std::string& str, JNIEnv* env = Ripterms::p_env);
+	String(const char* str, JNIEnv* env = Ripterms::p_env);
 	int size() const;
 	std::string toStdString() const;
+protected:
+	inline static Ripterms::JavaClassV2 StringClass{ "java/lang/String" };
 };

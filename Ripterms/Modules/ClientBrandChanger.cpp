@@ -43,5 +43,6 @@ void Ripterms::Modules::ClientBrandChanger::disable()
 
 String Ripterms::Modules::ClientBrandChanger::getClientModName()
 {
-	return Ripterms::p_env->CallStaticObjectMethod(Ripterms::classcache->ClientBrandRetrieverClass.javaClass, Ripterms::classcache->ClientBrandRetrieverClass.methods["getClientModName"]);
+	Ripterms::JavaClassV2 ClientBrandRetrieverClass("net/minecraft/client/ClientBrandRetriever");
+	return Ripterms::p_env->CallStaticObjectMethod(ClientBrandRetrieverClass.getJClass(), ClientBrandRetrieverClass.getMethodID("getClientModName"));
 }

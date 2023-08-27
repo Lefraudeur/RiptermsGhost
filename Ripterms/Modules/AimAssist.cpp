@@ -41,7 +41,7 @@ void Ripterms::Modules::AimAssist::run()
 				selected_target_PitchToAdd = pitchToAdd;
 				break;
 			}
-			if (!selected_target || std::abs(yawToAdd) < std::abs(selected_target_YawToAdd))
+			if (!selected_target.isValid() || std::abs(yawToAdd) < std::abs(selected_target_YawToAdd))
 			{
 				selected_target = target;
 				selected_target_YawToAdd = yawToAdd;
@@ -61,10 +61,10 @@ void Ripterms::Modules::AimAssist::run()
 			return;
 		std::mt19937 gen(rd());
 		std::uniform_int_distribution<> range_yaw(150, 400);
-		if (std::abs(selected_target_YawToAdd) > 3.0f)
+		if (std::abs(selected_target_YawToAdd) > 4.0f)
 			thePlayer_rotation.x += (selected_target_YawToAdd > 0.0f ? range_yaw(gen) / 100.0f : -range_yaw(gen) / 100.0f);
-		std::uniform_int_distribution<> range_pitch(100, 250);
-		if (std::abs(selected_target_PitchToAdd) > 3.0f)
+		std::uniform_int_distribution<> range_pitch(50, 200);
+		if (std::abs(selected_target_PitchToAdd) > 4.0f)
 			thePlayer_rotation.y += (selected_target_PitchToAdd > 0.0f ? range_pitch(gen) / 100.0f : -range_pitch(gen) / 100.0f);
 		cache->thePlayer.setRotation(thePlayer_rotation);
 	}
@@ -88,7 +88,7 @@ void Ripterms::Modules::AimAssist::renderGUI()
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderFloat("Max Distance", &max_distance, 1.0f, 5.0f, "%.1f");
+		ImGui::SliderFloat("Max Distance", &max_distance, 1.0f, 4.5f, "%.1f");
 		ImGui::SliderFloat("Max Angle", &max_angle, 10.0f, 180.0f, "%.1f");
 		ImGui::EndGroup();
 	}

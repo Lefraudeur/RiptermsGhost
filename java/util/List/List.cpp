@@ -1,8 +1,8 @@
 #include "List.h"
 
-List List::newObject()
+List List::newObject(JNIEnv* env)
 {
-	Object arrayListClass(Ripterms::p_env->FindClass("java/util/ArrayList"));
-	jmethodID constructor = Ripterms::p_env->GetMethodID((jclass)arrayListClass.getInstance(), "<init>", "()V");
-	return List(Ripterms::p_env->NewObject((jclass)arrayListClass.getInstance(), constructor));
+	Ripterms::JavaClassV2::JClass arrayListClass(env->FindClass("java/util/ArrayList"), env);
+	jmethodID constructor = env->GetMethodID(arrayListClass, "<init>", "()V");
+	return List(env->NewObject(arrayListClass, constructor), env);
 }

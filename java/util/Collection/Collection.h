@@ -9,20 +9,22 @@ public:
 	bool add(Object element);
 	template<class T>
 	std::vector<T> toVector();
+protected:
+	inline static Ripterms::JavaClassV2 CollectionClass{ "java/util/Collection" };
 };
 
 template<class T>
 inline std::vector<T> Collection::toVector()
 {
 	if (!this->instance) return {};
-	jobjectArray array = (jobjectArray)Ripterms::p_env->CallObjectMethod(instance, Ripterms::classcache->CollectionClass.methods["toArray"]);
+	jobjectArray array = (jobjectArray)env->CallObjectMethod(instance, CollectionClass.getMethodID("toArray"));
 	if (!array) return {};
-	jsize size = Ripterms::p_env->GetArrayLength(array);
+	jsize size = env->GetArrayLength(array);
 	if (size == 0) return {};
 	std::vector<T> vector(size);
 	for (jsize i = 0; i < size; ++i) {
-		vector.push_back(T(Ripterms::p_env->GetObjectArrayElement(array, i)));
+		vector.push_back(T(env->GetObjectArrayElement(array, i), env));
 	}
-	Ripterms::p_env->DeleteLocalRef(array);
+	env->DeleteLocalRef(array);
 	return vector;
 }

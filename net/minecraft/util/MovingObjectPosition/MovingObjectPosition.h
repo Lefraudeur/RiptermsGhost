@@ -7,4 +7,6 @@ class MovingObjectPosition : public Object {
 public:
 	using Object::Object;
 	MovingObjectType getType();
+protected:
+	inline static Ripterms::JavaClassV2 MovingObjectPositionClass{ "net/minecraft/util/MovingObjectPosition" };
 };
