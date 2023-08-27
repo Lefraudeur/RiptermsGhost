@@ -344,47 +344,6 @@ namespace Mappings
 			}
 		],
 		"methods": []
-	},
-	"net/minecraft/block/Block": {
-		"obfuscated": "net/minecraft/world/level/block/Block",
-		"fields": [],
-		"methods": [
-			{
-				"name": "shouldSideBeRendered",
-				"obfuscated": "shouldRenderFace",
-				"signature": "(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Z",
-				"static": true
-			}
-		]
-	},
-	"net/minecraft/util/registry/Registry": {
-		"obfuscated": "net/minecraft/core/Registry",
-		"fields": [
-			{
-				"name": "blockRegistry",
-				"obfuscated": "BLOCK",
-				"signature": "Lnet/minecraft/core/DefaultedRegistry;",
-				"static": true
-			}
-		],
-		"methods": []
-	},
-	"net/minecraft/util/RegistryNamespaced": {
-		"obfuscated": "net/minecraft/core/DefaultedRegistry",
-		"fields": [],
-		"methods": [
-			{
-				"name": "getNameForObject",
-				"obfuscated": "getKey",
-				"signature": "(Ljava/lang/Object;)Lnet/minecraft/resources/ResourceLocation;",
-				"static": false
-			}
-		]
-	},
-	"net/minecraft/util/ResourceLocation": {
-		"obfuscated": "net/minecraft/resources/ResourceLocation",
-		"fields": [],
-		"methods": []
 	}
 }
 )"_json);

@@ -29,16 +29,19 @@ namespace
 		Ripterms::JavaClassV2 EntityRendererClass("net/minecraft/client/renderer/EntityRenderer");
 		Ripterms::JavaClassV2 ClientBrandRetrieverClass("net/minecraft/client/ClientBrandRetriever");
 		Ripterms::JavaClassV2 NetworkManagerClass("net/minecraft/network/NetworkManager");
-		Ripterms::JavaClassV2 BlockClass("net/minecraft/block/Block");
 
 		jclass classes[] = 
 		{
 			EntityRendererClass.getJClass(),
 			ClientBrandRetrieverClass.getJClass(),
-			NetworkManagerClass.getJClass(),
-			BlockClass.getJClass()
+			NetworkManagerClass.getJClass()
 		};
 		errCheck(Ripterms::p_tienv->RetransformClasses(sizeof(classes) / sizeof(jclass), classes));
+		if (Ripterms::majorVersion != Ripterms::Version::MAJOR_1_16_5)
+		{
+			Ripterms::JavaClassV2 BlockClass("net/minecraft/block/Block");
+			errCheck(Ripterms::p_tienv->RetransformClasses(1, &BlockClass.getJClass().getInstance()));
+		}
 	}
 
 	void JNICALL ClassFileLoadHook
@@ -125,7 +128,7 @@ namespace
 				NetworkManager.getInstance()
 			});
 		}
-		else if (redefinedClass.isEqualTo(BlockClass.getJClass(jni_env)))
+		else if (Ripterms::majorVersion != Ripterms::Version::MAJOR_1_16_5 && redefinedClass.isEqualTo(BlockClass.getJClass(jni_env)))
 		{
 			Ripterms::JavaClassV2 RegistryClass("net/minecraft/util/registry/Registry");
 			Ripterms::JavaClassV2 RegistryNamespacedClass("net/minecraft/util/RegistryNamespaced");
