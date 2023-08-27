@@ -30,6 +30,7 @@ namespace
 		Ripterms::JavaClassV2 ClientBrandRetrieverClass("net/minecraft/client/ClientBrandRetriever");
 		Ripterms::JavaClassV2 NetworkManagerClass("net/minecraft/network/NetworkManager");
 		Ripterms::JavaClassV2 BlockClass("net/minecraft/block/Block");
+
 		jclass classes[] = 
 		{
 			EntityRendererClass.getJClass(),
@@ -158,19 +159,6 @@ namespace
 
 bool Ripterms::Patcher::init()
 {
-	jvmtiCapabilities capabilities{};
-	capabilities.can_retransform_classes = JVMTI_ENABLE;
-	if(!errCheck(Ripterms::p_tienv->AddCapabilities(&capabilities)))
-		return false;
-
-	jvmtiEventCallbacks callbacks{};
-	callbacks.ClassFileLoadHook = &ClassFileLoadHook;
-	if(!errCheck(Ripterms::p_tienv->SetEventCallbacks(&callbacks, sizeof(jvmtiEventCallbacks))))
-		return false;
-
-	if(!errCheck(Ripterms::p_tienv->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL))) return false;
-
-
 	Ripterms::JavaClassV2 ThreadContextClass("org/apache/logging/log4j/ThreadContext");
 	//here I am using an empty map, already in th game, to hide and store my cheat data, the getMouseOver than accesses this map (see asm folder)
 	original_EmptyMap = Ripterms::p_env->GetStaticObjectField(ThreadContextClass.getJClass(), ThreadContextClass.getFieldID("EMPTY_MAP"));
@@ -233,7 +221,20 @@ bool Ripterms::Patcher::init()
 	if(!classLoader.loadJar(ClassPatcherJar.data(), ClassPatcherJar.size())) return false;
 	Ripterms::JavaClassV2 ClassPatcherClass("io/github/lefraudeur/ClassPatcher");
 	ClassPatcherClass.reload();
+
+	jvmtiCapabilities capabilities{};
+	capabilities.can_retransform_classes = JVMTI_ENABLE;
+	if (!errCheck(Ripterms::p_tienv->AddCapabilities(&capabilities)))
+		return false;
+
+	jvmtiEventCallbacks callbacks{};
+	callbacks.ClassFileLoadHook = &ClassFileLoadHook;
+	if (!errCheck(Ripterms::p_tienv->SetEventCallbacks(&callbacks, sizeof(jvmtiEventCallbacks))))
+		return false;
+
+	if (!errCheck(Ripterms::p_tienv->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL))) return false;
 	retransformClasses();
+
 	Ripterms::p_tienv->SetEventNotificationMode(JVMTI_DISABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);
 	ClassPatcherClass.removeFromJClassCache();
 	classLoader.clear();

@@ -139,7 +139,7 @@ Ripterms::JavaClassV2::JClass& Ripterms::JavaClassV2::getJClass(JNIEnv* env)
 	}
 	catch (...)
 	{
-		jclassCache[env].insert({ class_path, JClass(findClass(class_path, env), env) });
+		jclassCache[env].insert({ class_path, JClass(findClass(getObfuscatedClassName(), env), env)});
 		return jclassCache[env].at(class_path);
 	}
 }
@@ -153,6 +153,9 @@ jfieldID Ripterms::JavaClassV2::getFieldID(const std::string& name)
 	catch (const std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
+		std::cerr << "Failed to get field ID " << name << std::endl;
+		std::cerr << "for class " << class_path << std::endl;
+		std::cin.ignore();
 		return nullptr;
 	}
 }
@@ -166,6 +169,9 @@ jmethodID Ripterms::JavaClassV2::getMethodID(const std::string& name)
 	catch (const std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
+		std::cerr << "Failed to get method ID " << name << std::endl;
+		std::cerr << "for class " << class_path << std::endl;
+		std::cin.ignore();
 		return nullptr;
 	}
 }
