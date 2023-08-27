@@ -9,7 +9,7 @@ class Minecraft : public Object {
 public:
 	using Object::Object;
 
-	static Minecraft getTheMinecraft();
+	static Minecraft getTheMinecraft(JNIEnv* env = Ripterms::p_env);
 	EntityPlayerSP getThePlayer();
 	WorldClient getTheWorld();
 	GameSettings getGameSettings();
@@ -18,4 +18,6 @@ public:
 	int getRightClickDelayTimer();
 
 	void setRightClickDelayTimer(int value);
+protected:
+	inline static Ripterms::JavaClassV2 MinecraftClass{ "net/minecraft/client/Minecraft" };
 };

@@ -4,17 +4,17 @@ float GameSettings::getGammaSetting()
 {
 	if(!instance) return 0.0f;
 	if (Ripterms::majorVersion == Ripterms::Version::MAJOR_1_16_5) {
-		return (float)Ripterms::p_env->GetDoubleField(instance, Ripterms::classcache->GameSettingsClass.fields["gammaSetting"]);
+		return (float)env->GetDoubleField(instance, GameSettingsClass.getFieldID("gammaSetting"));
 	}
-	return Ripterms::p_env->GetFloatField(instance, Ripterms::classcache->GameSettingsClass.fields["gammaSetting"]);
+	return env->GetFloatField(instance, GameSettingsClass.getFieldID("gammaSetting"));
 }
 
 void GameSettings::setGammaSetting(float value)
 {
 	if (!instance) return;
 	if (Ripterms::majorVersion == Ripterms::Version::MAJOR_1_16_5) {
-		Ripterms::p_env->SetDoubleField(instance, Ripterms::classcache->GameSettingsClass.fields["gammaSetting"], (jdouble)value);
+		env->SetDoubleField(instance, GameSettingsClass.getFieldID("gammaSetting"), (jdouble)value);
 		return;
 	}
-	Ripterms::p_env->SetFloatField(instance, Ripterms::classcache->GameSettingsClass.fields["gammaSetting"], value);
+	env->SetFloatField(instance, GameSettingsClass.getFieldID("gammaSetting"), value);
 }

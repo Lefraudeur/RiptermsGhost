@@ -196,9 +196,11 @@
     <ClCompile Include="net\minecraft\util\Vec3\Vec3.cpp" />
     <ClCompile Include="net\minecraft\world\World\World.cpp" />
     <ClCompile Include="Ripterms\Cache\Cache.cpp" />
+    <ClCompile Include="Ripterms\Event\Event.cpp" />
     <ClCompile Include="Ripterms\GUI\GUI.cpp" />
     <ClCompile Include="Ripterms\JavaClass\JavaClass.cpp" />
     <ClCompile Include="Ripterms\JavaClass\JavaClassCache.cpp" />
+    <ClCompile Include="Ripterms\JavaClass\JavaClassV2.cpp" />
     <ClCompile Include="Ripterms\Maths\Maths.cpp" />
     <ClCompile Include="Ripterms\Modules\AimAssist.cpp" />
     <ClCompile Include="Ripterms\Modules\Blink.cpp" />
@@ -234,6 +236,7 @@
     <ClInclude Include="net\minecraft\util\Vec3\Vec3.h" />
     <ClInclude Include="net\minecraft\world\World\World.h" />
     <ClInclude Include="Ripterms\Cache\Cache.h" />
+    <ClInclude Include="Ripterms\Event\Event.h" />
     <ClInclude Include="Ripterms\GUI\font.h" />
     <ClInclude Include="Ripterms\GUI\GUI.h" />
     <ClInclude Include="Ripterms\JavaClass\JavaClass.h" />

@@ -1,18 +1,20 @@
 #include "Object.h"
 
-Object::Object(jobject instance)
+Object::Object(jobject instance, JNIEnv* env)
 {
-	if (instance) {
-		this->instance = Ripterms::p_env->NewGlobalRef(instance);
-		Ripterms::p_env->DeleteLocalRef(instance);
+	if (instance)
+	{
+		this->instance = env->NewGlobalRef(instance);
+		if (env->GetObjectRefType(instance) == JNILocalRefType)
+			env->DeleteLocalRef(instance);
 	}
 	else this->instance = nullptr;
+	this->env = env;
 }
 
-Object::Object(const Object& other_Object)
+Object::Object(const Object& other_Object) :
+	Object(other_Object.instance, other_Object.env)
 {
-	if (other_Object.instance) this->instance = Ripterms::p_env->NewGlobalRef(other_Object.instance);
-	else this->instance = nullptr;
 }
 
 Object::Object()
@@ -21,21 +23,27 @@ Object::Object()
 
 Object& Object::operator=(const Object& other_Object)
 {
-	if (this->instance) Ripterms::p_env->DeleteGlobalRef(this->instance);
-	if (other_Object.instance) this->instance = Ripterms::p_env->NewGlobalRef(other_Object.instance);
+	this->env = other_Object.env;
+	if (this->instance) env->DeleteGlobalRef(this->instance);
+	if (other_Object.instance)
+		this->instance = env->NewGlobalRef(other_Object.instance);
 	else this->instance = nullptr;
 	return *this;
 }
 
 Object& Object::operator=(jobject instance)
 {
-	if (this->instance) Ripterms::p_env->DeleteGlobalRef(this->instance);
-	if (instance) {
-		this->instance = Ripterms::p_env->NewGlobalRef(instance);
-		Ripterms::p_env->DeleteLocalRef(instance);
-	}
+	if (!this->env) env = Ripterms::p_env;
+	if (this->instance) env->DeleteGlobalRef(this->instance);
+	if (instance)
+		this->instance = env->NewGlobalRef(instance);
 	else this->instance = nullptr;
 	return *this;
+}
+
+Object::operator jobject()
+{
+	return getInstance();
 }
 
 bool Object::isEqualTo(const Object& other_Object)
@@ -43,15 +51,10 @@ bool Object::isEqualTo(const Object& other_Object)
 	if (this->instance == other_Object.instance) {
 		return true;
 	}
-	else if (this->instance && other_Object.instance) {
-		return Ripterms::p_env->IsSameObject(this->instance, other_Object.instance) == JNI_TRUE;
+	if (this->instance && other_Object.instance) {
+		return env->IsSameObject(this->instance, other_Object.instance) == JNI_TRUE;
 	}
 	return false;
-}
-
-bool Object::operator!()
-{
-	return this->instance == nullptr;
 }
 
 bool Object::isValid()
@@ -61,15 +64,16 @@ bool Object::isValid()
 
 Object::~Object()
 {
-	if (!Ripterms::p_env) return;
-	if (instance) Ripterms::p_env->DeleteGlobalRef(instance);
+	clear();
 }
 
 void Object::clear()
 {
-	if (!Ripterms::p_env) return;
-	if (this->instance) {
-		Ripterms::p_env->DeleteGlobalRef(this->instance);
+	if (!Ripterms::p_env) 
+		return; // process termination scenario
+	if (isValid())
+	{
+		env->DeleteGlobalRef(this->instance);
 		this->instance = nullptr;
 	}
 }

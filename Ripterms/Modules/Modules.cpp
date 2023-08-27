@@ -13,6 +13,10 @@ void Ripterms::Modules::IModule::disable()
 {
 }
 
+void Ripterms::Modules::IModule::onEvent(Event* event)
+{
+}
+
 void Ripterms::Modules::runAll()
 {
 	for (const std::pair<std::string, std::vector<IModule*>>& category : categories)

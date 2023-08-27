@@ -28,6 +28,49 @@ namespace Ripterms
 		std::string class_path{};
 	};
 
+	class JavaClassV2
+	{ // JavaClassV2 is here to fix the problem of the JNIEnv and all references beeing incorrect because different thread
+	public:
+		static bool init();
+		static void clean();
+
+		JavaClassV2(const std::string& class_path);
+		JavaClassV2(const JavaClassV2& otherJavaClass);
+
+		struct JClass
+		{
+			JClass();
+			JClass(jclass javaClass, JNIEnv* env = Ripterms::p_env);
+			JClass(const JClass& other);
+			~JClass();
+
+			void clear(); //delete ref
+			bool isValid();
+			bool isEqualTo(const JClass& other);
+
+			operator jclass();
+		private:
+			jclass javaClass = nullptr;
+			JNIEnv* env = Ripterms::p_env;
+		};
+
+		JClass getJClass(JNIEnv* env = Ripterms::p_env);
+		jfieldID getFieldID(const std::string& name);
+		jmethodID getMethodID(const std::string& name);
+	private:
+		struct JavaClassData
+		{
+			std::unordered_map<std::string, jfieldID> fields{};
+			std::unordered_map<std::string, jmethodID> methods{};
+		};
+
+		static std::unordered_map<JNIEnv*, std::unordered_map<std::string, JClass>> jclassCache;
+		static std::unordered_map<std::string, JavaClassData> data;
+		static jclass findClass(const std::string& class_path, JNIEnv* env = Ripterms::p_env);
+
+		std::string class_path{};
+	};
+
 	class JavaClassCache
 	{
 	public:

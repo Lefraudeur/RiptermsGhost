@@ -3,5 +3,5 @@
 Object Map::put(const Object& key, const Object& value)
 {
 	if (!instance) return Object();
-	return Object(Ripterms::p_env->CallObjectMethod(instance, Ripterms::classcache->MapClass.methods["put"], key.getInstance(), value.getInstance()));
+	return Object(env->CallObjectMethod(instance, MapClass.getMethodID("put"), key.getInstance(), value.getInstance()), env);
 }
