@@ -205,6 +205,7 @@
     <ClCompile Include="Ripterms\Modules\ClientBrandChanger.cpp" />
     <ClCompile Include="Ripterms\Modules\FullBright.cpp" />
     <ClCompile Include="Ripterms\Modules\LeftClicker.cpp" />
+    <ClCompile Include="Ripterms\Modules\LegitScaffold.cpp" />
     <ClCompile Include="Ripterms\Modules\Modules.cpp" />
     <ClCompile Include="Ripterms\Modules\Reach.cpp" />
     <ClCompile Include="Ripterms\Modules\Test.cpp" />

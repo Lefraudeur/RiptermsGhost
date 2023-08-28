@@ -1,24 +1,19 @@
 #include "Event.h"
 #include "../Modules/Modules.h"
 
-Event::Event(JNIEnv* env, int mask)
+Ripterms::Event::Event(JNIEnv* env, int mask)
 {
-	std::unordered_map<int, Type>::iterator pos = events.find(mask);
-	if (pos != events.end())
+	if (mask >= 13371337)
 	{
-		this->type = pos->second;
+		this->type = (Type)mask;
+		this->env = env;
+		Ripterms::JavaClassV2 ThreadContext("org/apache/logging/log4j/ThreadContext");
+		this->EMPTY_MAP.setInstance(env->GetStaticObjectField(ThreadContext.getJClass(env), ThreadContext.getFieldID("EMPTY_MAP")), env);
 	}
-	else
-	{
-		this->type = UNKNOWN;
-		return;
-	}
-	this->env = env;
-	Ripterms::JavaClassV2 ThreadContext("org/apache/logging/log4j/ThreadContext");
-	this->EMPTY_MAP = env->GetStaticObjectField(ThreadContext.getJClass(env), ThreadContext.getFieldID("EMPTY_MAP"));
+	else this->type = UNKNOWN;
 }
 
-void Event::dispatch()
+void Ripterms::Event::dispatch()
 {
 	for (auto& category : Ripterms::Modules::categories)
 	{
@@ -29,13 +24,13 @@ void Event::dispatch()
 	}
 }
 
-bool Event::isEvent()
+bool Ripterms::Event::isEvent()
 {
 	return type != UNKNOWN;
 }
 
-void Event::cancel()
+void Ripterms::Event::cancel()
 {
 	isCanceled = true;
-	this->EMPTY_MAP.put(String("cancel"), String("1"));
+	this->EMPTY_MAP.put(String("cancel" + std::to_string((int)type), env), String("1", env));
 }

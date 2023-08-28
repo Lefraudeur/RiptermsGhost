@@ -386,6 +386,88 @@ public class ClassPatcher {
         return classWriter.toByteArray();
     }
 
+    public static byte[] patchGL11(byte[] classBytes)
+    {
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM5, classWriter)
+        {
+            private String className;
+            @Override
+            public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+                className = name;
+                cv.visit(version, access, name, signature, superName, interfaces);
+            }
+
+            @Override
+            public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions)
+            {
+                if (name.equals("glClear"))
+                {
+                    return new MethodVisitor(Opcodes.ASM5, cv.visitMethod(access, name, descriptor, signature, exceptions))
+                    {
+                        @Override
+                        public void visitCode()
+                        {
+                            mv.visitVarInsn(Opcodes.ILOAD, 0);
+                            mv.visitLdcInsn(13371337);
+                            Label noarg = new Label();
+                            mv.visitJumpInsn(Opcodes.IF_ICMPLT, noarg);
+                            mv.visitVarInsn(Opcodes.ILOAD, 0);
+                            mv.visitInsn(Opcodes.LCONST_0);
+                            mv.visitMethodInsn(Opcodes.INVOKESTATIC, className, "nglClear", "(IJ)V", false);
+                            mv.visitLabel(noarg);
+                            mv.visitCode();
+                        }
+                    };
+                }
+                return cv.visitMethod(access, name, descriptor, signature, exceptions);
+            }
+        };
+        ClassReader classReader = new ClassReader(classBytes);
+        classReader.accept(classVisitor, 0);
+        return classWriter.toByteArray();
+    }
+
+    public static byte[] patchMethod(byte[] classBytes, String methodName, String methodSig, String GL11, int preEventMask, int postEventMask)
+    {
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM5, classWriter)
+        {
+            @Override
+            public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions)
+            {
+                if (name.equals(methodName) && descriptor.equals(methodSig))
+                {
+                    return new MethodVisitor(Opcodes.ASM5, cv.visitMethod(access, name, descriptor, signature, exceptions))
+                    {
+                        @Override
+                        public void visitCode()
+                        {
+                            mv.visitLdcInsn(preEventMask);
+                            mv.visitMethodInsn(Opcodes.INVOKESTATIC, GL11, "glClear", "(I)V", false);
+                            mv.visitCode();
+                        }
+
+                        @Override
+                        public void visitInsn(int opcode)
+                        {
+                            if (opcode == Opcodes.RETURN || opcode == Opcodes.ARETURN || opcode == Opcodes.IRETURN || opcode == Opcodes.FRETURN || opcode == Opcodes.LRETURN || opcode == Opcodes.DRETURN)
+                            {
+                                mv.visitLdcInsn(postEventMask);
+                                mv.visitMethodInsn(Opcodes.INVOKESTATIC, GL11, "glClear", "(I)V", false);
+                            }
+                            mv.visitInsn(opcode);
+                        }
+                    };
+                }
+                return cv.visitMethod(access, name, descriptor, signature, exceptions);
+            }
+        };
+        ClassReader classReader = new ClassReader(classBytes);
+        classReader.accept(classVisitor, 0);
+        return classWriter.toByteArray();
+    }
+
     public static int getArgsNumber(String descriptor)
     {
         int count = 0;

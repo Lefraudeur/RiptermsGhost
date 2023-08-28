@@ -5,28 +5,28 @@
 #include "../../java/lang/String/String.h"
 #include "../../java/util/Map/Map.h"
 
-class Event
+namespace Ripterms
 {
-public:
-	Event(JNIEnv* env, int mask);
-
-	void dispatch();
-	bool isEvent();
-	void cancel();
-
-	enum Type
+	class Event
 	{
-		UNKNOWN,
-		PACKET_SEND
-	};
-	Type type = UNKNOWN;
+	public:
+		Event(JNIEnv* env, int mask);
 
-	JNIEnv* env = nullptr;
-	bool isCanceled = false;
-	Map EMPTY_MAP{};
-private:
-	inline static std::unordered_map<int, Type> events =
-	{
-		{1337, PACKET_SEND}
+		void dispatch();
+		bool isEvent();
+		void cancel();
+
+		enum Type
+		{
+			UNKNOWN,
+			PRE_MOTION = 13371337,
+			POST_MOTION = 13371338
+
+		};
+		Type type = UNKNOWN;
+
+		JNIEnv* env = nullptr;
+		bool isCanceled = false;
+		Map EMPTY_MAP{};
 	};
-};
+}

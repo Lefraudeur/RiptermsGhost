@@ -36,13 +36,14 @@ namespace Ripterms
 		void reload(); //refill the data with correct fields / methods
 
 		void removeFromJClassCache();
-		JClass& getJClass(JNIEnv* env = Ripterms::p_env); // a class reference is env / thread specific
-		jfieldID getFieldID(const std::string& name);
-		jmethodID getMethodID(const std::string& name);
-		std::string getObfuscatedClassName();
-		std::string getObfuscatedFieldName(const std::string& name);
-		std::string getObfuscatedMethodName(const std::string& name);
-		std::string getObfuscatedFieldSig(const std::string& name);
+		JClass& getJClass(JNIEnv* env = Ripterms::p_env) const; // a class reference is env / thread specific
+		jfieldID getFieldID(const std::string& name) const;
+		jmethodID getMethodID(const std::string& name) const;
+		std::string getObfuscatedClassName() const;
+		std::string getObfuscatedFieldName(const std::string& name) const;
+		std::string getObfuscatedMethodName(const std::string& name) const;
+		std::string getObfuscatedFieldSig(const std::string& name) const;
+		std::string getObfuscatedMethodSig(const std::string& name) const;
 	private:
 		struct JavaClassData
 		{

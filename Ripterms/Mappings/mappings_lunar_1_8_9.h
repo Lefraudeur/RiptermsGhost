@@ -107,6 +107,18 @@ namespace Mappings
 				"obfuscated": "patchBlock",
 				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
+			},
+			{
+				"name": "patchGL11",
+				"obfuscated": "patchGL11",
+				"signature": "([B)[B",
+				"static": true
+			},
+			{
+				"name": "patchMethod",
+				"obfuscated": "patchMethod",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[B",
+				"static": true
 			}
 		]
 	},
@@ -120,6 +132,11 @@ namespace Mappings
 				"static": true
 			}
 		],
+		"methods": []
+	},
+	"org/lwjgl/opengl/GL11": {
+		"obfuscated": "org/lwjgl/opengl/GL11",
+		"fields": [],
 		"methods": []
 	},
 	"net/minecraft/client/Minecraft": {
@@ -173,7 +190,14 @@ namespace Mappings
 	"net/minecraft/client/entity/EntityPlayerSP": {
 		"obfuscated": "net/minecraft/client/entity/EntityPlayerSP",
 		"fields": [],
-		"methods": []
+		"methods": [
+			{
+				"name": "onUpdateWalkingPlayer",
+				"obfuscated": "onUpdateWalkingPlayer",
+				"signature": "()V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/client/entity/AbstractClientPlayer": {
 		"obfuscated": "net/minecraft/client/entity/AbstractClientPlayer",

@@ -38,7 +38,7 @@ namespace {
 void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
 {
 	static bool runonce = true;
-	Event event(env, mask);
+	Ripterms::Event event(env, mask);
 	if (event.isEvent())
 	{
 		if (!runonce && runMainLoop && !tmp_no_hook) event.dispatch();
@@ -69,7 +69,7 @@ void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function
 void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 {
 	static bool runonce = true;
-	Event event(env, mask);
+	Ripterms::Event event(env, mask);
 	if (event.isEvent())
 	{
 		if (!runonce && runMainLoop && !tmp_no_hook) event.dispatch();

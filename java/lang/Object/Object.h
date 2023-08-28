@@ -15,6 +15,7 @@ public:
 	Object& operator=(jobject instance);
 	operator jobject();
 
+	void setInstance(jobject instance, JNIEnv* env = nullptr);
 	bool isEqualTo(const Object& other_Object); //reference check
 	bool equals(const Object& other_Object); //content check
 	bool isValid();

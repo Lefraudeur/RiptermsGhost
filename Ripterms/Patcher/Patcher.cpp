@@ -1,6 +1,7 @@
 #include "Patcher.h"
 #include "../Ripterms.h"
 #include "../Cache/Cache.h"
+#include "../Event/Event.h"
 #include "ClassPatcherJar.h"
 #include "../../java/lang/ClassLoader/ClassLoader.h"
 #include "../../java/lang/System/System.h"
@@ -29,18 +30,22 @@ namespace
 		Ripterms::JavaClassV2 EntityRendererClass("net/minecraft/client/renderer/EntityRenderer");
 		Ripterms::JavaClassV2 ClientBrandRetrieverClass("net/minecraft/client/ClientBrandRetriever");
 		Ripterms::JavaClassV2 NetworkManagerClass("net/minecraft/network/NetworkManager");
+		Ripterms::JavaClassV2 EntityPlayerSPClass("net/minecraft/client/entity/EntityPlayerSP");
 
 		jclass classes[] = 
 		{
 			EntityRendererClass.getJClass(),
 			ClientBrandRetrieverClass.getJClass(),
-			NetworkManagerClass.getJClass()
+			NetworkManagerClass.getJClass(),
+			EntityPlayerSPClass.getJClass()
 		};
 		errCheck(Ripterms::p_tienv->RetransformClasses(sizeof(classes) / sizeof(jclass), classes));
 		if (Ripterms::majorVersion != Ripterms::Version::MAJOR_1_16_5)
 		{
 			Ripterms::JavaClassV2 BlockClass("net/minecraft/block/Block");
+			Ripterms::JavaClassV2 GL11Class("org/lwjgl/opengl/GL11");
 			errCheck(Ripterms::p_tienv->RetransformClasses(1, &BlockClass.getJClass().getInstance()));
+			errCheck(Ripterms::p_tienv->RetransformClasses(1, &GL11Class.getJClass().getInstance())); //patch GL11 for older versions to skip some code and avoid errors
 		}
 	}
 
@@ -58,6 +63,13 @@ namespace
 		unsigned char** new_class_data
 	)
 	{
+		Ripterms::JavaClassV2 EntityRendererClass("net/minecraft/client/renderer/EntityRenderer");
+		Ripterms::JavaClassV2 ClientBrandRetrieverClass("net/minecraft/client/ClientBrandRetriever");
+		Ripterms::JavaClassV2 NetworkManagerClass("net/minecraft/network/NetworkManager");
+		Ripterms::JavaClassV2 BlockClass("net/minecraft/block/Block");
+		Ripterms::JavaClassV2 GL11Class("org/lwjgl/opengl/GL11");
+		Ripterms::JavaClassV2 EntityPlayerSPClass("net/minecraft/client/entity/EntityPlayerSP");
+
 		std::function<void(const std::string&, const std::string&, const std::vector<jobject>&)> patchClass = 
 		[=](const std::string& patchMethod, const std::string& methodToPatch, const std::vector<jobject>& additional)
 		{
@@ -100,10 +112,32 @@ namespace
 			jni_env->DeleteLocalRef(new_class_bytes);
 		};
 
-		Ripterms::JavaClassV2 EntityRendererClass("net/minecraft/client/renderer/EntityRenderer");
-		Ripterms::JavaClassV2 ClientBrandRetrieverClass("net/minecraft/client/ClientBrandRetriever");
-		Ripterms::JavaClassV2 NetworkManagerClass("net/minecraft/network/NetworkManager");
-		Ripterms::JavaClassV2 BlockClass("net/minecraft/block/Block");
+		std::function<void(const std::string&, const std::string&, Ripterms::Event::Type, Ripterms::Event::Type)> patchMethod = 
+		[=](const std::string& methodName, const std::string& methodSig, Ripterms::Event::Type preEvent, Ripterms::Event::Type postEvent)
+		{
+			Ripterms::JavaClassV2 ClassPatcherClass("io/github/lefraudeur/ClassPatcher");
+
+			jbyteArray original_class_bytes = jni_env->NewByteArray(class_data_len);
+			jni_env->SetByteArrayRegion(original_class_bytes, 0, class_data_len, (const jbyte*)class_data);
+
+			jbyteArray new_class_bytes = (jbyteArray)jni_env->CallStaticObjectMethod
+			(
+				ClassPatcherClass.getJClass(jni_env),
+				ClassPatcherClass.getMethodID("patchMethod"),
+				original_class_bytes,
+				String(methodName, jni_env).getInstance(),
+				String(methodSig, jni_env).getInstance(),
+				String(GL11Class.getObfuscatedClassName(), jni_env).getInstance(),
+				(int)preEvent,
+				(int)postEvent
+			);
+
+			jni_env->DeleteLocalRef(original_class_bytes);
+			*new_class_data_len = jni_env->GetArrayLength(new_class_bytes);
+			jvmti_env->Allocate(*new_class_data_len, new_class_data);
+			jni_env->GetByteArrayRegion(new_class_bytes, 0, *new_class_data_len, (jbyte*)*new_class_data);
+			jni_env->DeleteLocalRef(new_class_bytes);
+		};
 
 		Ripterms::JavaClassV2::JClass redefinedClass(class_being_redefined, jni_env);
 
@@ -155,6 +189,37 @@ namespace
 					getNameForObject.getInstance(),
 					RessourceLocation.getInstance()
 			});
+		}
+		else if (Ripterms::majorVersion != Ripterms::Version::MAJOR_1_16_5 && redefinedClass.isEqualTo(GL11Class.getJClass(jni_env)))
+		{
+			Ripterms::JavaClassV2 ClassPatcherClass("io/github/lefraudeur/ClassPatcher");
+
+			jbyteArray original_class_bytes = jni_env->NewByteArray(class_data_len);
+			jni_env->SetByteArrayRegion(original_class_bytes, 0, class_data_len, (const jbyte*)class_data);
+
+			jbyteArray new_class_bytes = (jbyteArray)jni_env->CallStaticObjectMethod
+			(
+				ClassPatcherClass.getJClass(jni_env),
+				ClassPatcherClass.getMethodID("patchGL11"),
+				original_class_bytes
+			);
+
+			jni_env->DeleteLocalRef(original_class_bytes);
+			*new_class_data_len = jni_env->GetArrayLength(new_class_bytes);
+			jvmti_env->Allocate(*new_class_data_len, new_class_data);
+			jni_env->GetByteArrayRegion(new_class_bytes, 0, *new_class_data_len, (jbyte*)*new_class_data);
+			jni_env->DeleteLocalRef(new_class_bytes);
+		}
+		else if (redefinedClass.isEqualTo(EntityPlayerSPClass.getJClass(jni_env)))
+		{
+			//setup Events
+			patchMethod
+			(
+				EntityPlayerSPClass.getObfuscatedMethodName("onUpdateWalkingPlayer"),
+				EntityPlayerSPClass.getObfuscatedMethodSig("onUpdateWalkingPlayer"),
+				Ripterms::Event::Type::PRE_MOTION,
+				Ripterms::Event::Type::POST_MOTION
+			);
 		}
 	}
 }

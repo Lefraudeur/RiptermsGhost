@@ -139,7 +139,7 @@ Ripterms::JavaClassV2::JavaClassV2(const JavaClassV2& otherJavaClass) :
 {
 }
 
-Ripterms::JavaClassV2::JClass& Ripterms::JavaClassV2::getJClass(JNIEnv* env)
+Ripterms::JavaClassV2::JClass& Ripterms::JavaClassV2::getJClass(JNIEnv* env) const
 {
 	try
 	{
@@ -152,7 +152,7 @@ Ripterms::JavaClassV2::JClass& Ripterms::JavaClassV2::getJClass(JNIEnv* env)
 	}
 }
 
-jfieldID Ripterms::JavaClassV2::getFieldID(const std::string& name)
+jfieldID Ripterms::JavaClassV2::getFieldID(const std::string& name) const
 {
 	try
 	{
@@ -168,7 +168,7 @@ jfieldID Ripterms::JavaClassV2::getFieldID(const std::string& name)
 	}
 }
 
-jmethodID Ripterms::JavaClassV2::getMethodID(const std::string& name)
+jmethodID Ripterms::JavaClassV2::getMethodID(const std::string& name) const
 {
 	try
 	{
@@ -184,7 +184,7 @@ jmethodID Ripterms::JavaClassV2::getMethodID(const std::string& name)
 	}
 }
 
-std::string Ripterms::JavaClassV2::getObfuscatedClassName()
+std::string Ripterms::JavaClassV2::getObfuscatedClassName() const
 {
 	try
 	{
@@ -196,7 +196,7 @@ std::string Ripterms::JavaClassV2::getObfuscatedClassName()
 	}
 }
 
-std::string Ripterms::JavaClassV2::getObfuscatedFieldName(const std::string& name)
+std::string Ripterms::JavaClassV2::getObfuscatedFieldName(const std::string& name) const
 {
 	try
 	{
@@ -212,7 +212,7 @@ std::string Ripterms::JavaClassV2::getObfuscatedFieldName(const std::string& nam
 	return name;
 }
 
-std::string Ripterms::JavaClassV2::getObfuscatedMethodName(const std::string& name)
+std::string Ripterms::JavaClassV2::getObfuscatedMethodName(const std::string& name) const
 {
 	try
 	{
@@ -228,7 +228,7 @@ std::string Ripterms::JavaClassV2::getObfuscatedMethodName(const std::string& na
 	return name;
 }
 
-std::string Ripterms::JavaClassV2::getObfuscatedFieldSig(const std::string& name)
+std::string Ripterms::JavaClassV2::getObfuscatedFieldSig(const std::string& name) const
 {
 	try
 	{
@@ -236,6 +236,22 @@ std::string Ripterms::JavaClassV2::getObfuscatedFieldSig(const std::string& name
 		{
 			if (name == std::string(field["name"]))
 				return field["signature"];
+		}
+	}
+	catch (...)
+	{
+	}
+	return name;
+}
+
+std::string Ripterms::JavaClassV2::getObfuscatedMethodSig(const std::string& name) const
+{
+	try
+	{
+		for (auto& method : mappings[0][class_path]["methods"])
+		{
+			if (name == std::string(method["name"]))
+				return method["signature"];
 		}
 	}
 	catch (...)
