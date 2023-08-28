@@ -6,7 +6,7 @@ void Collection::clear()
 	env->CallVoidMethod(instance, CollectionClass.getMethodID("clear"));
 }
 
-bool Collection::add(Object element)
+bool Collection::add(const Object& element)
 {
 	if (!instance) return false;
 	return env->CallBooleanMethod(instance, CollectionClass.getMethodID("add"), element.getInstance()) == JNI_TRUE;

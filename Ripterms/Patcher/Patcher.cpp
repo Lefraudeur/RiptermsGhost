@@ -109,7 +109,6 @@ namespace
 
 		if (redefinedClass.isEqualTo(EntityRendererClass.getJClass(jni_env)))
 		{
-			Ripterms::JavaClassV2 EntityRendererClass("net/minecraft/client/renderer/EntityRenderer");
 			patchClass("patchEntityRenderer", EntityRendererClass.getObfuscatedMethodName("getMouseOver"), {});
 		}
 		else if (redefinedClass.isEqualTo(ClientBrandRetrieverClass.getJClass(jni_env)))
@@ -178,26 +177,10 @@ bool Ripterms::Patcher::init()
 		String("client_brand"),
 		String(Ripterms::p_env->CallStaticObjectMethod(ClientBrandRetrieverClass.getJClass(), ClientBrandRetrieverClass.getMethodID("getClientModName")))
 	);
-	Ripterms::cache->EMPTY_MAP.put
-	(
-		String("blink_enabled"),
-		String("0")
-	);
-	Ripterms::cache->EMPTY_MAP.put
-	(
-		String("blink_send"),
-		String("0")
-	);
-	Ripterms::cache->EMPTY_MAP.put
-	(
-		String("blink_packets"),
-		List::newObject()
-	);
-	Ripterms::cache->EMPTY_MAP.put
-	(
-		String("xray_enabled"),
-		String("0")
-	);
+	Ripterms::cache->EMPTY_MAP.put(String("blink_enabled"), String("0"));
+	Ripterms::cache->EMPTY_MAP.put(String("blink_send"),String("0"));
+	Ripterms::cache->EMPTY_MAP.put(String("blink_packets"),List::newObject());
+	Ripterms::cache->EMPTY_MAP.put(String("xray_enabled"),String("0"));
 	List blocks = List::newObject();
 	blocks.add(String("minecraft:iron_ore"));
 	blocks.add(String("minecraft:gold_ore"));
@@ -215,13 +198,11 @@ bool Ripterms::Patcher::init()
 	blocks.add(String("palamod:tile.findium.ore"));
 	blocks.add(String("palamod:tile.paladium.green.ore"));
 	blocks.add(String("palamod:tile.paladium_green.ore"));
-	Ripterms::cache->EMPTY_MAP.put
-	(
-		String("xray_blocks"),
-		blocks
-	);
+	Ripterms::cache->EMPTY_MAP.put(String("xray_blocks"), blocks);
+
 	ClassLoader classLoader(ClassLoader::newObject());
-	if(!classLoader.loadJar(ClassPatcherJar.data(), ClassPatcherJar.size())) return false;
+	if(!classLoader.loadJar(ClassPatcherJar.data(), ClassPatcherJar.size()))
+		return false;
 	Ripterms::JavaClassV2 ClassPatcherClass("io/github/lefraudeur/ClassPatcher");
 	ClassPatcherClass.reload();
 
@@ -235,13 +216,14 @@ bool Ripterms::Patcher::init()
 	if (!errCheck(Ripterms::p_tienv->SetEventCallbacks(&callbacks, sizeof(jvmtiEventCallbacks))))
 		return false;
 
-	if (!errCheck(Ripterms::p_tienv->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL))) return false;
+	if (!errCheck(Ripterms::p_tienv->SetEventNotificationMode(JVMTI_ENABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL)))
+		return false;
 	retransformClasses();
 
 	Ripterms::p_tienv->SetEventNotificationMode(JVMTI_DISABLE, JVMTI_EVENT_CLASS_FILE_LOAD_HOOK, NULL);
-	ClassPatcherClass.removeFromJClassCache();
-	classLoader.clear();
-	System::gc();
+	ClassPatcherClass.removeFromJClassCache(); //delete all references to loaded class
+	classLoader.clear(); //delete reference to classLoader
+	System::gc(); //call garbage collector to destroy the loaded classes
 	return true;
 }
 

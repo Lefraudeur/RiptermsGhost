@@ -48,11 +48,26 @@ Object::operator jobject()
 
 bool Object::isEqualTo(const Object& other_Object)
 {
-	if (this->instance == other_Object.instance) {
+	if (this->instance == other_Object.instance)
+	{
 		return true;
 	}
-	if (this->instance && other_Object.instance) {
+	if (this->instance && other_Object.instance)
+	{
 		return env->IsSameObject(this->instance, other_Object.instance) == JNI_TRUE;
+	}
+	return false;
+}
+
+bool Object::equals(const Object& other_Object)
+{
+	if (this->instance == other_Object.instance)
+	{
+		return true;
+	}
+	if (this->instance && other_Object.instance)
+	{
+		return env->CallBooleanMethod(instance, ObjectClass.getMethodID("equals"), other_Object.getInstance()) == JNI_TRUE;
 	}
 	return false;
 }

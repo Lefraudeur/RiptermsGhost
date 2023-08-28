@@ -7,7 +7,14 @@ namespace Mappings
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
 		"fields": [],
-		"methods": []
+		"methods": [
+			{
+				"name": "equals",
+				"obfuscated": "equals",
+				"signature": "(Ljava/lang/Object;)Z",
+				"static": false
+			}
+		]
 	},
 	"java/util/Collection": {
 		"obfuscated": "java/util/Collection",

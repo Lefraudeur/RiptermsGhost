@@ -6,7 +6,7 @@ class Collection : public Object {
 public:
 	using Object::Object;
 	void clear();
-	bool add(Object element);
+	bool add(const Object& element);
 	template<class T>
 	std::vector<T> toVector();
 protected:

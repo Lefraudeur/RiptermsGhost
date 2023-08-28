@@ -15,7 +15,8 @@ public:
 	Object& operator=(jobject instance);
 	operator jobject();
 
-	bool isEqualTo(const Object& other_Object);
+	bool isEqualTo(const Object& other_Object); //reference check
+	bool equals(const Object& other_Object); //content check
 	bool isValid();
 	void clear(); //delete ref
 	const jobject& getInstance() const;

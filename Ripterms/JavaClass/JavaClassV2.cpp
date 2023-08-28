@@ -84,7 +84,11 @@ bool Ripterms::JavaClassV2::init()
 			{
 				fieldID = Ripterms::p_env->GetFieldID(javaClass, std::string(field["obfuscated"]).c_str(), std::string(field["signature"]).c_str());
 			}
-			if (!fieldID) continue;
+			if (!fieldID)
+			{
+				std::cerr << "Failed to find field ID: " + field["name"] << std::endl;
+				continue;
+			}
 			classData.fields.insert({ field["name"], fieldID });
 		}
 		for (auto& method : classContent["methods"])
@@ -98,7 +102,11 @@ bool Ripterms::JavaClassV2::init()
 			{
 				methodID = Ripterms::p_env->GetMethodID(javaClass, std::string(method["obfuscated"]).c_str(), std::string(method["signature"]).c_str());
 			}
-			if (!methodID) continue;
+			if (!methodID)
+			{
+				std::cerr << "Failed to find method ID: " + method["name"] << std::endl;
+				continue;
+			}
 			classData.methods.insert({ method["name"], methodID });
 		}
 		data.insert({className, classData});
