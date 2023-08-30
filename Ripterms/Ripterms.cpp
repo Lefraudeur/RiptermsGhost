@@ -20,7 +20,8 @@ void mainLoop()
 	Ripterms::Modules::runAll();
 }
 
-namespace {
+namespace
+{
 	typedef void(JNICALL* nglClearType)(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer);
 	nglClearType originalnglClear = nullptr;
 	nglClearType targetnglClear = nullptr;
@@ -38,7 +39,7 @@ namespace {
 void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
 {
 	static bool runonce = true;
-	Event event(env, mask);
+	Ripterms::Event event(env, mask);
 	if (event.isEvent())
 	{
 		if (!runonce && runMainLoop && !tmp_no_hook) event.dispatch();
@@ -58,7 +59,8 @@ void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function
 		runonce = false;
 	}
 
-	if (GetAsyncKeyState(VK_END)) {
+	if (GetAsyncKeyState(VK_END))
+	{
 		Ripterms::clean();
 		return originalnglClear(env, clazz, mask, function_pointer);
 	}
@@ -69,7 +71,7 @@ void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function
 void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 {
 	static bool runonce = true;
-	Event event(env, mask);
+	Ripterms::Event event(env, mask);
 	if (event.isEvent())
 	{
 		if (!runonce && runMainLoop && !tmp_no_hook) event.dispatch();
@@ -89,7 +91,8 @@ void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 		runonce = false;
 	}
 
-	if (GetAsyncKeyState(VK_END)) {
+	if (GetAsyncKeyState(VK_END))
+	{
 		Ripterms::clean();
 		return originalglClear(env, clazz, mask);
 	}

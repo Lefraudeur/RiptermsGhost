@@ -17,8 +17,9 @@ Object::Object(const Object& other_Object) :
 {
 }
 
-Object::Object()
+Object::Object(JNIEnv* env)
 {
+	this->env = env;
 }
 
 Object& Object::operator=(const Object& other_Object)
@@ -33,11 +34,7 @@ Object& Object::operator=(const Object& other_Object)
 
 Object& Object::operator=(jobject instance)
 {
-	if (!this->env) env = Ripterms::p_env;
-	if (this->instance) env->DeleteGlobalRef(this->instance);
-	if (instance)
-		this->instance = env->NewGlobalRef(instance);
-	else this->instance = nullptr;
+	setInstance(instance);
 	return *this;
 }
 
@@ -46,13 +43,44 @@ Object::operator jobject()
 	return getInstance();
 }
 
+void Object::setInstance(jobject instance, JNIEnv* env)
+{
+	if (this->instance) this->env->DeleteGlobalRef(this->instance);
+
+	if (!this->env) this->env = Ripterms::p_env;
+	if (env) this->env = env;
+
+	if (instance)
+	{
+		this->instance = this->env->NewGlobalRef(instance);
+		if (this->env->GetObjectRefType(instance) == JNILocalRefType)
+			this->env->DeleteLocalRef(instance);
+	}
+	else this->instance = nullptr;
+}
+
 bool Object::isEqualTo(const Object& other_Object)
 {
-	if (this->instance == other_Object.instance) {
+	if (this->instance == other_Object.instance)
+	{
 		return true;
 	}
-	if (this->instance && other_Object.instance) {
+	if (this->instance && other_Object.instance)
+	{
 		return env->IsSameObject(this->instance, other_Object.instance) == JNI_TRUE;
+	}
+	return false;
+}
+
+bool Object::equals(const Object& other_Object)
+{
+	if (this->instance == other_Object.instance)
+	{
+		return true;
+	}
+	if (this->instance && other_Object.instance)
+	{
+		return env->CallBooleanMethod(instance, ObjectClass.getMethodID("equals"), other_Object.getInstance()) == JNI_TRUE;
 	}
 	return false;
 }

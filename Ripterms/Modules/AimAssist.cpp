@@ -9,11 +9,12 @@ void Ripterms::Modules::AimAssist::run()
 		return;
 	}
 
-	static Ripterms::Timer timer = std::chrono::milliseconds(10);
+	static Ripterms::Timer timer = std::chrono::milliseconds(5);
 	if (!timer.isElapsed()) 
 		return;
 
 	Maths::Vector3d thePlayer_position = cache->thePlayer.getPosition();
+	thePlayer_position.y += cache->thePlayer.getEyeHeight();
 	Maths::Vector2d thePlayer_rotation = cache->thePlayer.getRotation();
 	float cropped_thePlayer_yaw = Ripterms::Maths::cropAngle180(thePlayer_rotation.x);
 	float cropped_thePlayer_pitch = thePlayer_rotation.y;
@@ -27,6 +28,8 @@ void Ripterms::Modules::AimAssist::run()
 		if (target.isEqualTo(cache->thePlayer)) 
 			continue;
 		Maths::Vector3d target_position = target.getPosition();
+		AxisAlignedBB targetBB = target.getBoundingBox();
+		target_position.y += (targetBB.getMaxY() - targetBB.getMinY()) / 2.0f;
 		Maths::Vector2d target_required_rotation = Maths::getYawPitch(thePlayer_position, target_position);
 		float yawToAdd = target_required_rotation.x - cropped_thePlayer_yaw;
 		float pitchToAdd = target_required_rotation.y - cropped_thePlayer_pitch;
@@ -57,15 +60,59 @@ void Ripterms::Modules::AimAssist::run()
 	if (selected_target.isValid())
 	{
 		prev_selected_target = selected_target;
-		if (Ripterms::cache->theMinecraft.getPointedEntity().isEqualTo(selected_target))
-			return;
-		std::mt19937 gen(rd());
-		std::uniform_int_distribution<> range_yaw(150, 400);
-		if (std::abs(selected_target_YawToAdd) > 4.0f)
-			thePlayer_rotation.x += (selected_target_YawToAdd > 0.0f ? range_yaw(gen) / 100.0f : -range_yaw(gen) / 100.0f);
-		std::uniform_int_distribution<> range_pitch(50, 200);
-		if (std::abs(selected_target_PitchToAdd) > 4.0f)
-			thePlayer_rotation.y += (selected_target_PitchToAdd > 0.0f ? range_pitch(gen) / 100.0f : -range_pitch(gen) / 100.0f);
+
+		AxisAlignedBB selected_target_bb = selected_target.getBoundingBox();
+		Ripterms::Maths::Vector3d positionsToCheck[] =
+		{
+			Ripterms::Maths::Vector3d(selected_target_bb.getMinX(), selected_target_bb.getMinY(), selected_target_bb.getMaxZ()),
+			Ripterms::Maths::Vector3d(selected_target_bb.getMaxX(), selected_target_bb.getMinY(), selected_target_bb.getMinZ()),
+			Ripterms::Maths::Vector3d(selected_target_bb.getMaxX(), selected_target_bb.getMinY(), selected_target_bb.getMaxZ()),
+			Ripterms::Maths::Vector3d(selected_target_bb.getMinX(), selected_target_bb.getMinY(), selected_target_bb.getMinZ())
+		};
+		float minYaw = 361.0f, maxYaw = -1.0f;
+		float minPitch = 0.0f, maxPitch = 0.0f;
+		for (const Ripterms::Maths::Vector3d& position : positionsToCheck)
+		{
+			Ripterms::Maths::Vector2d YawPitch = Maths::getYawPitch(thePlayer_position, position);
+			float Yaw = YawPitch.x;
+			if (Yaw < 0.0f) Yaw += 360.0f;
+			if (Yaw < minYaw) minYaw = Yaw;
+			if (Yaw > maxYaw) maxYaw = Yaw;
+			maxPitch = YawPitch.y;
+		}
+
+		if (minYaw > 180.0f) minYaw -= 360.0f;
+		if (maxYaw > 180.0f) maxYaw -= 360.0f;
+
+		Ripterms::Maths::Vector2d YawPitch = Maths::getYawPitch
+		(
+			thePlayer_position, 
+			Ripterms::Maths::Vector3d(selected_target_bb.getMaxX(), selected_target_bb.getMaxY(), selected_target_bb.getMaxZ())
+		);
+		minPitch = YawPitch.y;
+
+		float maxDelta = std::abs(Ripterms::Maths::cropAngle180((maxYaw - minYaw))) / 2.0f;
+		if (std::abs(selected_target_YawToAdd) >= maxDelta)
+		{
+			float difference = std::abs(selected_target_YawToAdd) - maxDelta;
+			if (difference <= 5.0f)
+			{
+				thePlayer_rotation.x += difference * (selected_target_YawToAdd > 0.0f ? 1.0f : -1.0f);
+			}
+			else
+				thePlayer_rotation.x += selected_target_YawToAdd * 0.09f;
+		}
+		float maxPitchDelta = std::abs(maxPitch - minPitch) / 2.0f;
+		if (std::abs(selected_target_PitchToAdd) >= maxPitchDelta)
+		{
+			float difference = std::abs(selected_target_PitchToAdd) - maxPitchDelta;
+			if (difference <= 5.0f)
+			{
+				thePlayer_rotation.y += difference * (selected_target_PitchToAdd > 0.0f ? 1.0f : -1.0f);
+			}
+			else
+				thePlayer_rotation.y += selected_target_PitchToAdd * 0.05f;
+		}
 		cache->thePlayer.setRotation(thePlayer_rotation);
 	}
 }
@@ -88,7 +135,7 @@ void Ripterms::Modules::AimAssist::renderGUI()
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderFloat("Max Distance", &max_distance, 1.0f, 4.5f, "%.1f");
+		ImGui::SliderFloat("Max Distance", &max_distance, 1.0f, 6.0f, "%.1f");
 		ImGui::SliderFloat("Max Angle", &max_angle, 10.0f, 180.0f, "%.1f");
 		ImGui::EndGroup();
 	}

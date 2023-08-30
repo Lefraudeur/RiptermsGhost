@@ -84,7 +84,11 @@ bool Ripterms::JavaClassV2::init()
 			{
 				fieldID = Ripterms::p_env->GetFieldID(javaClass, std::string(field["obfuscated"]).c_str(), std::string(field["signature"]).c_str());
 			}
-			if (!fieldID) continue;
+			if (!fieldID)
+			{
+				std::cerr << "Failed to find field ID: " + field["name"] << std::endl;
+				continue;
+			}
 			classData.fields.insert({ field["name"], fieldID });
 		}
 		for (auto& method : classContent["methods"])
@@ -98,7 +102,11 @@ bool Ripterms::JavaClassV2::init()
 			{
 				methodID = Ripterms::p_env->GetMethodID(javaClass, std::string(method["obfuscated"]).c_str(), std::string(method["signature"]).c_str());
 			}
-			if (!methodID) continue;
+			if (!methodID)
+			{
+				std::cerr << "Failed to find method ID: " + method["name"] << std::endl;
+				continue;
+			}
 			classData.methods.insert({ method["name"], methodID });
 		}
 		data.insert({className, classData});
@@ -108,16 +116,7 @@ bool Ripterms::JavaClassV2::init()
 
 void Ripterms::JavaClassV2::clean()
 {
-	if (Ripterms::p_env) // if not process exit termination scenario
-	{
-		for (auto& entry : jclassCache)
-		{
-			for (auto& kv : entry.second)
-			{
-				kv.second.clear();
-			}
-		}
-	}
+	jclassCache.clear();
 	delete mappings;
 }
 
@@ -131,7 +130,7 @@ Ripterms::JavaClassV2::JavaClassV2(const JavaClassV2& otherJavaClass) :
 {
 }
 
-Ripterms::JavaClassV2::JClass& Ripterms::JavaClassV2::getJClass(JNIEnv* env)
+Ripterms::JavaClassV2::JClass& Ripterms::JavaClassV2::getJClass(JNIEnv* env) const
 {
 	try
 	{
@@ -144,7 +143,7 @@ Ripterms::JavaClassV2::JClass& Ripterms::JavaClassV2::getJClass(JNIEnv* env)
 	}
 }
 
-jfieldID Ripterms::JavaClassV2::getFieldID(const std::string& name)
+jfieldID Ripterms::JavaClassV2::getFieldID(const std::string& name) const
 {
 	try
 	{
@@ -160,7 +159,7 @@ jfieldID Ripterms::JavaClassV2::getFieldID(const std::string& name)
 	}
 }
 
-jmethodID Ripterms::JavaClassV2::getMethodID(const std::string& name)
+jmethodID Ripterms::JavaClassV2::getMethodID(const std::string& name) const
 {
 	try
 	{
@@ -176,7 +175,7 @@ jmethodID Ripterms::JavaClassV2::getMethodID(const std::string& name)
 	}
 }
 
-std::string Ripterms::JavaClassV2::getObfuscatedClassName()
+std::string Ripterms::JavaClassV2::getObfuscatedClassName() const
 {
 	try
 	{
@@ -188,7 +187,7 @@ std::string Ripterms::JavaClassV2::getObfuscatedClassName()
 	}
 }
 
-std::string Ripterms::JavaClassV2::getObfuscatedFieldName(const std::string& name)
+std::string Ripterms::JavaClassV2::getObfuscatedFieldName(const std::string& name) const
 {
 	try
 	{
@@ -204,7 +203,7 @@ std::string Ripterms::JavaClassV2::getObfuscatedFieldName(const std::string& nam
 	return name;
 }
 
-std::string Ripterms::JavaClassV2::getObfuscatedMethodName(const std::string& name)
+std::string Ripterms::JavaClassV2::getObfuscatedMethodName(const std::string& name) const
 {
 	try
 	{
@@ -220,7 +219,7 @@ std::string Ripterms::JavaClassV2::getObfuscatedMethodName(const std::string& na
 	return name;
 }
 
-std::string Ripterms::JavaClassV2::getObfuscatedFieldSig(const std::string& name)
+std::string Ripterms::JavaClassV2::getObfuscatedFieldSig(const std::string& name) const
 {
 	try
 	{
@@ -228,6 +227,22 @@ std::string Ripterms::JavaClassV2::getObfuscatedFieldSig(const std::string& name
 		{
 			if (name == std::string(field["name"]))
 				return field["signature"];
+		}
+	}
+	catch (...)
+	{
+	}
+	return name;
+}
+
+std::string Ripterms::JavaClassV2::getObfuscatedMethodSig(const std::string& name) const
+{
+	try
+	{
+		for (auto& method : mappings[0][class_path]["methods"])
+		{
+			if (name == std::string(method["name"]))
+				return method["signature"];
 		}
 	}
 	catch (...)
@@ -335,6 +350,7 @@ void Ripterms::JavaClassV2::reload()
 
 void Ripterms::JavaClassV2::JClass::clear()
 {
+	if (!Ripterms::p_env) return; //process termination scenario
 	if (isValid()) env->DeleteGlobalRef(javaClass);
 	this->javaClass = nullptr;
 }

@@ -7,7 +7,14 @@ namespace Mappings
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
 		"fields": [],
-		"methods": []
+		"methods": [
+			{
+				"name": "equals",
+				"obfuscated": "equals",
+				"signature": "(Ljava/lang/Object;)Z",
+				"static": false
+			}
+		]
 	},
 	"java/util/Collection": {
 		"obfuscated": "java/util/Collection",
@@ -100,6 +107,12 @@ namespace Mappings
 				"obfuscated": "patchBlock",
 				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
+			},
+			{
+				"name": "patchMethod",
+				"obfuscated": "patchMethod",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[B",
+				"static": true
 			}
 		]
 	},
@@ -167,7 +180,14 @@ namespace Mappings
 	"net/minecraft/client/entity/EntityPlayerSP": {
 		"obfuscated": "net/minecraft/client/player/LocalPlayer",
 		"fields": [],
-		"methods": []
+		"methods": [
+			{
+				"name": "onUpdateWalkingPlayer",
+				"obfuscated": "sendPosition",
+				"signature": "()V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/client/entity/AbstractClientPlayer": {
 		"obfuscated": "net/minecraft/client/player/AbstractClientPlayer",
@@ -222,9 +242,22 @@ namespace Mappings
 				"obfuscated": "tickCount",
 				"signature": "I",
 				"static": false
+			},
+			{
+				"name": "boundingBox",
+				"obfuscated": "bb",
+				"signature": "Lnet/minecraft/world/phys/AABB;",
+				"static": false
 			}
 		],
-		"methods": []
+		"methods": [
+			{
+				"name": "getEyeHeight",
+				"obfuscated": "getEyeHeight",
+				"signature": "()F",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/client/multiplayer/WorldClient": {
 		"obfuscated": "net/minecraft/client/multiplayer/ClientLevel",
@@ -341,6 +374,48 @@ namespace Mappings
 				"obfuscated": "BLOCK",
 				"signature": "Lnet/minecraft/world/phys/HitResult$Type;",
 				"static": true
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/util/AxisAlignedBB": {
+		"obfuscated": "net/minecraft/world/phys/AABB",
+		"fields": [
+			{
+				"name": "minX",
+				"obfuscated": "minX",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "minY",
+				"obfuscated": "minY",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "minZ",
+				"obfuscated": "minZ",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxX",
+				"obfuscated": "maxX",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxY",
+				"obfuscated": "maxY",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxZ",
+				"obfuscated": "maxZ",
+				"signature": "D",
+				"static": false
 			}
 		],
 		"methods": []

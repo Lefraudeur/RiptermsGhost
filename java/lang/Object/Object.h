@@ -8,14 +8,16 @@ class Object {
 public:
 	Object(jobject instance, JNIEnv* env = Ripterms::p_env);
 	Object(const Object& other_Object);
-	Object();
+	Object(JNIEnv* env = Ripterms::p_env);
 	~Object();
 
 	Object& operator=(const Object& other_Object);
 	Object& operator=(jobject instance);
 	operator jobject();
 
-	bool isEqualTo(const Object& other_Object);
+	void setInstance(jobject instance, JNIEnv* env = nullptr);
+	bool isEqualTo(const Object& other_Object); //reference check
+	bool equals(const Object& other_Object); //content check
 	bool isValid();
 	void clear(); //delete ref
 	const jobject& getInstance() const;

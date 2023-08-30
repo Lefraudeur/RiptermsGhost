@@ -7,7 +7,14 @@ namespace Mappings
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
 		"fields": [],
-		"methods": []
+		"methods": [
+			{
+				"name": "equals",
+				"obfuscated": "equals",
+				"signature": "(Ljava/lang/Object;)Z",
+				"static": false
+			}
+		]
 	},
 	"java/util/Collection": {
 		"obfuscated": "java/util/Collection",
@@ -100,6 +107,18 @@ namespace Mappings
 				"obfuscated": "patchBlock",
 				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
+			},
+			{
+				"name": "patchGL11",
+				"obfuscated": "patchGL11",
+				"signature": "([B)[B",
+				"static": true
+			},
+			{
+				"name": "patchMethod",
+				"obfuscated": "patchMethod",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[B",
+				"static": true
 			}
 		]
 	},
@@ -113,6 +132,11 @@ namespace Mappings
 				"static": true
 			}
 		],
+		"methods": []
+	},
+	"org/lwjgl/opengl/GL11": {
+		"obfuscated": "org/lwjgl/opengl/GL11",
+		"fields": [],
 		"methods": []
 	},
 	"net/minecraft/client/Minecraft": {
@@ -166,7 +190,14 @@ namespace Mappings
 	"net/minecraft/client/entity/EntityPlayerSP": {
 		"obfuscated": "net/minecraft/client/entity/EntityPlayerSP",
 		"fields": [],
-		"methods": []
+		"methods": [
+			{
+				"name": "onUpdateWalkingPlayer",
+				"obfuscated": "onUpdateWalkingPlayer",
+				"signature": "()V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/client/entity/AbstractClientPlayer": {
 		"obfuscated": "net/minecraft/client/entity/AbstractClientPlayer",
@@ -245,9 +276,22 @@ namespace Mappings
 				"obfuscated": "ticksExisted",
 				"signature": "I",
 				"static": false
+			},
+			{
+				"name": "boundingBox",
+				"obfuscated": "boundingBox",
+				"signature": "Lnet/minecraft/util/AxisAlignedBB;",
+				"static": false
 			}
 		],
-		"methods": []
+		"methods": [
+			{
+				"name": "getEyeHeight",
+				"obfuscated": "getEyeHeight",
+				"signature": "()F",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/client/multiplayer/WorldClient": {
 		"obfuscated": "net/minecraft/client/multiplayer/WorldClient",
@@ -406,6 +450,48 @@ namespace Mappings
 	"net/minecraft/util/ResourceLocation": {
 		"obfuscated": "net/minecraft/util/ResourceLocation",
 		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/util/AxisAlignedBB": {
+		"obfuscated": "net/minecraft/util/AxisAlignedBB",
+		"fields": [
+			{
+				"name": "minX",
+				"obfuscated": "minX",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "minY",
+				"obfuscated": "minY",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "minZ",
+				"obfuscated": "minZ",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxX",
+				"obfuscated": "maxX",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxY",
+				"obfuscated": "maxY",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxZ",
+				"obfuscated": "maxZ",
+				"signature": "D",
+				"static": false
+			}
+		],
 		"methods": []
 	}
 }

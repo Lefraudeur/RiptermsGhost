@@ -17,7 +17,7 @@ namespace Ripterms
 			virtual void run();
 			virtual void renderGUI();
 			virtual void disable();
-			virtual void onEvent(Event* event);
+			virtual void onEvent(Ripterms::Event* event);
 		protected:
 			inline static std::random_device rd{};
 			bool enabled = false;
@@ -31,8 +31,8 @@ namespace Ripterms
 			void run() override;
 			void renderGUI() override;
 		private:
-			float max_distance = 3.0f;
-			float max_angle = 120.0f;
+			float max_distance = 6.0f;
+			float max_angle = 80.0f;
 		};
 
 		class Reach : public IModule
@@ -126,10 +126,19 @@ namespace Ripterms
 			int keyBind = VK_NUMPAD1;
 		};
 
+		class LegitScaffold : public IModule
+		{
+		public:
+			void onEvent(Ripterms::Event* event) override;
+			void renderGUI() override;
+		private:
+			int keyBind = VK_NUMPAD1;
+		};
+
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
 			{"Combat", {new AimAssist(), new Reach(), new LeftClicker()}},
-			{"Player", {new Velocity(), new FastPlace(), new Blink()}},
+			{"Player", {new Velocity(), new FastPlace(), new Blink(), new LegitScaffold()}},
 			{"Misc", {new FullBright(), new Xray(), new ClientBrandChanger(), new Test()}}
 		};
 
