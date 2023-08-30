@@ -282,6 +282,24 @@ namespace Mappings
 				"obfuscated": "boundingBox",
 				"signature": "Lnet/minecraft/util/AxisAlignedBB;",
 				"static": false
+			},
+			{
+				"name": "lastTickPosX",
+				"obfuscated": "lastTickPosX",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosY",
+				"obfuscated": "lastTickPosY",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosZ",
+				"obfuscated": "lastTickPosZ",
+				"signature": "D",
+				"static": false
 			}
 		],
 		"methods": [

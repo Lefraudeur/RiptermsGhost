@@ -283,6 +283,24 @@ namespace Mappings
 				"obfuscated": "field_70121_D",
 				"signature": "Lnet/minecraft/util/AxisAlignedBB;",
 				"static": false
+			},
+			{
+				"name": "lastTickPosX",
+				"obfuscated": "field_70142_S",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosY",
+				"obfuscated": "field_70137_T",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosZ",
+				"obfuscated": "field_70136_U",
+				"signature": "D",
+				"static": false
 			}
 		],
 		"methods": [

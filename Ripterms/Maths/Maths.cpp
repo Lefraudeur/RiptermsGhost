@@ -2,7 +2,7 @@
 
 Ripterms::Maths::Vector2d Ripterms::Maths::getYawPitch(Vector3d playerPos, Vector3d facingPos)
 {
-	float pi = 3.14159265f;
+	float pi = 3.1415926535f;
 	Vector3d delta = facingPos - playerPos;
 
 	float hypxz = std::sqrt(delta.x * delta.x + delta.z * delta.z);
@@ -42,6 +42,11 @@ Ripterms::Maths::Vector3d::Vector3d(float x, float y, float z)
 Ripterms::Maths::Vector3d Ripterms::Maths::Vector3d::operator-(const Vector3d& other_vector)
 {
 	return Vector3d(x - other_vector.x, y - other_vector.y, z - other_vector.z);
+}
+
+Ripterms::Maths::Vector3d Ripterms::Maths::Vector3d::operator+(const Vector3d& other_vector)
+{
+	return Vector3d(x + other_vector.x, y + other_vector.y, z + other_vector.z);
 }
 
 Ripterms::Maths::Vector3d Ripterms::Maths::Vector3d::operator*(int coef)

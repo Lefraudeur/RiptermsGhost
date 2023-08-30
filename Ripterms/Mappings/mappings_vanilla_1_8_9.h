@@ -277,6 +277,24 @@ namespace Mappings
 				"obfuscated": "f",
 				"signature": "Laug;",
 				"static": false
+			},
+			{
+				"name": "lastTickPosX",
+				"obfuscated": "P",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosY",
+				"obfuscated": "Q",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosZ",
+				"obfuscated": "R",
+				"signature": "D",
+				"static": false
 			}
 		],
 		"methods": [

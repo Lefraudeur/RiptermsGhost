@@ -248,6 +248,24 @@ namespace Mappings
 				"obfuscated": "bb",
 				"signature": "Lnet/minecraft/world/phys/AABB;",
 				"static": false
+			},
+			{
+				"name": "lastTickPosX",
+				"obfuscated": "xOld",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosY",
+				"obfuscated": "yOld",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosZ",
+				"obfuscated": "zOld",
+				"signature": "D",
+				"static": false
 			}
 		],
 		"methods": [

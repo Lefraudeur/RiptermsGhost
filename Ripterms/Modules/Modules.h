@@ -20,6 +20,7 @@ namespace Ripterms
 			virtual void onEvent(Ripterms::Event* event);
 		protected:
 			inline static std::random_device rd{};
+			inline static std::mt19937 gen{rd()};
 			bool enabled = false;
 		};
 
@@ -30,6 +31,7 @@ namespace Ripterms
 		public:
 			void run() override;
 			void renderGUI() override;
+			void onEvent(Ripterms::Event* event) override;
 		private:
 			float max_distance = 6.0f;
 			float max_angle = 80.0f;

@@ -14,6 +14,22 @@ Ripterms::Maths::Vector3d Entity::getPosition() const
 	);
 }
 
+Ripterms::Maths::Vector3d Entity::getLastTickPosition() const
+{
+	if (!instance) return Ripterms::Maths::Vector3d();
+	return Ripterms::Maths::Vector3d
+	(
+		(float)env->GetDoubleField(instance, EntityClass.getFieldID("lastTickPosX")),
+		(float)env->GetDoubleField(instance, EntityClass.getFieldID("lastTickPosY")),
+		(float)env->GetDoubleField(instance, EntityClass.getFieldID("lastTickPosZ"))
+	);
+}
+
+Ripterms::Maths::Vector3d Entity::getRenderPosition() const
+{
+	return getPosition() + (getPosition() - getLastTickPosition());
+}
+
 Ripterms::Maths::Vector2d Entity::getRotation() const
 {
 	if (!instance) return Ripterms::Maths::Vector2d();
