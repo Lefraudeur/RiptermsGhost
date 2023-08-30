@@ -9,7 +9,7 @@ void Ripterms::Modules::AimAssist::run()
 		return;
 	}
 
-	static Ripterms::Timer timer = std::chrono::milliseconds(10);
+	static Ripterms::Timer timer = std::chrono::milliseconds(8);
 	if (!timer.isElapsed()) 
 		return;
 
@@ -57,15 +57,39 @@ void Ripterms::Modules::AimAssist::run()
 	if (selected_target.isValid())
 	{
 		prev_selected_target = selected_target;
-		if (Ripterms::cache->theMinecraft.getPointedEntity().isEqualTo(selected_target))
-			return;
+
+		AxisAlignedBB selected_target_bb = selected_target.getBoundingBox();
+		Ripterms::Maths::Vector3d positionsToCheck[] =
+		{
+			Ripterms::Maths::Vector3d(selected_target_bb.getMinX(), selected_target_bb.getMinY(), selected_target_bb.getMinZ()),
+			Ripterms::Maths::Vector3d(selected_target_bb.getMaxX(), selected_target_bb.getMinY(), selected_target_bb.getMinZ()),
+			Ripterms::Maths::Vector3d(selected_target_bb.getMaxX(), selected_target_bb.getMinY(), selected_target_bb.getMaxZ()),
+			Ripterms::Maths::Vector3d(selected_target_bb.getMinX(), selected_target_bb.getMinY(), selected_target_bb.getMaxZ())
+		};
+		float minYaw = 361.0f, maxYaw = -1.0f;
+		for (const Ripterms::Maths::Vector3d& position : positionsToCheck)
+		{
+			Ripterms::Maths::Vector2d YawPitch = Maths::getYawPitch(thePlayer_position, position);
+			float Yaw = YawPitch.x;
+			if (Yaw < 0.0f) Yaw += 360.0f;
+			if (Yaw < minYaw) minYaw = Yaw;
+			if (Yaw > maxYaw) maxYaw = Yaw;
+		}
+
+		if (minYaw > 180.0f) minYaw -= 360.0f;
+		if (maxYaw > 180.0f) maxYaw -= 360.0f;
+
 		std::mt19937 gen(rd());
-		std::uniform_int_distribution<> range_yaw(150, 400);
-		if (std::abs(selected_target_YawToAdd) > 4.0f)
-			thePlayer_rotation.x += (selected_target_YawToAdd > 0.0f ? range_yaw(gen) / 100.0f : -range_yaw(gen) / 100.0f);
+		if (std::abs(selected_target_YawToAdd) > std::abs(Ripterms::Maths::cropAngle180((maxYaw - minYaw))) / 2.0f)
+		{
+			//std::uniform_int_distribution<> range_yaw(150, 400);
+			//thePlayer_rotation.x += (selected_target_YawToAdd > 0.0f ? range_yaw(gen) / 100.0f : -range_yaw(gen) / 100.0f);
+			thePlayer_rotation.x += selected_target_YawToAdd * 0.1f;
+		}
+		/*
 		std::uniform_int_distribution<> range_pitch(50, 200);
-		if (std::abs(selected_target_PitchToAdd) > 4.0f)
-			thePlayer_rotation.y += (selected_target_PitchToAdd > 0.0f ? range_pitch(gen) / 100.0f : -range_pitch(gen) / 100.0f);
+		thePlayer_rotation.y += (selected_target_PitchToAdd > 0.0f ? range_pitch(gen) / 100.0f : -range_pitch(gen) / 100.0f);
+		*/
 		cache->thePlayer.setRotation(thePlayer_rotation);
 	}
 }
@@ -88,7 +112,7 @@ void Ripterms::Modules::AimAssist::renderGUI()
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderFloat("Max Distance", &max_distance, 1.0f, 4.5f, "%.1f");
+		ImGui::SliderFloat("Max Distance", &max_distance, 1.0f, 6.0f, "%.1f");
 		ImGui::SliderFloat("Max Angle", &max_angle, 10.0f, 180.0f, "%.1f");
 		ImGui::EndGroup();
 	}

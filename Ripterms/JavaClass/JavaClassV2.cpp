@@ -116,16 +116,7 @@ bool Ripterms::JavaClassV2::init()
 
 void Ripterms::JavaClassV2::clean()
 {
-	if (Ripterms::p_env) // if not process exit termination scenario
-	{
-		for (auto& entry : jclassCache)
-		{
-			for (auto& kv : entry.second)
-			{
-				kv.second.clear();
-			}
-		}
-	}
+	jclassCache.clear();
 	delete mappings;
 }
 
@@ -359,6 +350,7 @@ void Ripterms::JavaClassV2::reload()
 
 void Ripterms::JavaClassV2::JClass::clear()
 {
+	if (!Ripterms::p_env) return; //process termination scenario
 	if (isValid()) env->DeleteGlobalRef(javaClass);
 	this->javaClass = nullptr;
 }

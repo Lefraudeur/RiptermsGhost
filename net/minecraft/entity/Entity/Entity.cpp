@@ -50,6 +50,12 @@ int Entity::getTicksExisted() const
 	return env->GetIntField(instance, EntityClass.getFieldID("ticksExisted"));
 }
 
+AxisAlignedBB Entity::getBoundingBox() const
+{
+	if (!instance) return AxisAlignedBB(env);
+	return AxisAlignedBB(env->GetObjectField(instance, EntityClass.getFieldID("boundingBox")), env);
+}
+
 void Entity::setMotion(const Ripterms::Maths::Vector3d& motion)
 {
 	if (!instance) return;

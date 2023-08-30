@@ -276,6 +276,12 @@ namespace Mappings
 				"obfuscated": "ticksExisted",
 				"signature": "I",
 				"static": false
+			},
+			{
+				"name": "boundingBox",
+				"obfuscated": "boundingBox",
+				"signature": "Lnet/minecraft/util/AxisAlignedBB;",
+				"static": false
 			}
 		],
 		"methods": []
@@ -437,6 +443,48 @@ namespace Mappings
 	"net/minecraft/util/ResourceLocation": {
 		"obfuscated": "net/minecraft/util/ResourceLocation",
 		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/util/AxisAlignedBB": {
+		"obfuscated": "net/minecraft/util/AxisAlignedBB",
+		"fields": [
+			{
+				"name": "minX",
+				"obfuscated": "minX",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "minY",
+				"obfuscated": "minY",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "minZ",
+				"obfuscated": "minZ",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxX",
+				"obfuscated": "maxX",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxY",
+				"obfuscated": "maxY",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxZ",
+				"obfuscated": "maxZ",
+				"signature": "D",
+				"static": false
+			}
+		],
 		"methods": []
 	}
 }

@@ -30,7 +30,15 @@ namespace
 		Ripterms::JavaClassV2 EntityRendererClass("net/minecraft/client/renderer/EntityRenderer");
 		Ripterms::JavaClassV2 ClientBrandRetrieverClass("net/minecraft/client/ClientBrandRetriever");
 		Ripterms::JavaClassV2 NetworkManagerClass("net/minecraft/network/NetworkManager");
-		Ripterms::JavaClassV2 EntityPlayerSPClass("net/minecraft/client/entity/EntityPlayerSP");
+		Ripterms::JavaClassV2 EntityPlayerSPClass
+		(
+			(
+				Ripterms::version == Ripterms::Version::FORGE_1_7_10
+				|| Ripterms::version == Ripterms::Version::LUNAR_1_7_10
+				? "net/minecraft/client/entity/EntityClientPlayerMP"
+				: "net/minecraft/client/entity/EntityPlayerSP"
+				)
+		);
 
 		jclass classes[] = 
 		{
@@ -68,7 +76,15 @@ namespace
 		Ripterms::JavaClassV2 NetworkManagerClass("net/minecraft/network/NetworkManager");
 		Ripterms::JavaClassV2 BlockClass("net/minecraft/block/Block");
 		Ripterms::JavaClassV2 GL11Class("org/lwjgl/opengl/GL11");
-		Ripterms::JavaClassV2 EntityPlayerSPClass("net/minecraft/client/entity/EntityPlayerSP");
+		Ripterms::JavaClassV2 EntityPlayerSPClass
+		(
+			(
+				Ripterms::version == Ripterms::Version::FORGE_1_7_10
+				|| Ripterms::version == Ripterms::Version::LUNAR_1_7_10
+				? "net/minecraft/client/entity/EntityClientPlayerMP"
+				: "net/minecraft/client/entity/EntityPlayerSP"
+			)
+		);
 
 		std::function<void(const std::string&, const std::string&, const std::vector<jobject>&)> patchClass = 
 		[=](const std::string& patchMethod, const std::string& methodToPatch, const std::vector<jobject>& additional)

@@ -430,7 +430,7 @@ public class ClassPatcher {
 
     public static byte[] patchMethod(byte[] classBytes, String methodName, String methodSig, String GL11, int preEventMask, int postEventMask)
     {
-        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         ClassVisitor classVisitor = new ClassVisitor(Opcodes.ASM5, classWriter)
         {
             @Override

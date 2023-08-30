@@ -31,8 +31,8 @@ namespace Ripterms
 			void run() override;
 			void renderGUI() override;
 		private:
-			float max_distance = 3.0f;
-			float max_angle = 120.0f;
+			float max_distance = 6.0f;
+			float max_angle = 80.0f;
 		};
 
 		class Reach : public IModule

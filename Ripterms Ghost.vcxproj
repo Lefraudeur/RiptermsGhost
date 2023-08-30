@@ -191,6 +191,7 @@
     <ClCompile Include="net\minecraft\entity\EntityLivingBase\EntityLivingBase.cpp" />
     <ClCompile Include="net\minecraft\entity\Entity\Entity.cpp" />
     <ClCompile Include="net\minecraft\entity\player\EntityPlayer\EntityPlayer.cpp" />
+    <ClCompile Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.cpp" />
     <ClCompile Include="net\minecraft\util\MovingObjectPosition\MovingObjectPosition.cpp" />
     <ClCompile Include="net\minecraft\util\MovingObjectPosition\MovingObjectType\MovingObjectType.cpp" />
     <ClCompile Include="net\minecraft\util\Vec3\Vec3.cpp" />
@@ -230,6 +231,7 @@
     <ClInclude Include="net\minecraft\entity\EntityLivingBase\EntityLivingBase.h" />
     <ClInclude Include="net\minecraft\entity\Entity\Entity.h" />
     <ClInclude Include="net\minecraft\entity\player\EntityPlayer\EntityPlayer.h" />
+    <ClInclude Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.h" />
     <ClInclude Include="net\minecraft\util\MovingObjectPosition\MovingObjectPosition.h" />
     <ClInclude Include="net\minecraft\util\MovingObjectPosition\MovingObjectType\MovingObjectType.h" />
     <ClInclude Include="net\minecraft\util\Vec3\Vec3.h" />

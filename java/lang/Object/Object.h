@@ -8,7 +8,7 @@ class Object {
 public:
 	Object(jobject instance, JNIEnv* env = Ripterms::p_env);
 	Object(const Object& other_Object);
-	Object();
+	Object(JNIEnv* env = Ripterms::p_env);
 	~Object();
 
 	Object& operator=(const Object& other_Object);

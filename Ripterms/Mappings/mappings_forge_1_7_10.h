@@ -107,6 +107,18 @@ namespace Mappings
 				"obfuscated": "patchBlock",
 				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
+			},
+			{
+				"name": "patchGL11",
+				"obfuscated": "patchGL11",
+				"signature": "([B)[B",
+				"static": true
+			},
+			{
+				"name": "patchMethod",
+				"obfuscated": "patchMethod",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[B",
+				"static": true
 			}
 		]
 	},
@@ -169,6 +181,18 @@ namespace Mappings
 			}
 		],
 		"methods": [
+		]
+	},
+	"net/minecraft/client/entity/EntityClientPlayerMP": {
+		"obfuscated": "net/minecraft/client/entity/EntityClientPlayerMP",
+		"fields": [],
+		"methods": [
+			{
+				"name": "onUpdateWalkingPlayer",
+				"obfuscated": "func_71166_b",
+				"signature": "()V",
+				"static": false
+			}
 		]
 	},
 	"net/minecraft/client/entity/EntityPlayerSP": {
@@ -252,6 +276,12 @@ namespace Mappings
 				"name": "ticksExisted",
 				"obfuscated": "field_70173_aa",
 				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "boundingBox",
+				"obfuscated": "field_70121_D",
+				"signature": "Lnet/minecraft/util/AxisAlignedBB;",
 				"static": false
 			}
 		],
@@ -422,6 +452,48 @@ namespace Mappings
 				"static": false
 			}
 		]
+	},
+	"net/minecraft/util/AxisAlignedBB": {
+		"obfuscated": "net/minecraft/util/AxisAlignedBB",
+		"fields": [
+			{
+				"name": "minX",
+				"obfuscated": "field_72340_a",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "minY",
+				"obfuscated": "field_72338_b",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "minZ",
+				"obfuscated": "field_72339_c",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxX",
+				"obfuscated": "field_72336_d",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxY",
+				"obfuscated": "field_72337_e",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxZ",
+				"obfuscated": "field_72334_f",
+				"signature": "D",
+				"static": false
+			}
+		],
+		"methods": []
 	}
 }
 )"_json);

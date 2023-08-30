@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../../java/lang/Object/Object.h"
+#include "../../util/AxisAlignedBB/AxisAlignedBB.h"
 
 class Entity : public Object
 {
@@ -11,6 +12,7 @@ public:
 	Ripterms::Maths::Vector3d getMotion() const;
 	int getHurtResistantTime() const;
 	int getTicksExisted() const;
+	AxisAlignedBB getBoundingBox() const;
 
 	void setMotion(const Ripterms::Maths::Vector3d& motion);
 	void setRotation(const Ripterms::Maths::Vector2d& yawPitch);

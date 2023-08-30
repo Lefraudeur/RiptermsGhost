@@ -4,7 +4,6 @@ void Ripterms::Modules::LegitScaffold::onEvent(Ripterms::Event* event)
 {
 	if (event->type == Ripterms::Event::PRE_MOTION)
 	{
-		std::cout << "pre motion" << std::endl;
 	}
 }
 

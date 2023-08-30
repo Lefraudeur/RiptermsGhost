@@ -107,6 +107,18 @@ namespace Mappings
 				"obfuscated": "patchBlock",
 				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
 				"static": true
+			},
+			{
+				"name": "patchGL11",
+				"obfuscated": "patchGL11",
+				"signature": "([B)[B",
+				"static": true
+			},
+			{
+				"name": "patchMethod",
+				"obfuscated": "patchMethod",
+				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[B",
+				"static": true
 			}
 		]
 	},
@@ -173,7 +185,14 @@ namespace Mappings
 	"net/minecraft/client/entity/EntityPlayerSP": {
 		"obfuscated": "bew",
 		"fields": [],
-		"methods": []
+		"methods": [
+			{
+				"name": "onUpdateWalkingPlayer",
+				"obfuscated": "p",
+				"signature": "()V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/client/entity/AbstractClientPlayer": {
 		"obfuscated": "bet",
@@ -251,6 +270,12 @@ namespace Mappings
 				"name": "ticksExisted",
 				"obfuscated": "W",
 				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "boundingBox",
+				"obfuscated": "f",
+				"signature": "Laug;",
 				"static": false
 			}
 		],
@@ -413,6 +438,48 @@ namespace Mappings
 	"net/minecraft/util/ResourceLocation": {
 		"obfuscated": "jy",
 		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/util/AxisAlignedBB": {
+		"obfuscated": "aug",
+		"fields": [
+			{
+				"name": "minX",
+				"obfuscated": "a",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "minY",
+				"obfuscated": "b",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "minZ",
+				"obfuscated": "c",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxX",
+				"obfuscated": "d",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxY",
+				"obfuscated": "e",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "maxZ",
+				"obfuscated": "f",
+				"signature": "D",
+				"static": false
+			}
+		],
 		"methods": []
 	}
 }
