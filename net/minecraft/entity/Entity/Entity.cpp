@@ -56,6 +56,12 @@ AxisAlignedBB Entity::getBoundingBox() const
 	return AxisAlignedBB(env->GetObjectField(instance, EntityClass.getFieldID("boundingBox")), env);
 }
 
+float Entity::getEyeHeight() const
+{
+	if (!instance) return 0.0f;
+	return env->CallFloatMethod(instance, EntityClass.getMethodID("getEyeHeight"));
+}
+
 void Entity::setMotion(const Ripterms::Maths::Vector3d& motion)
 {
 	if (!instance) return;

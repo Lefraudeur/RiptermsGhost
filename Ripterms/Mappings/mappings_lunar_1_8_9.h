@@ -284,7 +284,14 @@ namespace Mappings
 				"static": false
 			}
 		],
-		"methods": []
+		"methods": [
+			{
+				"name": "getEyeHeight",
+				"obfuscated": "getEyeHeight",
+				"signature": "()F",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/client/multiplayer/WorldClient": {
 		"obfuscated": "net/minecraft/client/multiplayer/WorldClient",

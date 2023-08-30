@@ -2,7 +2,7 @@
 
 Ripterms::Maths::Vector2d Ripterms::Maths::getYawPitch(Vector3d playerPos, Vector3d facingPos)
 {
-	float pi = 3.1415926535f;
+	float pi = 3.14159265f;
 	Vector3d delta = facingPos - playerPos;
 
 	float hypxz = std::sqrt(delta.x * delta.x + delta.z * delta.z);

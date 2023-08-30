@@ -13,6 +13,7 @@ public:
 	int getHurtResistantTime() const;
 	int getTicksExisted() const;
 	AxisAlignedBB getBoundingBox() const;
+	float getEyeHeight() const;
 
 	void setMotion(const Ripterms::Maths::Vector3d& motion);
 	void setRotation(const Ripterms::Maths::Vector2d& yawPitch);
