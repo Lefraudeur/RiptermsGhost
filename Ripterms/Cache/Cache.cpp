@@ -16,12 +16,14 @@ bool Ripterms::Cache::fillCache()
 	if (!theMinecraft.isValid()) return false;
 	thePlayer = theMinecraft.getThePlayer();
 	if (!thePlayer.isValid()) return false;
-	if (!prev_thePlayer.isEqualTo(thePlayer)) {
+	if (!prev_thePlayer.isEqualTo(thePlayer))
+	{
 		std::clog << "object updated" << std::endl;
 		prev_thePlayer = thePlayer;
 		theWorld = theMinecraft.getTheWorld();
 		playerEntities = theWorld.getPlayerEntities();
 		gameSettings = theMinecraft.getGameSettings();
+		timer = theMinecraft.getTimer();
 	}
 	return true;
 }

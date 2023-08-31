@@ -178,6 +178,12 @@ namespace Mappings
 				"obfuscated": "field_147125_j",
 				"signature": "Lnet/minecraft/entity/Entity;",
 				"static": false
+			},
+			{
+				"name": "timer",
+				"obfuscated": "field_71428_T",
+				"signature": "Lnet/minecraft/util/Timer;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -282,6 +288,24 @@ namespace Mappings
 				"name": "boundingBox",
 				"obfuscated": "field_70121_D",
 				"signature": "Lnet/minecraft/util/AxisAlignedBB;",
+				"static": false
+			},
+			{
+				"name": "lastTickPosX",
+				"obfuscated": "field_70142_S",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosY",
+				"obfuscated": "field_70137_T",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosZ",
+				"obfuscated": "field_70136_U",
+				"signature": "D",
 				"static": false
 			}
 		],
@@ -497,6 +521,18 @@ namespace Mappings
 				"name": "maxZ",
 				"obfuscated": "field_72334_f",
 				"signature": "D",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/util/Timer": {
+		"obfuscated": "net/minecraft/util/Timer",
+		"fields": [
+			{
+				"name": "renderPartialTicks",
+				"obfuscated": "field_74281_c",
+				"signature": "F",
 				"static": false
 			}
 		],

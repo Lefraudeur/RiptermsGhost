@@ -172,6 +172,12 @@ namespace Mappings
 				"obfuscated": "crosshairPickEntity",
 				"signature": "Lnet/minecraft/world/entity/Entity;",
 				"static": false
+			},
+			{
+				"name": "timer",
+				"obfuscated": "timer",
+				"signature": "Lnet/minecraft/client/Timer;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -247,6 +253,24 @@ namespace Mappings
 				"name": "boundingBox",
 				"obfuscated": "bb",
 				"signature": "Lnet/minecraft/world/phys/AABB;",
+				"static": false
+			},
+			{
+				"name": "lastTickPosX",
+				"obfuscated": "xOld",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosY",
+				"obfuscated": "yOld",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosZ",
+				"obfuscated": "zOld",
+				"signature": "D",
 				"static": false
 			}
 		],
@@ -415,6 +439,18 @@ namespace Mappings
 				"name": "maxZ",
 				"obfuscated": "maxZ",
 				"signature": "D",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/util/Timer": {
+		"obfuscated": "net/minecraft/client/Timer",
+		"fields": [
+			{
+				"name": "renderPartialTicks",
+				"obfuscated": "partialTick",
+				"signature": "F",
 				"static": false
 			}
 		],

@@ -8,6 +8,8 @@ public:
 	using Object::Object;
 
 	Ripterms::Maths::Vector3d getPosition() const;
+	Ripterms::Maths::Vector3d getLastTickPosition() const;
+	Ripterms::Maths::Vector3d getMovementVector(float partialTicks) const; //(currpos - lastpos) * partial ticks
 	Ripterms::Maths::Vector2d getRotation() const;
 	Ripterms::Maths::Vector3d getMotion() const;
 	int getHurtResistantTime() const;

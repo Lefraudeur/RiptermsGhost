@@ -2,7 +2,7 @@
 
 void Ripterms::Modules::LeftClicker::run()
 {
-	static Timer timer(std::chrono::milliseconds(1000/min_cps));
+	static CTimer timer(std::chrono::milliseconds(1000/min_cps));
 	if (!enabled || Ripterms::GUI::draw || !(GetKeyState(VK_LBUTTON) & 0x8000)) 
 		return;
 	if (!timer.isElapsed()) 
@@ -13,7 +13,6 @@ void Ripterms::Modules::LeftClicker::run()
 	GetCursorPos(&cursorPos);
 	SendMessageA(Ripterms::window, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
 	SendMessageA(Ripterms::window, WM_LBUTTONUP, MK_LBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
-	std::mt19937 gen(rd());
 	std::uniform_int_distribution<> distr(min_cps, max_cps);
 	timer.setEvery(std::chrono::milliseconds(1000 / distr(gen)));
 }

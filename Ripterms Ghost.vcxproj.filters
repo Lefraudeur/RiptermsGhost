@@ -45,7 +45,7 @@
     <ClCompile Include="net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Ripterms\Timer.cpp">
+    <ClCompile Include="Ripterms\CTimer.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="net\minecraft\client\multiplayer\WorldClient\WorldClient.cpp">
@@ -156,6 +156,9 @@
     <ClCompile Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="net\minecraft\util\Timer\Timer.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ripterms\Ripterms.h">
@@ -261,6 +264,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="net\minecraft\util\Timer\Timer.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

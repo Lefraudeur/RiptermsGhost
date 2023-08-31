@@ -77,7 +77,7 @@ void Ripterms::Modules::FastPlace::renderGUI()
 
 void Ripterms::Modules::Xray::run()
 {
-	static Timer timer = std::chrono::milliseconds(300);
+	static CTimer timer = std::chrono::milliseconds(300);
 	if (GetAsyncKeyState(keyBind) && timer.isElapsed() && GetActiveWindow() == Ripterms::window)
 	{
 		enabled = !enabled;

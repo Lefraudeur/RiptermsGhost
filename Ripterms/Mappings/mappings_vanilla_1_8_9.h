@@ -178,6 +178,12 @@ namespace Mappings
 				"obfuscated": "i",
 				"signature": "Lpk;",
 				"static": false
+			},
+			{
+				"name": "timer",
+				"obfuscated": "Y",
+				"signature": "Lavl;",
+				"static": false
 			}
 		],
 		"methods": []
@@ -276,6 +282,24 @@ namespace Mappings
 				"name": "boundingBox",
 				"obfuscated": "f",
 				"signature": "Laug;",
+				"static": false
+			},
+			{
+				"name": "lastTickPosX",
+				"obfuscated": "P",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosY",
+				"obfuscated": "Q",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "lastTickPosZ",
+				"obfuscated": "R",
+				"signature": "D",
 				"static": false
 			}
 		],
@@ -484,6 +508,18 @@ namespace Mappings
 				"name": "maxZ",
 				"obfuscated": "f",
 				"signature": "D",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/util/Timer": {
+		"obfuscated": "avl",
+		"fields": [
+			{
+				"name": "renderPartialTicks",
+				"obfuscated": "c",
+				"signature": "F",
 				"static": false
 			}
 		],

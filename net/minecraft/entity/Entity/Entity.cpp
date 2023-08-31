@@ -1,10 +1,12 @@
 #include "Entity.h"
+#include "../../../../Ripterms/Cache/Cache.h"
 #include "../../util/Vec3/Vec3.h"
 
 Ripterms::Maths::Vector3d Entity::getPosition() const
 {
 	if (!instance) return Ripterms::Maths::Vector3d();
-	if (Ripterms::majorVersion == Ripterms::Version::MAJOR_1_16_5) {
+	if (Ripterms::majorVersion == Ripterms::Version::MAJOR_1_16_5)
+	{
 		return Vec3(env->GetObjectField(instance, EntityClass.getFieldID("positionVec")), env).getVector();
 	}
 	return Ripterms::Maths::Vector3d(
@@ -12,6 +14,23 @@ Ripterms::Maths::Vector3d Entity::getPosition() const
 		(float)env->GetDoubleField(instance, EntityClass.getFieldID("posY")),
 		(float)env->GetDoubleField(instance, EntityClass.getFieldID("posZ"))
 	);
+}
+
+Ripterms::Maths::Vector3d Entity::getLastTickPosition() const
+{
+	if (!instance) return Ripterms::Maths::Vector3d();
+	return Ripterms::Maths::Vector3d
+	(
+		(float)env->GetDoubleField(instance, EntityClass.getFieldID("lastTickPosX")),
+		(float)env->GetDoubleField(instance, EntityClass.getFieldID("lastTickPosY")),
+		(float)env->GetDoubleField(instance, EntityClass.getFieldID("lastTickPosZ"))
+	);
+}
+
+Ripterms::Maths::Vector3d Entity::getMovementVector(float partialTicks) const
+{
+	if (!instance) return Ripterms::Maths::Vector3d();
+	return (getPosition() - getLastTickPosition()) * partialTicks;
 }
 
 Ripterms::Maths::Vector2d Entity::getRotation() const

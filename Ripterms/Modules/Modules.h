@@ -20,6 +20,7 @@ namespace Ripterms
 			virtual void onEvent(Ripterms::Event* event);
 		protected:
 			inline static std::random_device rd{};
+			inline static std::mt19937 gen{rd()};
 			bool enabled = false;
 		};
 
