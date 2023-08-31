@@ -10,7 +10,7 @@ This cheat is not guaranteed to be undetectable, especially when it's open sourc
 
 ### Supported versions :
 - Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1, 1.18.2
-- Forge: 1.7.10
+- Forge: 1.7.10 (tested on Paladium: https://paladium-pvp.fr/)
 - Badlion Client: 1.8.9
 
 Change mappings to add new versions
@@ -24,6 +24,7 @@ Change mappings to add new versions
 - Client Brand Changer (see asm folder) (to troll staffs lol, sent to the server on login and displayed by some anticheats)
 - Blink (keybind b) (see asm folder) this was such a pain to make
 - FastPlace
+- LegitScaffold
 - Xray (only on 1.7.10 and 1.8.9)
 
 ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/39690baa-859a-4ea2-a9b0-dfbc8cbfe472)
