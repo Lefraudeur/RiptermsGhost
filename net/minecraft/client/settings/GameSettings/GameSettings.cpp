@@ -9,6 +9,12 @@ float GameSettings::getGammaSetting()
 	return env->GetFloatField(instance, GameSettingsClass.getFieldID("gammaSetting"));
 }
 
+KeyBinding GameSettings::getKeyBindSneak()
+{
+	if (!instance) return KeyBinding(env);
+	return KeyBinding(env->GetObjectField(instance, GameSettingsClass.getFieldID("keyBindSneak")), env);
+}
+
 void GameSettings::setGammaSetting(float value)
 {
 	if (!instance) return;

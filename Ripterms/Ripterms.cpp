@@ -236,7 +236,8 @@ void Ripterms::clean()
 	System::gc();
 	Ripterms::JavaClassV2::clean();
 	if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
-	std::thread a([] {
+	std::thread a([]
+	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		MH_DisableHook(MH_ALL_HOOKS);
 		MH_Uninitialize();

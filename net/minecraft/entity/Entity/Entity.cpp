@@ -57,6 +57,12 @@ Ripterms::Maths::Vector3d Entity::getMotion() const
 	);
 }
 
+bool Entity::isOnGround() const
+{
+	if (!instance) return false;
+	return env->GetBooleanField(instance, EntityClass.getFieldID("onGround")) == JNI_TRUE;
+}
+
 int Entity::getHurtResistantTime() const
 {
 	if (!instance) return 0;

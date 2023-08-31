@@ -355,7 +355,7 @@ void Ripterms::JavaClassV2::JClass::clear()
 	this->javaClass = nullptr;
 }
 
-bool Ripterms::JavaClassV2::JClass::isValid()
+bool Ripterms::JavaClassV2::JClass::isValid() const
 {
 	return javaClass != nullptr;
 }

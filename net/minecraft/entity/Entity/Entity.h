@@ -12,6 +12,7 @@ public:
 	Ripterms::Maths::Vector3d getMovementVector(float partialTicks) const; //(currpos - lastpos) * partial ticks
 	Ripterms::Maths::Vector2d getRotation() const;
 	Ripterms::Maths::Vector3d getMotion() const;
+	bool isOnGround() const;
 	int getHurtResistantTime() const;
 	int getTicksExisted() const;
 	AxisAlignedBB getBoundingBox() const;

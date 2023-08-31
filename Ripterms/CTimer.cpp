@@ -21,3 +21,8 @@ void Ripterms::CTimer::setEvery(std::chrono::milliseconds everyXms)
 	timerBegin = std::chrono::steady_clock::now();
 	targetMs = everyXms;
 }
+
+void Ripterms::CTimer::reset()
+{
+	timerBegin = std::chrono::steady_clock::now();
+}

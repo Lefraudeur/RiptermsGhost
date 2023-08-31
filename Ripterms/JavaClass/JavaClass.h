@@ -23,7 +23,7 @@ namespace Ripterms
 			~JClass();
 
 			void clear(); //delete ref
-			bool isValid();
+			bool isValid() const;
 			bool isEqualTo(const JClass& other);
 			const jclass& getInstance() const;
 

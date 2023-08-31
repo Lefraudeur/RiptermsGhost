@@ -49,7 +49,7 @@ Ripterms::Maths::Vector3d Ripterms::Maths::Vector3d::operator+(const Vector3d& o
 	return Vector3d(x + other_vector.x, y + other_vector.y, z + other_vector.z);
 }
 
-Ripterms::Maths::Vector3d Ripterms::Maths::Vector3d::operator*(int coef)
+Ripterms::Maths::Vector3d Ripterms::Maths::Vector3d::operator*(float coef)
 {
 	return Vector3d(x * coef, y * coef, z * coef);
 }

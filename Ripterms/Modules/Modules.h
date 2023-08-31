@@ -136,6 +136,7 @@ namespace Ripterms
 			void renderGUI() override;
 		private:
 			int keyBind = VK_NUMPAD1;
+			int delayMs = 50;
 		};
 
 		inline std::map<std::string, std::vector<IModule*>> categories =
