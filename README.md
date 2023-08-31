@@ -25,6 +25,7 @@ Change mappings to add new versions
 - Blink (keybind b) (see asm folder) this was such a pain to make
 - FastPlace
 - LegitScaffold
+- Xray (only on 1.7.10 and 1.8.9)
 
 ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/39690baa-859a-4ea2-a9b0-dfbc8cbfe472)
 
@@ -35,7 +36,7 @@ Insert to open the gui / end key to self destruct
 
 To test it, just build visual studio project, and inject it using any injector.
 
-In 1.16.5 + versions, you have to inject while in game (otherwise some classes are not loaded)
+You have to inject while in game (otherwise some classes are not loaded)
 
 
 Help would be appreciated, this repo is here to share your knowledge with other people. You can also make suggestions. (open an issue or a pull request to dev branch)
