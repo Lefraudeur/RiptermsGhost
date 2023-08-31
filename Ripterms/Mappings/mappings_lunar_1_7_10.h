@@ -307,6 +307,12 @@ namespace Mappings
 				"obfuscated": "lastTickPosZ",
 				"signature": "D",
 				"static": false
+			},
+			{
+				"name": "onGround",
+				"obfuscated": "onGround",
+				"signature": "Z",
+				"static": false
 			}
 		],
 		"methods": [
@@ -333,7 +339,14 @@ namespace Mappings
 				"static": false
 			}
 		],
-		"methods": []
+		"methods": [
+			{
+				"name": "getBlock",
+				"obfuscated": "getBlock",
+				"signature": "(III)Lnet/minecraft/block/Block;",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/util/Vec3": {
 		"obfuscated": "net/minecraft/util/Vec3",
@@ -378,6 +391,12 @@ namespace Mappings
 				"name": "gammaSetting",
 				"obfuscated": "gammaSetting",
 				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "keyBindSneak",
+				"obfuscated": "keyBindSneak",
+				"signature": "Lnet/minecraft/client/settings/KeyBinding;",
 				"static": false
 			}
 		],
@@ -521,6 +540,29 @@ namespace Mappings
 				"name": "renderPartialTicks",
 				"obfuscated": "renderPartialTicks",
 				"signature": "F",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/block/BlockAir": {
+		"obfuscated": "net/minecraft/block/BlockAir",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/client/settings/KeyBinding": {
+		"obfuscated": "net/minecraft/client/settings/KeyBinding",
+		"fields": [
+			{
+				"name": "pressed",
+				"obfuscated": "pressed",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "pressTime",
+				"obfuscated": "pressTime",
+				"signature": "I",
 				"static": false
 			}
 		],

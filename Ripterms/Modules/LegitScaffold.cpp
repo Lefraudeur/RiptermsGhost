@@ -20,8 +20,7 @@ void Ripterms::Modules::LegitScaffold::onEvent(Ripterms::Event* event)
 		{
 			Ripterms::Maths::Vector3d playerPosition = thePlayer.getPosition();
 			playerPosition.y -= 1.0f;
-			BlockPos playerBlockPos = BlockPos::newObject(playerPosition, event->env);
-			Block playerBlock = theWorld.getBlockState(playerBlockPos).getBlock();
+			Block playerBlock = theWorld.getBlock(playerPosition);
 			if (playerBlock.instanceOf(JavaClassV2("net/minecraft/block/BlockAir").getJClass(event->env)))
 			{
 				timer.setEvery(std::chrono::milliseconds(delayMs));

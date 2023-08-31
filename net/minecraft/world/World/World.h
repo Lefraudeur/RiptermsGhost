@@ -9,6 +9,7 @@ class World : public Object
 public:
 	using Object::Object;
 	IBlockState getBlockState(const BlockPos& blockPos);
+	Block getBlock(const Ripterms::Maths::Vector3d& position);
 	virtual List getPlayerEntities();
 protected:
 	inline static Ripterms::JavaClassV2 WorldClass{ "net/minecraft/world/World" };
