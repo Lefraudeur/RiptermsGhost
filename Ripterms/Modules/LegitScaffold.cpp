@@ -18,8 +18,14 @@ void Ripterms::Modules::LegitScaffold::onEvent(Ripterms::Event* event)
 		bool checkSneak = true;
 		if ((GetKeyState(0x53) & 0x8000) && thePlayer.isOnGround())
 		{
-			Ripterms::Maths::Vector3d playerPosition = thePlayer.getPosition();
-			playerPosition.y -= 1.0f;
+			AxisAlignedBB thePlayerbb = thePlayer.getBoundingBox();
+			Ripterms::Maths::Vector3d playerPosition
+			(
+				thePlayerbb.getMinX() + (thePlayerbb.getMaxX() - thePlayerbb.getMinX()) / 2.0f,
+				thePlayerbb.getMinY(),
+				thePlayerbb.getMinZ() + (thePlayerbb.getMaxZ() - thePlayerbb.getMinZ()) / 2.0f
+			);
+			playerPosition.y -= 0.1f;
 			Block playerBlock = theWorld.getBlock(playerPosition);
 			if (playerBlock.instanceOf(JavaClassV2("net/minecraft/block/BlockAir").getJClass(event->env)))
 			{

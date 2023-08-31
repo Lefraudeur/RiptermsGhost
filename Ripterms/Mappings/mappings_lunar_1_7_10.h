@@ -339,14 +339,7 @@ namespace Mappings
 				"static": false
 			}
 		],
-		"methods": [
-			{
-				"name": "getBlock",
-				"obfuscated": "getBlock",
-				"signature": "(III)Lnet/minecraft/block/Block;",
-				"static": false
-			}
-		]
+		"methods": []
 	},
 	"net/minecraft/util/Vec3": {
 		"obfuscated": "net/minecraft/util/Vec3",
@@ -567,6 +560,18 @@ namespace Mappings
 			}
 		],
 		"methods": []
+	},
+	"net/minecraft/world/IBlockAccess": {
+		"obfuscated": "net/minecraft/world/IBlockAccess",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getBlock",
+				"obfuscated": "getBlock",
+				"signature": "(III)Lnet/minecraft/block/Block;",
+				"static": false
+			}
+		]
 	}
 }
 )"_json);

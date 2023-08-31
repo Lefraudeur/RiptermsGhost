@@ -26,10 +26,10 @@ Block World::getBlock(const Ripterms::Maths::Vector3d& position)
 			env->CallObjectMethod
 			(
 				instance,
-				WorldClass.getMethodID("getBlock"), 
-				(jint)position.x,
-				(jint)position.y,
-				(jint)position.z
+				IBlockAccessClass.getMethodID("getBlock"),
+				(int)std::floor(position.x),
+				(int)std::floor(position.y),
+				(int)std::floor(position.z)
 			),
 			env
 		);
