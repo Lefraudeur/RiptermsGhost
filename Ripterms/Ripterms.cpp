@@ -15,7 +15,7 @@
 
 void mainLoop()
 {
-	static Ripterms::Timer timer = std::chrono::milliseconds(1);
+	static Ripterms::CTimer timer = std::chrono::milliseconds(1);
 	if (!timer.isElapsed() || !Ripterms::cache->fillCache()) return;
 	Ripterms::Modules::runAll();
 }

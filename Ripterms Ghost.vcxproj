@@ -194,6 +194,7 @@
     <ClCompile Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.cpp" />
     <ClCompile Include="net\minecraft\util\MovingObjectPosition\MovingObjectPosition.cpp" />
     <ClCompile Include="net\minecraft\util\MovingObjectPosition\MovingObjectType\MovingObjectType.cpp" />
+    <ClCompile Include="net\minecraft\util\Timer\Timer.cpp" />
     <ClCompile Include="net\minecraft\util\Vec3\Vec3.cpp" />
     <ClCompile Include="net\minecraft\world\World\World.cpp" />
     <ClCompile Include="Ripterms\Cache\Cache.cpp" />
@@ -213,7 +214,7 @@
     <ClCompile Include="Ripterms\Modules\Velocity.cpp" />
     <ClCompile Include="Ripterms\Patcher\Patcher.cpp" />
     <ClCompile Include="Ripterms\Ripterms.cpp" />
-    <ClCompile Include="Ripterms\Timer.cpp" />
+    <ClCompile Include="Ripterms\CTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="java\lang\ClassLoader\ClassLoader.h" />
@@ -234,6 +235,7 @@
     <ClInclude Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.h" />
     <ClInclude Include="net\minecraft\util\MovingObjectPosition\MovingObjectPosition.h" />
     <ClInclude Include="net\minecraft\util\MovingObjectPosition\MovingObjectType\MovingObjectType.h" />
+    <ClInclude Include="net\minecraft\util\Timer\Timer.h" />
     <ClInclude Include="net\minecraft\util\Vec3\Vec3.h" />
     <ClInclude Include="net\minecraft\world\World\World.h" />
     <ClInclude Include="Ripterms\Cache\Cache.h" />

@@ -178,6 +178,12 @@ namespace Mappings
 				"obfuscated": "i",
 				"signature": "Lpk;",
 				"static": false
+			},
+			{
+				"name": "timer",
+				"obfuscated": "Y",
+				"signature": "Lavl;",
+				"static": false
 			}
 		],
 		"methods": []
@@ -502,6 +508,18 @@ namespace Mappings
 				"name": "maxZ",
 				"obfuscated": "f",
 				"signature": "D",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/util/Timer": {
+		"obfuscated": "avl",
+		"fields": [
+			{
+				"name": "renderPartialTicks",
+				"obfuscated": "c",
+				"signature": "F",
 				"static": false
 			}
 		],

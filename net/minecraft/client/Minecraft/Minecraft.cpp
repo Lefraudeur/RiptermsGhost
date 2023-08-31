@@ -35,6 +35,12 @@ Entity Minecraft::getPointedEntity()
 	return Entity(env->GetObjectField(instance, MinecraftClass.getFieldID("pointedEntity")), env);
 }
 
+Timer Minecraft::getTimer()
+{
+	if(!instance) return Timer(env);
+	return Timer(env->GetObjectField(instance, MinecraftClass.getFieldID("timer")), env);
+}
+
 int Minecraft::getRightClickDelayTimer()
 {
 	if (!instance) return 0;

@@ -31,7 +31,6 @@ namespace Ripterms
 		public:
 			void run() override;
 			void renderGUI() override;
-			void onEvent(Ripterms::Event* event) override;
 		private:
 			float max_distance = 6.0f;
 			float max_angle = 80.0f;

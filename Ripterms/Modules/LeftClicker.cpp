@@ -2,7 +2,7 @@
 
 void Ripterms::Modules::LeftClicker::run()
 {
-	static Timer timer(std::chrono::milliseconds(1000/min_cps));
+	static CTimer timer(std::chrono::milliseconds(1000/min_cps));
 	if (!enabled || Ripterms::GUI::draw || !(GetKeyState(VK_LBUTTON) & 0x8000)) 
 		return;
 	if (!timer.isElapsed()) 

@@ -178,6 +178,12 @@ namespace Mappings
 				"obfuscated": "field_147125_j",
 				"signature": "Lnet/minecraft/entity/Entity;",
 				"static": false
+			},
+			{
+				"name": "timer",
+				"obfuscated": "field_71428_T",
+				"signature": "Lnet/minecraft/util/Timer;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -515,6 +521,18 @@ namespace Mappings
 				"name": "maxZ",
 				"obfuscated": "field_72334_f",
 				"signature": "D",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/util/Timer": {
+		"obfuscated": "net/minecraft/util/Timer",
+		"fields": [
+			{
+				"name": "renderPartialTicks",
+				"obfuscated": "field_74281_c",
+				"signature": "F",
 				"static": false
 			}
 		],
