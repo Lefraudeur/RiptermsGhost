@@ -306,6 +306,12 @@ namespace Mappings
 				"obfuscated": "lastTickPosZ",
 				"signature": "D",
 				"static": false
+			},
+			{
+				"name": "onGround",
+				"obfuscated": "onGround",
+				"signature": "Z",
+				"static": false
 			}
 		],
 		"methods": [
@@ -377,6 +383,12 @@ namespace Mappings
 				"name": "gammaSetting",
 				"obfuscated": "gammaSetting",
 				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "keyBindSneak",
+				"obfuscated": "keyBindSneak",
+				"signature": "Lnet/minecraft/client/settings/KeyBinding;",
 				"static": false
 			}
 		],
@@ -525,6 +537,65 @@ namespace Mappings
 				"name": "renderPartialTicks",
 				"obfuscated": "renderPartialTicks",
 				"signature": "F",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/world/IBlockAccess": {
+		"obfuscated": "net/minecraft/world/IBlockAccess",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getBlockState",
+				"obfuscated": "getBlockState",
+				"signature": "(Lnet/minecraft/util/BlockPos;)Lnet/minecraft/block/state/IBlockState;",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/util/BlockPos": {
+		"obfuscated": "net/minecraft/util/BlockPos",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(DDD)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/block/state/IBlockState": {
+		"obfuscated": "net/minecraft/block/state/IBlockState",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getBlock",
+				"obfuscated": "getBlock",
+				"signature": "()Lnet/minecraft/block/Block;",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/block/BlockAir": {
+		"obfuscated": "net/minecraft/block/BlockAir",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/client/settings/KeyBinding": {
+		"obfuscated": "net/minecraft/client/settings/KeyBinding",
+		"fields": [
+			{
+				"name": "pressed",
+				"obfuscated": "pressed",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "pressTime",
+				"obfuscated": "pressTime",
+				"signature": "I",
 				"static": false
 			}
 		],

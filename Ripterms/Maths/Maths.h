@@ -13,7 +13,7 @@ namespace Ripterms
 			float x = 0.0f, y = 0.0f, z = 0.0f;
 			Vector3d operator-(const Vector3d& other_vector);
 			Vector3d operator+(const Vector3d& other_vector);
-			Vector3d operator*(int coef);
+			Vector3d operator*(float coef);
 			float distance();
 		};
 

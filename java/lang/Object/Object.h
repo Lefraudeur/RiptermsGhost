@@ -17,6 +17,7 @@ public:
 
 	void setInstance(jobject instance, JNIEnv* env = nullptr);
 	bool isEqualTo(const Object& other_Object); //reference check
+	bool instanceOf(const Ripterms::JavaClassV2::JClass& classRef);
 	bool equals(const Object& other_Object); //content check
 	bool isValid();
 	void clear(); //delete ref

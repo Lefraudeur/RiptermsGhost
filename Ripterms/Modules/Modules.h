@@ -34,6 +34,8 @@ namespace Ripterms
 		private:
 			float max_distance = 6.0f;
 			float max_angle = 80.0f;
+			float multiplier = 1.0f;
+			float multiplierPitch = 1.0f;
 		};
 
 		class Reach : public IModule
@@ -134,6 +136,7 @@ namespace Ripterms
 			void renderGUI() override;
 		private:
 			int keyBind = VK_NUMPAD1;
+			int delayMs = 50;
 		};
 
 		inline std::map<std::string, std::vector<IModule*>> categories =

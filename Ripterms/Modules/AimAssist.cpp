@@ -102,22 +102,22 @@ void Ripterms::Modules::AimAssist::run()
 			}
 			else if (difference >= 16.0f)
 			{
-				std::uniform_int_distribution<> distr(400, 800);
+				std::uniform_int_distribution<> distr(int(400.0f * multiplier), int(800.0f * multiplier));
 				thePlayer_rotation.x += (float(distr(gen)) / 100.0f) * (selected_target_YawToAdd > 0.0f ? 1.0f : -1.0f);
 			}
 			else if (difference >= 8.0f)
 			{
-				std::uniform_int_distribution<> distr(250, 400);
+				std::uniform_int_distribution<> distr(int(250.0f * multiplier), int(400.0f * multiplier));
 				thePlayer_rotation.x += (float(distr(gen)) / 100.0f) * (selected_target_YawToAdd > 0.0f ? 1.0f : -1.0f);
 			}
 			else if (difference >= 4.0f)
 			{
-				std::uniform_int_distribution<> distr(100, 200);
+				std::uniform_int_distribution<> distr(int(100.0f * multiplier), int(200.0f * multiplier));
 				thePlayer_rotation.x += (float(distr(gen)) / 100.0f) * (selected_target_YawToAdd > 0.0f ? 1.0f : -1.0f);
 			}
 			else
 			{
-				std::uniform_int_distribution<> distr(25, 100);
+				std::uniform_int_distribution<> distr(int(25.0f * multiplier), int(100.0f * multiplier));
 				thePlayer_rotation.x += (float(distr(gen)) / 100.0f) * (selected_target_YawToAdd > 0.0f ? 1.0f : -1.0f);
 			}
 		}
@@ -132,22 +132,22 @@ void Ripterms::Modules::AimAssist::run()
 			}
 			else if (difference >= 16.0f)
 			{
-				std::uniform_int_distribution<> distr(400, 800);
+				std::uniform_int_distribution<> distr(int(400.0f * multiplierPitch), int(800.0f * multiplierPitch));
 				thePlayer_rotation.y += (float(distr(gen)) / 100.0f) * (selected_target_PitchToAdd > 0.0f ? 1.0f : -1.0f);
 			}
 			else if (difference >= 8.0f)
 			{
-				std::uniform_int_distribution<> distr(250, 400);
+				std::uniform_int_distribution<> distr(int(250.0f * multiplierPitch), int(400.0f * multiplierPitch));
 				thePlayer_rotation.y += (float(distr(gen)) / 100.0f) * (selected_target_PitchToAdd > 0.0f ? 1.0f : -1.0f);
 			}
 			else if (difference >= 4.0f)
 			{
-				std::uniform_int_distribution<> distr(100, 200);
+				std::uniform_int_distribution<> distr(int(100.0f * multiplierPitch), int(200.0f * multiplierPitch));
 				thePlayer_rotation.y += (float(distr(gen)) / 100.0f) * (selected_target_PitchToAdd > 0.0f ? 1.0f : -1.0f);
 			}
 			else
 			{
-				std::uniform_int_distribution<> distr(25, 100);
+				std::uniform_int_distribution<> distr(int(25.0f * multiplierPitch), int(100.0f * multiplierPitch));
 				thePlayer_rotation.y += (float(distr(gen)) / 100.0f) * (selected_target_PitchToAdd > 0.0f ? 1.0f : -1.0f);
 			}
 		}
@@ -167,7 +167,7 @@ void Ripterms::Modules::AimAssist::renderGUI()
 		display_options = !display_options;
 	ImGui::SameLine();
 	ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30.0f);
-	if(ImGui::ArrowButton("test", ImGuiDir_Down)) 
+	if(ImGui::ArrowButton("aimopt", ImGuiDir_Down)) 
 		display_options = !display_options;
 	if (display_options)
 	{
@@ -175,6 +175,8 @@ void Ripterms::Modules::AimAssist::renderGUI()
 		ImGui::BeginGroup();
 		ImGui::SliderFloat("Max Distance", &max_distance, 1.0f, 6.0f, "%.1f");
 		ImGui::SliderFloat("Max Angle", &max_angle, 10.0f, 180.0f, "%.1f");
+		ImGui::SliderFloat("Multiplier Yaw", &multiplier, 0.1f, 2.0f, "%.1f");
+		ImGui::SliderFloat("Multiplier Pitch", &multiplierPitch, 0.1f, 2.0f, "%.1f");
 		ImGui::EndGroup();
 	}
 }
