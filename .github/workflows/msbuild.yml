@@ -48,3 +48,5 @@ jobs:
         name: Ripterms Ghost ${{ github.ref_name }}.${{ github.sha }}
         # A file, directory or wildcard pattern that describes what to upload
         path: ${{ github.workspace }}\x64\Release\Ripterms Ghost.dll
+        if-no-files-found: error
+        retention-days: 90
