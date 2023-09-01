@@ -63,6 +63,12 @@ bool Entity::isOnGround() const
 	return env->GetBooleanField(instance, EntityClass.getFieldID("onGround")) == JNI_TRUE;
 }
 
+bool Entity::isSprinting() const
+{
+	if (!instance) return false;
+	return env->CallBooleanMethod(instance, EntityClass.getMethodID("isSprinting")) == JNI_TRUE;
+}
+
 int Entity::getHurtResistantTime() const
 {
 	if (!instance) return 0;
@@ -85,6 +91,12 @@ float Entity::getEyeHeight() const
 {
 	if (!instance) return 0.0f;
 	return env->CallFloatMethod(instance, EntityClass.getMethodID("getEyeHeight"));
+}
+
+void Entity::setSprinting(bool state)
+{
+	if (!instance) return;
+	env->CallBooleanMethod(instance, EntityClass.getMethodID("setSprinting"), (jboolean)(state ? JNI_TRUE : JNI_FALSE));
 }
 
 void Entity::setMotion(const Ripterms::Maths::Vector3d& motion)

@@ -15,6 +15,12 @@ KeyBinding GameSettings::getKeyBindSneak()
 	return KeyBinding(env->GetObjectField(instance, GameSettingsClass.getFieldID("keyBindSneak")), env);
 }
 
+KeyBinding GameSettings::getKeyBindSprint()
+{
+	if (!instance) return KeyBinding(env);
+	return KeyBinding(env->GetObjectField(instance, GameSettingsClass.getFieldID("keyBindSprint")), env);
+}
+
 void GameSettings::setGammaSetting(float value)
 {
 	if (!instance) return;

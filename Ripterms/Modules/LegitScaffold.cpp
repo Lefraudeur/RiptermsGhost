@@ -2,13 +2,13 @@
 
 void Ripterms::Modules::LegitScaffold::onEvent(Ripterms::Event* event)
 {
+	if (!enabled)
+		return;
+
 	if (event->type == Ripterms::Event::PRE_MOTION)
 	{
 		static bool sneaked = false;
 		static int elapsedTicks = 0;
-
-		if (!enabled)
-			return;
 
 		if (sneaked)
 			elapsedTicks++;
