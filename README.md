@@ -2,11 +2,12 @@
 An example injectable cheat for minecraft using java native interface and jvmti + java asm
 
 Currently in development.
-Uses weird jni export function hooking for better compatibility with clients that doesn't allow the creation of new JNIEnv*. That's why there is a weird init/exit system.
+Uses weird jni export function hooking for better compatibility with clients that doesn't allow the creation of new JNIEnv*.
 
 This cheat is open source, mainly to show you a combination of all the techniques I found to make injectable cheats for minecraft java, it is one of the only open source client that uses java asm to edit class bytecode, and that can completely unload itself.
 
-This cheat is not guaranteed to be undetectable, especially when it's open source. This is made for developpers, that's why there isn't any download link
+<ins>Download</ins>: https://github.com/Lefraudeur/RiptermsGhost/releases/download/v0.1-alpha/Ripterms.Ghost.dll
+Or https://github.com/Lefraudeur/RiptermsGhost/actions/workflows/msbuild.yml for early builds
 
 ### Supported versions :
 - Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1, 1.18.2
@@ -22,7 +23,7 @@ Change mappings to add new versions
 - Full Bright
 - Velocity
 - Client Brand Changer (see asm folder) (to troll staffs lol, sent to the server on login and displayed by some anticheats)
-- Blink (keybind b) (see asm folder) this was such a pain to make
+- Blink (keybind numpad 1) (see asm folder) this was such a pain to make
 - FastPlace
 - LegitScaffold
 - Xray (only on 1.7.10 and 1.8.9)
