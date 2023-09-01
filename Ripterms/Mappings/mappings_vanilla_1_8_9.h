@@ -301,6 +301,12 @@ namespace Mappings
 				"obfuscated": "R",
 				"signature": "D",
 				"static": false
+			},
+			{
+				"name": "onGround",
+				"obfuscated": "C",
+				"signature": "Z",
+				"static": false
 			}
 		],
 		"methods": [
@@ -372,6 +378,12 @@ namespace Mappings
 				"name": "gammaSetting",
 				"obfuscated": "aJ",
 				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "keyBindSneak",
+				"obfuscated": "ad",
+				"signature": "Lavb;",
 				"static": false
 			}
 		],
@@ -520,6 +532,65 @@ namespace Mappings
 				"name": "renderPartialTicks",
 				"obfuscated": "c",
 				"signature": "F",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/world/IBlockAccess": {
+		"obfuscated": "adq",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getBlockState",
+				"obfuscated": "p",
+				"signature": "(Lcj;)Lalz;",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/util/BlockPos": {
+		"obfuscated": "cj",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(DDD)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/block/state/IBlockState": {
+		"obfuscated": "alz",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getBlock",
+				"obfuscated": "c",
+				"signature": "()Lafh;",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/block/BlockAir": {
+		"obfuscated": "aey",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/client/settings/KeyBinding": {
+		"obfuscated": "avb",
+		"fields": [
+			{
+				"name": "pressed",
+				"obfuscated": "h",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "pressTime",
+				"obfuscated": "i",
+				"signature": "I",
 				"static": false
 			}
 		],
