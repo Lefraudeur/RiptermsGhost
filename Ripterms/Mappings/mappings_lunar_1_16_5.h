@@ -272,6 +272,12 @@ namespace Mappings
 				"obfuscated": "zOld",
 				"signature": "D",
 				"static": false
+			},
+			{
+				"name": "onGround",
+				"obfuscated": "onGround",
+				"signature": "Z",
+				"static": false
 			}
 		],
 		"methods": [
@@ -344,6 +350,12 @@ namespace Mappings
 				"name": "gammaSetting",
 				"obfuscated": "gamma",
 				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "keyBindSneak",
+				"obfuscated": "keyShift",
+				"signature": "Lnet/minecraft/client/KeyMapping;",
 				"static": false
 			}
 		],
@@ -451,6 +463,65 @@ namespace Mappings
 				"name": "renderPartialTicks",
 				"obfuscated": "partialTick",
 				"signature": "F",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/world/IBlockAccess": {
+		"obfuscated": "net/minecraft/world/level/BlockGetter",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getBlockState",
+				"obfuscated": "getBlockState",
+				"signature": "(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/util/BlockPos": {
+		"obfuscated": "net/minecraft/core/BlockPos",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(DDD)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/block/state/IBlockState": {
+		"obfuscated": "net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getBlock",
+				"obfuscated": "getBlock",
+				"signature": "()Lnet/minecraft/world/level/block/Block;",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/block/BlockAir": {
+		"obfuscated": "net/minecraft/world/level/block/AirBlock",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/client/settings/KeyBinding": {
+		"obfuscated": "net/minecraft/client/KeyMapping",
+		"fields": [
+			{
+				"name": "pressed",
+				"obfuscated": "isDown",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "pressTime",
+				"obfuscated": "clickCount",
+				"signature": "I",
 				"static": false
 			}
 		],

@@ -15,6 +15,7 @@ void Ripterms::Modules::AimAssist::run()
 
 	Maths::Vector3d thePlayer_position = cache->thePlayer.getPosition();
 	thePlayer_position.y += cache->thePlayer.getEyeHeight();
+
 	Maths::Vector2d thePlayer_rotation = cache->thePlayer.getRotation();
 	float cropped_thePlayer_yaw = Ripterms::Maths::cropAngle180(thePlayer_rotation.x);
 	float cropped_thePlayer_pitch = thePlayer_rotation.y;
@@ -27,9 +28,16 @@ void Ripterms::Modules::AimAssist::run()
 	{
 		if (target.isEqualTo(cache->thePlayer))
 			continue;
-		Maths::Vector3d target_position = target.getPosition() + target.getMovementVector(cache->timer.getRenderPartialTicks());
+
 		AxisAlignedBB targetBB = target.getBoundingBox();
-		target_position.y += (targetBB.getMaxY() - targetBB.getMinY()) / 2.0f;
+		Maths::Vector3d target_position
+		(
+			targetBB.getMinX() + (targetBB.getMaxX() - targetBB.getMinX()) / 2.0f,
+			targetBB.getMinY() + (targetBB.getMaxY() - targetBB.getMinY()) / 2.0f,
+			targetBB.getMinZ() + (targetBB.getMaxZ() - targetBB.getMinZ()) / 2.0f
+		);
+		target_position = target_position + target.getMovementVector(cache->timer.getRenderPartialTicks());
+
 		Maths::Vector2d target_required_rotation = Maths::getYawPitch(thePlayer_position, target_position);
 		float yawToAdd = target_required_rotation.x - cropped_thePlayer_yaw;
 		float pitchToAdd = target_required_rotation.y - cropped_thePlayer_pitch;

@@ -5,9 +5,15 @@ void Ripterms::Modules::LegitScaffold::onEvent(Ripterms::Event* event)
 	if (event->type == Ripterms::Event::PRE_MOTION)
 	{
 		static bool sneaked = false;
+		static int elapsedTicks = 0;
+
 		if (!enabled)
 			return;
-		static CTimer timer = std::chrono::milliseconds(delayMs);
+
+		if (sneaked)
+			elapsedTicks++;
+		else
+			elapsedTicks = 0;
 
 		Minecraft theMinecraft = Minecraft::getTheMinecraft(event->env);
 		EntityPlayerSP thePlayer = theMinecraft.getThePlayer();
@@ -15,22 +21,25 @@ void Ripterms::Modules::LegitScaffold::onEvent(Ripterms::Event* event)
 		GameSettings gameSettings = theMinecraft.getGameSettings();
 		KeyBinding keyBindSneak = gameSettings.getKeyBindSneak();
 
-		bool checkSneak = true;
 		if ((GetKeyState(0x53) & 0x8000) && thePlayer.isOnGround())
 		{
-			Ripterms::Maths::Vector3d playerPosition = thePlayer.getPosition();
-			playerPosition.y -= 1.0f;
-			BlockPos playerBlockPos = BlockPos::newObject(playerPosition, event->env);
-			Block playerBlock = theWorld.getBlockState(playerBlockPos).getBlock();
+			AxisAlignedBB thePlayerbb = thePlayer.getBoundingBox();
+			Ripterms::Maths::Vector3d playerPosition
+			(
+				thePlayerbb.getMinX() + (thePlayerbb.getMaxX() - thePlayerbb.getMinX()) / 2.0f,
+				thePlayerbb.getMinY(),
+				thePlayerbb.getMinZ() + (thePlayerbb.getMaxZ() - thePlayerbb.getMinZ()) / 2.0f
+			);
+			playerPosition.y -= 0.1f;
+			Block playerBlock = theWorld.getBlock(playerPosition);
 			if (playerBlock.instanceOf(JavaClassV2("net/minecraft/block/BlockAir").getJClass(event->env)))
 			{
-				timer.setEvery(std::chrono::milliseconds(delayMs));
 				sneaked = true;
 				keyBindSneak.setPressed(true);
-				checkSneak = false;
+				return;
 			}
 		}
-		if (checkSneak && sneaked && timer.isElapsed())
+		if (sneaked && elapsedTicks > tickDelay)
 		{
 			keyBindSneak.setPressed(false);
 			sneaked = false;
@@ -56,7 +65,7 @@ void Ripterms::Modules::LegitScaffold::renderGUI()
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderInt("delay ms", &delayMs, 50, 300);
+		ImGui::SliderInt("delay", &tickDelay, 0, 10);
 		ImGui::EndGroup();
 	}
 }

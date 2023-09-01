@@ -307,6 +307,12 @@ namespace Mappings
 				"obfuscated": "field_70136_U",
 				"signature": "D",
 				"static": false
+			},
+			{
+				"name": "onGround",
+				"obfuscated": "field_70122_E",
+				"signature": "Z",
+				"static": false
 			}
 		],
 		"methods": [
@@ -378,6 +384,12 @@ namespace Mappings
 				"name": "gammaSetting",
 				"obfuscated": "field_74333_Y",
 				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "keyBindSneak",
+				"obfuscated": "field_74311_E",
+				"signature": "Lnet/minecraft/client/settings/KeyBinding;",
 				"static": false
 			}
 		],
@@ -537,6 +549,41 @@ namespace Mappings
 			}
 		],
 		"methods": []
+	},
+	"net/minecraft/block/BlockAir": {
+		"obfuscated": "net/minecraft/block/BlockAir",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/client/settings/KeyBinding": {
+		"obfuscated": "net/minecraft/client/settings/KeyBinding",
+		"fields": [
+			{
+				"name": "pressed",
+				"obfuscated": "field_74513_e",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "pressTime",
+				"obfuscated": "field_151474_i",
+				"signature": "I",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/world/IBlockAccess": {
+		"obfuscated": "net/minecraft/world/IBlockAccess",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getBlock",
+				"obfuscated": "func_147439_a",
+				"signature": "(III)Lnet/minecraft/block/Block;",
+				"static": false
+			}
+		]
 	}
 }
 )"_json);
