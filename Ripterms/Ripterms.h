@@ -37,7 +37,8 @@ namespace Ripterms
 		std::chrono::milliseconds targetMs;
 	};
 	
-	BOOL init(HMODULE dll, FILE* fbuffer1, FILE* fbuffer2, FILE* fbuffer3);
+	HWND getCurrentWindow();
+	BOOL init(HMODULE dll);
 	void clean();
 	void partialClean();
 }

@@ -315,6 +315,18 @@ namespace Mappings
 				"obfuscated": "aS",
 				"signature": "()F",
 				"static": false
+			},
+			{
+				"name": "isSprinting",
+				"obfuscated": "aw",
+				"signature": "()Z",
+				"static": false
+			},
+			{
+				"name": "setSprinting",
+				"obfuscated": "d",
+				"signature": "(Z)V",
+				"static": false
 			}
 		]
 	},
@@ -383,6 +395,12 @@ namespace Mappings
 			{
 				"name": "keyBindSneak",
 				"obfuscated": "ad",
+				"signature": "Lavb;",
+				"static": false
+			},
+			{
+				"name": "keyBindSprint",
+				"obfuscated": "ae",
 				"signature": "Lavb;",
 				"static": false
 			}

@@ -116,7 +116,8 @@ bool Ripterms::JavaClassV2::init()
 
 void Ripterms::JavaClassV2::clean()
 {
-	jclassCache.clear();
+	if (Ripterms::p_env)
+		jclassCache[Ripterms::p_env].clear();
 	delete mappings;
 }
 

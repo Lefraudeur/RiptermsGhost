@@ -122,7 +122,7 @@ BOOL CALLBACK EnumWindowsCallback(_In_ HWND hwnd, _In_ LPARAM lParam)
 	return TRUE;
 }
 
-HWND getCurrentWindow()
+HWND Ripterms::getCurrentWindow()
 {
 	HANDLE current = GetCurrentProcess();
 	Process process = { GetProcessId(current) };
@@ -139,12 +139,13 @@ std::string getWindowName(HWND hwnd)
 }
 
 
-BOOL Ripterms::init(HMODULE dll, FILE* fbuffer1, FILE* fbuffer2, FILE* fbuffer3)
+BOOL Ripterms::init(HMODULE dll)
 {
 	Ripterms::module = dll;
-	console_buffer1 = fbuffer1;
-	console_buffer2 = fbuffer2;
-	console_buffer3 = fbuffer3;
+	AllocConsole();
+	freopen_s(&console_buffer1, "CONOUT$", "w", stdout);
+	freopen_s(&console_buffer2, "CONOUT$", "w", stderr);
+	freopen_s(&console_buffer3, "CONIN$", "r", stdin);
 	Ripterms::window = getCurrentWindow();
 	std::string windowName = getWindowName(window);
 	if (windowName.find("Lunar Client 1.8.9") != std::string::npos)
@@ -229,21 +230,19 @@ BOOL Ripterms::init(HMODULE dll, FILE* fbuffer1, FILE* fbuffer2, FILE* fbuffer3)
 void Ripterms::clean()
 {
 	tmp_no_hook = true;
-	GUI::clean();
 	Ripterms::Modules::cleanAll();
 	Ripterms::Patcher::clean();
 	delete Ripterms::cache;
-	System::gc();
 	Ripterms::JavaClassV2::clean();
-	if (Ripterms::p_tienv) Ripterms::p_tienv->DisposeEnvironment();
+	System::gc();
+	if (Ripterms::p_tienv)
+		Ripterms::p_tienv->DisposeEnvironment();
 	std::thread a([]
 	{
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+		GUI::clean();
 		MH_DisableHook(MH_ALL_HOOKS);
 		MH_Uninitialize();
-		ImGui_ImplOpenGL3_Shutdown();
-		ImGui_ImplWin32_Shutdown();
-		ImGui::DestroyContext();
 		fclose(console_buffer1);
 		fclose(console_buffer2);
 		fclose(console_buffer3);
@@ -257,7 +256,6 @@ void Ripterms::clean()
 void Ripterms::partialClean()
 {
 	tmp_no_hook = true;
-	GUI::clean();
 	MH_DisableHook(MH_ALL_HOOKS);
 	MH_Uninitialize();
 	Ripterms::p_env = nullptr;

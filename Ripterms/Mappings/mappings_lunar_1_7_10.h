@@ -321,6 +321,18 @@ namespace Mappings
 				"obfuscated": "getEyeHeight",
 				"signature": "()F",
 				"static": false
+			},
+			{
+				"name": "isSprinting",
+				"obfuscated": "isSprinting",
+				"signature": "()Z",
+				"static": false
+			},
+			{
+				"name": "setSprinting",
+				"obfuscated": "setSprinting",
+				"signature": "(Z)V",
+				"static": false
 			}
 		]
 	},
@@ -389,6 +401,12 @@ namespace Mappings
 			{
 				"name": "keyBindSneak",
 				"obfuscated": "keyBindSneak",
+				"signature": "Lnet/minecraft/client/settings/KeyBinding;",
+				"static": false
+			},
+			{
+				"name": "keyBindSprint",
+				"obfuscated": "keyBindSprint",
 				"signature": "Lnet/minecraft/client/settings/KeyBinding;",
 				"static": false
 			}
