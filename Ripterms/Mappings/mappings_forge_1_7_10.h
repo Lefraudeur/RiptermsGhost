@@ -214,7 +214,14 @@ namespace Mappings
 	"net/minecraft/entity/player/EntityPlayer": {
 		"obfuscated": "net/minecraft/entity/player/EntityPlayer",
 		"fields": [],
-		"methods": []
+		"methods": [
+			{
+				"name": "attackTargetEntityWithCurrentItem",
+				"obfuscated": "func_71059_n",
+				"signature": "(Lnet/minecraft/entity/Entity;)V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/entity/EntityLivingBase": {
 		"obfuscated": "net/minecraft/entity/EntityLivingBase",

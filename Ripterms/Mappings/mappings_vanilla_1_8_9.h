@@ -208,7 +208,14 @@ namespace Mappings
 	"net/minecraft/entity/player/EntityPlayer": {
 		"obfuscated": "wn",
 		"fields": [],
-		"methods": []
+		"methods": [
+			{
+				"name": "attackTargetEntityWithCurrentItem",
+				"obfuscated": "f",
+				"signature": "(Lpk;)V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/entity/EntityLivingBase": {
 		"obfuscated": "pr",

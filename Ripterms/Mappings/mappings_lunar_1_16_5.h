@@ -203,7 +203,14 @@ namespace Mappings
 	"net/minecraft/entity/player/EntityPlayer": {
 		"obfuscated": "net/minecraft/world/entity/player/Player",
 		"fields": [],
-		"methods": []
+		"methods": [
+			{
+				"name": "attackTargetEntityWithCurrentItem",
+				"obfuscated": "attack",
+				"signature": "(Lnet/minecraft/world/entity/Entity;)V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/entity/EntityLivingBase": {
 		"obfuscated": "net/minecraft/world/entity/LivingEntity",
