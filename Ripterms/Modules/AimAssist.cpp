@@ -43,7 +43,7 @@ void Ripterms::Modules::AimAssist::run()
 		float pitchToAdd = target_required_rotation.y - cropped_thePlayer_pitch;
 		yawToAdd = Ripterms::Maths::cropAngle180(yawToAdd);
 		float target_distance = (target_position - thePlayer_position).distance();
-		if (target_distance <= max_distance && std::abs(yawToAdd) <= max_angle)
+		if (target_distance <= max_distance && target_distance > 0.5 && std::abs(yawToAdd) <= max_angle)
 		{
 			if (prev_selected_target.isValid() && prev_selected_target.isEqualTo(target))
 			{
