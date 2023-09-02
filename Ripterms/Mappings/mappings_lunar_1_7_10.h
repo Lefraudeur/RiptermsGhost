@@ -214,7 +214,14 @@ namespace Mappings
 	"net/minecraft/entity/player/EntityPlayer": {
 		"obfuscated": "net/minecraft/entity/player/EntityPlayer",
 		"fields": [],
-		"methods": []
+		"methods": [
+			{
+				"name": "attackTargetEntityWithCurrentItem",
+				"obfuscated": "attackTargetEntityWithCurrentItem",
+				"signature": "(Lnet/minecraft/entity/Entity;)V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/entity/EntityLivingBase": {
 		"obfuscated": "net/minecraft/entity/EntityLivingBase",
@@ -321,6 +328,18 @@ namespace Mappings
 				"obfuscated": "getEyeHeight",
 				"signature": "()F",
 				"static": false
+			},
+			{
+				"name": "isSprinting",
+				"obfuscated": "isSprinting",
+				"signature": "()Z",
+				"static": false
+			},
+			{
+				"name": "setSprinting",
+				"obfuscated": "setSprinting",
+				"signature": "(Z)V",
+				"static": false
 			}
 		]
 	},
@@ -389,6 +408,12 @@ namespace Mappings
 			{
 				"name": "keyBindSneak",
 				"obfuscated": "keyBindSneak",
+				"signature": "Lnet/minecraft/client/settings/KeyBinding;",
+				"static": false
+			},
+			{
+				"name": "keyBindSprint",
+				"obfuscated": "keyBindSprint",
 				"signature": "Lnet/minecraft/client/settings/KeyBinding;",
 				"static": false
 			}

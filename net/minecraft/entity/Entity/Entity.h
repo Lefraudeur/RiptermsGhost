@@ -13,11 +13,13 @@ public:
 	Ripterms::Maths::Vector2d getRotation() const;
 	Ripterms::Maths::Vector3d getMotion() const;
 	bool isOnGround() const;
+	bool isSprinting() const;
 	int getHurtResistantTime() const;
 	int getTicksExisted() const;
 	AxisAlignedBB getBoundingBox() const;
 	float getEyeHeight() const;
 
+	void setSprinting(bool state);
 	void setMotion(const Ripterms::Maths::Vector3d& motion);
 	void setRotation(const Ripterms::Maths::Vector2d& yawPitch);
 protected:

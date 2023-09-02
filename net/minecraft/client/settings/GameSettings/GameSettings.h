@@ -8,6 +8,7 @@ public:
 
 	float getGammaSetting();
 	KeyBinding getKeyBindSneak();
+	KeyBinding getKeyBindSprint();
 
 	void setGammaSetting(float value);
 protected:

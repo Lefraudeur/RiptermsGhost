@@ -10,14 +10,16 @@
 #include "../Modules/Modules.h"
 #include "font.h"
 
-namespace {
+namespace
+{
 	typedef BOOL(WINAPI* type_wglSwapBuffers)(HDC);
 	type_wglSwapBuffers original_wglSwapBuffers = nullptr;
 	WNDPROC original_WndProc = nullptr;
 	type_wglSwapBuffers target_wglSwapBuffers = nullptr;
 
+	ImGuiContext* imGuiContext = nullptr;
+
 	bool hook = true;
-	bool stop = false;
 }
 
 void update_style()
@@ -55,26 +57,52 @@ void update_style()
 	style.TabRounding = Ripterms::GUI::rounding_tab;
 }
 
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	if (msg == WM_KEYDOWN && wParam == VK_INSERT)
+	{
+		Ripterms::GUI::draw = !Ripterms::GUI::draw;
+	}
+	if (Ripterms::GUI::draw)
+	{
+		ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
+		return true;
+	}
+
+	return CallWindowProcA(original_WndProc, hWnd, msg, wParam, lParam);
+}
+
 BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 {
-	static HGLRC new_context = nullptr;
-	if (!hook) {
+	if (!hook)
+	{
 		return original_wglSwapBuffers(unnamedParam1);
 	}
 	static bool isInit = false;
 	static HGLRC old_context = nullptr;
+	static HGLRC new_context = nullptr;
 
 	static RECT originalClip;
 	static bool clipped = true;
 
-	GLint viewport[4];
-	glGetIntegerv(GL_VIEWPORT, viewport);
+	HWND current_window = WindowFromDC(unnamedParam1);
+	if (isInit && current_window != Ripterms::window)
+	{
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext(imGuiContext);
+		SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)original_WndProc);
+		Ripterms::window = current_window;
+		original_WndProc = (WNDPROC)SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)&detour_WndProc);
+		isInit = false;
+	}
 
-	if (!isInit) {
+	if (!isInit)
+	{
 		old_context = wglGetCurrentContext();
 		new_context = wglCreateContext(unnamedParam1);
 
-		ImGui::CreateContext();
+		imGuiContext = ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		io.IniFilename = nullptr;
@@ -274,21 +302,6 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 	return original_wglSwapBuffers(unnamedParam1);
 }
 
-extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-LRESULT CALLBACK detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
-	if (msg == WM_KEYDOWN && wParam == VK_INSERT)
-	{
-		Ripterms::GUI::draw = !Ripterms::GUI::draw;
-	}
-	if (Ripterms::GUI::draw)
-	{
-		ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
-		return true;
-	}
-
-	return CallWindowProcA(original_WndProc, hWnd, msg, wParam, lParam);
-}
-
 bool Ripterms::GUI::init()
 {
 	HMODULE opengl32dll = GetModuleHandleA("opengl32.dll");
@@ -314,6 +327,9 @@ void Ripterms::GUI::clean()
 {
 	draw = false;
 	hook = false;
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext(imGuiContext);
 	SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)original_WndProc);
 	return;
 }

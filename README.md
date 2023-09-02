@@ -23,7 +23,7 @@ Change mappings to add new versions
 - Full Bright
 - Velocity
 - Client Brand Changer (see asm folder) (to troll staffs lol, sent to the server on login and displayed by some anticheats)
-- Blink (keybind b) (see asm folder) this was such a pain to make
+- Blink (keybind numpad 1) (see asm folder) this was such a pain to make
 - FastPlace
 - LegitScaffold
 - Xray (only on 1.7.10 and 1.8.9)

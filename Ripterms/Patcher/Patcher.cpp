@@ -39,13 +39,15 @@ namespace
 				: "net/minecraft/client/entity/EntityPlayerSP"
 				)
 		);
+		Ripterms::JavaClassV2 EntityPlayerClass("net/minecraft/entity/player/EntityPlayer");
 
 		jclass classes[] = 
 		{
 			EntityRendererClass.getJClass(),
 			ClientBrandRetrieverClass.getJClass(),
 			NetworkManagerClass.getJClass(),
-			EntityPlayerSPClass.getJClass()
+			EntityPlayerSPClass.getJClass(),
+			EntityPlayerClass.getJClass()
 		};
 		errCheck(Ripterms::p_tienv->RetransformClasses(sizeof(classes) / sizeof(jclass), classes));
 		if (Ripterms::majorVersion != Ripterms::Version::MAJOR_1_16_5)
@@ -85,6 +87,7 @@ namespace
 				: "net/minecraft/client/entity/EntityPlayerSP"
 			)
 		);
+		Ripterms::JavaClassV2 EntityPlayerClass("net/minecraft/entity/player/EntityPlayer");
 
 		std::function<void(const std::string&, const std::string&, const std::vector<jobject>&)> patchClass = 
 		[=](const std::string& patchMethod, const std::string& methodToPatch, const std::vector<jobject>& additional)
@@ -235,6 +238,16 @@ namespace
 				EntityPlayerSPClass.getObfuscatedMethodSig("onUpdateWalkingPlayer"),
 				Ripterms::Event::Type::PRE_MOTION,
 				Ripterms::Event::Type::POST_MOTION
+			);
+		}
+		else if (redefinedClass.isEqualTo(EntityPlayerClass.getJClass(jni_env)))
+		{
+			patchMethod
+			(
+				EntityPlayerClass.getObfuscatedMethodName("attackTargetEntityWithCurrentItem"),
+				EntityPlayerClass.getObfuscatedMethodSig("attackTargetEntityWithCurrentItem"),
+				Ripterms::Event::Type::PRE_ATTACK,
+				Ripterms::Event::Type::POST_ATTACK
 			);
 		}
 	}

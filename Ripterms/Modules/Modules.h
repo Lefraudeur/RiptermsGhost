@@ -57,6 +57,13 @@ namespace Ripterms
 			int max_cps = 14;
 		};
 
+		class WTap : public IModule
+		{
+		public:
+			void onEvent(Ripterms::Event* event) override;
+			void renderGUI() override;
+		};
+
 
 		//Category MISC
 		class FullBright : public IModule
@@ -139,10 +146,17 @@ namespace Ripterms
 			int tickDelay = 0;
 		};
 
+		class Sprint : public IModule
+		{
+		public:
+			void run() override;
+			void renderGUI() override;
+		};
+
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
-			{"Combat", {new AimAssist(), new Reach(), new LeftClicker()}},
-			{"Player", {new Velocity(), new FastPlace(), new Blink(), new LegitScaffold()}},
+			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap()}},
+			{"Player", {new Velocity(), new FastPlace(), new Blink(), new LegitScaffold(), new Sprint()}},
 			{"Misc", {new FullBright(), new Xray(), new ClientBrandChanger(), new Test()}}
 		};
 
