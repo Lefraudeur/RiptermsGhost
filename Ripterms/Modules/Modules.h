@@ -35,7 +35,7 @@ namespace Ripterms
 			float max_distance = 6.0f;
 			float max_angle = 80.0f;
 			float multiplier = 1.0f;
-			float multiplierPitch = 0.6f;
+			float multiplierPitch = 0.5f;
 		};
 
 		class Reach : public IModule
