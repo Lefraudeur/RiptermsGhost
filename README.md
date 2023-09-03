@@ -27,6 +27,8 @@ Change mappings to add new versions
 - FastPlace
 - LegitScaffold
 - Xray (only on 1.7.10 and 1.8.9)
+- WTap
+- Sprint
 
 ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/39690baa-859a-4ea2-a9b0-dfbc8cbfe472)
 
