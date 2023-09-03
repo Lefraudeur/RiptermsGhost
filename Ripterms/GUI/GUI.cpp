@@ -18,6 +18,7 @@ namespace
 	type_wglSwapBuffers target_wglSwapBuffers = nullptr;
 
 	ImGuiContext* imGuiContext = nullptr;
+	HGLRC new_context = nullptr;
 
 	bool hook = true;
 }
@@ -80,7 +81,6 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 	}
 	static bool isInit = false;
 	static HGLRC old_context = nullptr;
-	static HGLRC new_context = nullptr;
 
 	static RECT originalClip;
 	static bool clipped = true;
@@ -88,18 +88,23 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 	HWND current_window = WindowFromDC(unnamedParam1);
 	if (isInit && current_window != Ripterms::window)
 	{
+		old_context = wglGetCurrentContext();
+		wglMakeCurrent(unnamedParam1, new_context);
 		ImGui_ImplOpenGL3_Shutdown();
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext(imGuiContext);
 		SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)original_WndProc);
 		Ripterms::window = current_window;
 		original_WndProc = (WNDPROC)SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)&detour_WndProc);
+		wglMakeCurrent(unnamedParam1, old_context);
 		isInit = false;
 	}
 
 	if (!isInit)
 	{
 		old_context = wglGetCurrentContext();
+		if (new_context)
+			wglDeleteContext(new_context);
 		new_context = wglCreateContext(unnamedParam1);
 
 		imGuiContext = ImGui::CreateContext();
@@ -116,9 +121,9 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 		io.Fonts->AddFontDefault(); ImGui::StyleColorsDark();
 
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-		//   io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-	//	ImGui::StyleColorsDark();
+		//ImGui::StyleColorsDark();
 		ImGui_ImplOpenGL3_Init();
 		ImGui_ImplWin32_Init(Ripterms::window);
 		isInit = true;
@@ -331,5 +336,6 @@ void Ripterms::GUI::clean()
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext(imGuiContext);
 	SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)original_WndProc);
+	wglDeleteContext(new_context);
 	return;
 }
