@@ -35,7 +35,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.1
       with:
         vs-prerelease: true
-        vs-version: '[17.7,17.8)'
+        vs-version: '17.7.0'
         msbuild-architecture: x64
 
     - name: Build
