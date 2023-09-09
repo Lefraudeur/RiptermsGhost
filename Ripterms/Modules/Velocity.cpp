@@ -16,7 +16,7 @@ void Ripterms::Modules::Velocity::run()
 
 		Maths::Vector3d target_position = target.getPosition();
 
-		if (only_facing && (target_position - thePlayer_position).distance() >= 5.0f)
+		if (only_facing && (target_position - thePlayer_position).distance() >= 10.0f)
 			continue;
 
 		Maths::Vector2d target_required_rotation = Maths::getYawPitch(thePlayer_position, target_position);
