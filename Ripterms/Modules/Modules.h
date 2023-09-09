@@ -114,7 +114,7 @@ namespace Ripterms
 			float motionY = 0.0f;
 			float motionZ = 0.0f;
 			int tickDelay = 1;
-			bool only_facing = true;
+			bool only_facing = false;
 		};
 
 		class FastPlace : public IModule
