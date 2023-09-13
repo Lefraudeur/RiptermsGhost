@@ -11,7 +11,7 @@ Or https://github.com/Lefraudeur/RiptermsGhost/actions/workflows/msbuild.yml for
 
 ### Supported versions :
 - Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1, 1.18.2
-- Forge: 1.7.10 (tested on Paladium: https://paladium-pvp.fr/)
+- Forge: 1.7.10
 - Badlion Client: 1.8.9
 
 Change mappings to add new versions
