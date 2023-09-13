@@ -6,8 +6,6 @@
 name: Compile RiptermsGhost dll
 
 on:
-  pull_request:
-    branches: [ "master", "dev" ]
   workflow_dispatch:
 
 env:
