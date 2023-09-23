@@ -6,8 +6,6 @@ Uses weird jni export function hooking for better compatibility with clients tha
 
 This cheat is open source, mainly to show you a combination of all the techniques I found to make injectable cheats for minecraft java, it is one of the only open source client that uses java asm to edit class bytecode, and that can completely unload itself.
 
-<ins>Download</ins>: https://github.com/Lefraudeur/RiptermsGhost/releases/download/v0.1-alpha/Ripterms.Ghost.dll
-Or https://github.com/Lefraudeur/RiptermsGhost/actions/workflows/msbuild.yml for early builds
 
 ### Supported versions :
 - Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1, 1.18.2
