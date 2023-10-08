@@ -184,6 +184,12 @@ namespace Mappings
 				"obfuscated": "timer",
 				"signature": "Lnet/minecraft/util/Timer;",
 				"static": false
+			},
+			{
+				"name": "playerController",
+				"obfuscated": "playerController",
+				"signature": "Lnet/minecraft/client/multiplayer/PlayerControllerMP;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -226,7 +232,14 @@ namespace Mappings
 	"net/minecraft/entity/EntityLivingBase": {
 		"obfuscated": "net/minecraft/entity/EntityLivingBase",
 		"fields": [],
-		"methods": []
+		"methods": [
+			{
+				"name": "setPositionAndUpdate",
+				"obfuscated": "setPositionAndUpdate",
+				"signature": "(DDD)V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/entity/Entity": {
 		"obfuscated": "net/minecraft/entity/Entity",
@@ -594,6 +607,18 @@ namespace Mappings
 				"name": "getBlock",
 				"obfuscated": "getBlock",
 				"signature": "(III)Lnet/minecraft/block/Block;",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/client/multiplayer/PlayerControllerMP": {
+		"obfuscated": "net/minecraft/client/multiplayer/PlayerControllerMP",
+		"fields": [],
+		"methods": [
+			{
+				"name": "attackEntity",
+				"obfuscated": "attackEntity",
+				"signature": "(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/entity/Entity;)V",
 				"static": false
 			}
 		]

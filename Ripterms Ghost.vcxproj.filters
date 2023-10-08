@@ -171,6 +171,9 @@
     <ClCompile Include="net\minecraft\client\settings\KeyBinding\KeyBinding.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="net\minecraft\client\multiplayer\PlayerControllerMP\PlayerControllerMP.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ripterms\Ripterms.h">
@@ -291,6 +294,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="net\minecraft\client\settings\KeyBinding\KeyBinding.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="net\minecraft\client\multiplayer\PlayerControllerMP\PlayerControllerMP.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

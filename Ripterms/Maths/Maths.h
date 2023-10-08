@@ -30,5 +30,6 @@ namespace Ripterms
 		Vector2d getYawPitch(Vector3d playerPos, Vector3d facingPos);
 
 		float cropAngle180(float angle);
+		float cropAngle360(float angle);
 	}
 }

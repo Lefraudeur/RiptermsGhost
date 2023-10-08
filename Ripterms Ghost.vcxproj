@@ -188,6 +188,7 @@
     <ClCompile Include="net\minecraft\client\entity\AbstractClientPlayer\AbstractClientPlayer.cpp" />
     <ClCompile Include="net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.cpp" />
     <ClCompile Include="net\minecraft\client\Minecraft\Minecraft.cpp" />
+    <ClCompile Include="net\minecraft\client\multiplayer\PlayerControllerMP\PlayerControllerMP.cpp" />
     <ClCompile Include="net\minecraft\client\multiplayer\WorldClient\WorldClient.cpp" />
     <ClCompile Include="net\minecraft\client\settings\GameSettings\GameSettings.cpp" />
     <ClCompile Include="net\minecraft\client\settings\KeyBinding\KeyBinding.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="net\minecraft\client\entity\AbstractClientPlayer\AbstractClientPlayer.h" />
     <ClInclude Include="net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.h" />
     <ClInclude Include="net\minecraft\client\Minecraft\Minecraft.h" />
+    <ClInclude Include="net\minecraft\client\multiplayer\PlayerControllerMP\PlayerControllerMP.h" />
     <ClInclude Include="net\minecraft\client\multiplayer\WorldClient\WorldClient.h" />
     <ClInclude Include="net\minecraft\client\settings\GameSettings\GameSettings.h" />
     <ClInclude Include="net\minecraft\client\settings\KeyBinding\KeyBinding.h" />

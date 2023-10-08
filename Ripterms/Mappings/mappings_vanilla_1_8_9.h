@@ -184,6 +184,12 @@ namespace Mappings
 				"obfuscated": "Y",
 				"signature": "Lavl;",
 				"static": false
+			},
+			{
+				"name": "playerController",
+				"obfuscated": "c",
+				"signature": "Lbda;",
+				"static": false
 			}
 		],
 		"methods": []
@@ -333,6 +339,12 @@ namespace Mappings
 				"name": "setSprinting",
 				"obfuscated": "d",
 				"signature": "(Z)V",
+				"static": false
+			},
+			{
+				"name": "setPositionAndUpdate",
+				"obfuscated": "a",
+				"signature": "(DDD)V",
 				"static": false
 			}
 		]
@@ -620,6 +632,18 @@ namespace Mappings
 			}
 		],
 		"methods": []
+	},
+	"net/minecraft/client/multiplayer/PlayerControllerMP": {
+		"obfuscated": "bda",
+		"fields": [],
+		"methods": [
+			{
+				"name": "attackEntity",
+				"obfuscated": "a",
+				"signature": "(Lwn;Lpk;)V",
+				"static": false
+			}
+		]
 	}
 }
 )"_json);

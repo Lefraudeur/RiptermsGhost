@@ -23,8 +23,15 @@ Ripterms::Maths::Vector2d Ripterms::Maths::getYawPitch(Vector3d playerPos, Vecto
 
 float Ripterms::Maths::cropAngle180(float angle)
 {
-	while (angle < -180.0f) angle += 360.0f;
+	while (angle <= -180.0f) angle += 360.0f;
 	while (angle > 180.0f) angle -= 360.0f;
+	return angle;
+}
+
+float Ripterms::Maths::cropAngle360(float angle)
+{
+	while (angle < 0) angle += 360.0f;
+	while (angle >= 360.0f) angle -= 360.0f;
 	return angle;
 }
 

@@ -24,6 +24,7 @@ bool Ripterms::Cache::fillCache()
 		playerEntities = theWorld.getPlayerEntities();
 		gameSettings = theMinecraft.getGameSettings();
 		timer = theMinecraft.getTimer();
+		playerController = theMinecraft.getPlayerController();
 	}
 	return true;
 }

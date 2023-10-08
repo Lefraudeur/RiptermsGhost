@@ -119,3 +119,15 @@ void Entity::setRotation(const Ripterms::Maths::Vector2d& yawPitch)
 	env->SetFloatField(instance, EntityClass.getFieldID("rotationYaw"), yawPitch.x);
 	env->SetFloatField(instance, EntityClass.getFieldID("rotationPitch"), yawPitch.y);
 }
+
+void Entity::setPositionAndUpdate(const Ripterms::Maths::Vector3d& position)
+{
+	if (!instance)
+		return;
+	env->CallVoidMethod(
+		instance, 
+		EntityClass.getMethodID("setPositionAndUpdate"), 
+		(jdouble)position.x, 
+		(jdouble)position.y, 
+		(jdouble)position.z);
+}

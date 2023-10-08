@@ -178,6 +178,12 @@ namespace Mappings
 				"obfuscated": "timer",
 				"signature": "Lnet/minecraft/client/Timer;",
 				"static": false
+			},
+			{
+				"name": "playerController",
+				"obfuscated": "gameMode",
+				"signature": "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -304,6 +310,12 @@ namespace Mappings
 				"name": "setSprinting",
 				"obfuscated": "setSprinting",
 				"signature": "(Z)V",
+				"static": false
+			},
+			{
+				"name": "setPositionAndUpdate",
+				"obfuscated": "teleportTo",
+				"signature": "(DDD)V",
 				"static": false
 			}
 		]
@@ -551,6 +563,18 @@ namespace Mappings
 			}
 		],
 		"methods": []
+	},
+	"net/minecraft/client/multiplayer/PlayerControllerMP": {
+		"obfuscated": "net/minecraft/client/multiplayer/MultiPlayerGameMode",
+		"fields": [],
+		"methods": [
+			{
+				"name": "attackEntity",
+				"obfuscated": "attack",
+				"signature": "(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;)V",
+				"static": false
+			}
+		]
 	}
 }
 )"_json);
