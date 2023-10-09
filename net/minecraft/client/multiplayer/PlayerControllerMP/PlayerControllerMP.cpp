@@ -1,6 +1,6 @@
 #include "PlayerControllerMP.h"
 
-void PlayerControllerMP::attackEntity(EntityPlayer player, Entity targetEntity)
+void PlayerControllerMP::attackEntity(const EntityPlayer& player, const Entity& targetEntity)
 {
 	if (!instance)
 		return;

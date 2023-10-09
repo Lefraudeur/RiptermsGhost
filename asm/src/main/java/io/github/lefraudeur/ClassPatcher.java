@@ -415,6 +415,7 @@ public class ClassPatcher {
                             mv.visitVarInsn(Opcodes.ILOAD, 0);
                             mv.visitInsn(Opcodes.LCONST_0);
                             mv.visitMethodInsn(Opcodes.INVOKESTATIC, className, "nglClear", "(IJ)V", false);
+                            mv.visitInsn(Opcodes.RETURN);
                             mv.visitLabel(noarg);
                             mv.visitCode();
                         }

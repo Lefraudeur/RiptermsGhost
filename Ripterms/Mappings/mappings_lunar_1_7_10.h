@@ -134,6 +134,11 @@ namespace Mappings
 		],
 		"methods": []
 	},
+	"org/lwjgl/opengl/GL11": {
+		"obfuscated": "org/lwjgl/opengl/GL11",
+		"fields": [],
+		"methods": []
+	},
 	"net/minecraft/client/Minecraft": {
 		"obfuscated": "net/minecraft/client/Minecraft",
 		"fields": [

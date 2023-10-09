@@ -35,7 +35,7 @@ Insert to open the gui / end key to self destruct
 ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/96388338-971e-48e5-9703-5c1ed30fcdce)
 
 
-To test it, just build visual studio project, and inject it using any injector.
+To test it, just build visual studio project ON RELEASE PROFILE, and inject it using any injector.
 
 You have to inject while in game (otherwise some classes are not loaded)
 

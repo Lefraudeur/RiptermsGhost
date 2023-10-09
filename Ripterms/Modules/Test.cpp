@@ -21,7 +21,7 @@ void Ripterms::Modules::Test::renderGUI()
 		const float PI = 3.1415926535;
 		float yaw = rotation.x * (PI / 180.0f);
 		float pitch = rotation.y * (PI / 180.0f);
-		const float move_forward = 1.0f;
+		const float move_forward = 3.0f;
 		Ripterms::Maths::Vector3d motion{};
 
 		float hypxz = std::cos(pitch) * move_forward;

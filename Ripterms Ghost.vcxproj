@@ -119,7 +119,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Lib;$(SolutionDir)Lib\MinHook;$(SolutionDir)Lib\JNI;$(SolutionDir)Lib\miniz;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>jawt.lib;jvm.lib;opengl32.lib;libMinHook.x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -161,7 +161,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Lib;$(SolutionDir)Lib\MinHook;$(SolutionDir)Lib\JNI;$(SolutionDir)Lib\miniz;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>jawt.lib;jvm.lib;opengl32.lib;libMinHook.x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
@@ -190,11 +190,15 @@
     <ClCompile Include="net\minecraft\client\Minecraft\Minecraft.cpp" />
     <ClCompile Include="net\minecraft\client\multiplayer\PlayerControllerMP\PlayerControllerMP.cpp" />
     <ClCompile Include="net\minecraft\client\multiplayer\WorldClient\WorldClient.cpp" />
+    <ClCompile Include="net\minecraft\client\network\NetHandlerPlayClient\NetHandlerPlayClient.cpp" />
     <ClCompile Include="net\minecraft\client\settings\GameSettings\GameSettings.cpp" />
     <ClCompile Include="net\minecraft\client\settings\KeyBinding\KeyBinding.cpp" />
     <ClCompile Include="net\minecraft\entity\EntityLivingBase\EntityLivingBase.cpp" />
     <ClCompile Include="net\minecraft\entity\Entity\Entity.cpp" />
     <ClCompile Include="net\minecraft\entity\player\EntityPlayer\EntityPlayer.cpp" />
+    <ClCompile Include="net\minecraft\network\Packet\Packet.cpp" />
+    <ClCompile Include="net\minecraft\network\play\client\C03PacketPlayer\C03PacketPlayer.cpp" />
+    <ClCompile Include="net\minecraft\network\play\client\C03PacketPlayer\C04PacketPlayerPosition\C04PacketPlayerPosition.cpp" />
     <ClCompile Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.cpp" />
     <ClCompile Include="net\minecraft\util\BlockPos\BlockPos.cpp" />
     <ClCompile Include="net\minecraft\util\MovingObjectPosition\MovingObjectPosition.cpp" />
@@ -236,11 +240,15 @@
     <ClInclude Include="net\minecraft\client\Minecraft\Minecraft.h" />
     <ClInclude Include="net\minecraft\client\multiplayer\PlayerControllerMP\PlayerControllerMP.h" />
     <ClInclude Include="net\minecraft\client\multiplayer\WorldClient\WorldClient.h" />
+    <ClInclude Include="net\minecraft\client\network\NetHandlerPlayClient\NetHandlerPlayClient.h" />
     <ClInclude Include="net\minecraft\client\settings\GameSettings\GameSettings.h" />
     <ClInclude Include="net\minecraft\client\settings\KeyBinding\KeyBinding.h" />
     <ClInclude Include="net\minecraft\entity\EntityLivingBase\EntityLivingBase.h" />
     <ClInclude Include="net\minecraft\entity\Entity\Entity.h" />
     <ClInclude Include="net\minecraft\entity\player\EntityPlayer\EntityPlayer.h" />
+    <ClInclude Include="net\minecraft\network\Packet\Packet.h" />
+    <ClInclude Include="net\minecraft\network\play\client\C03PacketPlayer\C03PacketPlayer.h" />
+    <ClInclude Include="net\minecraft\network\play\client\C03PacketPlayer\C04PacketPlayerPosition\C04PacketPlayerPosition.h" />
     <ClInclude Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.h" />
     <ClInclude Include="net\minecraft\util\BlockPos\BlockPos.h" />
     <ClInclude Include="net\minecraft\util\MovingObjectPosition\MovingObjectPosition.h" />

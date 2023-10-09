@@ -174,6 +174,18 @@
     <ClCompile Include="net\minecraft\client\multiplayer\PlayerControllerMP\PlayerControllerMP.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="net\minecraft\network\Packet\Packet.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="net\minecraft\client\network\NetHandlerPlayClient\NetHandlerPlayClient.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="net\minecraft\network\play\client\C03PacketPlayer\C03PacketPlayer.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="net\minecraft\network\play\client\C03PacketPlayer\C04PacketPlayerPosition\C04PacketPlayerPosition.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ripterms\Ripterms.h">
@@ -297,6 +309,18 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="net\minecraft\client\multiplayer\PlayerControllerMP\PlayerControllerMP.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="net\minecraft\network\Packet\Packet.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="net\minecraft\client\network\NetHandlerPlayClient\NetHandlerPlayClient.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="net\minecraft\network\play\client\C03PacketPlayer\C03PacketPlayer.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="net\minecraft\network\play\client\C03PacketPlayer\C04PacketPlayerPosition\C04PacketPlayerPosition.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

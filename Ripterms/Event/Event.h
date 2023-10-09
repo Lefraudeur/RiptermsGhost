@@ -29,6 +29,5 @@ namespace Ripterms
 
 		JNIEnv* env = nullptr;
 		bool isCanceled = false;
-		Map EMPTY_MAP{};
 	};
 }

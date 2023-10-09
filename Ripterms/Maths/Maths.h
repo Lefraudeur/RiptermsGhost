@@ -22,7 +22,7 @@ namespace Ripterms
 		public:
 			Vector2d();
 			Vector2d(float x, float y);
-			float x = 0.0f, y = 0.0f;
+			float x = 0.0f, y = 0.0f; //in ripterms, little bit weird but x is yaw and y is pitch
 			Vector2d operator-(const Vector2d& other_vector);
 			float distance();
 		};
