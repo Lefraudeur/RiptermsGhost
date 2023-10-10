@@ -189,13 +189,26 @@ namespace Mappings
 				"obfuscated": "timer",
 				"signature": "Lnet/minecraft/util/Timer;",
 				"static": false
+			},
+			{
+				"name": "playerController",
+				"obfuscated": "playerController",
+				"signature": "Lnet/minecraft/client/multiplayer/PlayerControllerMP;",
+				"static": false
 			}
 		],
 		"methods": []
 	},
 	"net/minecraft/client/entity/EntityPlayerSP": {
 		"obfuscated": "net/minecraft/client/entity/EntityPlayerSP",
-		"fields": [],
+		"fields": [
+			{
+				"name": "sendQueue",
+				"obfuscated": "sendQueue",
+				"signature": "Lnet/minecraft/client/network/NetHandlerPlayClient;",
+				"static": false
+			}
+		],
 		"methods": [
 			{
 				"name": "onUpdateWalkingPlayer",
@@ -338,6 +351,12 @@ namespace Mappings
 				"name": "setSprinting",
 				"obfuscated": "setSprinting",
 				"signature": "(Z)V",
+				"static": false
+			},
+			{
+				"name": "setPositionAndUpdate",
+				"obfuscated": "setPositionAndUpdate",
+				"signature": "(DDD)V",
 				"static": false
 			}
 		]
@@ -625,6 +644,96 @@ namespace Mappings
 			}
 		],
 		"methods": []
+	},
+	"net/minecraft/client/multiplayer/PlayerControllerMP": {
+		"obfuscated": "net/minecraft/client/multiplayer/PlayerControllerMP",
+		"fields": [],
+		"methods": [
+			{
+				"name": "attackEntity",
+				"obfuscated": "attackEntity",
+				"signature": "(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/entity/Entity;)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/client/network/NetHandlerPlayClient": {
+		"obfuscated": "net/minecraft/client/network/NetHandlerPlayClient",
+		"fields": [],
+		"methods": [
+			{
+				"name": "addToSendQueue",
+				"obfuscated": "addToSendQueue",
+				"signature": "(Lnet/minecraft/network/Packet;)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/network/play/client/C03PacketPlayer": {
+		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer",
+		"fields": [
+			{
+				"name": "x",
+				"obfuscated": "x",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "y",
+				"obfuscated": "y",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "z",
+				"obfuscated": "z",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "yaw",
+				"obfuscated": "yaw",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "pitch",
+				"obfuscated": "pitch",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "onGround",
+				"obfuscated": "onGround",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "moving",
+				"obfuscated": "moving",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "rotating",
+				"obfuscated": "rotating",
+				"signature": "Z",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition": {
+		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(DDDZ)V",
+				"static": false
+			}
+		]
 	}
 }
 )"_json);

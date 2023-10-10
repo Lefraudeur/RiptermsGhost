@@ -11,3 +11,10 @@ void KeyBinding::setPressTime(int pressTime)
 	if (!instance) return;
 	env->SetIntField(instance, KeyBindingClass.getFieldID("pressTime"), pressTime);
 }
+
+bool KeyBinding::isPressed()
+{
+	if (!instance) 
+		return false;
+	return env->GetBooleanField(instance, KeyBindingClass.getFieldID("pressed")) == JNI_TRUE;
+}

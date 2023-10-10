@@ -7,8 +7,6 @@ Ripterms::Event::Event(JNIEnv* env, int mask)
 	{
 		this->type = (Type)mask;
 		this->env = env;
-		Ripterms::JavaClassV2 ThreadContext("org/apache/logging/log4j/ThreadContext");
-		this->EMPTY_MAP.setInstance(env->GetStaticObjectField(ThreadContext.getJClass(env), ThreadContext.getFieldID("EMPTY_MAP")), env);
 	}
 	else this->type = UNKNOWN;
 }
@@ -32,5 +30,4 @@ bool Ripterms::Event::isEvent()
 void Ripterms::Event::cancel()
 {
 	isCanceled = true;
-	this->EMPTY_MAP.put(String("cancel" + std::to_string((int)type), env), String("1", env));
 }

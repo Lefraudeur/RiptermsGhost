@@ -5,6 +5,7 @@
 #include "../settings/GameSettings/GameSettings.h"
 #include "../../util/MovingObjectPosition/MovingObjectPosition.h"
 #include "../../util/Timer/Timer.h"
+#include "../multiplayer/PlayerControllerMP/PlayerControllerMP.h"
 
 class Minecraft : public Object {
 public:
@@ -12,6 +13,7 @@ public:
 
 	static Minecraft getTheMinecraft(JNIEnv* env = Ripterms::p_env);
 	EntityPlayerSP getThePlayer();
+	PlayerControllerMP getPlayerController();
 	WorldClient getTheWorld();
 	GameSettings getGameSettings();
 	MovingObjectPosition getObjectMouseOver();

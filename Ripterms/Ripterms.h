@@ -26,7 +26,8 @@ namespace Ripterms
 	inline JNIEnv* p_env = nullptr;
 	inline jvmtiEnv* p_tienv = nullptr;
 
-	class CTimer {
+	class CTimer
+	{
 	public:
 		CTimer(std::chrono::milliseconds everyXms);
 		bool isElapsed();

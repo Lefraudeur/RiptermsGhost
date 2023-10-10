@@ -1,5 +1,4 @@
 #include "Ripterms.h"
-#include <psapi.h>
 #include <iostream>
 #include "Cache/Cache.h"
 #include "GUI/GUI.h"
@@ -8,14 +7,11 @@
 #include "Patcher/Patcher.h"
 #include "../java/lang/System/System.h"
 #include <MinHook.h>
-#include <ImGui/imgui.h>
-#include <ImGui/imgui_impl_opengl3.h>
-#include <ImGui/imgui_impl_win32.h>
 #include "Event/Event.h"
 
 void mainLoop()
 {
-	static Ripterms::CTimer timer = std::chrono::milliseconds(1);
+	static Ripterms::CTimer timer = std::chrono::milliseconds(5);
 	if (!timer.isElapsed() || !Ripterms::cache->fillCache()) return;
 	Ripterms::Modules::runAll();
 }

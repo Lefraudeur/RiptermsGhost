@@ -52,9 +52,9 @@ void Ripterms::Modules::Velocity::renderGUI()
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 		ImGui::BeginGroup();
 		{
-			ImGui::SliderFloat("Motion X", &motionX, 0.0f, 1.0f, "%.1f");
-			ImGui::SliderFloat("Motion Y", &motionY, 0.0f, 1.0f, "%.1f");
-			ImGui::SliderFloat("Motion Z", &motionZ, 0.0f, 1.0f, "%.1f");
+			ImGui::SliderFloat("Motion X", &motionX, -2.0f, 2.0f, "%.1f");
+			ImGui::SliderFloat("Motion Y", &motionY, -2.0f, 2.0f, "%.1f");
+			ImGui::SliderFloat("Motion Z", &motionZ, -2.0f, 2.0f, "%.1f");
 			ImGui::SliderInt("Tick Delay", &tickDelay, 0, 20);
 			ImGui::Checkbox("Only Facing Enemy", &only_facing);
 		}

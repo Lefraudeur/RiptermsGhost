@@ -134,6 +134,11 @@ namespace Mappings
 		],
 		"methods": []
 	},
+	"org/lwjgl/opengl/GL11": {
+		"obfuscated": "org/lwjgl/opengl/GL11",
+		"fields": [],
+		"methods": []
+	},
 	"net/minecraft/client/Minecraft": {
 		"obfuscated": "net/minecraft/client/Minecraft",
 		"fields": [
@@ -184,6 +189,12 @@ namespace Mappings
 				"obfuscated": "field_71428_T",
 				"signature": "Lnet/minecraft/util/Timer;",
 				"static": false
+			},
+			{
+				"name": "playerController",
+				"obfuscated": "field_71442_b",
+				"signature": "Lnet/minecraft/client/multiplayer/PlayerControllerMP;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -191,7 +202,14 @@ namespace Mappings
 	},
 	"net/minecraft/client/entity/EntityClientPlayerMP": {
 		"obfuscated": "net/minecraft/client/entity/EntityClientPlayerMP",
-		"fields": [],
+		"fields": [
+			{
+				"name": "sendQueue",
+				"obfuscated": "field_71174_a",
+				"signature": "Lnet/minecraft/client/network/NetHandlerPlayClient;",
+				"static": false
+			}
+		],
 		"methods": [
 			{
 				"name": "onUpdateWalkingPlayer",
@@ -226,7 +244,14 @@ namespace Mappings
 	"net/minecraft/entity/EntityLivingBase": {
 		"obfuscated": "net/minecraft/entity/EntityLivingBase",
 		"fields": [],
-		"methods": []
+		"methods": [
+			{
+				"name": "setPositionAndUpdate",
+				"obfuscated": "func_70634_a",
+				"signature": "(DDD)V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/entity/Entity": {
 		"obfuscated": "net/minecraft/entity/Entity",
@@ -606,6 +631,96 @@ namespace Mappings
 				"name": "getBlock",
 				"obfuscated": "func_147439_a",
 				"signature": "(III)Lnet/minecraft/block/Block;",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/client/multiplayer/PlayerControllerMP": {
+		"obfuscated": "net/minecraft/client/multiplayer/PlayerControllerMP",
+		"fields": [],
+		"methods": [
+			{
+				"name": "attackEntity",
+				"obfuscated": "func_78764_a",
+				"signature": "(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/entity/Entity;)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/client/network/NetHandlerPlayClient": {
+		"obfuscated": "net/minecraft/client/network/NetHandlerPlayClient",
+		"fields": [],
+		"methods": [
+			{
+				"name": "addToSendQueue",
+				"obfuscated": "func_147297_a",
+				"signature": "(Lnet/minecraft/network/Packet;)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/network/play/client/C03PacketPlayer": {
+		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer",
+		"fields": [
+			{
+				"name": "x",
+				"obfuscated": "field_149479_a",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "y",
+				"obfuscated": "field_149477_b",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "z",
+				"obfuscated": "field_149478_c",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "yaw",
+				"obfuscated": "field_149476_e",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "pitch",
+				"obfuscated": "field_149473_f",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "onGround",
+				"obfuscated": "field_149474_g",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "moving",
+				"obfuscated": "field_149480_h",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "rotating",
+				"obfuscated": "field_149481_i",
+				"signature": "Z",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition": {
+		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(DDDDZ)V",
 				"static": false
 			}
 		]

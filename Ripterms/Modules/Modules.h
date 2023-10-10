@@ -142,7 +142,6 @@ namespace Ripterms
 			void onEvent(Ripterms::Event* event) override;
 			void renderGUI() override;
 		private:
-			int keyBind = VK_NUMPAD1;
 			int tickDelay = 0;
 		};
 

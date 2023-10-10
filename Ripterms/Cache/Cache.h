@@ -13,6 +13,7 @@ namespace Ripterms
 		~Cache();
 		Minecraft theMinecraft{};
 		EntityPlayerSP thePlayer{};
+		PlayerControllerMP playerController{};
 		WorldClient theWorld{};
 		List playerEntities{};
 		GameSettings gameSettings{};

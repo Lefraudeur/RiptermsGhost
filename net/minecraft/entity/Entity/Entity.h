@@ -22,6 +22,7 @@ public:
 	void setSprinting(bool state);
 	void setMotion(const Ripterms::Maths::Vector3d& motion);
 	void setRotation(const Ripterms::Maths::Vector2d& yawPitch);
+	virtual void setPositionAndUpdate(const Ripterms::Maths::Vector3d& position);
 protected:
 	inline static Ripterms::JavaClassV2 EntityClass{ "net/minecraft/entity/Entity" };
 };

@@ -11,6 +11,11 @@ EntityPlayerSP Minecraft::getThePlayer()
 	return EntityPlayerSP(env->GetObjectField(this->instance, MinecraftClass.getFieldID("thePlayer")), env);
 }
 
+PlayerControllerMP Minecraft::getPlayerController()
+{
+	return PlayerControllerMP(env->GetObjectField(instance, MinecraftClass.getFieldID("playerController")), env);
+}
+
 WorldClient Minecraft::getTheWorld()
 {
 	if (!this->instance) return WorldClient(nullptr, env);
