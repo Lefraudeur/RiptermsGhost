@@ -1,5 +1,6 @@
 #include "Modules.h"
 #include "../../java/lang/ClassLoader/ClassLoader.h"
+#include "../../net/minecraft/network/play/client/C03PacketPlayer/C04PacketPlayerPosition/C04PacketPlayerPosition.h"
 
 void Ripterms::Modules::Test::renderGUI()
 {
@@ -21,13 +22,15 @@ void Ripterms::Modules::Test::renderGUI()
 		const float PI = 3.1415926535;
 		float yaw = rotation.x * (PI / 180.0f);
 		float pitch = rotation.y * (PI / 180.0f);
-		const float move_forward = 3.0f;
+		const float move_forward = 2.0f;
 		Ripterms::Maths::Vector3d motion{};
 
 		float hypxz = std::cos(pitch) * move_forward;
 		motion.z = std::cos(yaw) * hypxz;
 		motion.x = -std::sin(yaw) * hypxz;
 		motion.y = -std::sin(pitch) * move_forward;
-		cache->thePlayer.setMotion(motion);
+		
+		position = position + motion;
+		cache->thePlayer.getSendQueue().addToSendQueue(C04PacketPlayerPosition::newObject(position, true));
 	}
 }

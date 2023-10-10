@@ -1,9 +1,9 @@
 #pragma once
-#include "../../../../../../java/lang/Object/Object.h"
-class C03PacketPlayer : public Object
+#include "../../../Packet/Packet.h"
+class C03PacketPlayer : public Packet
 {
 public:
-	using Object::Object;
+	using Packet::Packet;
 
 	Ripterms::Maths::Vector3d getXYZ();
 	void setXYZ(const Ripterms::Maths::Vector3d& vector);
