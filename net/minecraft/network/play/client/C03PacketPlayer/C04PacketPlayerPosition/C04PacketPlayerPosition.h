@@ -1,9 +1,9 @@
 #pragma once
-#include "../../../../../../../java/lang/Object/Object.h"
-class C04PacketPlayerPosition : public Object
+#include "../C03PacketPlayer.h"
+class C04PacketPlayerPosition : public C03PacketPlayer
 {
 public:
-	using Object::Object;
+	using C03PacketPlayer::C03PacketPlayer;
 	static C04PacketPlayerPosition newObject(const Ripterms::Maths::Vector3d& position, bool isOnGround, JNIEnv* env = Ripterms::p_env);
 
 	//on 1.7.10, packet is different, it contains a stance value, which is usually set to posY
