@@ -202,7 +202,14 @@ namespace Mappings
 	},
 	"net/minecraft/client/entity/EntityClientPlayerMP": {
 		"obfuscated": "net/minecraft/client/entity/EntityClientPlayerMP",
-		"fields": [],
+		"fields": [
+			{
+				"name": "sendQueue",
+				"obfuscated": "sendQueue",
+				"signature": "Lnet/minecraft/client/network/NetHandlerPlayClient;",
+				"static": false
+			}
+		],
 		"methods": [
 			{
 				"name": "onUpdateWalkingPlayer",
@@ -624,6 +631,84 @@ namespace Mappings
 				"name": "attackEntity",
 				"obfuscated": "attackEntity",
 				"signature": "(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/entity/Entity;)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/client/network/NetHandlerPlayClient": {
+		"obfuscated": "net/minecraft/client/network/NetHandlerPlayClient",
+		"fields": [],
+		"methods": [
+			{
+				"name": "addToSendQueue",
+				"obfuscated": "addToSendQueue",
+				"signature": "(Lnet/minecraft/network/Packet;)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/network/play/client/C03PacketPlayer": {
+		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer",
+		"fields": [
+			{
+				"name": "x",
+				"obfuscated": "x",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "y",
+				"obfuscated": "y",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "z",
+				"obfuscated": "z",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "yaw",
+				"obfuscated": "yaw",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "pitch",
+				"obfuscated": "pitch",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "onGround",
+				"obfuscated": "field_149474_g",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "moving",
+				"obfuscated": "field_149480_h",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "rotating",
+				"obfuscated": "rotating",
+				"signature": "Z",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition": {
+		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer_C04PacketPlayerPosition",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(DDDDZ)V",
 				"static": false
 			}
 		]

@@ -201,7 +201,14 @@ namespace Mappings
 	},
 	"net/minecraft/client/entity/EntityPlayerSP": {
 		"obfuscated": "bew",
-		"fields": [],
+		"fields": [
+			{
+				"name": "sendQueue",
+				"obfuscated": "a",
+				"signature": "Lbcy;",
+				"static": false
+			}
+		],
 		"methods": [
 			{
 				"name": "onUpdateWalkingPlayer",
@@ -646,6 +653,84 @@ namespace Mappings
 				"name": "attackEntity",
 				"obfuscated": "a",
 				"signature": "(Lwn;Lpk;)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/client/network/NetHandlerPlayClient": {
+		"obfuscated": "bcy",
+		"fields": [],
+		"methods": [
+			{
+				"name": "addToSendQueue",
+				"obfuscated": "a",
+				"signature": "(Lff;)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/network/play/client/C03PacketPlayer": {
+		"obfuscated": "ip",
+		"fields": [
+			{
+				"name": "x",
+				"obfuscated": "a",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "y",
+				"obfuscated": "b",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "z",
+				"obfuscated": "c",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "yaw",
+				"obfuscated": "d",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "pitch",
+				"obfuscated": "e",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "onGround",
+				"obfuscated": "f",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "moving",
+				"obfuscated": "g",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "rotating",
+				"obfuscated": "h",
+				"signature": "Z",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition": {
+		"obfuscated": "ip$a",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(DDDZ)V",
 				"static": false
 			}
 		]

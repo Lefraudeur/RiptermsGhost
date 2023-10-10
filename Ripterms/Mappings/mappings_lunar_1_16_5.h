@@ -191,7 +191,14 @@ namespace Mappings
 	},
 	"net/minecraft/client/entity/EntityPlayerSP": {
 		"obfuscated": "net/minecraft/client/player/LocalPlayer",
-		"fields": [],
+		"fields": [
+			{
+				"name": "sendQueue",
+				"obfuscated": "connection",
+				"signature": "Lnet/minecraft/client/multiplayer/ClientPacketListener;",
+				"static": false
+			}
+		],
 		"methods": [
 			{
 				"name": "onUpdateWalkingPlayer",
@@ -572,6 +579,84 @@ namespace Mappings
 				"name": "attackEntity",
 				"obfuscated": "attack",
 				"signature": "(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/client/network/NetHandlerPlayClient": {
+		"obfuscated": "net/minecraft/client/multiplayer/ClientPacketListener",
+		"fields": [],
+		"methods": [
+			{
+				"name": "addToSendQueue",
+				"obfuscated": "send",
+				"signature": "(Lnet/minecraft/network/protocol/Packet;)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/network/play/client/C03PacketPlayer": {
+		"obfuscated": "net/minecraft/network/protocol/game/ServerboundMovePlayerPacket",
+		"fields": [
+			{
+				"name": "x",
+				"obfuscated": "x",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "y",
+				"obfuscated": "y",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "z",
+				"obfuscated": "z",
+				"signature": "D",
+				"static": false
+			},
+			{
+				"name": "yaw",
+				"obfuscated": "xRot",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "pitch",
+				"obfuscated": "yRot",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "onGround",
+				"obfuscated": "onGround",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "moving",
+				"obfuscated": "hasPos",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "rotating",
+				"obfuscated": "hasRot",
+				"signature": "Z",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition": {
+		"obfuscated": "net/minecraft/network/protocol/game/ServerboundMovePlayerPacket$Pos",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(DDDZ)V",
 				"static": false
 			}
 		]
