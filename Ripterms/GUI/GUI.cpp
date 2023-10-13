@@ -1,14 +1,13 @@
 #include "GUI.h"
 #include <Windows.h>
 #include <iostream>
-#include "MinHook.h"
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_impl_opengl3.h>
 #include <ImGui/imgui_impl_win32.h>
 #include <gl/GL.h>
-#include "../Cache/Cache.h"
 #include "../Modules/Modules.h"
 #include "font.h"
+#include "../Hook/Hook.h"
 
 namespace
 {
@@ -17,13 +16,15 @@ namespace
 	WNDPROC original_WndProc = nullptr;
 	type_wglSwapBuffers target_wglSwapBuffers = nullptr;
 
+	HDC device = nullptr;
 	ImGuiContext* imGuiContext = nullptr;
 	HGLRC new_context = nullptr;
+	HGLRC old_context = nullptr;
 
-	bool hook = true;
+	Ripterms::Hook* guiHook = nullptr;
 }
 
-void update_style()
+static void update_style()
 {
 	/* colors  */
 
@@ -59,7 +60,7 @@ void update_style()
 }
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-LRESULT CALLBACK detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+static LRESULT CALLBACK detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (msg == WM_KEYDOWN && wParam == VK_INSERT)
 	{
 		Ripterms::GUI::draw = !Ripterms::GUI::draw;
@@ -73,14 +74,9 @@ LRESULT CALLBACK detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
 	return CallWindowProcA(original_WndProc, hWnd, msg, wParam, lParam);
 }
 
-BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
+static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 {
-	if (!hook)
-	{
-		return original_wglSwapBuffers(unnamedParam1);
-	}
 	static bool isInit = false;
-	static HGLRC old_context = nullptr;
 
 	static RECT originalClip;
 	static bool clipped = true;
@@ -102,6 +98,7 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 
 	if (!isInit)
 	{
+		device = unnamedParam1;
 		old_context = wglGetCurrentContext();
 		if (new_context)
 			wglDeleteContext(new_context);
@@ -158,26 +155,6 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 			ImVec2 center_pos = ImVec2(window_size.x * .5f, window_size.y * .5f);
 
 			ImGui::BeginChild("##header", (ImVec2(583, 40)));
-			
-			/* text animation */
-
-			if (Ripterms::GUI::tick || Ripterms::GUI::alpha >= 255)
-			{
-				Ripterms::GUI::tick = true;
-				if (!(Ripterms::GUI::alpha <= 0))
-					Ripterms::GUI::alpha -= Ripterms::GUI::speed;
-				else if (Ripterms::GUI::alpha <= 0)
-					Ripterms::GUI::tick ^= 1;
-			}
-
-			else if (!Ripterms::GUI::tick || Ripterms::GUI::alpha != 255)
-			{
-				Ripterms::GUI::tick = false;
-				if (!(Ripterms::GUI::alpha >= 255))
-					Ripterms::GUI::alpha += Ripterms::GUI::speed;
-				else if (Ripterms::GUI::alpha >= 255)
-					Ripterms::GUI::tick ^= 1;
-			}
 
 			if(Ripterms::GUI::ripterms_title)
 			{
@@ -187,8 +164,8 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 				(
 					ImColor
 					(
-						111,	0, 15,
-						(int)Ripterms::GUI::alpha
+						150,	0, 20,
+						255
 					),
 					"r i p t e r m s    g h o s t"
 				);
@@ -309,21 +286,11 @@ BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 
 bool Ripterms::GUI::init()
 {
-	HMODULE opengl32dll = GetModuleHandleA("opengl32.dll");
-	if (!opengl32dll) return false;
-	target_wglSwapBuffers = reinterpret_cast<type_wglSwapBuffers>(GetProcAddress(opengl32dll, "wglSwapBuffers"));
-	MH_STATUS status = MH_CreateHook(target_wglSwapBuffers, &detour_wglSwapBuffers, reinterpret_cast<LPVOID*>(&original_wglSwapBuffers));
-	if (status != MH_OK)
-	{
-		std::cerr << MH_StatusToString(status) << std::endl;
+	Ripterms::Module opengl("opengl32.dll");
+	if (!opengl)
 		return false;
-	}
-	status = MH_EnableHook(target_wglSwapBuffers);
-	if (status != MH_OK)
-	{
-		std::cerr << MH_StatusToString(status) << std::endl;
-		return false;
-	}
+	target_wglSwapBuffers = (type_wglSwapBuffers)opengl.getProcAddress("wglSwapBuffers");
+	guiHook = new Ripterms::Hook(5, target_wglSwapBuffers, detour_wglSwapBuffers, (void**)&original_wglSwapBuffers, Ripterms::Hook::RELATIVE_5B_JMP);
 	original_WndProc = (WNDPROC)SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)&detour_WndProc);
 	return true;
 }
@@ -331,11 +298,13 @@ bool Ripterms::GUI::init()
 void Ripterms::GUI::clean()
 {
 	draw = false;
-	hook = false;
+	wglMakeCurrent(device, new_context);
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext(imGuiContext);
 	SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)original_WndProc);
+	wglMakeCurrent(device, old_context);
 	wglDeleteContext(new_context);
+	delete guiHook;
 	return;
 }

@@ -22,7 +22,7 @@ void Ripterms::Modules::Test::renderGUI()
 		const float PI = 3.1415926535;
 		float yaw = rotation.x * (PI / 180.0f);
 		float pitch = rotation.y * (PI / 180.0f);
-		const float move_forward = 2.0f;
+		const float move_forward = 1.0f;
 		Ripterms::Maths::Vector3d motion{};
 
 		float hypxz = std::cos(pitch) * move_forward;
@@ -31,6 +31,6 @@ void Ripterms::Modules::Test::renderGUI()
 		motion.y = -std::sin(pitch) * move_forward;
 		
 		position = position + motion;
-		cache->thePlayer.getSendQueue().addToSendQueue(C04PacketPlayerPosition::newObject(position, true));
+		cache->thePlayer.getSendQueue().addToSendQueue(C04PacketPlayerPosition::newObject1_7_10(position, position.y, false));
 	}
 }

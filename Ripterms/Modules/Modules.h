@@ -65,27 +65,7 @@ namespace Ripterms
 		};
 
 
-		//Category MISC
-		class FullBright : public IModule
-		{
-		public:
-			void run() override;
-			void renderGUI() override;
-			void disable() override;
-		private:
-			float old_gamma = -1.0f;
-		};
-
-		class Xray : public IModule
-		{
-		public:
-			void run() override;
-			void renderGUI() override;
-			void disable() override;
-		private:
-			int keyBind = VK_NUMPAD2;
-		};
-
+		//Category Other
 		class ClientBrandChanger : public IModule
 		{
 		public:
@@ -152,11 +132,34 @@ namespace Ripterms
 			void renderGUI() override;
 		};
 
+		// Category Render
+		class FullBright : public IModule
+		{
+		public:
+			void run() override;
+			void renderGUI() override;
+			void disable() override;
+		private:
+			float old_gamma = -1.0f;
+		};
+
+		class Xray : public IModule
+		{
+		public:
+			void run() override;
+			void renderGUI() override;
+			void disable() override;
+		private:
+			int keyBind = VK_NUMPAD2;
+		};
+
+
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
 			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap()}},
 			{"Player", {new Velocity(), new FastPlace(), new Blink(), new LegitScaffold(), new Sprint()}},
-			{"Misc", {new FullBright(), new Xray(), new ClientBrandChanger(), new Test()}}
+			{"Render", {new Xray(), new FullBright()}},
+			{"Whatever", {new ClientBrandChanger(), new Test()}}
 		};
 
 		void runAll();

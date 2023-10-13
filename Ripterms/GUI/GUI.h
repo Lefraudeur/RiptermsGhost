@@ -10,9 +10,6 @@ namespace Ripterms
 		bool init();
 		void clean();
 
-		inline float alpha = 255;
-		inline bool tick = false;
-		inline float speed = .25f;
 		inline ImVec2 category_button_size = ImVec2(100, 30);
 
 		/* other style*/

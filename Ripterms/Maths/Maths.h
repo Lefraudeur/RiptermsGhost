@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <string>
 
 namespace Ripterms
 {
@@ -31,5 +32,28 @@ namespace Ripterms
 
 		float cropAngle180(float angle);
 		float cropAngle360(float angle);
+
+		class Matrix
+		{
+		public:
+			Matrix(int line_number, int column_number, float fill_number = 0.0f);
+			Matrix(const Matrix& other_matrix);
+			Matrix(std::initializer_list<std::initializer_list<float>> init);
+			~Matrix();
+
+			float* operator [](int index);
+			operator bool() const;
+			Matrix operator *(const Matrix& other_matrix);
+			Matrix operator +(const Matrix& other_matrix);
+
+			bool is_valid() const;
+			std::string to_string() const;
+		private:
+			const int line_number;
+			const int column_number;
+			float** data;
+		};
+
+		Vector2d worldToScreen(const Vector3d& world_pos);
 	}
 }
