@@ -1,8 +1,7 @@
 #pragma once
 namespace Mappings
 {
-	using namespace nlohmann::literals;
-	static const nlohmann::json* const mappings_lunar_1_8_9 = new const nlohmann::json(R"(
+	constexpr inline char mappings_lunar_1_8_9[] = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -734,7 +733,57 @@ namespace Mappings
 				"static": false
 			}
 		]
+	},
+)"
+R"(
+	"net/minecraft/client/renderer/ActiveRenderInfo": {
+		"obfuscated": "net/minecraft/client/renderer/ActiveRenderInfo",
+		"fields": [
+			{
+				"name": "MODELVIEW",
+				"obfuscated": "MODELVIEW",
+				"signature": "Ljava/nio/FloatBuffer;",
+				"static": true
+			},
+			{
+				"name": "PROJECTION",
+				"obfuscated": "PROJECTION",
+				"signature": "Ljava/nio/FloatBuffer;",
+				"static": true
+			},
+			{
+				"name": "VIEWPORT",
+				"obfuscated": "VIEWPORT",
+				"signature": "Ljava/nio/IntBuffer;",
+				"static": true
+			}
+		],
+		"methods": []
+	},
+	"java/nio/FloatBuffer": {
+		"obfuscated": "java/nio/FloatBuffer",
+		"fields": [],
+		"methods": [
+			{
+				"name": "get",
+				"obfuscated": "get",
+				"signature": "(I)F",
+				"static": false
+			}
+		]
+	},
+	"java/nio/IntBuffer": {
+		"obfuscated": "java/nio/IntBuffer",
+		"fields": [],
+		"methods": [
+			{
+				"name": "get",
+				"obfuscated": "get",
+				"signature": "(I)I",
+				"static": false
+			}
+		]
 	}
 }
-)"_json);
+)";
 }

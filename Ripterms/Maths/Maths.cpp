@@ -1,4 +1,8 @@
 #include "Maths.h"
+#include <Windows.h>
+#include <gl/GLU.h>
+#include <cmath>
+#include <iostream>
 
 Ripterms::Maths::Vector2d Ripterms::Maths::getYawPitch(Vector3d playerPos, Vector3d facingPos)
 {
@@ -35,16 +39,6 @@ float Ripterms::Maths::cropAngle360(float angle)
 	return angle;
 }
 
-Ripterms::Maths::Vector2d Ripterms::Maths::worldToScreen(const Vector3d& world_pos)
-{
-	float model_matrix[4][4] = {0};
-	float view_matrix[4][4] = {0};
-	float projection_matrix[4][4] = {0};
-
-	float model_view_matrix[4][4] = { 0 };
-
-	return {};
-}
 
 Ripterms::Maths::Vector3d::Vector3d()
 {
@@ -143,7 +137,7 @@ Ripterms::Maths::Matrix::operator bool() const
 	return is_valid();
 }
 
-Ripterms::Maths::Matrix Ripterms::Maths::Matrix::operator*(const Matrix& other_matrix)
+Ripterms::Maths::Matrix Ripterms::Maths::Matrix::operator*(const Matrix& other_matrix) const
 {
 	if (!is_valid() || !other_matrix.is_valid() || this->column_number != other_matrix.line_number)
 		return { {0} };
@@ -162,7 +156,7 @@ Ripterms::Maths::Matrix Ripterms::Maths::Matrix::operator*(const Matrix& other_m
 
 }
 
-Ripterms::Maths::Matrix Ripterms::Maths::Matrix::operator+(const Matrix& other_matrix)
+Ripterms::Maths::Matrix Ripterms::Maths::Matrix::operator+(const Matrix& other_matrix) const
 {
 	if (line_number != other_matrix.line_number || column_number != other_matrix.column_number)
 		return { {0} };
@@ -208,4 +202,65 @@ Ripterms::Maths::Matrix::~Matrix()
 		}
 		delete data;
 	}
+}
+
+Ripterms::Maths::Vector2d Ripterms::Maths::worldToScreen(
+	const Vector3d& world_pos, Matrix& view_matrix,
+	Matrix& projection_matrix, Matrix& view_port)
+{
+	// not done
+	Vector2d ndc(0.0f, 0.0f);
+
+	GLdouble modelMatrix[16] =
+	{
+		view_matrix[0][0],
+		view_matrix[0][1],
+		view_matrix[0][2],
+		view_matrix[0][3],
+		view_matrix[1][0],
+		view_matrix[1][1],
+		view_matrix[1][2],
+		view_matrix[1][3],
+		view_matrix[2][0],
+		view_matrix[2][1],
+		view_matrix[2][2],
+		view_matrix[2][3],
+		view_matrix[3][0],
+		view_matrix[3][1],
+		view_matrix[3][2],
+		view_matrix[3][3]
+	};
+
+	GLdouble projectionMatrix[16] = 
+	{
+		projection_matrix[0][0],
+		projection_matrix[0][1],
+		projection_matrix[0][2],
+		projection_matrix[0][3],
+		projection_matrix[1][0],
+		projection_matrix[1][1],
+		projection_matrix[1][2],
+		projection_matrix[1][3],
+		projection_matrix[2][0],
+		projection_matrix[2][1],
+		projection_matrix[2][2],
+		projection_matrix[2][3],
+		projection_matrix[3][0],
+		projection_matrix[3][1],
+		projection_matrix[3][2],
+		projection_matrix[3][3]
+	};
+
+	GLint viewport[4] =
+	{ 
+		(int)view_port[0][0],
+		(int)view_port[1][0],
+		(int)view_port[2][0],
+		(int)view_port[3][0],
+	};
+	GLdouble x = 0.0, y = 0.0, z = 0.0;
+	gluProject(world_pos.x, world_pos.y, world_pos.z, modelMatrix, projectionMatrix, viewport, &x, &y, &z);
+	ndc.x = (float)x;
+	ndc.y = (float)y;
+	return ndc;
 }

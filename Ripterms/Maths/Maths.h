@@ -1,5 +1,4 @@
 #pragma once
-#include <cmath>
 #include <string>
 
 namespace Ripterms
@@ -43,8 +42,8 @@ namespace Ripterms
 
 			float* operator [](int index);
 			operator bool() const;
-			Matrix operator *(const Matrix& other_matrix);
-			Matrix operator +(const Matrix& other_matrix);
+			Matrix operator *(const Matrix& other_matrix) const;
+			Matrix operator +(const Matrix& other_matrix) const;
 
 			bool is_valid() const;
 			std::string to_string() const;
@@ -54,6 +53,8 @@ namespace Ripterms
 			float** data;
 		};
 
-		Vector2d worldToScreen(const Vector3d& world_pos);
+		Vector2d worldToScreen(
+			const Vector3d& world_pos, Matrix& view_matrix,
+			Matrix& projection_matrix, Matrix& view_port);
 	}
 }

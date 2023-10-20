@@ -13,6 +13,7 @@ EntityPlayerSP Minecraft::getThePlayer()
 
 PlayerControllerMP Minecraft::getPlayerController()
 {
+	if (!instance) return PlayerControllerMP(nullptr, env);
 	return PlayerControllerMP(env->GetObjectField(instance, MinecraftClass.getFieldID("playerController")), env);
 }
 

@@ -1,11 +1,8 @@
 #pragma once
-#include "../Cache/Cache.h"
-#include "../GUI/GUI.h"
 #include "../../java/lang/String/String.h"
-#include <ImGui/imgui.h>
-#include <iostream>
 #include <random>
 #include "../Event/Event.h"
+#include "../Maths/Maths.h"
 
 namespace Ripterms
 {
@@ -16,6 +13,7 @@ namespace Ripterms
 		public:
 			virtual void run();
 			virtual void renderGUI();
+			virtual void render();
 			virtual void disable();
 			virtual void onEvent(Ripterms::Event* event);
 		protected:
@@ -31,11 +29,13 @@ namespace Ripterms
 		public:
 			void run() override;
 			void renderGUI() override;
+			void render() override;
 		private:
 			float max_distance = 6.0f;
 			float max_angle = 80.0f;
 			float multiplier = 1.0f;
 			float multiplierPitch = 0.5f;
+			Ripterms::Maths::Vector3d target_pos{};
 		};
 
 		class Reach : public IModule
@@ -112,8 +112,6 @@ namespace Ripterms
 			void run() override;
 			void renderGUI() override;
 			void disable() override;
-		private:
-			int keyBind = VK_NUMPAD1;
 		};
 
 		class LegitScaffold : public IModule
@@ -149,16 +147,19 @@ namespace Ripterms
 			void run() override;
 			void renderGUI() override;
 			void disable() override;
-		private:
-			int keyBind = VK_NUMPAD2;
 		};
 
+		class ESP : public IModule
+		{
+		public:
+			void render() override;
+		};
 
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
 			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap()}},
 			{"Player", {new Velocity(), new FastPlace(), new Blink(), new LegitScaffold(), new Sprint()}},
-			{"Render", {new Xray(), new FullBright()}},
+			{"Render", {new Xray(), new FullBright(), new ESP()}},
 			{"Whatever", {new ClientBrandChanger(), new Test()}}
 		};
 

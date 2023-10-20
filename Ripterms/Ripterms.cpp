@@ -8,6 +8,7 @@
 #include "../java/lang/System/System.h"
 #include "Event/Event.h"
 #include "Hook/Hook.h"
+#include <thread>
 
 static void mainLoop()
 {
@@ -139,59 +140,37 @@ BOOL Ripterms::init(HMODULE dll)
 	freopen_s(&console_buffer3, "CONIN$", "r", stdin);
 	Ripterms::window = getCurrentWindow();
 	std::string windowName = getWindowName(window);
-	if (windowName.find("Lunar Client 1.8.9") != std::string::npos)
+	for (Version v : versions)
 	{
-		version = LUNAR_1_8_9;
-		majorVersion = MAJOR_1_8_9;
+		if (windowName.find(v.name) != std::string::npos)
+		{
+			Ripterms::version = v;
+			break;
+		}
 	}
-	else if 
-	(
-		(windowName.find("Badlion Minecraft Client") != std::string::npos && windowName.find("1.8.9") != std::string::npos)
-	)
+	switch (version.type)
 	{
-		version = VANILLA_1_8_9;
-		majorVersion = MAJOR_1_8_9;
-	}
-	else if (windowName.find("Lunar Client 1.7.10") != std::string::npos)
-	{
-		version = LUNAR_1_7_10;
-		majorVersion = MAJOR_1_8_9;
-	}
-	else if 
-	(
-		windowName.find("Lunar Client 1.16.5") != std::string::npos ||
-		windowName.find("Lunar Client 1.17.1") != std::string::npos ||
-		windowName.find("Lunar Client 1.18.2") != std::string::npos
-	)
-	{
-		version = LUNAR_1_16_5;
-		majorVersion = MAJOR_1_16_5;
-	}
-	else if (windowName.find("Paladium") != std::string::npos || windowName.find("Minecraft 1.7.10") != std::string::npos)
-	{
-		version = FORGE_1_7_10;
-		majorVersion = MAJOR_1_8_9;
-	}
-	else
-	{
-		std::cerr << "unknown version" << std::endl;
-		return FALSE;
-	}
-	if (majorVersion == MAJOR_1_8_9)
+	case Version::MAJOR_1_8_9:
+	case Version::MAJOR_1_7_10:
 	{
 		Ripterms::Module lwjgl("lwjgl64.dll");
 		if (!lwjgl)
 			return FALSE;
 		targetnglClear = (nglClearType)lwjgl.getProcAddress("Java_org_lwjgl_opengl_GL11_nglClear");
 		hook = new Ripterms::Hook(6, targetnglClear, detournglClear, (void**)&originalnglClear, Ripterms::Hook::RELATIVE_5B_JMP);
+		break;
 	}
-	else if (majorVersion == MAJOR_1_16_5)
+	case Version::MAJOR_1_16_5:
 	{
 		Ripterms::Module lwjgl("lwjgl_opengl.dll");
 		if (!lwjgl)
 			return FALSE;
 		targetglClear = (glClearType)lwjgl.getProcAddress("Java_org_lwjgl_opengl_GL11C_glClear");
-		hook = new Ripterms::Hook(17, targetglClear, detourglClear, (void**)&originalglClear, Ripterms::Hook::RELATIVE_5B_JMP);
+		hook = new Ripterms::Hook(6, targetglClear, detourglClear, (void**)&originalglClear, Ripterms::Hook::RELATIVE_5B_JMP);
+		break;
+	}
+	default:
+		return FALSE;
 	}
 	if (!GUI::init()) return FALSE;
 	return TRUE;
@@ -212,8 +191,7 @@ void Ripterms::clean()
 	fclose(console_buffer3);
 	FreeConsole();
 	delete hook;
-	std::thread a(FreeLibrary, Ripterms::module);
-	a.detach();
+	std::thread(FreeLibrary, Ripterms::module).detach();
 }
 
 void Ripterms::partialClean()

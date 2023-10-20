@@ -1,4 +1,7 @@
 #include "Modules.h"
+#include "../GUI/GUI.h"
+#include "../Cache/Cache.h"
+#include <ImGui/imgui.h>
 
 void Ripterms::Modules::AimAssist::run()
 {
@@ -6,6 +9,7 @@ void Ripterms::Modules::AimAssist::run()
 	if (!enabled || !(GetKeyState(VK_LBUTTON) & 0x8000) || GUI::draw)
 	{
 		prev_selected_target.clear();
+		target_pos = { 0.0f, 0.0f, 0.0f };
 		return;
 	}
 
@@ -67,6 +71,7 @@ void Ripterms::Modules::AimAssist::run()
 
 	if (selected_target.isValid())
 	{
+		target_pos = selected_target.getPosition();
 		prev_selected_target = selected_target;
 		Ripterms::Maths::Vector3d selected_target_mvmt_vec = selected_target.getMovementVector(cache->timer.getRenderPartialTicks());
 		AxisAlignedBB selected_target_bb = selected_target.getBoundingBox();
@@ -161,6 +166,8 @@ void Ripterms::Modules::AimAssist::run()
 		}
 		cache->thePlayer.setRotation(thePlayer_rotation);
 	}
+	else
+		target_pos = { 0.0f, 0.0f, 0.0f };
 }
 
 void Ripterms::Modules::AimAssist::renderGUI()
@@ -187,4 +194,20 @@ void Ripterms::Modules::AimAssist::renderGUI()
 		ImGui::SliderFloat("Multiplier Pitch", &multiplierPitch, 0.1f, 2.0f, "%.1f");
 		ImGui::EndGroup();
 	}
+}
+
+void Ripterms::Modules::AimAssist::render()
+{
+	return; //testing purposes, will fix world to screen later
+	if (target_pos.x == 0.0f && target_pos.y == 0.0f && target_pos.z == 0.0f)
+		return;
+
+	ImVec2 winSize = ImGui::GetWindowSize();
+
+	Ripterms::Maths::Matrix modelview = cache->MODELVIEW.toMatrix(4, 4);
+	Ripterms::Maths::Matrix projection = cache->PROJECTION.toMatrix(4, 4);
+	Ripterms::Maths::Matrix viewport = cache->VIEWPORT.toMatrix(4, 1);
+
+	Ripterms::Maths::Vector2d vector = Ripterms::Maths::worldToScreen(target_pos, modelview, projection, viewport);
+	ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(vector.x, vector.y), ImVec2(vector.x + 50.0f, vector.y + 50.0f), ImColor(255, 30, 15, 255));
 }

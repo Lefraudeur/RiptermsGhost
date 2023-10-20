@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../../java/lang/Object/Object.h"
+#include "../../../../Ripterms/Maths/Maths.h"
 
 class Vec3 : public Object {
 public:

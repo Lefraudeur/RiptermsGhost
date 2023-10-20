@@ -1,5 +1,6 @@
 #pragma once
 #include "../../../Packet/Packet.h"
+#include "../../../../../../Ripterms/Maths/Maths.h"
 class C03PacketPlayer : public Packet
 {
 public:

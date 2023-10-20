@@ -4,7 +4,7 @@ void EntityLivingBase::setPositionAndUpdate(const Ripterms::Maths::Vector3d& pos
 {
 	if (!instance)
 		return;
-	if (Ripterms::version == Ripterms::Version::FORGE_1_7_10 || Ripterms::version == Ripterms::Version::LUNAR_1_7_10)
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10)
 	{
 		env->CallVoidMethod(
 			instance,

@@ -33,11 +33,10 @@ namespace
 		Ripterms::JavaClassV2 EntityPlayerSPClass
 		(
 			(
-				Ripterms::version == Ripterms::Version::FORGE_1_7_10
-				|| Ripterms::version == Ripterms::Version::LUNAR_1_7_10
+				Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10
 				? "net/minecraft/client/entity/EntityClientPlayerMP"
 				: "net/minecraft/client/entity/EntityPlayerSP"
-				)
+			)
 		);
 		Ripterms::JavaClassV2 EntityPlayerClass("net/minecraft/entity/player/EntityPlayer");
 
@@ -50,7 +49,7 @@ namespace
 			EntityPlayerClass.getJClass()
 		};
 		errCheck(Ripterms::p_tienv->RetransformClasses(sizeof(classes) / sizeof(jclass), classes));
-		if (Ripterms::majorVersion != Ripterms::Version::MAJOR_1_16_5)
+		if (Ripterms::version.type != Ripterms::Version::MAJOR_1_16_5)
 		{
 			Ripterms::JavaClassV2 BlockClass("net/minecraft/block/Block");
 			Ripterms::JavaClassV2 GL11Class("org/lwjgl/opengl/GL11");
@@ -81,8 +80,7 @@ namespace
 		Ripterms::JavaClassV2 EntityPlayerSPClass
 		(
 			(
-				Ripterms::version == Ripterms::Version::FORGE_1_7_10
-				|| Ripterms::version == Ripterms::Version::LUNAR_1_7_10
+				Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10
 				? "net/minecraft/client/entity/EntityClientPlayerMP"
 				: "net/minecraft/client/entity/EntityPlayerSP"
 			)
@@ -180,7 +178,7 @@ namespace
 				NetworkManager.getInstance()
 			});
 		}
-		else if (Ripterms::majorVersion != Ripterms::Version::MAJOR_1_16_5 && redefinedClass.isEqualTo(BlockClass.getJClass(jni_env)))
+		else if (Ripterms::version.type != Ripterms::Version::MAJOR_1_16_5 && redefinedClass.isEqualTo(BlockClass.getJClass(jni_env)))
 		{
 			Ripterms::JavaClassV2 RegistryClass("net/minecraft/util/registry/Registry");
 			Ripterms::JavaClassV2 RegistryNamespacedClass("net/minecraft/util/RegistryNamespaced");
@@ -193,8 +191,7 @@ namespace
 			String RessourceLocation
 			(
 				(
-					Ripterms::version == Ripterms::Version::LUNAR_1_7_10 ||
-					Ripterms::version == Ripterms::Version::FORGE_1_7_10
+					Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10
 					? "none"
 					: Ripterms::JavaClassV2("net/minecraft/util/ResourceLocation").getObfuscatedClassName()
 				), jni_env
@@ -209,7 +206,7 @@ namespace
 					RessourceLocation.getInstance()
 			});
 		}
-		else if (Ripterms::majorVersion != Ripterms::Version::MAJOR_1_16_5 && redefinedClass.isEqualTo(GL11Class.getJClass(jni_env)))
+		else if (Ripterms::version.type != Ripterms::Version::MAJOR_1_16_5 && redefinedClass.isEqualTo(GL11Class.getJClass(jni_env)))
 		{
 			Ripterms::JavaClassV2 ClassPatcherClass("io/github/lefraudeur/ClassPatcher");
 

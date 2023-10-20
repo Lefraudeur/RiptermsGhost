@@ -1,11 +1,16 @@
 #include "Modules.h"
-#include <bitset>
+#include "../Cache/Cache.h"
+#include <ImGui/imgui.h>
 
 void Ripterms::Modules::IModule::run()
 {
 }
 
 void Ripterms::Modules::IModule::renderGUI()
+{
+}
+
+void Ripterms::Modules::IModule::render()
 {
 }
 
@@ -77,11 +82,6 @@ void Ripterms::Modules::FastPlace::renderGUI()
 
 void Ripterms::Modules::Xray::run()
 {
-	static CTimer timer = std::chrono::milliseconds(300);
-	if (GetAsyncKeyState(keyBind) && timer.isElapsed() && GetActiveWindow() == Ripterms::window)
-	{
-		enabled = !enabled;
-	}
 	static bool prev_enabled = false;
 	if (!enabled)
 	{
@@ -159,4 +159,8 @@ void Ripterms::Modules::Sprint::renderGUI()
 	ImGui::Checkbox("Sprint", &enabled);
 	ImGui::PopStyleVar();
 	ImGui::PopStyleVar();
+}
+
+void Ripterms::Modules::ESP::render()
+{
 }

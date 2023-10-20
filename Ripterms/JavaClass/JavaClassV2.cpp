@@ -1,71 +1,22 @@
 #include "JavaClass.h"
-#include "../Mappings/mappings_lunar_1_7_10.h"
-#include "../Mappings/mappings_forge_1_7_10.h"
-#include "../Mappings/mappings_lunar_1_8_9.h"
-#include "../Mappings/mappings_vanilla_1_8_9.h"
-#include "../Mappings/mappings_lunar_1_16_5.h"
+#include <iostream>
 
 std::unordered_map<std::string, Ripterms::JavaClassV2::JavaClassData> Ripterms::JavaClassV2::data{};
 std::unordered_map<JNIEnv*, std::unordered_map<std::string, Ripterms::JavaClassV2::JClass>> Ripterms::JavaClassV2::jclassCache{};
 
 bool Ripterms::JavaClassV2::init()
 {
-	bool isSuccess = true;
-	int selected_version_index = -1;
-	const nlohmann::json* const allmaps[] =
+	try
 	{
-		Mappings::mappings_lunar_1_8_9,
-		Mappings::mappings_vanilla_1_8_9,
-		Mappings::mappings_lunar_1_7_10,
-		Mappings::mappings_lunar_1_16_5,
-		Mappings::mappings_forge_1_7_10
-	};
-	switch (version)
-	{
-	case LUNAR_1_8_9:
-	{
-		Ripterms::JavaClassV2::mappings = Mappings::mappings_lunar_1_8_9;
-		selected_version_index = 0;
-		break;
+		Ripterms::JavaClassV2::mappings = nlohmann::json::parse(version.mappings_text);
 	}
-	case VANILLA_1_8_9:
+	catch (const nlohmann::json::exception& e)
 	{
-		Ripterms::JavaClassV2::mappings = Mappings::mappings_vanilla_1_8_9;
-		selected_version_index = 1;
-		break;
+		std::cout << "Failed to parse mapping file" << '\n';
+		std::cerr << e.what() << '\n';
+		return false;
 	}
-	case LUNAR_1_7_10:
-	{
-		Ripterms::JavaClassV2::mappings = Mappings::mappings_lunar_1_7_10;
-		selected_version_index = 2;
-		break;
-	}
-	case LUNAR_1_16_5:
-	{
-		Ripterms::JavaClassV2::mappings = Mappings::mappings_lunar_1_16_5;
-		selected_version_index = 3;
-		break;
-	}
-	case FORGE_1_7_10:
-	{
-		Ripterms::JavaClassV2::mappings = Mappings::mappings_forge_1_7_10;
-		selected_version_index = 4;
-		break;
-	}
-	default:
-	{
-		std::cerr << "Cannot find mappings for the specified version" << std::endl;
-		isSuccess = false;
-	}
-	}
-	for (int i = 0; i < sizeof(allmaps) / sizeof(nlohmann::json*); ++i)
-	{
-		if (i == selected_version_index) continue;
-		delete allmaps[i];
-	}
-	if (!isSuccess) return false;
 
-	auto& mappings = Ripterms::JavaClassV2::mappings[0];
 	if (mappings.empty())
 		return false;
 	for (auto& [className, classContent] : mappings.items())
@@ -118,7 +69,6 @@ void Ripterms::JavaClassV2::clean()
 {
 	if (Ripterms::p_env)
 		jclassCache[Ripterms::p_env].clear();
-	delete mappings;
 }
 
 Ripterms::JavaClassV2::JavaClassV2(const std::string& class_path)
@@ -180,7 +130,7 @@ std::string Ripterms::JavaClassV2::getObfuscatedClassName() const
 {
 	try
 	{
-		return mappings[0][class_path]["obfuscated"];
+		return mappings[class_path]["obfuscated"];
 	}
 	catch (...)
 	{
@@ -192,7 +142,7 @@ std::string Ripterms::JavaClassV2::getObfuscatedFieldName(const std::string& nam
 {
 	try
 	{
-		for (auto& field : mappings[0][class_path]["fields"])
+		for (auto& field : mappings[class_path]["fields"])
 		{
 			if (name == std::string(field["name"]))
 				return field["obfuscated"];
@@ -208,7 +158,7 @@ std::string Ripterms::JavaClassV2::getObfuscatedMethodName(const std::string& na
 {
 	try
 	{
-		for (auto& method : mappings[0][class_path]["methods"])
+		for (auto& method : mappings[class_path]["methods"])
 		{
 			if (name == std::string(method["name"]))
 				return method["obfuscated"];
@@ -224,7 +174,7 @@ std::string Ripterms::JavaClassV2::getObfuscatedFieldSig(const std::string& name
 {
 	try
 	{
-		for (auto& field : mappings[0][class_path]["fields"])
+		for (auto& field : mappings[class_path]["fields"])
 		{
 			if (name == std::string(field["name"]))
 				return field["signature"];
@@ -240,7 +190,7 @@ std::string Ripterms::JavaClassV2::getObfuscatedMethodSig(const std::string& nam
 {
 	try
 	{
-		for (auto& method : mappings[0][class_path]["methods"])
+		for (auto& method : mappings[class_path]["methods"])
 		{
 			if (name == std::string(method["name"]))
 				return method["signature"];
@@ -315,7 +265,7 @@ Ripterms::JavaClassV2::JClass::~JClass()
 
 void Ripterms::JavaClassV2::reload()
 {
-	auto& classMapping = Ripterms::JavaClassV2::mappings[0][class_path];
+	auto& classMapping = Ripterms::JavaClassV2::mappings[class_path];
 	JClass javaClass = findClass(classMapping["obfuscated"]);
 	Ripterms::JavaClassV2::JavaClassData classData{};
 	for (auto& field : classMapping["fields"])

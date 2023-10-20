@@ -101,19 +101,25 @@ void Ripterms::Hook::hook_RELATIVE_5B_JMP(void* a_detour_function_addr, void** a
     our_tmp_instructions[10] = '\xff'; // jmp
     our_tmp_instructions[11] = '\xe0'; // rax
 
-    allocated_instructions = (uint8_t*)VirtualAlloc(nullptr, bytes_to_replace + 12, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+
+    allocated_instructions = (uint8_t*)VirtualAlloc(nullptr, bytes_to_replace + 22, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
     if (!allocated_instructions)
         throw std::exception("Failed to allocate memory for the hook");
     *a_original_function_addr = allocated_instructions; // where to go once detour returns
 
     // we copy the original instructions to our allocated instructions, because they are going to be overwritten by the relative jmp instruction
     memcpy(allocated_instructions, target_function_addr, bytes_to_replace);
-    // jump back to normal execution flow
-    allocated_instructions[bytes_to_replace] = '\x48'; // mov
-    allocated_instructions[bytes_to_replace + 1] = '\xB8'; // rax,
-    *((uint64_t*)(allocated_instructions + bytes_to_replace + 2)) = (uint64_t)target_function_addr + bytes_to_replace;
-    allocated_instructions[bytes_to_replace + 10] = '\xff'; // jmp
-    allocated_instructions[bytes_to_replace + 11] = '\xe0'; // rax
+    // jump back to normal execution flow, by preserving registers and stack
+    // mov[rsp - 16], rax
+    // mov rax, 0x7e80e42e7d8e1b34
+    // push rax
+    // mov rax, [rsp - 8]
+    // ret
+    uint8_t shell_code1[] = { 0x48, 0x89, 0x44, 0x24, 0xf0, 0x48, 0xb8 };
+    memcpy(allocated_instructions + bytes_to_replace, shell_code1, 7);
+    *((uint64_t*)(allocated_instructions + bytes_to_replace + 7)) = (uint64_t)target_function_addr + bytes_to_replace;
+    uint8_t shell_code2[] = { 0x50, 0x48, 0x8B, 0x44, 0x24, 0xF8, 0xC3 };
+    memcpy(allocated_instructions + bytes_to_replace + 15, shell_code2, 7);
 
 
     // relative jump from target_function_addr to our_tmp_instructions
@@ -126,14 +132,12 @@ void Ripterms::Hook::hook_RELATIVE_5B_JMP(void* a_detour_function_addr, void** a
 
     VirtualProtect(target_function_addr, bytes_to_replace, original_protection, &original_protection);
     VirtualProtect(our_tmp_instructions, 12, PAGE_EXECUTE_READ, &original_protection);
-    VirtualProtect(allocated_instructions, bytes_to_replace + 12, PAGE_EXECUTE_READ, &original_protection);
+    VirtualProtect(allocated_instructions, bytes_to_replace + 22, PAGE_EXECUTE_READ, &original_protection);
 }
 
 void Ripterms::Hook::remove_RELATIVE_5B_JMP()
 {
     DWORD original_protection = 0;
-    VirtualProtect(our_tmp_instructions, 12, PAGE_EXECUTE_READWRITE, &original_protection);
-    VirtualProtect(allocated_instructions, bytes_to_replace + 12, PAGE_EXECUTE_READWRITE, &original_protection);
     VirtualProtect(target_function_addr, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection);
 
     memcpy(target_function_addr, allocated_instructions, bytes_to_replace);
