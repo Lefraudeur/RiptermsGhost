@@ -1,6 +1,7 @@
 #pragma once
 #include "../../../../java/lang/Object/Object.h"
 #include "../../util/AxisAlignedBB/AxisAlignedBB.h"
+#include "../../../../Ripterms/Maths/Maths.h"
 
 class Entity : public Object
 {

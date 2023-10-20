@@ -3,6 +3,7 @@
 #include "../../../../java/util/List/List.h"
 #include "../../block/state/IBlockState.h"
 #include "../../util/BlockPos/BlockPos.h"
+#include "../../../../Ripterms/Maths/Maths.h"
 
 class World : public Object
 {

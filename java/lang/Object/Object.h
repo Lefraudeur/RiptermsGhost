@@ -1,7 +1,6 @@
 #pragma once
 #include <iostream>
 #include "../../../Ripterms/Ripterms.h"
-#include "../../../Ripterms/Maths/Maths.h"
 #include "../../../Ripterms/JavaClass/JavaClass.h"
 
 class Object {

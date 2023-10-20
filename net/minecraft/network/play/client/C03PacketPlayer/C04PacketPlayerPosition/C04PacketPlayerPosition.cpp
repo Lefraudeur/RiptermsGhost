@@ -3,7 +3,7 @@
 C04PacketPlayerPosition C04PacketPlayerPosition::newObject(const Ripterms::Maths::Vector3d& position, bool isOnGround, JNIEnv* env)
 {
 	if (!env)
-		return C04PacketPlayerPosition();
+		return C04PacketPlayerPosition(nullptr, env);
 	return C04PacketPlayerPosition
 	(
 		env->NewObject
@@ -22,7 +22,7 @@ C04PacketPlayerPosition C04PacketPlayerPosition::newObject(const Ripterms::Maths
 C04PacketPlayerPosition C04PacketPlayerPosition::newObject1_7_10(const Ripterms::Maths::Vector3d& position, double stance, bool isOnGround, JNIEnv* env)
 {
 	if (!env)
-		return C04PacketPlayerPosition();
+		return C04PacketPlayerPosition(nullptr, env);
 	return C04PacketPlayerPosition
 	(
 		env->NewObject

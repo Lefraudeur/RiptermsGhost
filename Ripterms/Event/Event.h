@@ -1,9 +1,5 @@
 #pragma once
 #include <JNI/jni.h>
-#include <JNI/jvmti.h>
-#include "../../java/lang/Object/Object.h"
-#include "../../java/lang/String/String.h"
-#include "../../java/util/Map/Map.h"
 
 namespace Ripterms
 {

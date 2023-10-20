@@ -53,7 +53,7 @@ namespace Ripterms
 
 		static std::unordered_map<JNIEnv*, std::unordered_map<std::string, JClass>> jclassCache;
 		static std::unordered_map<std::string, JavaClassData> data;
-		inline static const nlohmann::json* mappings = nullptr;
+		inline static nlohmann::json mappings{};
 
 		std::string class_path{};
 	};

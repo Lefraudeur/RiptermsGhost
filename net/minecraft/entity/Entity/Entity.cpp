@@ -1,11 +1,10 @@
 #include "Entity.h"
-#include "../../../../Ripterms/Cache/Cache.h"
 #include "../../util/Vec3/Vec3.h"
 
 Ripterms::Maths::Vector3d Entity::getPosition() const
 {
 	if (!instance) return Ripterms::Maths::Vector3d();
-	if (Ripterms::majorVersion == Ripterms::Version::MAJOR_1_16_5)
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
 	{
 		return Vec3(env->GetObjectField(instance, EntityClass.getFieldID("positionVec")), env).getVector();
 	}
@@ -45,7 +44,7 @@ Ripterms::Maths::Vector2d Entity::getRotation() const
 Ripterms::Maths::Vector3d Entity::getMotion() const
 {
 	if (!instance) return Ripterms::Maths::Vector3d();
-	if (Ripterms::majorVersion == Ripterms::Version::MAJOR_1_16_5)
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
 	{
 		return Vec3(env->GetObjectField(instance, EntityClass.getFieldID("motion")), env).getVector();
 	}
@@ -102,7 +101,7 @@ void Entity::setSprinting(bool state)
 void Entity::setMotion(const Ripterms::Maths::Vector3d& motion)
 {
 	if (!instance) return;
-	if (Ripterms::majorVersion == Ripterms::Version::MAJOR_1_16_5)
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
 	{
 		Vec3 motion_obj(env->GetObjectField(instance, EntityClass.getFieldID("motion")), env);
 		motion_obj.setVector(motion);

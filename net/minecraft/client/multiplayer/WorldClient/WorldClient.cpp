@@ -3,7 +3,8 @@
 
 List WorldClient::getPlayerEntities()
 {
-	if (!instance) return {};
-	if (Ripterms::majorVersion == Ripterms::Version::MAJOR_1_8_9) return World::getPlayerEntities();
-	return List(env->GetObjectField(instance, WorldClientClass.getFieldID("players")), env);
+	if (!instance) return List(nullptr, env);
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
+		return List(env->GetObjectField(instance, WorldClientClass.getFieldID("players")), env);
+	return World::getPlayerEntities();
 }

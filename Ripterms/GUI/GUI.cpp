@@ -1,13 +1,13 @@
 #include "GUI.h"
-#include <Windows.h>
-#include <iostream>
+#define IMGUI_DEFINE_MATH_OPERATORS
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_impl_opengl3.h>
 #include <ImGui/imgui_impl_win32.h>
-#include <gl/GL.h>
+#include <Windows.h>
 #include "../Modules/Modules.h"
 #include "font.h"
 #include "../Hook/Hook.h"
+#include "GUI_conf.h"
 
 namespace
 {
@@ -130,6 +130,25 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+
+
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
+	ImGui::Begin("Overlay", nullptr, 
+		ImGuiWindowFlags_NoTitleBar | 
+		ImGuiWindowFlags_NoResize | 
+		ImGuiWindowFlags_NoMove | 
+		ImGuiWindowFlags_NoScrollbar | 
+		ImGuiWindowFlags_NoInputs | 
+		ImGuiWindowFlags_NoBackground);
+	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	{
+		for (Ripterms::Modules::IModule* m : category.second)
+		{
+			m->render();
+		}
+	}
+	ImGui::End();
 
 	if (Ripterms::GUI::draw)
 	{

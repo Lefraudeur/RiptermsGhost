@@ -1,13 +1,9 @@
 #include "Modules.h"
+#include "../Cache/Cache.h"
+#include <ImGui/imgui.h>
 
 void Ripterms::Modules::Blink::run()
 {
-	static CTimer timer = std::chrono::milliseconds(300);
-	if (GetAsyncKeyState(keyBind) && timer.isElapsed() && GetActiveWindow() == Ripterms::window)
-	{
-		enabled = !enabled;
-	}
-
 	static bool prev_enabled = false;
 	if (!enabled)
 	{

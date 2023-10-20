@@ -1,8 +1,7 @@
 #pragma once
 namespace Mappings
 {
-	using namespace nlohmann::literals;
-	static const nlohmann::json* const mappings_vanilla_1_8_9 = new const nlohmann::json(R"(
+	constexpr inline char mappings_vanilla_1_8_9[] = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -736,5 +735,5 @@ namespace Mappings
 		]
 	}
 }
-)"_json);
+)";
 }
