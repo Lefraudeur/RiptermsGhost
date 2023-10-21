@@ -4,8 +4,9 @@ An example injectable cheat for minecraft using java native interface and jvmti 
 Currently in development.
 Uses weird jni export function hooking for better compatibility with clients that doesn't allow the creation of new JNIEnv*.
 
-This cheat is open source, mainly to show you a combination of all the techniques I found to make injectable cheats for minecraft java, it is one of the only open source client that uses java asm to edit class bytecode, and that can completely unload itself.
+This cheat is open source, mainly to show you a combination of all the techniques I found to make injectable cheats for minecraft java.
 
+#### Download: https://github.com/Lefraudeur/RiptermsGhost/actions
 
 ### Supported versions :
 - Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1, 1.18.2
@@ -21,7 +22,7 @@ Change mappings to add new versions
 - Full Bright
 - Velocity
 - Client Brand Changer (see asm folder) (to troll staffs lol, sent to the server on login and displayed by some anticheats)
-- Blink (keybind numpad 1) (see asm folder) this was such a pain to make
+- Blink (see asm folder)
 - FastPlace
 - LegitScaffold
 - Xray (only on 1.7.10 and 1.8.9)
@@ -30,10 +31,10 @@ Change mappings to add new versions
 
 ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/39690baa-859a-4ea2-a9b0-dfbc8cbfe472)
 
+
 Insert to open the gui / end key to self destruct
 
-![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/96388338-971e-48e5-9703-5c1ed30fcdce)
-
+![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/8857b5f1-743e-4417-ab55-922252aaf0a0)
 
 To test it, just build visual studio project ON RELEASE PROFILE, and inject it using any injector.
 
