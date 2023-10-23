@@ -1,36 +1,36 @@
 #include "AxisAlignedBB.h"
 
-float AxisAlignedBB::getMinX()
+float AxisAlignedBB::getMinX() const
 {
 	if (!instance) return 0.0f;
 	return (float)env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("minX"));
 }
 
-float AxisAlignedBB::getMinY()
+float AxisAlignedBB::getMinY() const
 {
 	if (!instance) return 0.0f;
 	return (float)env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("minY"));
 }
 
-float AxisAlignedBB::getMinZ()
+float AxisAlignedBB::getMinZ() const
 {
 	if (!instance) return 0.0f;
 	return (float)env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("minZ"));
 }
 
-float AxisAlignedBB::getMaxX()
+float AxisAlignedBB::getMaxX() const
 {
 	if (!instance) return 0.0f;
 	return (float)env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("maxX"));
 }
 
-float AxisAlignedBB::getMaxY()
+float AxisAlignedBB::getMaxY() const
 {
 	if (!instance) return 0.0f;
 	return (float)env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("maxY"));
 }
 
-float AxisAlignedBB::getMaxZ()
+float AxisAlignedBB::getMaxZ() const
 {
 	if (!instance) return 0.0f;
 	return (float)env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("maxZ"));

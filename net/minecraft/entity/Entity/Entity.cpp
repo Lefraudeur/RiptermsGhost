@@ -92,6 +92,13 @@ float Entity::getEyeHeight() const
 	return env->CallFloatMethod(instance, EntityClass.getMethodID("getEyeHeight"));
 }
 
+void Entity::setBoundingBox(const AxisAlignedBB& bb)
+{
+	if (!instance)
+		return;
+	env->SetObjectField(instance, EntityClass.getFieldID("boundingBox"), bb.getInstance());
+}
+
 void Entity::setSprinting(bool state)
 {
 	if (!instance) return;

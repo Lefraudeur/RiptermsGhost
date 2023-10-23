@@ -6,12 +6,12 @@ class AxisAlignedBB : public Object
 public:
 	using Object::Object;
 
-	float getMinX();
-	float getMinY();
-	float getMinZ();
-	float getMaxX();
-	float getMaxY();
-	float getMaxZ();
+	float getMinX() const;
+	float getMinY() const;
+	float getMinZ() const;
+	float getMaxX() const;
+	float getMaxY() const;
+	float getMaxZ() const;
 
 	void setMinX(float value);
 	void setMinY(float value);
