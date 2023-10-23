@@ -28,6 +28,7 @@ Change mappings to add new versions
 - Xray (only on 1.7.10 and 1.8.9)
 - WTap
 - Sprint
+- HitBoxes
 
 ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/39690baa-859a-4ea2-a9b0-dfbc8cbfe472)
 
@@ -42,8 +43,17 @@ You have to inject while in game (otherwise some classes are not loaded)
 
 
 Help would be appreciated, this repo is here to share your knowledge with other people. You can also make suggestions. (open an issue or a pull request to dev branch)
+
+TODO: 
+- Good world to screen, to make player and block ESP (so I can get rid of the xray)
+- Customizable key binds
+- Enabled modules list
+
 You can also test the cheat and tell me about bugs you find, you can try the dev branch, it sometimes contains unstable modules that only works with lunar 1.8.9.
 
+### Future of the project ?
+There are some cool jvm tricks I can't implement in the current base, and I also have less time to work on Ripterms.
+So future updates will be mainly bug fixes / code restructure for better scalability.
 
 Thanks to t0r-onion for the GUI
 

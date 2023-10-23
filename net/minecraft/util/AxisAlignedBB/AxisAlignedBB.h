@@ -13,6 +13,13 @@ public:
 	float getMaxY();
 	float getMaxZ();
 
+	void setMinX(float value);
+	void setMinY(float value);
+	void setMinZ(float value);
+	void setMaxX(float value);
+	void setMaxY(float value);
+	void setMaxZ(float value);
+
 protected:
 	inline static Ripterms::JavaClassV2 AxisAlignedBBClass{ "net/minecraft/util/AxisAlignedBB" };
 };

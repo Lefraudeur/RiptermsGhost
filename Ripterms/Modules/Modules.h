@@ -64,6 +64,16 @@ namespace Ripterms
 			void renderGUI() override;
 		};
 
+		class HitBoxes : public IModule
+		{
+		public:
+			void run();
+			void renderGUI();
+		private:
+			float x_expand = 0.5f;
+			float y_expand = 0.5f;
+		};
+
 
 		//Category Other
 		class ClientBrandChanger : public IModule
@@ -157,7 +167,7 @@ namespace Ripterms
 
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
-			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap()}},
+			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap(), new HitBoxes()}},
 			{"Player", {new Velocity(), new FastPlace(), new Blink(), new LegitScaffold(), new Sprint()}},
 			{"Render", {new Xray(), new FullBright(), new ESP()}},
 			{"Whatever", {new ClientBrandChanger(), new Test()}}
