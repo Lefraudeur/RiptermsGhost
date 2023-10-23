@@ -20,6 +20,7 @@ public:
 	AxisAlignedBB getBoundingBox() const;
 	float getEyeHeight() const;
 
+	void setBoundingBox(const AxisAlignedBB& bb);
 	void setSprinting(bool state);
 	void setMotion(const Ripterms::Maths::Vector3d& motion);
 	void setRotation(const Ripterms::Maths::Vector2d& yawPitch);
