@@ -79,6 +79,32 @@ namespace Mappings
 			}
 		]
 	},
+	"java/nio/FloatBuffer": {
+		"obfuscated": "java/nio/FloatBuffer",
+		"fields": [],
+		"methods": [
+			{
+				"name": "get",
+				"obfuscated": "get",
+				"signature": "(I)F",
+				"static": false
+			}
+		]
+	},
+	"java/nio/IntBuffer": {
+		"obfuscated": "java/nio/IntBuffer",
+		"fields": [],
+		"methods": [
+			{
+				"name": "get",
+				"obfuscated": "get",
+				"signature": "(I)I",
+				"static": false
+			}
+		]
+	},
+)"
+R"(
 	"io/github/lefraudeur/ClassPatcher": {
 		"obfuscated": "io/github/lefraudeur/ClassPatcher",
 		"fields": [],
@@ -138,6 +164,8 @@ namespace Mappings
 		"fields": [],
 		"methods": []
 	},
+)"
+R"(
 	"net/minecraft/client/Minecraft": {
 		"obfuscated": "ave",
 		"fields": [
@@ -196,7 +224,14 @@ namespace Mappings
 				"static": false
 			}
 		],
-		"methods": []
+		"methods": [
+			{
+				"name": "clickMouse",
+				"obfuscated": "aw",
+				"signature": "()V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/client/entity/EntityPlayerSP": {
 		"obfuscated": "bew",

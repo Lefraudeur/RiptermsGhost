@@ -1,10 +1,12 @@
 #include "Modules.h"
 #include <ImGui/imgui.h>
 #include "../Cache/Cache.h"
-#include <gl/GL.h>
-#include <gl/GLU.h>
-#include "../GUI/GUI.h"
-#include "../../net/minecraft/client/renderer/ActiveRenderInfo/ActiveRenderInfo.h"
+#include <iostream>
+
+static void callback(void* method, void* sp)
+{
+	std::cout << Ripterms::cache->thePlayer.getPosition().x << std::endl;
+}
 
 void Ripterms::Modules::Test::renderGUI()
 {
@@ -20,7 +22,8 @@ void Ripterms::Modules::Test::renderGUI()
 		{
 			std::cout << "not found" << std::endl;
 		}
-		Ripterms::Maths::Vector3d position = cache->thePlayer.getPosition();
-		position.x += 2.0f;
+		Ripterms::JavaClassV2 PlayerControllerMPClass{ "net/minecraft/client/multiplayer/PlayerControllerMP" };
+		jmethodID mid = PlayerControllerMPClass.getMethodID("attackEntity");
+		Ripterms::JavaHook::add_to_java_hook(mid, callback);
 	}
 }

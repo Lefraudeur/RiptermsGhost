@@ -26,6 +26,7 @@ bool Ripterms::Cache::fillCache()
 		gameSettings = theMinecraft.getGameSettings();
 		timer = theMinecraft.getTimer();
 		playerController = theMinecraft.getPlayerController();
+		sendQueue = thePlayer.getSendQueue();
 		//MODELVIEW = ActiveRenderInfo::getMODELVIEW();
 		//PROJECTION = ActiveRenderInfo::getPROJECTION();
 		//VIEWPORT = ActiveRenderInfo::getVIEWPORT();

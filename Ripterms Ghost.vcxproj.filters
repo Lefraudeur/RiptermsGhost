@@ -216,6 +216,9 @@
     <ClCompile Include="Ripterms\Modules\FastPlace.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Ripterms\Hook\JavaHook.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ripterms\Ripterms.h">

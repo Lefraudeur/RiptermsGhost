@@ -20,6 +20,7 @@ public:
 	Entity getPointedEntity();
 	Timer getTimer();
 	int getRightClickDelayTimer();
+	void clickMouse();
 
 	void setRightClickDelayTimer(int value);
 protected:
