@@ -4,7 +4,7 @@
 #include <iostream>
 #include <JNI/jni.h>
 #include <vector>
-#include <functional>
+#include <type_traits>
 
 namespace Ripterms
 {
@@ -54,7 +54,33 @@ namespace Ripterms
 
 	namespace JavaHook
 	{
+		class JavaParameters
+		{
+		public:
+			inline JavaParameters(void* sp, void* thread) :
+				sp((uint64_t*)sp),
+				thread(thread)
+			{}
+			//primitive type only
+			template<typename T> inline T get_primitive_at(int index) const
+			{
+				return *((T*)(sp + index));
+			}
+			//index from right to left, 0 is last parameter
+			inline jobject get_jobject_at(int index) const
+			{
+				void* oop = *((void**)(sp + index));
+				return make_local(thread, oop, 0);
+			}
+
+			void* thread;
+			inline static jobject(*make_local)(void* thread, void* oop, int alloc_failure) = nullptr;
+		private:
+			uint64_t* sp;
+		};
+
 		void clean();
-		void add_to_java_hook(jmethodID methodID, void(*callback)(void*, void*));
+		bool init();
+		void add_to_java_hook(jmethodID methodID, void(*callback)(const JavaParameters& params));
 	}
 }

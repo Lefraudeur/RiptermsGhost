@@ -20,9 +20,6 @@ namespace Ripterms
 		GameSettings gameSettings{};
 		Timer timer{};
 		NetHandlerPlayClient sendQueue{};
-		FloatBuffer MODELVIEW{}; // not done
-		FloatBuffer PROJECTION{}; // not done
-		IntBuffer VIEWPORT{}; // not done
 
 		Map EMPTY_MAP{};
 		bool fillCache();

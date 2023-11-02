@@ -6,6 +6,7 @@
 #include "../../util/MovingObjectPosition/MovingObjectPosition.h"
 #include "../../util/Timer/Timer.h"
 #include "../multiplayer/PlayerControllerMP/PlayerControllerMP.h"
+#include "../gui/GuiScreen/GuiScreen.h"
 
 class Minecraft : public Object {
 public:
@@ -19,6 +20,7 @@ public:
 	MovingObjectPosition getObjectMouseOver();
 	Entity getPointedEntity();
 	Timer getTimer();
+	GuiScreen getCurrentScreen();
 	int getRightClickDelayTimer();
 	void clickMouse();
 

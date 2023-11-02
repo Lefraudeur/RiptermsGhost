@@ -1,6 +1,5 @@
 #include "Cache.h"
 #include <iostream>
-#include "../../net/minecraft/client/renderer/ActiveRenderInfo/ActiveRenderInfo.h"
 
 Ripterms::Cache::Cache()
 {
@@ -27,9 +26,6 @@ bool Ripterms::Cache::fillCache()
 		timer = theMinecraft.getTimer();
 		playerController = theMinecraft.getPlayerController();
 		sendQueue = thePlayer.getSendQueue();
-		//MODELVIEW = ActiveRenderInfo::getMODELVIEW();
-		//PROJECTION = ActiveRenderInfo::getPROJECTION();
-		//VIEWPORT = ActiveRenderInfo::getVIEWPORT();
 	}
 	return true;
 }

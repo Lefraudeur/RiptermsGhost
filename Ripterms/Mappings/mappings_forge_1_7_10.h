@@ -222,6 +222,12 @@ R"(
 				"obfuscated": "field_71442_b",
 				"signature": "Lnet/minecraft/client/multiplayer/PlayerControllerMP;",
 				"static": false
+			},
+			{
+				"name": "currentScreen",
+				"obfuscated": "field_71462_r",
+				"signature": "Lnet/minecraft/client/gui/GuiScreen;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -757,6 +763,11 @@ R"(
 				"static": false
 			}
 		]
+	},
+	"net/minecraft/client/gui/GuiScreen": {
+		"obfuscated": "net/minecraft/client/gui/GuiScreen",
+		"fields": [],
+		"methods": []
 	}
 }
 )";
