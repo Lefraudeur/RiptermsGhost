@@ -173,6 +173,7 @@ BOOL Ripterms::init(HMODULE dll)
 		return FALSE;
 	}
 	if (!GUI::init()) return FALSE;
+	if(!Ripterms::JavaHook::init()) return FALSE;
 	return TRUE;
 }
 

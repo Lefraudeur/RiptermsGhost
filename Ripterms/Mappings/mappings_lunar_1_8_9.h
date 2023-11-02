@@ -768,30 +768,6 @@ R"(
 				"static": false
 			}
 		]
-	},
-	"net/minecraft/client/renderer/ActiveRenderInfo": {
-		"obfuscated": "net/minecraft/client/renderer/ActiveRenderInfo",
-		"fields": [
-			{
-				"name": "MODELVIEW",
-				"obfuscated": "MODELVIEW",
-				"signature": "Ljava/nio/FloatBuffer;",
-				"static": true
-			},
-			{
-				"name": "PROJECTION",
-				"obfuscated": "PROJECTION",
-				"signature": "Ljava/nio/FloatBuffer;",
-				"static": true
-			},
-			{
-				"name": "VIEWPORT",
-				"obfuscated": "VIEWPORT",
-				"signature": "Ljava/nio/IntBuffer;",
-				"static": true
-			}
-		],
-		"methods": []
 	}
 }
 )";

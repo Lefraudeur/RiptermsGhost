@@ -3,9 +3,10 @@
 #include "../Cache/Cache.h"
 #include <iostream>
 
-static void callback(void* method, void* sp)
+static void callback(const Ripterms::JavaHook::JavaParameters& params)
 {
-	std::cout << Ripterms::cache->thePlayer.getPosition().x << std::endl;
+	EntityPlayer a(params.get_jobject_at(0));
+	std::cout << a.getPosition().x << std::endl;
 }
 
 void Ripterms::Modules::Test::renderGUI()
