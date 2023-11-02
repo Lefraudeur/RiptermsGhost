@@ -47,6 +47,13 @@ Timer Minecraft::getTimer()
 	return Timer(env->GetObjectField(instance, MinecraftClass.getFieldID("timer")), env);
 }
 
+GuiScreen Minecraft::getCurrentScreen()
+{
+	if (!instance)
+		return GuiScreen(env);
+	return GuiScreen(env->GetObjectField(instance, MinecraftClass.getFieldID("currentScreen")), env);
+}
+
 int Minecraft::getRightClickDelayTimer()
 {
 	if (!instance) return 0;

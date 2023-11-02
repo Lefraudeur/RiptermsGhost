@@ -6,7 +6,7 @@
 void Ripterms::Modules::AimAssist::run()
 {
 	static EntityPlayer prev_selected_target{};
-	if (!enabled || !(GetKeyState(VK_LBUTTON) & 0x8000) || GUI::draw)
+	if (!enabled || !(GetKeyState(VK_LBUTTON) & 0x8000) || GUI::draw || cache->theMinecraft.getCurrentScreen().isValid())
 	{
 		prev_selected_target.clear();
 		return;

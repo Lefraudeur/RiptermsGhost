@@ -222,6 +222,12 @@ R"(
 				"obfuscated": "c",
 				"signature": "Lbda;",
 				"static": false
+			},
+			{
+				"name": "currentScreen",
+				"obfuscated": "m",
+				"signature": "Laxu;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -768,6 +774,11 @@ R"(
 				"static": false
 			}
 		]
+	},
+	"net/minecraft/client/gui/GuiScreen": {
+		"obfuscated": "axu",
+		"fields": [],
+		"methods": []
 	}
 }
 )";

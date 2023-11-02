@@ -189,6 +189,7 @@
     <ClCompile Include="net\minecraft\block\state\IBlockState.cpp" />
     <ClCompile Include="net\minecraft\client\entity\AbstractClientPlayer\AbstractClientPlayer.cpp" />
     <ClCompile Include="net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.cpp" />
+    <ClCompile Include="net\minecraft\client\gui\GuiScreen\GuiScreen.cpp" />
     <ClCompile Include="net\minecraft\client\Minecraft\Minecraft.cpp" />
     <ClCompile Include="net\minecraft\client\multiplayer\PlayerControllerMP\PlayerControllerMP.cpp" />
     <ClCompile Include="net\minecraft\client\multiplayer\WorldClient\WorldClient.cpp" />
@@ -249,6 +250,7 @@
     <ClInclude Include="net\minecraft\block\state\IBlockState.h" />
     <ClInclude Include="net\minecraft\client\entity\AbstractClientPlayer\AbstractClientPlayer.h" />
     <ClInclude Include="net\minecraft\client\entity\EntityPlayerSP\EntityPlayerSP.h" />
+    <ClInclude Include="net\minecraft\client\gui\GuiScreen\GuiScreen.h" />
     <ClInclude Include="net\minecraft\client\Minecraft\Minecraft.h" />
     <ClInclude Include="net\minecraft\client\multiplayer\PlayerControllerMP\PlayerControllerMP.h" />
     <ClInclude Include="net\minecraft\client\multiplayer\WorldClient\WorldClient.h" />

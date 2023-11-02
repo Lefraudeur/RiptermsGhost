@@ -5,8 +5,7 @@
 
 static void callback(const Ripterms::JavaHook::JavaParameters& params)
 {
-	EntityPlayer a(params.get_jobject_at(0));
-	std::cout << a.getPosition().x << std::endl;
+	std::cout << "ha" << std::endl;
 }
 
 void Ripterms::Modules::Test::renderGUI()

@@ -211,6 +211,12 @@ R"(
 				"obfuscated": "gameMode",
 				"signature": "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;",
 				"static": false
+			},
+			{
+				"name": "currentScreen",
+				"obfuscated": "screen",
+				"signature": "Lnet/minecraft/client/gui/screens/Screen;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -693,6 +699,11 @@ R"(
 				"static": false
 			}
 		]
+	},
+	"net/minecraft/client/gui/GuiScreen": {
+		"obfuscated": "net/minecraft/client/gui/screens/Screen",
+		"fields": [],
+		"methods": []
 	}
 }
 )";
