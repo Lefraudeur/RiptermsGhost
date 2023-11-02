@@ -53,6 +53,14 @@ int Minecraft::getRightClickDelayTimer()
 	return env->GetIntField(instance, MinecraftClass.getFieldID("rightClickDelayTimer"));
 }
 
+void Minecraft::clickMouse()
+{
+	if (!instance)
+		return;
+	env->CallVoidMethod(instance, MinecraftClass.getMethodID("clickMouse"));
+	return;
+}
+
 void Minecraft::setRightClickDelayTimer(int value)
 {
 	if (!instance) return;

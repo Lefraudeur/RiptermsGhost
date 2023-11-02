@@ -186,6 +186,7 @@ void Ripterms::clean()
 	if (Ripterms::p_tienv)
 		Ripterms::p_tienv->DisposeEnvironment();
 	GUI::clean();
+	Ripterms::JavaHook::clean();
 	fclose(console_buffer1);
 	fclose(console_buffer2);
 	fclose(console_buffer3);
