@@ -29,7 +29,7 @@ uint8_t* Ripterms::Module::pattern_scan(uint8_t pattern[], int size, int access)
 			int matches = 0;
 			for (int i = 0; i < size; i++)
 			{
-				if (pattern[i] == rg_ptr[i])
+				if (pattern[i] == 0x90 || pattern[i] == rg_ptr[i])
 					matches++;
 				else
 					break;

@@ -1,5 +1,4 @@
 #include "Hook.h"
-#include <thread>
 
 Ripterms::Hook::Hook(int a_bytes_to_replace, void* a_target_function_addr, void* a_detour_function_addr, void** a_original_function_addr, Mode a_mode) :
     bytes_to_replace(a_bytes_to_replace),
@@ -37,10 +36,22 @@ void Ripterms::Hook::remove()
     }
 }
 
+bool Ripterms::Hook::init()
+{
+    return cs_open(CS_ARCH_X86, CS_MODE_64, &handle) == CS_ERR_OK;
+}
+
+void Ripterms::Hook::clean()
+{
+    cs_close(&handle);
+}
+
 void Ripterms::Hook::hook_RELATIVE_5B_JMP(void* a_detour_function_addr, void** a_original_function_addr)
 {
-    if (bytes_to_replace < 5)
-        throw std::exception("Not enough memory for the jmp instruction");
+    if (bytes_to_replace == 0)
+    {
+        bytes_to_replace = find_bytes_to_replace((uint8_t*)target_function_addr);
+    }
 
     DWORD original_protection = 0;
     VirtualProtect(target_function_addr, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection);
@@ -104,8 +115,10 @@ void Ripterms::Hook::remove_RELATIVE_5B_JMP()
 void Ripterms::Hook::hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a_original_function_addr)
 {
     uint8_t* target = (uint8_t*)target_function_addr;
-    if (bytes_to_replace < 5)
-        throw std::exception("not enough space for jmp");
+    if (bytes_to_replace == 0)
+    {
+        bytes_to_replace = find_bytes_to_replace(target);
+    }
 
     DWORD original_protection = 0;
     allocated_instructions = AllocateNearbyMemory(target, 57 + bytes_to_replace);
@@ -137,6 +150,9 @@ void Ripterms::Hook::hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a
     target[0] = '\xE9';
     *((int32_t*)(target + 1)) = target_allocated_offset;
 
+    if (bytes_to_replace > 5)
+        memset(target + 5, 0x90, bytes_to_replace - 5); // fill the remaining bytes with NOPs
+
     VirtualProtect(target, bytes_to_replace, original_protection, &original_protection);
     VirtualProtect(allocated_instructions, 60 + bytes_to_replace, PAGE_EXECUTE_READ, &original_protection);
 }
@@ -148,6 +164,24 @@ void Ripterms::Hook::remove_JAVA_ENTRY_HOOK()
     memcpy(target_function_addr, allocated_instructions + 55, bytes_to_replace);
     VirtualProtect(target_function_addr, bytes_to_replace, original_protection, &original_protection);
     VirtualFree(allocated_instructions, 0, MEM_RELEASE);
+}
+
+int Ripterms::Hook::find_bytes_to_replace(const uint8_t* target)
+{
+    cs_insn* insn = nullptr;
+    size_t count = cs_disasm(handle, target, 28, 0, 0, &insn);
+    if (!count)
+        return 0;
+
+    int bytes_to_replace = 0;
+    for (size_t i = 0; i < count; ++i)
+    {
+        bytes_to_replace += insn[i].size;
+        if (bytes_to_replace >= 5)
+            break;
+    }
+    cs_free(insn, count);
+    return bytes_to_replace;
 }
 
 uint8_t* Ripterms::Hook::AllocateNearbyMemory(uint8_t* nearby_addr, int size)

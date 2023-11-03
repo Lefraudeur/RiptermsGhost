@@ -138,6 +138,8 @@ BOOL Ripterms::init(HMODULE dll)
 	freopen_s(&console_buffer1, "CONOUT$", "w", stdout);
 	freopen_s(&console_buffer2, "CONOUT$", "w", stderr);
 	freopen_s(&console_buffer3, "CONIN$", "r", stdin);
+	if(!Ripterms::Hook::init())
+		return FALSE;
 	Ripterms::window = getCurrentWindow();
 	std::string windowName = getWindowName(window);
 	for (Version v : versions)
@@ -173,7 +175,7 @@ BOOL Ripterms::init(HMODULE dll)
 		return FALSE;
 	}
 	if (!GUI::init()) return FALSE;
-	if(!Ripterms::JavaHook::init()) return FALSE;
+	//if(!Ripterms::JavaHook::init()) return FALSE;
 	return TRUE;
 }
 
@@ -187,7 +189,8 @@ void Ripterms::clean()
 	if (Ripterms::p_tienv)
 		Ripterms::p_tienv->DisposeEnvironment();
 	GUI::clean();
-	Ripterms::JavaHook::clean();
+	//Ripterms::JavaHook::clean();
+	Ripterms::Hook::clean();
 	fclose(console_buffer1);
 	fclose(console_buffer2);
 	fclose(console_buffer3);
@@ -202,4 +205,5 @@ void Ripterms::partialClean()
 	Ripterms::Modules::cleanAll();
 	Ripterms::JavaClassV2::clean();
 	delete Ripterms::cache;
+	Ripterms::Hook::clean();
 }

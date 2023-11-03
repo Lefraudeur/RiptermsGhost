@@ -4,7 +4,7 @@
 #include <iostream>
 #include <JNI/jni.h>
 #include <vector>
-#include <type_traits>
+#include <capstone/capstone.h>
 
 namespace Ripterms
 {
@@ -20,12 +20,16 @@ namespace Ripterms
 		~Hook();
 		void remove();
 
+		static bool init();
+		static void clean();
+
 	private:
 		void hook_RELATIVE_5B_JMP(void* a_detour_function_addr, void** a_original_function_addr);
 		void remove_RELATIVE_5B_JMP();
 
 		void hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a_original_function_addr);
 		void remove_JAVA_ENTRY_HOOK();
+		int find_bytes_to_replace(const uint8_t* target);
 
 		uint8_t* AllocateNearbyMemory(uint8_t* nearby_addr, int size);
 
@@ -34,6 +38,7 @@ namespace Ripterms
 		uint8_t* our_tmp_instructions;
 		uint8_t* allocated_instructions;
 		Mode mode;
+		inline static csh handle = 0;
 	};
 
 	class Module
