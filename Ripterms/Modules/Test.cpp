@@ -6,6 +6,7 @@
 static void callback(const Ripterms::JavaHook::JavaParameters& params)
 {
 	std::cout << "ha" << std::endl;
+	std::cout << params.r8 << std::endl;
 }
 
 void Ripterms::Modules::Test::renderGUI()
@@ -22,8 +23,8 @@ void Ripterms::Modules::Test::renderGUI()
 		{
 			std::cout << "not found" << std::endl;
 		}
-		Ripterms::JavaClassV2 PlayerControllerMPClass{ "net/minecraft/client/multiplayer/PlayerControllerMP" };
-		jmethodID mid = PlayerControllerMPClass.getMethodID("attackEntity");
+		Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/gui/GuiChat"));
+		jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "mouseClicked", "(III)V");
 		Ripterms::JavaHook::add_to_java_hook(mid, callback);
 	}
 }

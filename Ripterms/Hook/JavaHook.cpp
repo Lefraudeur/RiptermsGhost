@@ -7,15 +7,16 @@ namespace //unique coding style lmao
 {
     std::unordered_map<void*, Ripterms::Hook*> hooks{};
     std::unordered_map<void*, void(*)(const Ripterms::JavaHook::JavaParameters& params)> methods_to_hook{};
+    //uint8_t* (*from_compiled_entry_no_trampoline)(void* Method) = nullptr;
 
     //parameters are passed through rcx and rdx, r8, r9 (Method* is in rbx, but JavaHook mov rcx, rbx)
-    void detour_i2i_entry(void* method_rbx, void* sp_r13, void* thread_r15)
+    void detour_i2i_entry(void* method_rbx, void* sp_r13, void* thread_r15, int r8)
     {
         if (!method_rbx || !sp_r13 || !thread_r15)
             return;
         if (methods_to_hook.contains(method_rbx))
         {
-            methods_to_hook[method_rbx]({sp_r13, thread_r15});
+            methods_to_hook[method_rbx]({sp_r13, thread_r15, r8});
         }
         return;
     }
@@ -51,7 +52,7 @@ bool Ripterms::JavaHook::init()
             jvmdll.pattern_scan(make_local_pattern2, sizeof(make_local_pattern2), PAGE_EXECUTE_READ);
     }
     if (!JavaParameters::make_local) return false;
-
+    /*
     uint8_t pattern[] = //0x90 used as wildcard
     {
         0x48, 0x63, 0xC1, 0x48, 0x8D, 0x0D, 0x06, 0x90, 0x90, 0x00, 0x48, 0x89, 0x14, 0xC1, 0xC3
@@ -69,22 +70,27 @@ bool Ripterms::JavaHook::init()
         std::cout << _entry_table[i] << std::endl;
         if (!hooks.contains(_entry_table[i]))
         {
-            try
-            {
-                Hook* hk = new Hook(0, _entry_table[i], detour_i2i_entry, nullptr, Hook::JAVA_ENTRY_HOOK);
-                hooks.insert({ _entry_table[i], hk});
-            }
-            catch (const std::exception& e)
-            {
-                std::cout << e.what() << std::endl;
-            }
+            Hook* hk = new Hook(0, _entry_table[i], detour_i2i_entry, nullptr, Hook::JAVA_ENTRY_HOOK);
+            hooks.insert({ _entry_table[i], hk});
         }
     }
+    uint8_t from_compiled_entry_no_tramp_pattern[] =
+    {
+        0x48, 0x8B, 0xC1, 0x48, 0x8B, 0x49, 0x48, 0x48, 0x85, 0xC9, 0x74, 0x0A, 0x48, 0x8B, 0x01, 0x48
+    };
+    from_compiled_entry_no_trampoline = (uint8_t*(*)(void*))jvmdll.pattern_scan(from_compiled_entry_no_tramp_pattern, sizeof(from_compiled_entry_no_tramp_pattern), PAGE_EXECUTE_READ);
+    */
     return true;
 }
 
 void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(const JavaParameters& params))
 {
     void* method = *((void**)methodID);
+    void* _from_interpreted_entry = *((void**)((uint8_t*)method + 0x38));
+    //void* _from_interpreted_entry = from_compiled_entry_no_trampoline(method);
+    if (_from_interpreted_entry && !hooks.contains(_from_interpreted_entry))
+    {
+        hooks.insert({ _from_interpreted_entry, new Hook(0,_from_interpreted_entry, detour_i2i_entry, nullptr, Hook::JAVA_ENTRY_HOOK) });
+    }
     methods_to_hook[method] = callback;
 }

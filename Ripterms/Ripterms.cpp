@@ -159,7 +159,7 @@ BOOL Ripterms::init(HMODULE dll)
 		if (!lwjgl)
 			return FALSE;
 		targetnglClear = (nglClearType)lwjgl.getProcAddress("Java_org_lwjgl_opengl_GL11_nglClear");
-		hook = new Ripterms::Hook(6, targetnglClear, detournglClear, (void**)&originalnglClear, Ripterms::Hook::RELATIVE_5B_JMP);
+		hook = new Ripterms::Hook(0, targetnglClear, detournglClear, (void**)&originalnglClear, Ripterms::Hook::RELATIVE_5B_JMP);
 		break;
 	}
 	case Version::MAJOR_1_16_5:
@@ -168,7 +168,7 @@ BOOL Ripterms::init(HMODULE dll)
 		if (!lwjgl)
 			return FALSE;
 		targetglClear = (glClearType)lwjgl.getProcAddress("Java_org_lwjgl_opengl_GL11C_glClear");
-		hook = new Ripterms::Hook(6, targetglClear, detourglClear, (void**)&originalglClear, Ripterms::Hook::RELATIVE_5B_JMP);
+		hook = new Ripterms::Hook(0, targetglClear, detourglClear, (void**)&originalglClear, Ripterms::Hook::RELATIVE_5B_JMP);
 		break;
 	}
 	default:

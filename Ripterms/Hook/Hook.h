@@ -62,9 +62,10 @@ namespace Ripterms
 		class JavaParameters
 		{
 		public:
-			inline JavaParameters(void* sp, void* thread) :
+			inline JavaParameters(void* sp, void* thread, int r8) :
 				sp((uint64_t*)sp),
-				thread(thread)
+				thread(thread),
+				r8(r8)
 			{}
 			//primitive type only
 			template<typename T> inline T get_primitive_at(int index) const
@@ -80,8 +81,8 @@ namespace Ripterms
 
 			void* thread;
 			inline static jobject(*make_local)(void* thread, void* oop, int alloc_failure) = nullptr;
-		private:
 			uint64_t* sp;
+			int r8;
 		};
 
 		void clean();
