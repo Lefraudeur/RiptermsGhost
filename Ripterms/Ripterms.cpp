@@ -175,7 +175,7 @@ BOOL Ripterms::init(HMODULE dll)
 		return FALSE;
 	}
 	if (!GUI::init()) return FALSE;
-	//if(!Ripterms::JavaHook::init()) return FALSE;
+	if(!Ripterms::JavaHook::init()) return FALSE;
 	return TRUE;
 }
 
@@ -189,7 +189,7 @@ void Ripterms::clean()
 	if (Ripterms::p_tienv)
 		Ripterms::p_tienv->DisposeEnvironment();
 	GUI::clean();
-	//Ripterms::JavaHook::clean();
+	Ripterms::JavaHook::clean();
 	Ripterms::Hook::clean();
 	fclose(console_buffer1);
 	fclose(console_buffer2);

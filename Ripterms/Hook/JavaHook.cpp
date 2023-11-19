@@ -1,30 +1,29 @@
 #include "Hook.h"
 #include <unordered_map>
-#include <functional>
-#include <thread>
+#include <winnt.h>
+
+static void* get_current_JavaThread_ptr();
 
 namespace //unique coding style lmao
 {
     std::unordered_map<void*, Ripterms::Hook*> hooks{};
-    std::unordered_map<void*, void(*)(const Ripterms::JavaHook::JavaParameters& params)> methods_to_hook{};
-    //uint8_t* (*from_compiled_entry_no_trampoline)(void* Method) = nullptr;
 
-    //parameters are passed through rcx and rdx, r8, r9 (Method* is in rbx, but JavaHook mov rcx, rbx)
-    void detour_i2i_entry(void* method_rbx, void* sp_r13, void* thread_r15, int r8)
+    struct MethodHandle
     {
-        if (!method_rbx || !sp_r13 || !thread_r15)
-            return;
-        if (methods_to_hook.contains(method_rbx))
-        {
-            methods_to_hook[method_rbx]({sp_r13, thread_r15, r8});
-        }
-        return;
-    }
+        void* method = nullptr;
+        void* thread = nullptr;
+    };
+
+    void(*compile_if_required)(MethodHandle* method, void* the_thread) = nullptr;
+    const char* (*get_thread_name)(void* the_thread) = nullptr;
+    void* (*compile_method)(MethodHandle* method, int osr_bci, int comp_level, MethodHandle* hot_method_handle, int hot_count, int compile_reason, void* thread) = nullptr;
+
+    int tls_index = 0;
 }
 
 void Ripterms::JavaHook::clean()
 {
-    for (const std::pair<void*, Ripterms::Hook*>& hook : hooks)
+    for (const std::pair<void*, Ripterms::Hook*> hook : hooks)
     {
         delete hook.second;
     }
@@ -52,45 +51,77 @@ bool Ripterms::JavaHook::init()
             jvmdll.pattern_scan(make_local_pattern2, sizeof(make_local_pattern2), PAGE_EXECUTE_READ);
     }
     if (!JavaParameters::make_local) return false;
-    /*
-    uint8_t pattern[] = //0x90 used as wildcard
+
+    uint8_t compile_if_required_pattern[] =
     {
-        0x48, 0x63, 0xC1, 0x48, 0x8D, 0x0D, 0x06, 0x90, 0x90, 0x00, 0x48, 0x89, 0x14, 0xC1, 0xC3
+        0x48, 0x89, 0x5C, 0x24, 0x10, 0x57, 0x48, 0x83, 0xEC, 0x50, 0x48, 0x8B, 0x01, 0x48, 0x8B, 0xFA
     };
-    uint8_t* pattern_addr = jvmdll.pattern_scan(pattern, sizeof(pattern), PAGE_EXECUTE_READ);
-    if (!pattern_addr) return false;
-    uint8_t* rip = pattern_addr + 3 + 7;
-    int32_t rip_offset = *((int32_t*)(pattern_addr + 6));
-    void** _entry_table = (void**)(rip + rip_offset);
-    std::cout << "table addr " << _entry_table << std::endl;
-    for (int i = 0; i < 36; ++i)
+    compile_if_required = (void(*)(MethodHandle*, void*))jvmdll.pattern_scan(compile_if_required_pattern, sizeof(compile_if_required_pattern), PAGE_EXECUTE_READ);
+
+    uint8_t tls_off_pattern[] =
     {
-        if (!_entry_table[i])
-            continue;
-        std::cout << _entry_table[i] << std::endl;
-        if (!hooks.contains(_entry_table[i]))
-        {
-            Hook* hk = new Hook(0, _entry_table[i], detour_i2i_entry, nullptr, Hook::JAVA_ENTRY_HOOK);
-            hooks.insert({ _entry_table[i], hk});
-        }
-    }
-    uint8_t from_compiled_entry_no_tramp_pattern[] =
-    {
-        0x48, 0x8B, 0xC1, 0x48, 0x8B, 0x49, 0x48, 0x48, 0x85, 0xC9, 0x74, 0x0A, 0x48, 0x8B, 0x01, 0x48
+        0x48, 0x85, 0xC0, 0x74, 0x61, 0x8B, 0x15
     };
-    from_compiled_entry_no_trampoline = (uint8_t*(*)(void*))jvmdll.pattern_scan(from_compiled_entry_no_tramp_pattern, sizeof(from_compiled_entry_no_tramp_pattern), PAGE_EXECUTE_READ);
-    */
+    uint8_t* tls_off = jvmdll.pattern_scan(tls_off_pattern, sizeof(tls_off_pattern), PAGE_EXECUTE_READ);
+    uint8_t* rip = tls_off + 7 + 4;
+    int32_t rip_offset = *((int32_t*)(tls_off + 7));
+    tls_index = *((int*)(rip + rip_offset));
+
+    uint8_t get_thread_name_pattern[] =
+    {
+        0x48, 0x89, 0x5C, 0x24, 0x08, 0x57, 0x48, 0x83, 0xEC, 0x20, 0x8B, 0x05, 0x90, 0x90, 0x90, 0x90, 0x48, 0x8B, 0xF9, 0x83, 0xF8, 0x02
+    };
+    get_thread_name = (const char*(*)(void*))jvmdll.pattern_scan(get_thread_name_pattern, sizeof(get_thread_name_pattern), PAGE_EXECUTE_READ);
+
+
+    uint8_t compile_method_pattern[] =
+    {
+        0x48, 0x89, 0x5C, 0x24, 0x10, 0x48, 0x89, 0x6C, 0x24, 0x18, 0x48, 0x89, 0x74, 0x24, 0x20, 0x41, 0x56, 0x48, 0x83, 0xEC, 0x40, 0x80
+    };
+    compile_method = (void* (*)(MethodHandle*, int, int, MethodHandle*, int, int, void*))jvmdll.pattern_scan(compile_method_pattern, sizeof(compile_method_pattern), PAGE_EXECUTE_READ);
+
     return true;
 }
 
-void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(const JavaParameters& params))
+void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(uint64_t sp, uint64_t j_rarg0, uint64_t j_rarg1, uint64_t j_rarg2))
 {
+    void* Java_thread = get_current_JavaThread_ptr();
     void* method = *((void**)methodID);
-    void* _from_interpreted_entry = *((void**)((uint8_t*)method + 0x38));
-    //void* _from_interpreted_entry = from_compiled_entry_no_trampoline(method);
-    if (_from_interpreted_entry && !hooks.contains(_from_interpreted_entry))
+
+
+    MethodHandle handle = { method, Java_thread };
+    MethodHandle hot_method = { nullptr, nullptr };
+    compile_method(&handle, -1, 1, &hot_method, 0, 0, Java_thread);
+    uint8_t* code = nullptr;
+    while (code == nullptr)
     {
-        hooks.insert({ _from_interpreted_entry, new Hook(0,_from_interpreted_entry, detour_i2i_entry, nullptr, Hook::JAVA_ENTRY_HOOK) });
+        method = *((void**)methodID);
+        if (method)
+            code = *((uint8_t**)((uint8_t*)method + 0x48));
     }
-    methods_to_hook[method] = callback;
+
+    void* begin = *((void**)(code + 0xE0)); // verified_entry_point of nmethod or 0xD8
+    if (begin && !hooks.contains(begin))
+    {
+        hooks.insert({ begin, new Hook(0,begin, callback, nullptr, Hook::JAVA_ENTRY_HOOK) });
+        std::cout << begin << std::endl;
+    }
+}
+
+static void* get_current_JavaThread_ptr()
+{
+    struct tb {
+        PVOID Reserved1[12];
+        PVOID  ProcessEnvironmentBlock;
+        PVOID Reserved2[399];
+        BYTE  Reserved3[1952];
+        PVOID TlsSlots[64];
+        BYTE  Reserved4[8];
+        PVOID Reserved5[26];
+        PVOID ReservedForOle;
+        PVOID Reserved6[4];
+        PVOID TlsExpansionSlots;
+    }* teb = (tb*)NtCurrentTeb();
+    uint8_t* tls = *((uint8_t**)teb->Reserved1[11] + tls_index);
+    return *((void**)(tls + 32));
 }

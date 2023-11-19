@@ -62,7 +62,7 @@ namespace Ripterms
 		class JavaParameters
 		{
 		public:
-			inline JavaParameters(void* sp, void* thread, int r8) :
+			inline JavaParameters(void* sp, void* thread, void* r8) :
 				sp((uint64_t*)sp),
 				thread(thread),
 				r8(r8)
@@ -82,11 +82,11 @@ namespace Ripterms
 			void* thread;
 			inline static jobject(*make_local)(void* thread, void* oop, int alloc_failure) = nullptr;
 			uint64_t* sp;
-			int r8;
+			void* r8;
 		};
 
 		void clean();
 		bool init();
-		void add_to_java_hook(jmethodID methodID, void(*callback)(const JavaParameters& params));
+		void add_to_java_hook(jmethodID methodID, void(*callback)(uint64_t sp, uint64_t j_rarg0, uint64_t j_rarg1, uint64_t j_rarg2));
 	}
 }

@@ -204,26 +204,31 @@ std::string Ripterms::JavaClassV2::getObfuscatedMethodSig(const std::string& nam
 
 jclass Ripterms::JavaClassV2::findClass(const std::string& class_path, JNIEnv* env)
 {
-	jint class_count = 0;
-	jclass* classes = nullptr;
-	jclass foundclass = nullptr;
-	Ripterms::p_tienv->GetLoadedClasses(&class_count, &classes);
-	for (int i = 0; i < class_count; ++i)
+	jclass* loaded_classes = nullptr;
+	jint loaded_classes_count = 0;
+	jclass found_class = nullptr;
+	jvmtiEnv* tienv = Ripterms::p_tienv;
+	tienv->GetLoadedClasses(&loaded_classes_count, &loaded_classes);
+	for (jint i = 0; i < loaded_classes_count; ++i)
 	{
 		char* signature_buffer = nullptr;
-		Ripterms::p_tienv->GetClassSignature(classes[i], &signature_buffer, nullptr);
+		tienv->GetClassSignature(loaded_classes[i], &signature_buffer, nullptr);
 		std::string signature = signature_buffer;
-		Ripterms::p_tienv->Deallocate((unsigned char*)signature_buffer);
+		tienv->Deallocate((unsigned char*)signature_buffer);
 		signature = signature.substr(1);
 		signature.pop_back();
 		if (signature == class_path)
 		{
-			foundclass = (jclass)env->NewLocalRef(classes[i]);
+			found_class = (jclass)env->NewLocalRef(loaded_classes[i]);
+			break;
 		}
-		env->DeleteLocalRef(classes[i]);
 	}
-	Ripterms::p_tienv->Deallocate((unsigned char*)classes);
-	return foundclass;
+	for (jint i = 0; i < loaded_classes_count; ++i)
+	{
+		env->DeleteLocalRef(loaded_classes[i]);
+	}
+	tienv->Deallocate((unsigned char*)loaded_classes);
+	return found_class;
 }
 
 void Ripterms::JavaClassV2::removeFromJClassCache()

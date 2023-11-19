@@ -121,24 +121,17 @@ void Ripterms::Hook::hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a
     }
 
     DWORD original_protection = 0;
-    allocated_instructions = AllocateNearbyMemory(target, 63 + bytes_to_replace);
+    allocated_instructions = AllocateNearbyMemory(target, 56 + bytes_to_replace);
     if (!allocated_instructions)
         throw std::exception("shit");
     VirtualProtect(target, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection);
     int32_t target_allocated_offset = int32_t(allocated_instructions - (target + 5));
 
-
-    uint8_t pre_call_old[] =
-    {
-        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 
-        0x53, 0x48, 0x89, 0xD9, 0x4C, 0x89, 0xEA, 0x4D, 0x89, 0xF8, 
-        0x55, 0x48, 0x89, 0xE5, 0x48, 0x83, 0xEC, 0x20, 0x48, 0xB8
-    };
     uint8_t pre_call[] =
     {
-        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 0x4D, 
-        0x89, 0xC1, 0x48, 0x89, 0xD9, 0x4C, 0x89, 0xEA, 0x4D, 0x89, 0xF8, 0x55, 
-        0x48, 0x89, 0xE5, 0x48, 0x83, 0xEC, 0x20, 0x48, 0xB8
+        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 
+        0x53, 0x55, 0x48, 0x89, 0xE5, 0x48, 0x8D, 0x4C, 0x24, 0x40, 
+        0x48, 0x83, 0xEC, 0x20, 0x48, 0xB8
     };
     memcpy(allocated_instructions, pre_call, sizeof(pre_call));
     *((uint64_t*)(allocated_instructions + sizeof(pre_call))) = (uint64_t)a_detour_function_addr;
@@ -160,17 +153,15 @@ void Ripterms::Hook::hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a
         memset(target + 5, 0x90, bytes_to_replace - 5); // fill the remaining bytes with NOPs
 
     VirtualProtect(target, bytes_to_replace, original_protection, &original_protection);
-    VirtualProtect(allocated_instructions, 63 + bytes_to_replace, PAGE_EXECUTE_READ, &original_protection);
+    VirtualProtect(allocated_instructions, 56 + bytes_to_replace, PAGE_EXECUTE_READ, &original_protection);
 }
 
 void Ripterms::Hook::remove_JAVA_ENTRY_HOOK()
 {
     DWORD original_protection = 0;
-    if (VirtualProtect(target_function_addr, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection))
-    {
-        memcpy(target_function_addr, allocated_instructions + 58, bytes_to_replace);
-        VirtualProtect(target_function_addr, bytes_to_replace, original_protection, &original_protection);
-    }
+    VirtualProtect(target_function_addr, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection);
+    memcpy(target_function_addr, allocated_instructions + 51, bytes_to_replace);
+    VirtualProtect(target_function_addr, bytes_to_replace, original_protection, &original_protection);
     VirtualFree(allocated_instructions, 0, MEM_RELEASE);
 }
 
@@ -196,9 +187,9 @@ uint8_t* Ripterms::Hook::AllocateNearbyMemory(uint8_t* nearby_addr, int size)
 {
     //this is slow, maybe change the value
     int fail = 0;
-    for (int i = 131072;
+    for (int i = 65536;
         i < 0x7FFFFFFF;
-        i += 131072)
+        i += 65536)
     {
         uint8_t* allocated = (uint8_t*)VirtualAlloc(nearby_addr + i, size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
         if (allocated)
