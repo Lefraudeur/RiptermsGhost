@@ -91,7 +91,7 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(ui
 
     MethodHandle handle = { method, Java_thread };
     MethodHandle hot_method = { nullptr, nullptr };
-    compile_method(&handle, -1, 1, &hot_method, 0, 0, Java_thread);
+    compile_method(&handle, -1, 1, &hot_method, 0, 6, Java_thread);
     uint8_t* code = nullptr;
     while (code == nullptr)
     {
@@ -105,6 +105,13 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(ui
     {
         hooks.insert({ begin, new Hook(0,begin, callback, nullptr, Hook::JAVA_ENTRY_HOOK) });
         std::cout << begin << std::endl;
+    }
+
+    void* begin2 = *((void**)(code + 0xD8)); // verified_entry_point of nmethod or 0xD8
+    if (begin2 && !hooks.contains(begin2))
+    {
+        hooks.insert({ begin2, new Hook(0,begin2, callback, nullptr, Hook::JAVA_ENTRY_HOOK) });
+        std::cout << begin2 << std::endl;
     }
 }
 
