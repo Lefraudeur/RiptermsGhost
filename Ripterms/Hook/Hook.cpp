@@ -121,7 +121,7 @@ void Ripterms::Hook::hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a
     }
 
     DWORD original_protection = 0;
-    allocated_instructions = AllocateNearbyMemory(target, 56 + bytes_to_replace);
+    allocated_instructions = AllocateNearbyMemory(target, 58 + bytes_to_replace);
     if (!allocated_instructions)
         throw std::exception("shit");
     VirtualProtect(target, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection);
@@ -129,9 +129,9 @@ void Ripterms::Hook::hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a
 
     uint8_t pre_call[] =
     {
-        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 
-        0x53, 0x55, 0x48, 0x89, 0xE5, 0x48, 0x8D, 0x4C, 0x24, 0x40, 
-        0x48, 0x83, 0xEC, 0x28, 0x48, 0xB8
+        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 0x55, 
+        0x48, 0x89, 0xE5, 0x51, 0x56, 0x57, 0x48, 0x8D, 0x4D, 0x40, 0x48, 0x83, 
+        0xEC, 0x20, 0x48, 0xB8
     };
     memcpy(allocated_instructions, pre_call, sizeof(pre_call));
     *((uint64_t*)(allocated_instructions + sizeof(pre_call))) = (uint64_t)a_detour_function_addr;
@@ -153,14 +153,14 @@ void Ripterms::Hook::hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a
         memset(target + 5, 0x90, bytes_to_replace - 5); // fill the remaining bytes with NOPs
 
     VirtualProtect(target, bytes_to_replace, original_protection, &original_protection);
-    VirtualProtect(allocated_instructions, 56 + bytes_to_replace, PAGE_EXECUTE_READ, &original_protection);
+    VirtualProtect(allocated_instructions, 58 + bytes_to_replace, PAGE_EXECUTE_READ, &original_protection);
 }
 
 void Ripterms::Hook::remove_JAVA_ENTRY_HOOK()
 {
     DWORD original_protection = 0;
     VirtualProtect(target_function_addr, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection);
-    memcpy(target_function_addr, allocated_instructions + 51, bytes_to_replace);
+    memcpy(target_function_addr, allocated_instructions + 53, bytes_to_replace);
     VirtualProtect(target_function_addr, bytes_to_replace, original_protection, &original_protection);
     VirtualFree(allocated_instructions, 0, MEM_RELEASE);
 }

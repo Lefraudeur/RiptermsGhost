@@ -5,7 +5,7 @@
 #include "../../net/minecraft/network/play/client/C03PacketPlayer/C03PacketPlayer.h"
 
 
-static void callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2) //j_rarg0 is this object in non static methods
+static void callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5) //j_rarg0 is this object in non static methods
 {
 	/*
 	static JNIEnv* env = nullptr;
@@ -18,10 +18,9 @@ static void callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2) //j_
 		std::cout << "player packet" << std::endl;
 	}
 	*/
-	std::cout << "x: " << (int)j_rarg1
-		<< "\ny: " << (int)j_rarg2 << '\n';
-	std::cout << "stack pointer address: " << sp << '\n';
-	std::cout << "return address: " << *(void**)sp << '\n';
+	std::cout << (int)j_rarg1 << '\n';
+	std::cout << (int)j_rarg2 << '\n';
+	std::cout << (int)j_rarg3 << '\n';
 	return;
 }
 

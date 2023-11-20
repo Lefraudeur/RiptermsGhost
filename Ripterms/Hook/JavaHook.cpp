@@ -69,7 +69,7 @@ bool Ripterms::JavaHook::init()
     return true;
 }
 
-void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2))
+void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5))
 {
     void* Java_thread = get_current_JavaThread_ptr();
     void* method = *((void**)methodID);
