@@ -194,13 +194,13 @@ uint8_t* Ripterms::Hook::AllocateNearbyMemory(uint8_t* nearby_addr, int size)
         uint8_t* allocated = (uint8_t*)VirtualAlloc(nearby_addr + i, size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
         if (allocated)
         {
-            std::cout << "fails: " << fail << std::endl;
+            //std::cout << "fails: " << fail << std::endl;
             return allocated;
         }
         allocated = (uint8_t*)VirtualAlloc(nearby_addr - i, size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
         if (allocated)
         {
-            std::cout << "fails: " << fail << std::endl;
+            //std::cout << "fails: " << fail << std::endl;
             return allocated;
         }
         fail++;

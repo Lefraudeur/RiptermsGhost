@@ -59,35 +59,9 @@ namespace Ripterms
 
 	namespace JavaHook
 	{
-		class JavaParameters
-		{
-		public:
-			inline JavaParameters(void* sp, void* thread, void* r8) :
-				sp((uint64_t*)sp),
-				thread(thread),
-				r8(r8)
-			{}
-			//primitive type only
-			template<typename T> inline T get_primitive_at(int index) const
-			{
-				return *((T*)(sp + index));
-			}
-			//index from right to left, 0 is last parameter
-			inline jobject get_jobject_at(int index) const
-			{
-				void* oop = *((void**)(sp + index));
-				return make_local(thread, oop, 0);
-			}
-
-			void* thread;
-			inline static jobject(*make_local)(void* thread, void* oop, int alloc_failure) = nullptr;
-			uint64_t* sp;
-			void* r8;
-		};
-
-		void* get_current_JavaThread_ptr();
 		void clean();
 		bool init();
-		void add_to_java_hook(jmethodID methodID, void(*callback)(uint64_t sp, uint64_t j_rarg0, uint64_t j_rarg1, uint64_t j_rarg2));
+		void add_to_java_hook(jmethodID methodID, void(*callback)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2));
+		jobject j_rarg_to_jobject(void* j_rarg);
 	}
 }
