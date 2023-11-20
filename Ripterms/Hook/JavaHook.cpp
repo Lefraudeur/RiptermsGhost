@@ -2,8 +2,6 @@
 #include <unordered_map>
 #include <winnt.h>
 
-static void* get_current_JavaThread_ptr();
-
 namespace //unique coding style lmao
 {
     std::unordered_map<void*, Ripterms::Hook*> hooks{};
@@ -14,7 +12,6 @@ namespace //unique coding style lmao
         void* thread = nullptr;
     };
 
-    void(*compile_if_required)(MethodHandle* method, void* the_thread) = nullptr;
     const char* (*get_thread_name)(void* the_thread) = nullptr;
     void* (*compile_method)(MethodHandle* method, int osr_bci, int comp_level, MethodHandle* hot_method_handle, int hot_count, int compile_reason, void* thread) = nullptr;
 
@@ -51,12 +48,6 @@ bool Ripterms::JavaHook::init()
             jvmdll.pattern_scan(make_local_pattern2, sizeof(make_local_pattern2), PAGE_EXECUTE_READ);
     }
     if (!JavaParameters::make_local) return false;
-
-    uint8_t compile_if_required_pattern[] =
-    {
-        0x48, 0x89, 0x5C, 0x24, 0x10, 0x57, 0x48, 0x83, 0xEC, 0x50, 0x48, 0x8B, 0x01, 0x48, 0x8B, 0xFA
-    };
-    compile_if_required = (void(*)(MethodHandle*, void*))jvmdll.pattern_scan(compile_if_required_pattern, sizeof(compile_if_required_pattern), PAGE_EXECUTE_READ);
 
     uint8_t tls_off_pattern[] =
     {
@@ -115,7 +106,7 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(ui
     }
 }
 
-static void* get_current_JavaThread_ptr()
+void* Ripterms::JavaHook::get_current_JavaThread_ptr()
 {
     struct tb {
         PVOID Reserved1[12];

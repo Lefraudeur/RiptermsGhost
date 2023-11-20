@@ -85,6 +85,7 @@ namespace Ripterms
 			void* r8;
 		};
 
+		void* get_current_JavaThread_ptr();
 		void clean();
 		bool init();
 		void add_to_java_hook(jmethodID methodID, void(*callback)(uint64_t sp, uint64_t j_rarg0, uint64_t j_rarg1, uint64_t j_rarg2));
