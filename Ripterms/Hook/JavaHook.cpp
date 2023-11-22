@@ -75,27 +75,30 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(vo
     void* Java_thread = get_current_JavaThread_ptr();
     void* method = *((void**)methodID);
     uint8_t* code = *((uint8_t**)((uint8_t*)method + 0x48));
+    int* access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
 
-    if (!code)
+
+    if (!code) // compile if no compiled code exist
     {
         MethodHandle handle = { method, Java_thread };
         MethodHandle hot_method = { nullptr, nullptr };
         if (compile_method)
-            compile_method(&handle, -1, 1, &hot_method, 0, 6, Java_thread);
+            compile_method(&handle, -1, 4, &hot_method, 0, 6, Java_thread);
         else
-            compile_method_old(handle, -1, -1, hot_method, 0, "must_be_compiled", Java_thread);
+            compile_method_old(handle, -1, 4, hot_method, 0, "must_be_compiled", Java_thread);
 
-        while (!code)
+        while (!code || (*(access_flags) & 0x01000000) != 0) //wait for compilation to complete
         {
             method = *((void**)methodID);
             if (method)
+            {
                 code = *((uint8_t**)((uint8_t*)method + 0x48));
+                access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
+            }
         }
     }
 
-    int* access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
-    if ((*(access_flags) & 0x01000000) == 0) // if it's not on compile queue
-        *(access_flags) |= 0x01000000; //fake put the method on queue, to disable recompilation
+    *(access_flags) |= 0x01000000; // fake put the method on compile queue, to disable recompilation
 
     void* begin = *((void**)(code + (compile_method ? 0xE0 : 0x80))); // verified_entry_point of nmethod (should be used almost all the time)
     if (begin && !hooks.contains(begin))
