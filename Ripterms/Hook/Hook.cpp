@@ -121,24 +121,24 @@ void Ripterms::Hook::hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a
     }
 
     DWORD original_protection = 0;
-    allocated_instructions = AllocateNearbyMemory(target, 58 + bytes_to_replace);
+    allocated_instructions = AllocateNearbyMemory(target, 73 + bytes_to_replace);
     if (!allocated_instructions)
         throw std::exception("shit");
     VirtualProtect(target, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection);
     int32_t target_allocated_offset = int32_t(allocated_instructions - (target + 5));
 
-    uint8_t pre_call[] =
+    uint8_t pre_call[] = //assembly code, save registers, move params to the corresponding registers, prepare stack to call detour
     {
-        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 0x55, 
-        0x48, 0x89, 0xE5, 0x51, 0x56, 0x57, 0x48, 0x8D, 0x4D, 0x40, 0x48, 0x83, 
-        0xEC, 0x20, 0x48, 0xB8
+        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 0x55, 0x6A, 
+        0x00, 0x48, 0x89, 0xE5, 0x48, 0x8D, 0x45, 0x00, 0x50, 0x51, 0x56, 0x57, 0x48, 
+        0x8D, 0x4D, 0x48, 0x48, 0x83, 0xEC, 0x20, 0x48, 0xB8
     };
     memcpy(allocated_instructions, pre_call, sizeof(pre_call));
     *((uint64_t*)(allocated_instructions + sizeof(pre_call))) = (uint64_t)a_detour_function_addr;
-    uint8_t post_call[] =
+    uint8_t post_call[] = //assembly code, call detour, restore registers and stack, and return or jmp back to continue execution
     {
-        0xFF, 0xD0, 0x48, 0x89, 0xEC, 0x5D, 0x41, 0x5B, 0x41, 0x5A, 
-        0x41, 0x59, 0x41, 0x58, 0x5A, 0x59, 0x58
+        0xFF, 0xD0, 0x48, 0x89, 0xEC, 0x58, 0x48, 0x83, 0xF8, 0x00, 0x5D, 0x41, 
+        0x5B, 0x41, 0x5A, 0x41, 0x59, 0x41, 0x58, 0x5A, 0x59, 0x58, 0x74, 0x01, 0xC3
     };
     memcpy(allocated_instructions + sizeof(pre_call) + 8, post_call, sizeof(post_call));
     memcpy(allocated_instructions + sizeof(pre_call) + 8 + sizeof(post_call), target, bytes_to_replace);
@@ -153,14 +153,14 @@ void Ripterms::Hook::hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a
         memset(target + 5, 0x90, bytes_to_replace - 5); // fill the remaining bytes with NOPs
 
     VirtualProtect(target, bytes_to_replace, original_protection, &original_protection);
-    VirtualProtect(allocated_instructions, 58 + bytes_to_replace, PAGE_EXECUTE_READ, &original_protection);
+    VirtualProtect(allocated_instructions, 73 + bytes_to_replace, PAGE_EXECUTE_READ, &original_protection);
 }
 
 void Ripterms::Hook::remove_JAVA_ENTRY_HOOK()
 {
     DWORD original_protection = 0;
     VirtualProtect(target_function_addr, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection);
-    memcpy(target_function_addr, allocated_instructions + 53, bytes_to_replace);
+    memcpy(target_function_addr, allocated_instructions + 68, bytes_to_replace);
     VirtualProtect(target_function_addr, bytes_to_replace, original_protection, &original_protection);
     VirtualFree(allocated_instructions, 0, MEM_RELEASE);
 }
