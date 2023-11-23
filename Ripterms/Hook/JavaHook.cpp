@@ -77,28 +77,32 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(vo
     uint8_t* code = *((uint8_t**)((uint8_t*)method + 0x48));
     int* access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
 
+    *(access_flags) = *(access_flags) & ~0x01000000; //make sure nothing prevents us from compiling
+    *(access_flags) = *(access_flags) & ~0x04000000;
+    *(access_flags) = *(access_flags) & ~0x02000000;
+    *(access_flags) = *(access_flags) & ~0x08000000;
 
-    if (!code) // compile if no compiled code exist
+    MethodHandle handle = { method, Java_thread };
+    MethodHandle hot_method = { nullptr, nullptr };
+    if (compile_method)
+        compile_method(&handle, -1, 4, &hot_method, 0, 6, Java_thread);
+    else
+        compile_method_old(handle, -1, 4, hot_method, 0, "must_be_compiled", Java_thread);
+
+    while (!code || (*(access_flags) & 0x01000000) != 0) //wait for compilation to complete
     {
-        MethodHandle handle = { method, Java_thread };
-        MethodHandle hot_method = { nullptr, nullptr };
-        if (compile_method)
-            compile_method(&handle, -1, 4, &hot_method, 0, 6, Java_thread);
-        else
-            compile_method_old(handle, -1, 4, hot_method, 0, "must_be_compiled", Java_thread);
-
-        while (!code || (*(access_flags) & 0x01000000) != 0) //wait for compilation to complete
+        method = *((void**)methodID);
+        if (method)
         {
-            method = *((void**)methodID);
-            if (method)
-            {
-                code = *((uint8_t**)((uint8_t*)method + 0x48));
-                access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
-            }
+            code = *((uint8_t**)((uint8_t*)method + 0x48));
+            access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
         }
     }
 
     *(access_flags) |= 0x01000000; // fake put the method on compile queue, to disable recompilation
+    *(access_flags) |= 0x04000000; //disable every compiler level
+    *(access_flags) |= 0x02000000;
+    *(access_flags) |= 0x08000000;
 
     void* begin = *((void**)(code + (compile_method ? 0xE0 : 0x80))); // verified_entry_point of nmethod (should be used almost all the time)
     if (begin && !hooks.contains(begin))
