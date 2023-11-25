@@ -32,11 +32,11 @@ void Ripterms::JavaHook::clean()
 bool Ripterms::JavaHook::init()
 {
     Module jvmdll("jvm.dll");
-    uint8_t make_local_pattern[] = 
-    { 
-        0x48, 0x85, 0xD2, 0x75, 0x03, 0x33, 0xC0, 0xC3, 
-        0x48, 0x8B, 0x89, 0xD8, 0x00, 0x00, 0x00, 0xE9, 
-        0x6C, 0xF7, 0xFF, 0xFF 
+    uint8_t make_local_pattern[] =
+    {
+        0x48, 0x85, 0xD2, 0x75, 0x03, 0x33, 0xC0, 0xC3,
+        0x48, 0x8B, 0x89, 0xD8, 0x00, 0x00, 0x00, 0xE9,
+        0x6C, 0xF7, 0xFF, 0xFF
     };
     make_local = (jobject(*)(void*, void*, int))
         jvmdll.pattern_scan(make_local_pattern, sizeof(make_local_pattern), PAGE_EXECUTE_READ);
@@ -74,7 +74,6 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(vo
 {
     void* Java_thread = get_current_JavaThread_ptr();
     void* method = *((void**)methodID);
-    uint8_t* code = *((uint8_t**)((uint8_t*)method + 0x48));
     int* access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
 
     *(access_flags) = *(access_flags) & ~0x01000000; //make sure nothing prevents us from compiling
@@ -85,34 +84,45 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(vo
     MethodHandle handle = { method, Java_thread };
     MethodHandle hot_method = { nullptr, nullptr };
     if (compile_method)
-        compile_method(&handle, -1, 4, &hot_method, 0, 6, Java_thread);
+        compile_method(&handle, -1, 1, &hot_method, 0, 6, Java_thread);
     else
         compile_method_old(handle, -1, 4, hot_method, 0, "must_be_compiled", Java_thread);
 
-    while (!code || (*(access_flags) & 0x01000000) != 0) //wait for compilation to complete
+
+    uint8_t* _code = nullptr;
+    for (int i = 0; i < 1000;)
     {
         method = *((void**)methodID);
-        if (method)
-        {
-            code = *((uint8_t**)((uint8_t*)method + 0x48));
-            access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
-        }
+        if (!method)
+            continue;
+        access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
+        while ((*(access_flags) & 0x01000000) != 0) {}
+        void* new_code = nullptr;
+        while (!new_code)
+            new_code = *((void**)((uint8_t*)method + 0x48));
+        if (new_code && _code && new_code == _code)
+            ++i;
+        else
+            i = 0;
+        _code = (uint8_t*)new_code;
     }
+    std::cout << (void*)_code << '\n';
 
-    *(access_flags) |= 0x01000000; // fake put the method on compile queue, to disable recompilation
-    *(access_flags) |= 0x04000000; //disable every compiler level
+    *(access_flags) |= 0x01000000;
+    *(access_flags) |= 0x04000000;
     *(access_flags) |= 0x02000000;
     *(access_flags) |= 0x08000000;
 
-    void* begin = *((void**)(code + (compile_method ? 0xE0 : 0x80))); // verified_entry_point of nmethod (should be used almost all the time)
-    if (begin && !hooks.contains(begin))
+    void* begin = *((void**)(_code + (compile_method ? 0xE0 : 0x80)));
+    if (begin && !hooks.contains(begin) && callback)
         hooks.insert({ begin, new Hook(0,begin, callback, nullptr, Hook::JAVA_ENTRY_HOOK) });
-    std::cout << begin << '\n';
 
+    /*
     begin = *((void**)(code + (compile_method ? 0xD8 : 0x78))); // _entry_point of nmethod
-    if (begin && !hooks.contains(begin))
+    if (begin && !hooks.contains(begin) && callback)
         hooks.insert({ begin, new Hook(0,begin, callback, nullptr, Hook::JAVA_ENTRY_HOOK) });
     std::cout << begin << '\n';
+    */
 }
 
 

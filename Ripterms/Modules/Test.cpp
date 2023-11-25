@@ -7,11 +7,12 @@
 
 static void callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return) //j_rarg0 is this object in non static methods
 {
-	std::cout << "x: " << j_rarg1 << "\n"
-		"y: " << j_rarg2 << "\n"
-		"mouse button: " << j_rarg3 << '\n';
-	*should_return = true;
-	std::cout << "cancel" << "\n\n";
+	static unsigned long long i = 0U;
+	std::cout << i << '\n';
+	i++;
+	if (i == 999999999U)
+		i = 0U;
+	//*should_return = true;
 	//set should_return to true to cancel the call
 	/*
 	static JNIEnv* env = nullptr;
@@ -44,11 +45,18 @@ void Ripterms::Modules::Test::renderGUI()
 		{
 			std::cout << "not found" << std::endl;
 		}
-		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/gui/GuiChat"));
-		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "mouseClicked", "(III)V");
+		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/entity/EntityPlayerSP"));
+		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "swingItem", "()V");
+
+		//Ripterms::JavaClassV2 minecraftClass("net/minecraft/client/Minecraft");
+		//jmethodID caller = minecraftClass.getMethodID("clickMouse");
+
+		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/entity/EntityPlayerSP"));
+		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "func_71038_i", "()V");
 
 		Ripterms::JavaClassV2 lol2("net/minecraft/network/NetworkManager");
 		jmethodID mid = lol2.getMethodID("sendPacket");
+		//Ripterms::JavaHook::add_to_java_hook(caller, nullptr);
 		Ripterms::JavaHook::add_to_java_hook(mid, callback);
 	}
 }

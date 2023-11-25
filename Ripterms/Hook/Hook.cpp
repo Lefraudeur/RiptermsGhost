@@ -122,9 +122,8 @@ void Ripterms::Hook::hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a
 
     DWORD original_protection = 0;
     allocated_instructions = AllocateNearbyMemory(target, 73 + bytes_to_replace);
-    if (!allocated_instructions)
+    if (!allocated_instructions || !VirtualProtect(target, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection))
         throw std::exception("shit");
-    VirtualProtect(target, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection);
     int32_t target_allocated_offset = int32_t(allocated_instructions - (target + 5));
 
     uint8_t pre_call[] = //assembly code, save registers, move params to the corresponding registers, prepare stack to call detour
@@ -152,8 +151,9 @@ void Ripterms::Hook::hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a
     if (bytes_to_replace > 5)
         memset(target + 5, 0x90, bytes_to_replace - 5); // fill the remaining bytes with NOPs
 
-    VirtualProtect(target, bytes_to_replace, original_protection, &original_protection);
-    VirtualProtect(allocated_instructions, 73 + bytes_to_replace, PAGE_EXECUTE_READ, &original_protection);
+    if (!VirtualProtect(target, bytes_to_replace, original_protection, &original_protection)
+        || !VirtualProtect(allocated_instructions, 73 + bytes_to_replace, PAGE_EXECUTE_READ, &original_protection))
+        throw std::exception("shit");
 }
 
 void Ripterms::Hook::remove_JAVA_ENTRY_HOOK()
