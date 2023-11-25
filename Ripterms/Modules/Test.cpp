@@ -12,22 +12,7 @@ static void callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void
 	i++;
 	if (i == 999999999U)
 		i = 0U;
-	//*should_return = true;
-	//set should_return to true to cancel the call
-	/*
-	static JNIEnv* env = nullptr;
-	if (!env)
-		Ripterms::p_jvm->GetEnv((void**)&env, JNI_VERSION_1_8);
-	Packet packet(Ripterms::JavaHook::j_rarg_to_jobject(j_rarg1), env);
-	if (packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/client/C03PacketPlayer").getJClass(env)))
-	{
-		C03PacketPlayer playerPacket(packet, env);
-		if (playerPacket.getRotating() == true)
-		{
-			playerPacket.setYawPitch({ 0.0f, 0.0f });
-		}
-	}
-	*/
+	*should_return = true;
 	return;
 }
 
@@ -45,18 +30,14 @@ void Ripterms::Modules::Test::renderGUI()
 		{
 			std::cout << "not found" << std::endl;
 		}
-		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/entity/EntityPlayerSP"));
+		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/entity/EntityLivingBase"));
 		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "swingItem", "()V");
 
-		//Ripterms::JavaClassV2 minecraftClass("net/minecraft/client/Minecraft");
-		//jmethodID caller = minecraftClass.getMethodID("clickMouse");
-
-		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/entity/EntityPlayerSP"));
+		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/entity/EntityLivingBase"));
 		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "func_71038_i", "()V");
 
 		Ripterms::JavaClassV2 lol2("net/minecraft/network/NetworkManager");
 		jmethodID mid = lol2.getMethodID("sendPacket");
-		//Ripterms::JavaHook::add_to_java_hook(caller, nullptr);
 		Ripterms::JavaHook::add_to_java_hook(mid, callback);
 	}
 }

@@ -1,7 +1,7 @@
 #pragma once
 namespace Mappings
 {
-	constexpr inline char mappings_forge_1_7_10[] = R"(
+	constexpr static char mappings_forge_1_7_10[] = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",

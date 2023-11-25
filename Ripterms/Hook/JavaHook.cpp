@@ -1,6 +1,7 @@
 #include "Hook.h"
 #include <unordered_map>
 #include <winnt.h>
+#include <thread>
 
 static void* get_current_JavaThread_ptr();
 
@@ -16,7 +17,7 @@ namespace
 
     void* (*compile_method)(MethodHandle* method, int osr_bci, int comp_level, MethodHandle* hot_method_handle, int hot_count, int compile_reason, void* thread) = nullptr; //jdk 17
 
-    void* (*compile_method_old)(MethodHandle method, int osr_bci, int comp_level, MethodHandle hot_method_handle, int hot_count, const char* compile_reason, void* thread) = nullptr; //jdk 8
+    void* (*compile_method_old)(MethodHandle* method, int osr_bci, int comp_level, MethodHandle* hot_method_handle, int hot_count, const char* compile_reason, void* thread) = nullptr; //jdk 8
 
     jobject(*make_local)(void* thread, void* oop, int alloc_failure) = nullptr;
 }
@@ -60,23 +61,39 @@ bool Ripterms::JavaHook::init()
 
     if (!compile_method)
     {
-        uint8_t compile_method_old_pattern[] =
+        const char* must_be_compiled_str_addr = (const char*)jvmdll.pattern_scan((uint8_t*)"must_be_compiled", 16, PAGE_READONLY);
+        uint8_t lea_pattern[] =
         {
-            0x48, 0x89, 0x5C, 0x24, 0x90, 0x56, 0x57, 0x41, 0x54, 0x41, 0x55, 0x41, 0x56, 0x48, 0x81, 0xEC
+            0x48, 0x8D,  0x05
         };
-        compile_method_old = (void* (*)(MethodHandle, int, int, MethodHandle, int, const char*, void*))jvmdll.pattern_scan(compile_method_old_pattern, sizeof(compile_method_old_pattern), PAGE_EXECUTE_READ);
+        
+        for (uint8_t* lea_addr : jvmdll.pattern_scan_all(lea_pattern, sizeof(lea_pattern), PAGE_EXECUTE_READ))
+        {
+            uint8_t* rip = lea_addr + 7;
+            int32_t rip_relative_offset = ((uint8_t*)must_be_compiled_str_addr - rip);
+            int32_t lea_offset = *((int32_t*)(lea_addr + 3));
+            if (lea_offset != rip_relative_offset)
+                continue;
+            while (rip[0] != 0xE8)
+                rip++;
+            uint8_t* rip2 = rip + 5;
+            int32_t offset = *((int32_t*)(rip + 1));
+            compile_method_old = (void*(*)(MethodHandle*, int, int, MethodHandle*, int, const char*, void*))(rip2 + offset);
+            break;
+        }
     }
     return compile_method != nullptr || compile_method_old != nullptr;
 }
 
 
-void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return))
+void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, 
+    void(*callback)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return))
 {
     void* Java_thread = get_current_JavaThread_ptr();
     void* method = *((void**)methodID);
     int* access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
 
-    *(access_flags) = *(access_flags) & ~0x01000000; //make sure nothing prevents us from compiling
+    *(access_flags) = *(access_flags) & ~0x01000000; //enable compilation
     *(access_flags) = *(access_flags) & ~0x04000000;
     *(access_flags) = *(access_flags) & ~0x02000000;
     *(access_flags) = *(access_flags) & ~0x08000000;
@@ -86,32 +103,38 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, void(*callback)(vo
     if (compile_method)
         compile_method(&handle, -1, 1, &hot_method, 0, 6, Java_thread);
     else
-        compile_method_old(handle, -1, 4, hot_method, 0, "must_be_compiled", Java_thread);
-
+        compile_method_old(&handle, -1, 1, &hot_method, 0, "must_be_compiled", Java_thread);
 
     uint8_t* _code = nullptr;
-    for (int i = 0; i < 1000;)
+    for (int i = 0; i < 10;) //I don't even know, make sure the _code is correct
     {
         method = *((void**)methodID);
         if (!method)
             continue;
         access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
         while ((*(access_flags) & 0x01000000) != 0) {}
-        void* new_code = nullptr;
-        while (!new_code)
-            new_code = *((void**)((uint8_t*)method + 0x48));
+        void* new_code = *((void**)((uint8_t*)method + 0x48));
         if (new_code && _code && new_code == _code)
             ++i;
         else
             i = 0;
         _code = (uint8_t*)new_code;
     }
-    std::cout << (void*)_code << '\n';
 
-    *(access_flags) |= 0x01000000;
+    *(access_flags) |= 0x01000000; //disable compilation
     *(access_flags) |= 0x04000000;
     *(access_flags) |= 0x02000000;
     *(access_flags) |= 0x08000000;
+
+    if (compile_method)
+    {
+        unsigned short* _flags = (unsigned short*)((uint8_t*)method + 0x32);
+        *_flags |= (1 << 2); //don't inline
+    }
+    else
+    {
+        *((uint8_t*)method + 43) |= (1 << 4); //don't inline java8
+    }
 
     void* begin = *((void**)(_code + (compile_method ? 0xE0 : 0x80)));
     if (begin && !hooks.contains(begin) && callback)

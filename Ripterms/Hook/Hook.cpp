@@ -159,9 +159,11 @@ void Ripterms::Hook::hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a
 void Ripterms::Hook::remove_JAVA_ENTRY_HOOK()
 {
     DWORD original_protection = 0;
-    VirtualProtect(target_function_addr, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection);
-    memcpy(target_function_addr, allocated_instructions + 68, bytes_to_replace);
-    VirtualProtect(target_function_addr, bytes_to_replace, original_protection, &original_protection);
+    if (VirtualProtect(target_function_addr, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection))
+    {
+        memcpy(target_function_addr, allocated_instructions + 68, bytes_to_replace);
+        VirtualProtect(target_function_addr, bytes_to_replace, original_protection, &original_protection);
+    }
     VirtualFree(allocated_instructions, 0, MEM_RELEASE);
 }
 

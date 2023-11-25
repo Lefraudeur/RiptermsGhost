@@ -3,6 +3,7 @@
 #include <random>
 #include "../Event/Event.h"
 #include "../Maths/Maths.h"
+#include "../../net/minecraft/network/Packet/Packet.h"
 
 namespace Ripterms
 {
@@ -16,6 +17,7 @@ namespace Ripterms
 			virtual void render();
 			virtual void disable();
 			virtual void onEvent(Ripterms::Event* event);
+			virtual void onPacketSend(JNIEnv* env, Packet& packet, bool* cancel);
 		protected:
 			inline static std::random_device rd{};
 			inline static std::mt19937 gen{rd()};
@@ -172,6 +174,7 @@ namespace Ripterms
 			{"Whatever", {new ClientBrandChanger(), new Test()}}
 		};
 
+		void setupEventHooks();
 		void runAll();
 		void cleanAll();
 	}

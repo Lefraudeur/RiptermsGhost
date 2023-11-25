@@ -9,6 +9,23 @@
 #include "Event/Event.h"
 #include "Hook/Hook.h"
 #include <thread>
+#include "Mappings/mappings_lunar_1_8_9.h"
+#include "Mappings/mappings_lunar_1_7_10.h"
+#include "Mappings/mappings_lunar_1_16_5.h"
+#include "Mappings/mappings_vanilla_1_8_9.h"
+#include "Mappings/mappings_forge_1_7_10.h"
+
+extern Ripterms::Version Ripterms::versions[] =
+{
+	{"Lunar Client 1.18.2", Mappings::mappings_lunar_1_16_5, Version::MAJOR_1_16_5},
+	{"Lunar Client 1.17.1", Mappings::mappings_lunar_1_16_5, Version::MAJOR_1_16_5},
+	{"Lunar Client 1.16.5", Mappings::mappings_lunar_1_16_5, Version::MAJOR_1_16_5},
+	{"Lunar Client 1.8.9", Mappings::mappings_lunar_1_8_9, Version::MAJOR_1_8_9},
+	{"Badlion Minecraft Client", Mappings::mappings_vanilla_1_8_9, Version::MAJOR_1_8_9},
+	{"Lunar Client 1.7.10", Mappings::mappings_lunar_1_7_10, Version::MAJOR_1_7_10},
+	{"Minecraft 1.7.10", Mappings::mappings_forge_1_7_10, Version::MAJOR_1_7_10},
+	{"Paladium", Mappings::mappings_forge_1_7_10, Version::MAJOR_1_7_10}
+};
 
 static void mainLoop()
 {
@@ -51,6 +68,7 @@ static void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong f
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::JavaClassV2::init();
 		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
+		//Ripterms::Modules::setupEventHooks();
 		runonce = false;
 	}
 
@@ -80,6 +98,7 @@ static void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::JavaClassV2::init();
 		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
+		//Ripterms::Modules::setupEventHooks();
 		runonce = false;
 	}
 
@@ -206,4 +225,26 @@ void Ripterms::partialClean()
 	Ripterms::JavaClassV2::clean();
 	delete Ripterms::cache;
 	Ripterms::Hook::clean();
+}
+
+JNIEnv* Ripterms::get_current_thread_env()
+{
+	static std::unordered_map<std::thread::id, JNIEnv*> env_cache{};
+	try
+	{
+		return env_cache.at(std::this_thread::get_id());
+	}
+	catch (...)
+	{
+		JNIEnv* env = nullptr;
+		JavaVM* jvm = Ripterms::p_jvm;
+		if (!jvm)
+			return nullptr;
+		if (jvm->GetEnv((void**)&env, JNI_VERSION_1_8) == JNI_EDETACHED)
+			jvm->AttachCurrentThread((void**)&env, nullptr);
+		if (env)
+			env_cache.insert({ std::this_thread::get_id(), env });
+		return env;
+	}
+	return nullptr;
 }
