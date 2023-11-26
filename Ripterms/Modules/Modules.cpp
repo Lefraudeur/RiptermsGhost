@@ -26,9 +26,8 @@ void Ripterms::Modules::IModule::onPacketSend(JNIEnv* env, Packet& packet, bool*
 {
 }
 
-static void sendPacket_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return) //j_rarg0 is this object in non static methods
+static void sendPacket_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* reserved) //j_rarg0 is this object in non static methods
 {
-	std::cout << "a";
 	JNIEnv* env = Ripterms::get_current_thread_env();
 	if (!env)
 		return;

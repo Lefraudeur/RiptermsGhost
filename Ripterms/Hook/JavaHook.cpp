@@ -87,7 +87,7 @@ bool Ripterms::JavaHook::init()
 
 
 void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, 
-    void(*callback)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return))
+    void(*callback)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* reserved))
 {
     void* Java_thread = get_current_JavaThread_ptr();
     void* method = *((void**)methodID);
@@ -137,6 +137,7 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID,
     }
 
     void* begin = *((void**)(_code + (compile_method ? 0xE0 : 0x80)));
+    std::cout << begin << std::endl;
     if (begin && !hooks.contains(begin) && callback)
         hooks.insert({ begin, new Hook(0,begin, callback, nullptr, Hook::JAVA_ENTRY_HOOK) });
 
