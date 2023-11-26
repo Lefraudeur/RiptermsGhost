@@ -68,7 +68,14 @@ static void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong f
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::JavaClassV2::init();
 		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
-		//Ripterms::Modules::setupEventHooks();
+		std::thread a([]
+			{
+			JNIEnv* jni_env = nullptr;
+			Ripterms::p_jvm->AttachCurrentThread((void**)&jni_env, nullptr);
+			Ripterms::Modules::setupEventHooks(); //somehow this needs to be done in a newly attached thread
+			});
+		if (a.joinable())
+			a.detach();
 		runonce = false;
 	}
 
@@ -98,7 +105,14 @@ static void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::JavaClassV2::init();
 		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
-		//Ripterms::Modules::setupEventHooks();
+		std::thread a([]
+			{
+				JNIEnv* jni_env = nullptr;
+				Ripterms::p_jvm->AttachCurrentThread((void**)&jni_env, nullptr);
+				Ripterms::Modules::setupEventHooks();
+			});
+		if (a.joinable())
+			a.detach();
 		runonce = false;
 	}
 
