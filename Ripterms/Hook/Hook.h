@@ -59,6 +59,21 @@ namespace Ripterms
 
 	namespace JavaHook
 	{
+			//        |-------------------------------------------------------|
+
+			//        | c_rarg0   c_rarg1  c_rarg2 c_rarg3 c_rarg4 c_rarg5    |
+
+			//        |-------------------------------------------------------|
+
+			//        | rcx       rdx      r8      r9      rdi*    rsi*       | windows (* not a c_rarg)
+
+			//        | rdi       rsi      rdx     rcx     r8      r9         | solaris/linux
+
+			//        |-------------------------------------------------------|
+
+			//        | j_rarg5   j_rarg0  j_rarg1 j_rarg2 j_rarg3 j_rarg4    |
+
+			//        |-------------------------------------------------------|
 		typedef void(*callback_t)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13);
 		void clean();
 		bool init();
