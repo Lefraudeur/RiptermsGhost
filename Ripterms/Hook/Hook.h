@@ -23,6 +23,8 @@ namespace Ripterms
 		static bool init();
 		static void clean();
 
+		static uint8_t* AllocateNearbyMemory(uint8_t* nearby_addr, int size);
+
 	private:
 		void hook_RELATIVE_5B_JMP(void* a_detour_function_addr, void** a_original_function_addr);
 		void remove_RELATIVE_5B_JMP();
@@ -30,8 +32,6 @@ namespace Ripterms
 		void hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a_original_function_addr);
 		void remove_JAVA_ENTRY_HOOK();
 		int find_bytes_to_replace(const uint8_t* target);
-
-		uint8_t* AllocateNearbyMemory(uint8_t* nearby_addr, int size);
 
 		int bytes_to_replace;
 		void* target_function_addr;
@@ -59,9 +59,10 @@ namespace Ripterms
 
 	namespace JavaHook
 	{
+		typedef void(*callback_t)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* reserved);
 		void clean();
 		bool init();
-		void add_to_java_hook(jmethodID methodID, void(*callback)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* reserved));
-		jobject j_rarg_to_jobject(void* j_rarg);
+		void add_to_java_hook(jmethodID methodID, callback_t interpreted_callback);
+		jobject j_rarg_to_jobject(void* j_rarg, void* thread);
 	}
 }

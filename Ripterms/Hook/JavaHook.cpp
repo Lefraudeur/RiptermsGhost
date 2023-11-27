@@ -3,31 +3,27 @@
 #include <winnt.h>
 #include <thread>
 
-static void* get_current_JavaThread_ptr();
-
-namespace
+static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr);
+static jobject(*make_local)(void* thread, void* oop, int alloc_failure) = nullptr;
+static struct HookedJavaMethodCache
 {
-    std::unordered_map<void*, Ripterms::Hook*> hooks{};
+    jmethodID methodID;
+    Ripterms::JavaHook::callback_t interpreted_callback;
+    uint8_t* prev_i2i_entry = nullptr;
+    uint8_t* original_i2i_entry = nullptr;
+};
 
-    struct MethodHandle
-    {
-        void* method = nullptr;
-        void* thread = nullptr;
-    };
-
-    void* (*compile_method)(MethodHandle* method, int osr_bci, int comp_level, MethodHandle* hot_method_handle, int hot_count, int compile_reason, void* thread) = nullptr; //jdk 17
-
-    void* (*compile_method_old)(MethodHandle* method, int osr_bci, int comp_level, MethodHandle* hot_method_handle, int hot_count, const char* compile_reason, void* thread) = nullptr; //jdk 8
-
-    jobject(*make_local)(void* thread, void* oop, int alloc_failure) = nullptr;
-}
+static std::thread JavaHookThread{};
+static volatile bool should_run_thread = true; //compiler is dumb so use volatile
+static volatile bool request_write_vector = false; //man doesn't know what mutex are
+static volatile bool can_write_vector = false;
+static std::vector<HookedJavaMethodCache> hookedMethods{}; //man overusing global variables
 
 void Ripterms::JavaHook::clean()
 {
-    for (const std::pair<void*, Ripterms::Hook*> hook : hooks)
-    {
-        delete hook.second;
-    }
+    should_run_thread = false;
+    if (JavaHookThread.joinable())
+        JavaHookThread.join();
 }
 
 bool Ripterms::JavaHook::init()
@@ -51,130 +47,122 @@ bool Ripterms::JavaHook::init()
         make_local = (jobject(*)(void*, void*, int))
             jvmdll.pattern_scan(make_local_pattern2, sizeof(make_local_pattern2), PAGE_EXECUTE_READ);
     }
-    if (!make_local) return false;
+    if (!make_local)
+        return false;
+    JavaHookThread = std::thread([]
+        {
+            while (should_run_thread)
+            {
+                if (request_write_vector)
+                {
+                    can_write_vector = true;
+                    continue;
+                }
+                can_write_vector = false;
+                for (HookedJavaMethodCache& m : hookedMethods)
+                {
+                    uint8_t* method = *((uint8_t**)m.methodID);
+                    if (!method)
+                        continue;
+                    *((uint8_t**)(method + 0x48)) = nullptr;
+                    unsigned short* _flags = (unsigned short*)(method + 0x32);
+                    if ((*(_flags) & (1 << 2)) == 0)
+                        *_flags |= (1 << 2); //don't inline
 
-    uint8_t compile_method_pattern[] =
+                    int* access_flags = (int*)((uint8_t*)method + 0x28);
+                    if ((*(access_flags) & 0x01000000) == 0) // no compile
+                        *access_flags |= 0x01000000;
+                    if ((*(access_flags) & 0x02000000) == 0)
+                        *access_flags |= 0x02000000;
+                    if ((*(access_flags) & 0x04000000) == 0)
+                        *access_flags |= 0x04000000;
+                    if ((*(access_flags) & 0x08000000) == 0)
+                        *access_flags |= 0x08000000;
+
+                    {
+                        uint8_t** p_i2i_entry = (uint8_t**)(method + 0x38);
+                        uint8_t* _i2i_entry = *p_i2i_entry;
+                        if (_i2i_entry && _i2i_entry != m.prev_i2i_entry)
+                        {
+                            uint8_t* new_i2i_entry = generate_detour_code(m.interpreted_callback, _i2i_entry);
+                            m.original_i2i_entry = _i2i_entry;
+                            *p_i2i_entry = new_i2i_entry;
+                            if (m.prev_i2i_entry)
+                                VirtualFree(m.prev_i2i_entry, 0, MEM_RELEASE);
+                            m.prev_i2i_entry = new_i2i_entry;
+                        }
+                        uint8_t** p_from_interpreted_entry = (uint8_t**)(method + 0x50);
+                        *p_from_interpreted_entry = *p_i2i_entry;
+                    }
+                }
+            }
+
+            for (HookedJavaMethodCache& m : hookedMethods)
+            {
+                uint8_t* method = *((uint8_t**)m.methodID);
+                uint8_t** p_i2i_entry = (uint8_t**)(method + 0x38);
+                uint8_t** p_from_interpreted_entry = (uint8_t**)(method + 0x50);
+                if (m.original_i2i_entry)
+                {
+                    *p_from_interpreted_entry = m.original_i2i_entry;
+                    *p_i2i_entry = m.original_i2i_entry;
+                }
+                if (m.prev_i2i_entry)
+                    VirtualFree(m.prev_i2i_entry, 0, MEM_RELEASE);
+            }
+        });
+    return true;
+}
+
+
+void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t interpreted_callback)
+{
+    for (const HookedJavaMethodCache& m : hookedMethods)
     {
-        0x48, 0x89, 0x5C, 0x24, 0x10, 0x48, 0x89, 0x6C, 0x24, 0x18, 0x48, 0x89, 0x74, 0x24, 0x20, 0x41, 0x56, 0x48, 0x83, 0xEC, 0x40, 0x80
+        if (m.methodID == methodID)
+            return;
+    }
+    request_write_vector = true;
+    while (!can_write_vector);
+    hookedMethods.push_back({ methodID, interpreted_callback });
+    request_write_vector = false;
+    return;
+}
+
+
+jobject Ripterms::JavaHook::j_rarg_to_jobject(void* j_rarg, void* thread)
+{
+    return make_local(thread, j_rarg, 0);
+}
+
+static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr)
+{
+    DWORD original_protection = 0;
+    uint8_t* allocated_instructions = Ripterms::Hook::AllocateNearbyMemory(original_addr, 76);
+    if (!allocated_instructions)
+        return nullptr;
+
+    uint8_t pre_call[] = //assembly code, save registers, move params to the corresponding registers, prepare stack to call detour
+    {
+        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 
+        0x55, 0x6A, 0x00, 0x48, 0x89, 0xE5, 0x48, 0x83, 0xE4, 0xF0, 0x41, 
+        0x57, 0x53, 0x55, 0x51, 0x56, 0x57, 0x48, 0x8D, 0x4D, 0x48, 0x48, 
+        0x83, 0xEC, 0x20, 0x48, 0xB8
     };
-    compile_method = (void* (*)(MethodHandle*, int, int, MethodHandle*, int, int, void*))jvmdll.pattern_scan(compile_method_pattern, sizeof(compile_method_pattern), PAGE_EXECUTE_READ);
-
-    if (!compile_method)
+    memcpy(allocated_instructions, pre_call, sizeof(pre_call));
+    *((uint64_t*)(allocated_instructions + sizeof(pre_call))) = (uint64_t)callback;
+    uint8_t post_call[] = //assembly code, call detour, restore registers and stack, and return or jmp back to continue execution
     {
-        const char* must_be_compiled_str_addr = (const char*)jvmdll.pattern_scan((uint8_t*)"must_be_compiled", 16, PAGE_READONLY);
-        uint8_t lea_pattern[] =
-        {
-            0x48, 0x8D,  0x05
-        };
-        
-        for (uint8_t* lea_addr : jvmdll.pattern_scan_all(lea_pattern, sizeof(lea_pattern), PAGE_EXECUTE_READ))
-        {
-            uint8_t* rip = lea_addr + 7;
-            int32_t rip_relative_offset = ((uint8_t*)must_be_compiled_str_addr - rip);
-            int32_t lea_offset = *((int32_t*)(lea_addr + 3));
-            if (lea_offset != rip_relative_offset)
-                continue;
-            while (rip[0] != 0xE8)
-                rip++;
-            uint8_t* rip2 = rip + 5;
-            int32_t offset = *((int32_t*)(rip + 1));
-            compile_method_old = (void*(*)(MethodHandle*, int, int, MethodHandle*, int, const char*, void*))(rip2 + offset);
-            break;
-        }
-    }
-    return compile_method != nullptr || compile_method_old != nullptr;
-}
+        0xFF, 0xD0, 0x48, 0x89, 0xEC, 0x58, 0x48, 0x83, 0xF8, 0x00, 0x5D, 0x41,
+        0x5B, 0x41, 0x5A, 0x41, 0x59, 0x41, 0x58, 0x5A, 0x59, 0x58, 0x74, 0x01, 0xC3
+    };
+    memcpy(allocated_instructions + sizeof(pre_call) + 8, post_call, sizeof(post_call));
+    allocated_instructions[sizeof(pre_call) + 8 + sizeof(post_call)] = '\xE9';
+    int32_t allocated_target_offset = int32_t(original_addr - (allocated_instructions + sizeof(pre_call) + 8 + sizeof(post_call) + 5));
+    *((int32_t*)(allocated_instructions + sizeof(pre_call) + 8 + sizeof(post_call) + 1)) = allocated_target_offset;
 
+    if (!VirtualProtect(allocated_instructions, 76, PAGE_EXECUTE_READ, &original_protection))
+        return nullptr;
 
-void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, 
-    void(*callback)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* reserved))
-{
-    void* Java_thread = get_current_JavaThread_ptr();
-    void* method = *((void**)methodID);
-    int* access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
-
-    *(access_flags) = *(access_flags) & ~0x01000000; //enable compilation
-    *(access_flags) = *(access_flags) & ~0x04000000;
-    *(access_flags) = *(access_flags) & ~0x02000000;
-    *(access_flags) = *(access_flags) & ~0x08000000;
-
-    MethodHandle handle = { method, Java_thread };
-    MethodHandle hot_method = { nullptr, nullptr };
-    if (compile_method)
-        compile_method(&handle, -1, 1, &hot_method, 0, 6, Java_thread);
-    else
-        compile_method_old(&handle, -1, 1, &hot_method, 0, "must_be_compiled", Java_thread);
-
-    uint8_t* _code = nullptr;
-    for (int i = 0; i < 10;) //I don't even know, make sure the _code is correct
-    {
-        method = *((void**)methodID);
-        if (!method)
-            continue;
-        access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
-        while ((*(access_flags) & 0x01000000) != 0) {}
-        void* new_code = *((void**)((uint8_t*)method + 0x48));
-        if (new_code && _code && new_code == _code)
-            ++i;
-        else
-            i = 0;
-        _code = (uint8_t*)new_code;
-    }
-
-    *(access_flags) |= 0x01000000; //disable compilation
-    *(access_flags) |= 0x04000000;
-    *(access_flags) |= 0x02000000;
-    *(access_flags) |= 0x08000000;
-
-    if (compile_method)
-    {
-        unsigned short* _flags = (unsigned short*)((uint8_t*)method + 0x32);
-        *_flags |= (1 << 2); //don't inline
-    }
-    else
-    {
-        *((uint8_t*)method + 43) |= (1 << 4); //don't inline java8
-    }
-
-    void* begin = *((void**)(_code + (compile_method ? 0xE0 : 0x80)));
-    std::cout << begin << std::endl;
-    if (begin && !hooks.contains(begin) && callback)
-        hooks.insert({ begin, new Hook(0,begin, callback, nullptr, Hook::JAVA_ENTRY_HOOK) });
-
-    /*
-    begin = *((void**)(code + (compile_method ? 0xD8 : 0x78))); // _entry_point of nmethod
-    if (begin && !hooks.contains(begin) && callback)
-        hooks.insert({ begin, new Hook(0,begin, callback, nullptr, Hook::JAVA_ENTRY_HOOK) });
-    std::cout << begin << '\n';
-    */
-}
-
-
-jobject Ripterms::JavaHook::j_rarg_to_jobject(void* j_rarg)
-{
-    return make_local(get_current_JavaThread_ptr(), j_rarg, 0);
-}
-
-static void* get_current_JavaThread_ptr()
-{
-    if (compile_method)
-    { //jdk 17
-        struct tb
-        {
-            PVOID Reserved1[12];
-            PVOID  ProcessEnvironmentBlock;
-            PVOID Reserved2[399];
-            BYTE  Reserved3[1952];
-            PVOID TlsSlots[64];
-            BYTE  Reserved4[8];
-            PVOID Reserved5[26];
-            PVOID ReservedForOle;
-            PVOID Reserved6[4];
-            PVOID TlsExpansionSlots;
-        }*teb = (tb*)NtCurrentTeb();
-
-        uint8_t* tls = *((uint8_t**)teb->Reserved1[11] + 9);
-        return *((void**)(tls + 32));
-    }
-    return TlsGetValue(22); //jdk 8
+    return allocated_instructions;
 }

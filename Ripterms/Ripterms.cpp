@@ -68,14 +68,6 @@ static void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong f
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::JavaClassV2::init();
 		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
-		std::thread a([]
-			{
-			JNIEnv* jni_env = nullptr;
-			Ripterms::p_jvm->AttachCurrentThread((void**)&jni_env, nullptr);
-			Ripterms::Modules::setupEventHooks(); //somehow this needs to be done in a newly attached thread
-			});
-		if (a.joinable())
-			a.detach();
 		runonce = false;
 	}
 
@@ -105,14 +97,6 @@ static void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::JavaClassV2::init();
 		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
-		std::thread a([]
-			{
-				JNIEnv* jni_env = nullptr;
-				Ripterms::p_jvm->AttachCurrentThread((void**)&jni_env, nullptr);
-				Ripterms::Modules::setupEventHooks();
-			});
-		if (a.joinable())
-			a.detach();
 		runonce = false;
 	}
 
@@ -215,6 +199,8 @@ BOOL Ripterms::init(HMODULE dll)
 void Ripterms::clean()
 {
 	Ripterms::Modules::cleanAll();
+	Ripterms::JavaHook::clean();
+	Ripterms::Hook::clean();
 	Ripterms::Patcher::clean();
 	delete Ripterms::cache;
 	System::gc();
@@ -222,8 +208,6 @@ void Ripterms::clean()
 	if (Ripterms::p_tienv)
 		Ripterms::p_tienv->DisposeEnvironment();
 	GUI::clean();
-	Ripterms::JavaHook::clean();
-	Ripterms::Hook::clean();
 	fclose(console_buffer1);
 	fclose(console_buffer2);
 	fclose(console_buffer3);
