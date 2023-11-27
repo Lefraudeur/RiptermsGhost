@@ -16,7 +16,6 @@ static void callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void
 	std::cout << "x: " << *(int*)((uint64_t*)sp + 3) << '\n';
 	std::cout << "y: " << *(int*)((uint64_t*)sp + 2) << '\n';
 	std::cout << "button: " << *(int*)((uint64_t*)sp +1) << '\n';
-	std::cout << "return address: " << *(void**)sp << '\n';
 	*should_return = true;
 	return;
 }
@@ -37,6 +36,9 @@ void Ripterms::Modules::Test::renderGUI()
 		}
 		Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/gui/GuiScreen"));
 		jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "mouseClicked", "(III)V");
+
+		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/entity/EntityPlayerSP"));
+		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "swingItem", "()V");
 
 		//Ripterms::JavaClassV2 lol2("net/minecraft/network/NetworkManager");
 		//jmethodID mid = lol2.getMethodID("sendPacket");

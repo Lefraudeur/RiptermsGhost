@@ -26,6 +26,12 @@ void Ripterms::JavaHook::clean()
         }
         if (m.second.prev_i2i_entry)
             VirtualFree(m.second.prev_i2i_entry, 0, MEM_RELEASE);
+
+        int* access_flags = (int*)(method + 0x28);
+        *access_flags &= ~0x01000000;
+        *access_flags &= ~0x02000000;
+        *access_flags &= ~0x04000000;
+        *access_flags &= ~0x08000000;
     }
 }
 
