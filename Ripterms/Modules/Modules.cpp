@@ -1,6 +1,7 @@
 #include "Modules.h"
 #include "../Cache/Cache.h"
 #include <ImGui/imgui.h>
+#include "../../net/minecraft/network/play/client/C03PacketPlayer/C03PacketPlayer.h"
 
 void Ripterms::Modules::IModule::run()
 {
@@ -24,16 +25,21 @@ void Ripterms::Modules::IModule::onEvent(Event* event)
 
 void Ripterms::Modules::IModule::onPacketSend(JNIEnv* env, Packet& packet, bool* cancel)
 {
+	/*
+	C03PacketPlayer packetPlayer(packet, env);
+	if (packetPlayer.getRotating())
+	{
+		std::cout << packetPlayer.getYawPitch().x << '\n';
+	}
+	*/
 }
 
 static void sendPacket_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13) //j_rarg0 is this object in non static methods
 {
-	if (!j_rarg0 || !j_rarg1 || !rbx)
-		return;
 	JNIEnv* env = Ripterms::get_current_thread_env();
 	if (!env)
 		return;
-	jobject packet_o = Ripterms::JavaHook::j_rarg_to_jobject(j_rarg1, thread);
+	jobject packet_o = Ripterms::JavaHook::j_rarg_to_jobject(*(void**)((uint64_t*)sp + 1), thread);
 	if (!packet_o)
 		return;
 	Packet packet(packet_o, env);
