@@ -68,6 +68,7 @@ static void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong f
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::JavaClassV2::init();
 		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
+		if (runMainLoop) Ripterms::Modules::setupEventHooks();
 		runonce = false;
 	}
 
@@ -97,6 +98,7 @@ static void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::JavaClassV2::init();
 		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
+		if (runMainLoop) Ripterms::Modules::setupEventHooks();
 		runonce = false;
 	}
 
