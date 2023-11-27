@@ -1,29 +1,41 @@
 #include "Hook.h"
 #include <unordered_map>
-#include <winnt.h>
-#include <thread>
 
 static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr);
 static jobject(*make_local)(void* thread, void* oop, int alloc_failure) = nullptr;
+
 struct HookedJavaMethodCache
 {
-    jmethodID methodID;
     Ripterms::JavaHook::callback_t interpreted_callback;
     uint8_t* prev_i2i_entry = nullptr;
     uint8_t* original_i2i_entry = nullptr;
 };
-
-static std::thread JavaHookThread{};
-static volatile bool should_run_thread = true; //compiler is dumb so use volatile
-static volatile bool request_write_vector = false; //man doesn't know what mutex are
-static volatile bool can_write_vector = false;
-static std::vector<HookedJavaMethodCache> hookedMethods{}; //man overusing global variables
+static std::unordered_map<jmethodID, HookedJavaMethodCache> hookedMethods{}; //man overusing global variables
 
 void Ripterms::JavaHook::clean()
 {
-    should_run_thread = false;
-    if (JavaHookThread.joinable())
-        JavaHookThread.join();
+    for (const std::pair<jmethodID, HookedJavaMethodCache>& m : hookedMethods)
+    {
+        uint8_t* method = *((uint8_t**)m.first);
+        uint8_t** p_i2i_entry = (uint8_t**)(method + 0x38);
+        uint8_t** p_from_interpreted_entry = (uint8_t**)(method + 0x50);
+        if (m.second.original_i2i_entry)
+        {
+            *p_from_interpreted_entry = m.second.original_i2i_entry; //restore entries
+            *p_i2i_entry = m.second.original_i2i_entry;
+        }
+        if (m.second.prev_i2i_entry)
+            VirtualFree(m.second.prev_i2i_entry, 0, MEM_RELEASE);
+
+        unsigned short* _flags = (unsigned short*)(method + 0x32);
+        *_flags &= ~(1 << 2); //reenable inline
+
+        int* access_flags = (int*)(method + 0x28);
+        *access_flags &= ~0x01000000; //reenable compilation
+        *access_flags &= ~0x02000000;
+        *access_flags &= ~0x04000000;
+        *access_flags &= ~0x08000000;
+    }
 }
 
 bool Ripterms::JavaHook::init()
@@ -49,83 +61,48 @@ bool Ripterms::JavaHook::init()
     }
     if (!make_local)
         return false;
-    JavaHookThread = std::thread([]
-        {
-            while (should_run_thread)
-            {
-                if (request_write_vector)
-                {
-                    can_write_vector = true;
-                    continue;
-                }
-                can_write_vector = false;
-                for (HookedJavaMethodCache& m : hookedMethods)
-                {
-                    uint8_t* method = *((uint8_t**)m.methodID);
-                    if (!method)
-                        continue;
-                    *((uint8_t**)(method + 0x48)) = nullptr;
-                    unsigned short* _flags = (unsigned short*)(method + 0x32);
-                    if ((*(_flags) & (1 << 2)) == 0)
-                        *_flags |= (1 << 2); //don't inline
-
-                    int* access_flags = (int*)((uint8_t*)method + 0x28);
-                    if ((*(access_flags) & 0x01000000) == 0) // no compile
-                        *access_flags |= 0x01000000;
-                    if ((*(access_flags) & 0x02000000) == 0)
-                        *access_flags |= 0x02000000;
-                    if ((*(access_flags) & 0x04000000) == 0)
-                        *access_flags |= 0x04000000;
-                    if ((*(access_flags) & 0x08000000) == 0)
-                        *access_flags |= 0x08000000;
-
-                    {
-                        uint8_t** p_i2i_entry = (uint8_t**)(method + 0x38);
-                        uint8_t* _i2i_entry = *p_i2i_entry;
-                        if (_i2i_entry && _i2i_entry != m.prev_i2i_entry)
-                        {
-                            uint8_t* new_i2i_entry = generate_detour_code(m.interpreted_callback, _i2i_entry);
-                            m.original_i2i_entry = _i2i_entry;
-                            *p_i2i_entry = new_i2i_entry;
-                            if (m.prev_i2i_entry)
-                                VirtualFree(m.prev_i2i_entry, 0, MEM_RELEASE);
-                            m.prev_i2i_entry = new_i2i_entry;
-                        }
-                        uint8_t** p_from_interpreted_entry = (uint8_t**)(method + 0x50);
-                        *p_from_interpreted_entry = *p_i2i_entry;
-                    }
-                }
-            }
-
-            for (HookedJavaMethodCache& m : hookedMethods)
-            {
-                uint8_t* method = *((uint8_t**)m.methodID);
-                uint8_t** p_i2i_entry = (uint8_t**)(method + 0x38);
-                uint8_t** p_from_interpreted_entry = (uint8_t**)(method + 0x50);
-                if (m.original_i2i_entry)
-                {
-                    *p_from_interpreted_entry = m.original_i2i_entry;
-                    *p_i2i_entry = m.original_i2i_entry;
-                }
-                if (m.prev_i2i_entry)
-                    VirtualFree(m.prev_i2i_entry, 0, MEM_RELEASE);
-            }
-        });
     return true;
 }
 
 
 void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t interpreted_callback)
 {
-    for (const HookedJavaMethodCache& m : hookedMethods)
+    uint8_t* method = *((uint8_t**)methodID);
+    HookedJavaMethodCache& m = hookedMethods[methodID];
+    m.interpreted_callback = interpreted_callback;
+
+    int* access_flags = (int*)(method + 0x28);
+    while (((*access_flags & 0x01000000) != 0) 
+        && ((*access_flags & 0x04000000) == 0))
+    {} // wait for compilations in progress
+
+    unsigned short* _flags = (unsigned short*)(method + 0x32);
+    *_flags |= (1 << 2); //don't inline
+
+    *access_flags |= 0x01000000; //no compile
+    *access_flags |= 0x02000000;
+    *access_flags |= 0x04000000;
+    *access_flags |= 0x08000000;
+
+    *((uint8_t**)(method + 0x48)) = nullptr; // delete compiled code
+
+    uint8_t** p_i2i_entry = (uint8_t**)(method + 0x38);
+    uint8_t* _i2i_entry = *p_i2i_entry;
+    if (_i2i_entry && _i2i_entry != m.prev_i2i_entry)
     {
-        if (m.methodID == methodID)
-            return;
+        uint8_t* new_i2i_entry = generate_detour_code(m.interpreted_callback, _i2i_entry);
+        m.original_i2i_entry = _i2i_entry;
+        *p_i2i_entry = new_i2i_entry;
+        if (m.prev_i2i_entry)
+            VirtualFree(m.prev_i2i_entry, 0, MEM_RELEASE);
+        m.prev_i2i_entry = new_i2i_entry;
+        uint8_t** p_from_interpreted_entry = (uint8_t**)(method + 0x50);
+        *p_from_interpreted_entry = *p_i2i_entry;
+        uint8_t* _adapter = *(uint8_t**)(method + 0x20);
+        uint8_t* _c2i_entry = *(uint8_t**)(_adapter + 0x20);
+        uint8_t** p_from_compiled_entry = (uint8_t**)(method + 0x40);
+        *p_from_compiled_entry = _c2i_entry;
     }
-    request_write_vector = true;
-    while (!can_write_vector);
-    hookedMethods.push_back({ methodID, interpreted_callback });
-    request_write_vector = false;
     return;
 }
 

@@ -33,11 +33,11 @@ void Ripterms::Modules::Test::renderGUI()
 		{
 			std::cout << "not found" << std::endl;
 		}
-		Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/gui/GuiScreen"));
-		jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "mouseClicked", "(III)V");
+		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/gui/GuiScreen"));
+		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "mouseClicked", "(III)V");
 
-		//Ripterms::JavaClassV2 lol2("net/minecraft/network/NetworkManager");
-		//jmethodID mid = lol2.getMethodID("sendPacket");
+		Ripterms::JavaClassV2 lol2("net/minecraft/network/NetworkManager");
+		jmethodID mid = lol2.getMethodID("sendPacket");
 
 
 		Ripterms::JavaHook::add_to_java_hook(mid, callback);
