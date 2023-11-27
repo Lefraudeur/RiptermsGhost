@@ -5,7 +5,7 @@
 
 static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr);
 static jobject(*make_local)(void* thread, void* oop, int alloc_failure) = nullptr;
-static struct HookedJavaMethodCache
+struct HookedJavaMethodCache
 {
     jmethodID methodID;
     Ripterms::JavaHook::callback_t interpreted_callback;
@@ -138,16 +138,16 @@ jobject Ripterms::JavaHook::j_rarg_to_jobject(void* j_rarg, void* thread)
 static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr)
 {
     DWORD original_protection = 0;
-    uint8_t* allocated_instructions = Ripterms::Hook::AllocateNearbyMemory(original_addr, 76);
+    uint8_t* allocated_instructions = Ripterms::Hook::AllocateNearbyMemory(original_addr, 80);
     if (!allocated_instructions)
         return nullptr;
 
     uint8_t pre_call[] = //assembly code, save registers, move params to the corresponding registers, prepare stack to call detour
     {
-        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 
-        0x55, 0x6A, 0x00, 0x48, 0x89, 0xE5, 0x48, 0x83, 0xE4, 0xF0, 0x41, 
-        0x57, 0x53, 0x55, 0x51, 0x56, 0x57, 0x48, 0x8D, 0x4D, 0x48, 0x48, 
-        0x83, 0xEC, 0x20, 0x48, 0xB8
+        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 
+        0x53, 0x55, 0x6A, 0x00, 0x48, 0x89, 0xE5, 0x48, 0x83, 0xE4, 
+        0xF0, 0x6A, 0x00, 0x41, 0x55, 0x41, 0x57, 0x53, 0x55, 0x51, 
+        0x56, 0x57, 0x48, 0x8D, 0x4D, 0x48, 0x48, 0x83, 0xEC, 0x20, 0x48, 0xB8
     };
     memcpy(allocated_instructions, pre_call, sizeof(pre_call));
     *((uint64_t*)(allocated_instructions + sizeof(pre_call))) = (uint64_t)callback;
@@ -161,7 +161,7 @@ static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, ui
     int32_t allocated_target_offset = int32_t(original_addr - (allocated_instructions + sizeof(pre_call) + 8 + sizeof(post_call) + 5));
     *((int32_t*)(allocated_instructions + sizeof(pre_call) + 8 + sizeof(post_call) + 1)) = allocated_target_offset;
 
-    if (!VirtualProtect(allocated_instructions, 76, PAGE_EXECUTE_READ, &original_protection))
+    if (!VirtualProtect(allocated_instructions, 80, PAGE_EXECUTE_READ, &original_protection))
         return nullptr;
 
     return allocated_instructions;

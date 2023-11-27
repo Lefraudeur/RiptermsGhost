@@ -59,7 +59,7 @@ namespace Ripterms
 
 	namespace JavaHook
 	{
-		typedef void(*callback_t)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* reserved);
+		typedef void(*callback_t)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* reserved, void* r13);
 		void clean();
 		bool init();
 		void add_to_java_hook(jmethodID methodID, callback_t interpreted_callback);
