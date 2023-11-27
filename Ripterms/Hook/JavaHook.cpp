@@ -8,12 +8,21 @@ static void* get_current_JavaThread_ptr();
 namespace
 {
     std::unordered_map<void*, Ripterms::Hook*> hooks{};
+    struct HookData
+    {
+        void* verified_code_entry_point;
+        Ripterms::JavaHook::callback_t callback;
+    };
+    std::unordered_map<jmethodID, HookData> hooked_methods{};
+    bool runchecker = true;
 
     struct MethodHandle
     {
         void* method = nullptr;
         void* thread = nullptr;
     };
+
+    std::thread checker{};
 
     void* (*compile_method)(MethodHandle* method, int osr_bci, int comp_level, MethodHandle* hot_method_handle, int hot_count, int compile_reason, void* thread) = nullptr; //jdk 17
 
@@ -24,9 +33,30 @@ namespace
 
 void Ripterms::JavaHook::clean()
 {
+    runchecker = false;
+    if (checker.joinable())
+        checker.join();
     for (const std::pair<void*, Ripterms::Hook*> hook : hooks)
     {
         delete hook.second;
+    }
+    for (const std::pair<jmethodID, HookData>& entry : hooked_methods)
+    {
+        void* method = *((void**)entry.first);
+        int* access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
+        *(access_flags) &= ~0x01000000; //enable compilation
+        *(access_flags) &= ~0x04000000;
+        *(access_flags) &= ~0x02000000;
+        *(access_flags) &= ~0x08000000;
+        if (compile_method)
+        {
+            unsigned short* _flags = (unsigned short*)((uint8_t*)method + 0x32);
+            *_flags &= ~(1 << 2);
+        }
+        else
+        {
+            *((uint8_t*)method + 43) &= ~(1 << 4);
+        }
     }
 }
 
@@ -82,31 +112,77 @@ bool Ripterms::JavaHook::init()
             break;
         }
     }
+
+    checker = std::thread([&] //periodically checks if the method has been deoptimized
+        {
+            JavaVM* jvm = nullptr;
+            JNI_GetCreatedJavaVMs(&jvm, 1, nullptr);
+            JNIEnv* jni_env = nullptr;
+            jvm->AttachCurrentThread((void**)&jni_env, nullptr);
+            while (runchecker)
+            {
+                for (const std::pair<jmethodID, HookData>& entry : hooked_methods)
+                {
+                    void* method = *((void**)entry.first);
+                    if (!method)
+                        continue;
+                    uint8_t* code = *((uint8_t**)((uint8_t*)method + 0x48));
+                    if (!code || *((void**)(code + (compile_method ? 0xE0 : 0x80))) != entry.second.verified_code_entry_point)
+                    {
+                        int* access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
+                        *(access_flags) &= ~0x01000000; //enable compilation
+                        *(access_flags) &= ~0x04000000;
+                        *(access_flags) &= ~0x02000000;
+                        *(access_flags) &= ~0x08000000;
+                        std::cout << "recompile";
+                        add_to_java_hook(entry.first, entry.second.callback);
+                    }
+                }
+            }
+        });
     return compile_method != nullptr || compile_method_old != nullptr;
 }
 
 
-void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, 
-    void(*callback)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* reserved))
+void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t callback)
 {
     void* Java_thread = get_current_JavaThread_ptr();
     void* method = *((void**)methodID);
+    while (!method)
+        method = *((void**)methodID);
     int* access_flags = (int*)((uint8_t*)method + (compile_method ? 0x28 : 0x20));
 
-    *(access_flags) = *(access_flags) & ~0x01000000; //enable compilation
-    *(access_flags) = *(access_flags) & ~0x04000000;
-    *(access_flags) = *(access_flags) & ~0x02000000;
-    *(access_flags) = *(access_flags) & ~0x08000000;
-
-    MethodHandle handle = { method, Java_thread };
-    MethodHandle hot_method = { nullptr, nullptr };
     if (compile_method)
-        compile_method(&handle, -1, 1, &hot_method, 0, 6, Java_thread);
+    {
+        unsigned short* _flags = (unsigned short*)((uint8_t*)method + 0x32);
+        *_flags |= (1 << 2); //don't inline
+    }
     else
-        compile_method_old(&handle, -1, 1, &hot_method, 0, "must_be_compiled", Java_thread);
+    {
+        *((uint8_t*)method + 43) |= (1 << 4); //don't inline java8
+    }
 
-    uint8_t* _code = nullptr;
-    for (int i = 0; i < 10;) //I don't even know, make sure the _code is correct
+    while ((*(access_flags) & 0x01000000) != 0) {}
+    method = *((void**)methodID);
+    while(!method)
+        method = *((void**)methodID);
+
+    uint8_t* _code = *((uint8_t**)((uint8_t*)method + 0x48));
+    if (!_code)
+    {
+        MethodHandle handle = { method, Java_thread };
+        MethodHandle hot_method = { nullptr, nullptr };
+        if (compile_method)
+        {
+            compile_method(&handle, -1, 4, &hot_method, 0, 6, Java_thread);
+        }
+        else
+        {
+            compile_method_old(&handle, -1, 4, &hot_method, 0, "must_be_compiled", Java_thread);
+        }
+    }
+
+    for (int i = 0; i < 1000;) //I don't even know, make sure the _code is correct
     {
         method = *((void**)methodID);
         if (!method)
@@ -126,21 +202,12 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID,
     *(access_flags) |= 0x02000000;
     *(access_flags) |= 0x08000000;
 
-    if (compile_method)
-    {
-        unsigned short* _flags = (unsigned short*)((uint8_t*)method + 0x32);
-        *_flags |= (1 << 2); //don't inline
-    }
-    else
-    {
-        *((uint8_t*)method + 43) |= (1 << 4); //don't inline java8
-    }
-
     void* begin = *((void**)(_code + (compile_method ? 0xE0 : 0x80)));
     std::cout << begin << std::endl;
     if (begin && !hooks.contains(begin) && callback)
         hooks.insert({ begin, new Hook(0,begin, callback, nullptr, Hook::JAVA_ENTRY_HOOK) });
 
+    hooked_methods[methodID] = {.verified_code_entry_point = begin , .callback = callback};
     /*
     begin = *((void**)(code + (compile_method ? 0xD8 : 0x78))); // _entry_point of nmethod
     if (begin && !hooks.contains(begin) && callback)

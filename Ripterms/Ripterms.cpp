@@ -215,6 +215,8 @@ BOOL Ripterms::init(HMODULE dll)
 void Ripterms::clean()
 {
 	Ripterms::Modules::cleanAll();
+	Ripterms::JavaHook::clean();
+	Ripterms::Hook::clean();
 	Ripterms::Patcher::clean();
 	delete Ripterms::cache;
 	System::gc();
@@ -222,8 +224,6 @@ void Ripterms::clean()
 	if (Ripterms::p_tienv)
 		Ripterms::p_tienv->DisposeEnvironment();
 	GUI::clean();
-	Ripterms::JavaHook::clean();
-	Ripterms::Hook::clean();
 	fclose(console_buffer1);
 	fclose(console_buffer2);
 	fclose(console_buffer3);

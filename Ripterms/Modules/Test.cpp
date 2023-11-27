@@ -17,20 +17,6 @@ static void callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void
 	return;
 }
 
-static uint8_t* method = nullptr;
-
-static void callback2(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* reserved) //j_rarg0 is this object in non static methods
-{
-	static unsigned long long i = 0U;
-	if (rbx != method)
-		return;
-	std::cout << "from _i2i_entry: " << i << '\n';
-	i++;
-	if (i == 999999999U)
-		i = 0U;
-	return;
-}
-
 void Ripterms::Modules::Test::renderGUI()
 {
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
@@ -54,8 +40,6 @@ void Ripterms::Modules::Test::renderGUI()
 		//Ripterms::JavaClassV2 lol2("net/minecraft/network/NetworkManager");
 		//jmethodID mid = lol2.getMethodID("sendPacket");
 
-		method = *((uint8_t**)mid);
-		//new Hook(0, *((void**)(method + 0x38)), callback2, nullptr, Ripterms::Hook::JAVA_ENTRY_HOOK);
 		Ripterms::JavaHook::add_to_java_hook(mid, callback);
 	}
 }

@@ -24,10 +24,13 @@ void Ripterms::Modules::IModule::onEvent(Event* event)
 
 void Ripterms::Modules::IModule::onPacketSend(JNIEnv* env, Packet& packet, bool* cancel)
 {
+	std::cout << "a";
 }
 
 static void sendPacket_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* reserved) //j_rarg0 is this object in non static methods
 {
+	if (!j_rarg0 || !j_rarg1 || !rbx)
+		return;
 	JNIEnv* env = Ripterms::get_current_thread_env();
 	if (!env)
 		return;
