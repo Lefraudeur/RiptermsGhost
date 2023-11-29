@@ -3,6 +3,7 @@
 #include <random>
 #include "../Maths/Maths.h"
 #include "../../net/minecraft/network/Packet/Packet.h"
+#include "../../net/minecraft/entity/Entity/Entity.h"
 
 namespace Ripterms
 {
@@ -16,8 +17,10 @@ namespace Ripterms
 			virtual void render();
 			virtual void disable();
 			virtual void onPacketSend(JNIEnv* env, Packet& packet, bool* cancel);
-			virtual void onWalkingUpdate(JNIEnv* env, bool* cancel);
-			virtual void onAttack(JNIEnv* env, bool* cancel);
+			virtual void onUpdateWalkingPlayer(JNIEnv* env, bool* cancel);
+			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, Entity& entity, bool* cancel);
+			virtual void onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel);
+
 		protected:
 			inline static std::random_device rd{};
 			inline static std::mt19937 gen{rd()};
@@ -44,8 +47,11 @@ namespace Ripterms
 		public:
 			void run() override;
 			void renderGUI() override;
+			void disable() override;
+			void onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel) override;
 		private:
 			float reach_distance = 4.0f;
+			double* cp_reach_addr = nullptr;
 		};
 
 		class LeftClicker : public IModule
@@ -61,8 +67,8 @@ namespace Ripterms
 		class WTap : public IModule
 		{
 		public:
-			void onWalkingUpdate(JNIEnv* env, bool* cancel) override;
-			void onAttack(JNIEnv* env, bool* cancel) override;
+			void onUpdateWalkingPlayer(JNIEnv* env, bool* cancel) override;
+			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, Entity& entity, bool* cancel) override;
 			void renderGUI() override;
 		private:
 			int ticks = 0;
@@ -131,7 +137,7 @@ namespace Ripterms
 		class LegitScaffold : public IModule
 		{
 		public:
-			void onWalkingUpdate(JNIEnv* env, bool* cancel) override;
+			void onUpdateWalkingPlayer(JNIEnv* env, bool* cancel) override;
 			void renderGUI() override;
 		private:
 			int tickDelay = 0;

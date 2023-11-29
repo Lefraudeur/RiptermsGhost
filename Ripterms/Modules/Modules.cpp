@@ -23,25 +23,26 @@ void Ripterms::Modules::IModule::onPacketSend(JNIEnv* env, Packet& packet, bool*
 {
 }
 
-void Ripterms::Modules::IModule::onWalkingUpdate(JNIEnv* env, bool* cancel)
+void Ripterms::Modules::IModule::onUpdateWalkingPlayer(JNIEnv* env, bool* cancel)
 {
 }
 
-void Ripterms::Modules::IModule::onAttack(JNIEnv* env, bool* cancel)
+void Ripterms::Modules::IModule::onAttackTargetEntityWithCurrentItem(JNIEnv* env, Entity& entity, bool* cancel)
+{
+
+}
+
+void Ripterms::Modules::IModule::onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel)
 {
 }
 
-static void sendPacket_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13) //j_rarg0 is this object in non static methods
+static void sendPacket_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13)
 {
 	JNIEnv* env = Ripterms::get_current_thread_env();
 	if (!env) return;
-	void* oop = *(void**)((uint64_t*)sp + 1);
-	if (!oop) return;
-	jobject packet_o = Ripterms::JavaHook::j_rarg_to_jobject(oop, thread);
-	if (!packet_o) return;
+	jobject packet_o = Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread);
 	Packet packet(packet_o, env);
 	if (!packet.isValid()) return;
-
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
 		for (Ripterms::Modules::IModule* module : category.second)
@@ -52,11 +53,68 @@ static void sendPacket_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_
 	return;
 }
 
+static void getMouseOver_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13)
+{
+	JNIEnv* env = Ripterms::get_current_thread_env();
+	if (!env) return;
+	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	{
+		for (Ripterms::Modules::IModule* module : category.second)
+		{
+			module->onGetMouseOver(env, (float*)((uint64_t*)sp + 1), should_return);
+		}
+	}
+	return;
+}
+
+static void attackTargetEntityWithCurrentItem_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13)
+{
+	JNIEnv* env = Ripterms::get_current_thread_env();
+	if (!env) return;
+	jobject entity_o = Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread);
+	Entity entity(entity_o, env);
+	if (!entity.isValid()) return;
+	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	{
+		for (Ripterms::Modules::IModule* module : category.second)
+		{
+			module->onAttackTargetEntityWithCurrentItem(env, entity, should_return);
+		}
+	}
+	return;
+}
+
+static void onUpdateWalkingPlayer_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13)
+{
+	JNIEnv* env = Ripterms::get_current_thread_env();
+	if (!env) return;
+	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	{
+		for (Ripterms::Modules::IModule* module : category.second)
+		{
+			module->onUpdateWalkingPlayer(env, should_return);
+		}
+	}
+	return;
+}
+
 void Ripterms::Modules::setupEventHooks()
 {
 	Ripterms::JavaClassV2 NetworkManager("net/minecraft/network/NetworkManager");
 	jmethodID sendPacket = NetworkManager.getMethodID("sendPacket");
 	Ripterms::JavaHook::add_to_java_hook(sendPacket, sendPacket_callback);
+
+	Ripterms::JavaClassV2 EntityRenderer("net/minecraft/client/renderer/EntityRenderer");
+	jmethodID getMouseOver = EntityRenderer.getMethodID("getMouseOver");
+	Ripterms::JavaHook::add_to_java_hook(getMouseOver, getMouseOver_callback);
+
+	Ripterms::JavaClassV2 EntityPlayer("net/minecraft/entity/player/EntityPlayer");
+	jmethodID attackTargetEntityWithCurrentItem = EntityPlayer.getMethodID("attackTargetEntityWithCurrentItem");
+	Ripterms::JavaHook::add_to_java_hook(attackTargetEntityWithCurrentItem, attackTargetEntityWithCurrentItem_callback);
+
+	Ripterms::JavaClassV2 EntityPlayerSP("net/minecraft/client/entity/EntityPlayerSP");
+	jmethodID onUpdateWalkingPlayer = EntityPlayerSP.getMethodID("onUpdateWalkingPlayer");
+	Ripterms::JavaHook::add_to_java_hook(onUpdateWalkingPlayer, onUpdateWalkingPlayer_callback);
 }
 
 void Ripterms::Modules::runAll()

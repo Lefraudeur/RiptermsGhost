@@ -28,6 +28,9 @@ void Ripterms::JavaHook::clean()
         if (m.second.prev_i2i_entry)
             VirtualFree(m.second.prev_i2i_entry, 0, MEM_RELEASE);
 
+        //unsigned short* _flags = (unsigned short*)(method + 0x32);
+        //*_flags &= ~(1 << 2);
+
         int* access_flags = (int*)(method + 0x28);
         //*access_flags &= ~0x01000000;
         *access_flags &= ~0x02000000;
@@ -94,7 +97,7 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t interpr
     uint8_t* _i2i_entry = *p_i2i_entry;
     if (_i2i_entry && _i2i_entry != m.prev_i2i_entry)
     {
-        std::cout << "hooking" << '\n';
+        //std::cout << "hooking" << '\n';
         uint8_t* new_i2i_entry = generate_detour_code(m.interpreted_callback, _i2i_entry);
         m.original_i2i_entry = _i2i_entry;
         *p_i2i_entry = new_i2i_entry;
@@ -113,9 +116,16 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t interpr
 }
 
 
-jobject Ripterms::JavaHook::j_rarg_to_jobject(void* j_rarg, void* thread)
+jobject Ripterms::JavaHook::oop_to_jobject(void* oop, void* thread)
 {
-    return make_local(thread, j_rarg, 0);
+    return make_local(thread, oop, 0);
+}
+
+jobject Ripterms::JavaHook::get_jobject_arg_at(void* sp, int index, void* thread)
+{
+    void* oop = get_primitive_arg_at<void*>(sp, index);
+    if (!oop) return nullptr;
+    return oop_to_jobject(oop, thread);
 }
 
 static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr)

@@ -3,7 +3,7 @@
 #include <imgui.h>
 
 
-void Ripterms::Modules::WTap::onWalkingUpdate(JNIEnv* env, bool* cancel)
+void Ripterms::Modules::WTap::onUpdateWalkingPlayer(JNIEnv* env, bool* cancel)
 {
 	if (!enabled) return;
 	++ticks;
@@ -15,7 +15,7 @@ void Ripterms::Modules::WTap::onWalkingUpdate(JNIEnv* env, bool* cancel)
 	}
 }
 
-void Ripterms::Modules::WTap::onAttack(JNIEnv* env, bool* cancel)
+void Ripterms::Modules::WTap::onAttackTargetEntityWithCurrentItem(JNIEnv* env, Entity& entity, bool* cancel)
 {
 	if (!enabled) return;
 	ticks = 0;

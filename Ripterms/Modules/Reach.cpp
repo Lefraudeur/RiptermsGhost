@@ -7,17 +7,42 @@
 void Ripterms::Modules::Reach::run()
 {
 	static float prev_reach_distance = -1.0f;
+	static bool runonce = true;
 	if (!enabled)
 	{
+		if (!cp_reach_addr) return;
 		if (prev_reach_distance != -1.0f)
 		{
-			//reset here
+			disable();
 			prev_reach_distance = -1.0f;
 		}
 		return;
 	}
+
+	if (runonce)
+	{
+		Ripterms::JavaClassV2 EntityRenderer("net/minecraft/client/renderer/EntityRenderer");
+		jmethodID mid = EntityRenderer.getMethodID("getMouseOver");
+		uint8_t* method = *((uint8_t**)mid);
+		uint8_t* _constMethod = *(uint8_t**)(method + 0x08);
+		uint8_t* _constants = *(uint8_t**)(_constMethod + 0x08);
+		uint8_t* constant_pool_base = _constants + 0x48;
+		int cp_length = *(int*)(_constants + 0x3C);
+		for (int i = 0; i < cp_length; ++i)
+		{
+			double* d = (double*)constant_pool_base + i;
+			if (*d == 3.0)
+			{
+				cp_reach_addr = d;
+				break;
+			}
+		}
+		runonce = false;
+	}
+
+	if (!cp_reach_addr) return;
 	if (prev_reach_distance == reach_distance) return;
-	//set here
+	*cp_reach_addr = reach_distance;
 	prev_reach_distance = reach_distance;
 }
 
@@ -39,4 +64,15 @@ void Ripterms::Modules::Reach::renderGUI()
 		ImGui::SliderFloat("Reach Distance", &reach_distance, 3.0f, 4.0f, "%.1f");
 		ImGui::EndGroup();
 	}
+}
+
+void Ripterms::Modules::Reach::disable()
+{
+	if (!cp_reach_addr) return;
+	*cp_reach_addr = 3.0;
+}
+
+void Ripterms::Modules::Reach::onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel)
+{
+	//this hook is here only as a trick to make sure the method is interpreted
 }

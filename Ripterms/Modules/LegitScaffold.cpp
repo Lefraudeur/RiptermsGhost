@@ -4,7 +4,7 @@
 
 
 
-void Ripterms::Modules::LegitScaffold::onWalkingUpdate(JNIEnv* env, bool* cancel)
+void Ripterms::Modules::LegitScaffold::onUpdateWalkingPlayer(JNIEnv* env, bool* cancel)
 {
 	if (!enabled)
 		return;
