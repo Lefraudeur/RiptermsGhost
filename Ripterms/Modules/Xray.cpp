@@ -16,7 +16,6 @@ void Ripterms::Modules::Xray::run()
 	}
 	if (!prev_enabled)
 	{
-		Ripterms::cache->EMPTY_MAP.put(String("xray_enabled"), String("1"));
 		prev_enabled = true;
 	}
 }
@@ -32,5 +31,4 @@ void Ripterms::Modules::Xray::renderGUI()
 
 void Ripterms::Modules::Xray::disable()
 {
-	Ripterms::cache->EMPTY_MAP.put(String("xray_enabled"), String("0"));
 }

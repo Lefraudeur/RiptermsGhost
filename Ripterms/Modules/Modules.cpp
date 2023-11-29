@@ -19,32 +19,29 @@ void Ripterms::Modules::IModule::disable()
 {
 }
 
-void Ripterms::Modules::IModule::onEvent(Event* event)
+void Ripterms::Modules::IModule::onPacketSend(JNIEnv* env, Packet& packet, bool* cancel)
 {
 }
 
-void Ripterms::Modules::IModule::onPacketSend(JNIEnv* env, Packet& packet, bool* cancel)
+void Ripterms::Modules::IModule::onWalkingUpdate(JNIEnv* env, bool* cancel)
 {
-	return;
-	C03PacketPlayer packetPlayer(packet, env);
-	if (packetPlayer.getRotating())
-	{
-		std::cout << packetPlayer.getYawPitch().x << '\n';
-	}
+}
+
+void Ripterms::Modules::IModule::onAttack(JNIEnv* env, bool* cancel)
+{
 }
 
 static void sendPacket_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13) //j_rarg0 is this object in non static methods
 {
 	JNIEnv* env = Ripterms::get_current_thread_env();
-	if (!env)
-		return;
+	if (!env) return;
 	void* oop = *(void**)((uint64_t*)sp + 1);
-	if (!oop)
-		return;
+	if (!oop) return;
 	jobject packet_o = Ripterms::JavaHook::j_rarg_to_jobject(oop, thread);
-	if (!packet_o)
-		return;
+	if (!packet_o) return;
 	Packet packet(packet_o, env);
+	if (!packet.isValid()) return;
+
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
 		for (Ripterms::Modules::IModule* module : category.second)
@@ -80,7 +77,7 @@ void Ripterms::Modules::cleanAll()
 	{
 		for (IModule* m : category.second)
 		{
-			if (should_disable)m->disable();
+			if (should_disable) m->disable();
 			delete m;
 		}
 	}

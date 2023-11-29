@@ -1,7 +1,6 @@
 #pragma once
 #include "../../java/lang/String/String.h"
 #include <random>
-#include "../Event/Event.h"
 #include "../Maths/Maths.h"
 #include "../../net/minecraft/network/Packet/Packet.h"
 
@@ -16,8 +15,9 @@ namespace Ripterms
 			virtual void renderGUI();
 			virtual void render();
 			virtual void disable();
-			virtual void onEvent(Ripterms::Event* event);
 			virtual void onPacketSend(JNIEnv* env, Packet& packet, bool* cancel);
+			virtual void onWalkingUpdate(JNIEnv* env, bool* cancel);
+			virtual void onAttack(JNIEnv* env, bool* cancel);
 		protected:
 			inline static std::random_device rd{};
 			inline static std::mt19937 gen{rd()};
@@ -61,8 +61,11 @@ namespace Ripterms
 		class WTap : public IModule
 		{
 		public:
-			void onEvent(Ripterms::Event* event) override;
+			void onWalkingUpdate(JNIEnv* env, bool* cancel) override;
+			void onAttack(JNIEnv* env, bool* cancel) override;
 			void renderGUI() override;
+		private:
+			int ticks = 0;
 		};
 
 		class HitBoxes : public IModule
@@ -128,7 +131,7 @@ namespace Ripterms
 		class LegitScaffold : public IModule
 		{
 		public:
-			void onEvent(Ripterms::Event* event) override;
+			void onWalkingUpdate(JNIEnv* env, bool* cancel) override;
 			void renderGUI() override;
 		private:
 			int tickDelay = 0;

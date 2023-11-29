@@ -21,7 +21,6 @@ namespace Ripterms
 		Timer timer{};
 		NetHandlerPlayClient sendQueue{};
 
-		Map EMPTY_MAP{};
 		bool fillCache();
 	private:
 		EntityPlayerSP prev_thePlayer{};

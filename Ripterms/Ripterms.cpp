@@ -4,9 +4,7 @@
 #include "GUI/GUI.h"
 #include "Modules/Modules.h"
 #include "JavaClass/JavaClass.h"
-#include "Patcher/Patcher.h"
 #include "../java/lang/System/System.h"
-#include "Event/Event.h"
 #include "Hook/Hook.h"
 #include <thread>
 #include "Mappings/mappings_lunar_1_8_9.h"
@@ -54,12 +52,6 @@ namespace
 static void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer)
 {
 	static bool runonce = true;
-	Ripterms::Event event(env, mask);
-	if (event.isEvent())
-	{
-		if (!runonce && runMainLoop) event.dispatch();
-		return;
-	}
 
 	if (runonce)
 	{
@@ -67,7 +59,6 @@ static void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong f
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::JavaClassV2::init();
-		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
 		if (runMainLoop) Ripterms::Modules::setupEventHooks();
 		runonce = false;
 	}
@@ -84,12 +75,6 @@ static void JNICALL detournglClear(JNIEnv* env, jclass clazz, jint mask, jlong f
 static void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 {
 	static bool runonce = true;
-	Ripterms::Event event(env, mask);
-	if (event.isEvent())
-	{
-		if (!runonce && runMainLoop) event.dispatch();
-		return;
-	}
 
 	if (runonce)
 	{
@@ -97,7 +82,6 @@ static void JNICALL detourglClear(JNIEnv* env, jclass clazz, jint mask)
 		env->GetJavaVM(&Ripterms::p_jvm);
 		Ripterms::p_jvm->GetEnv((void**)&Ripterms::p_tienv, JVMTI_VERSION_1_2);
 		runMainLoop = Ripterms::JavaClassV2::init();
-		if (runMainLoop) runMainLoop = Ripterms::Patcher::init();
 		if (runMainLoop) Ripterms::Modules::setupEventHooks();
 		runonce = false;
 	}
@@ -203,7 +187,6 @@ void Ripterms::clean()
 	Ripterms::Modules::cleanAll();
 	Ripterms::JavaHook::clean();
 	Ripterms::Hook::clean();
-	Ripterms::Patcher::clean();
 	delete Ripterms::cache;
 	System::gc();
 	Ripterms::JavaClassV2::clean();

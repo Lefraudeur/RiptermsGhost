@@ -105,67 +105,6 @@ namespace Mappings
 	},
 )"
 R"(
-	"io/github/lefraudeur/ClassPatcher": {
-		"obfuscated": "io/github/lefraudeur/ClassPatcher",
-		"fields": [],
-		"methods": [
-			{
-				"name": "patchEntityRenderer",
-				"obfuscated": "patchEntityRenderer",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchClientBrandRetriever",
-				"obfuscated": "patchClientBrandRetriever",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchNetworkManager",
-				"obfuscated": "patchNetworkManager",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchBlock",
-				"obfuscated": "patchBlock",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchGL11",
-				"obfuscated": "patchGL11",
-				"signature": "([B)[B",
-				"static": true
-			},
-			{
-				"name": "patchMethod",
-				"obfuscated": "patchMethod",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[B",
-				"static": true
-			}
-		]
-	},
-	"org/apache/logging/log4j/ThreadContext": {
-		"obfuscated": "org/apache/logging/log4j/ThreadContext",
-		"fields": [
-			{
-				"name": "EMPTY_MAP",
-				"obfuscated": "EMPTY_MAP",
-				"signature": "Ljava/util/Map;",
-				"static": true
-			}
-		],
-		"methods": []
-	},
-	"org/lwjgl/opengl/GL11": {
-		"obfuscated": "org/lwjgl/opengl/GL11",
-		"fields": [],
-		"methods": []
-	},
-)"
-R"(
 	"net/minecraft/client/Minecraft": {
 		"obfuscated": "net/minecraft/client/Minecraft",
 		"fields": [

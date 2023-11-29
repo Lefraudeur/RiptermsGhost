@@ -2,50 +2,48 @@
 #include "../Cache/Cache.h"
 #include <ImGui/imgui.h>
 
-void Ripterms::Modules::LegitScaffold::onEvent(Ripterms::Event* event)
+
+
+void Ripterms::Modules::LegitScaffold::onWalkingUpdate(JNIEnv* env, bool* cancel)
 {
 	if (!enabled)
 		return;
+	static bool sneaked = false;
+	static int elapsedTicks = 0;
 
-	if (event->type == Ripterms::Event::PRE_MOTION)
+	if (sneaked)
+		elapsedTicks++;
+	else
+		elapsedTicks = 0;
+
+	Minecraft theMinecraft = Minecraft::getTheMinecraft(env);
+	EntityPlayerSP thePlayer = theMinecraft.getThePlayer();
+	WorldClient theWorld = theMinecraft.getTheWorld();
+	GameSettings gameSettings = theMinecraft.getGameSettings();
+	KeyBinding keyBindSneak = gameSettings.getKeyBindSneak();
+
+	if ((GetKeyState(0x53) & 0x8000) && thePlayer.isOnGround())
 	{
-		static bool sneaked = false;
-		static int elapsedTicks = 0;
-
-		if (sneaked)
-			elapsedTicks++;
-		else
-			elapsedTicks = 0;
-
-		Minecraft theMinecraft = Minecraft::getTheMinecraft(event->env);
-		EntityPlayerSP thePlayer = theMinecraft.getThePlayer();
-		WorldClient theWorld = theMinecraft.getTheWorld();
-		GameSettings gameSettings = theMinecraft.getGameSettings();
-		KeyBinding keyBindSneak = gameSettings.getKeyBindSneak();
-
-		if ((GetKeyState(0x53) & 0x8000) && thePlayer.isOnGround())
+		AxisAlignedBB thePlayerbb = thePlayer.getBoundingBox();
+		Ripterms::Maths::Vector3d playerPosition
+		(
+			thePlayerbb.getMinX() + (thePlayerbb.getMaxX() - thePlayerbb.getMinX()) / 2.0f,
+			thePlayerbb.getMinY(),
+			thePlayerbb.getMinZ() + (thePlayerbb.getMaxZ() - thePlayerbb.getMinZ()) / 2.0f
+		);
+		playerPosition.y -= 0.1f;
+		Block playerBlock = theWorld.getBlock(playerPosition);
+		if (playerBlock.instanceOf(JavaClassV2("net/minecraft/block/BlockAir").getJClass(env)))
 		{
-			AxisAlignedBB thePlayerbb = thePlayer.getBoundingBox();
-			Ripterms::Maths::Vector3d playerPosition
-			(
-				thePlayerbb.getMinX() + (thePlayerbb.getMaxX() - thePlayerbb.getMinX()) / 2.0f,
-				thePlayerbb.getMinY(),
-				thePlayerbb.getMinZ() + (thePlayerbb.getMaxZ() - thePlayerbb.getMinZ()) / 2.0f
-			);
-			playerPosition.y -= 0.1f;
-			Block playerBlock = theWorld.getBlock(playerPosition);
-			if (playerBlock.instanceOf(JavaClassV2("net/minecraft/block/BlockAir").getJClass(event->env)))
-			{
-				sneaked = true;
-				keyBindSneak.setPressed(true);
-				return;
-			}
+			sneaked = true;
+			keyBindSneak.setPressed(true);
+			return;
 		}
-		if (sneaked && elapsedTicks > tickDelay)
-		{
-			keyBindSneak.setPressed(false);
-			sneaked = false;
-		}
+	}
+	if (sneaked && elapsedTicks > tickDelay)
+	{
+		keyBindSneak.setPressed(false);
+		sneaked = false;
 	}
 }
 

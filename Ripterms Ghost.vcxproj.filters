@@ -102,9 +102,6 @@
     <ClCompile Include="Ripterms\Modules\Test.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Ripterms\Patcher\Patcher.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="Ripterms\Modules\Reach.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -145,9 +142,6 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Ripterms\JavaClass\JavaClassV2.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Ripterms\Event\Event.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Ripterms\Modules\LegitScaffold.cpp">
@@ -287,12 +281,6 @@
     <ClInclude Include="java\lang\ClassLoader\ClassLoader.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Ripterms\Patcher\ClassPatcherJar.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Ripterms\Patcher\Patcher.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="net\minecraft\client\settings\GameSettings\GameSettings.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -318,9 +306,6 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_16_5.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Ripterms\Event\Event.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.h">

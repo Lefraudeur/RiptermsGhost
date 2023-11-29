@@ -7,16 +7,17 @@
 void Ripterms::Modules::Reach::run()
 {
 	static float prev_reach_distance = -1.0f;
-	if (!enabled) {
+	if (!enabled)
+	{
 		if (prev_reach_distance != -1.0f)
 		{
-			Ripterms::cache->EMPTY_MAP.put(String("reach_distance"), String("3.0")); //we use this random Map as storage
+			//reset here
 			prev_reach_distance = -1.0f;
 		}
 		return;
 	}
 	if (prev_reach_distance == reach_distance) return;
-	Ripterms::cache->EMPTY_MAP.put(String("reach_distance"), String(std::to_string(reach_distance)));
+	//set here
 	prev_reach_distance = reach_distance;
 }
 

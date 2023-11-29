@@ -18,11 +18,7 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 	if (ImGui::Button("change"))
 	{
-		Ripterms::cache->EMPTY_MAP.put
-		(
-			String("client_brand"),
-			String(name)
-		);
+
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("reset"))
@@ -34,12 +30,6 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 
 void Ripterms::Modules::ClientBrandChanger::disable()
 {
-	Ripterms::cache->EMPTY_MAP.put
-	(
-		String("client_brand"),
-		old_ClientModName
-	);
-	old_ClientModName.clear();
 }
 
 String Ripterms::Modules::ClientBrandChanger::getClientModName()

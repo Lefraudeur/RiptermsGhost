@@ -2,27 +2,23 @@
 #include "../../net/minecraft/client/Minecraft/Minecraft.h"
 #include <imgui.h>
 
-void Ripterms::Modules::WTap::onEvent(Ripterms::Event* event)
+
+void Ripterms::Modules::WTap::onWalkingUpdate(JNIEnv* env, bool* cancel)
 {
-	static int ticks = 10;
-
-	if (!enabled)
-		return;
-
-	if (event->type == Ripterms::Event::Type::PRE_ATTACK)
+	if (!enabled) return;
+	++ticks;
+	EntityPlayerSP thePlayer = Minecraft::getTheMinecraft(env).getThePlayer();
+	if (thePlayer.isSprinting())
 	{
-		ticks = 0;
+		if (ticks == 2) thePlayer.setSprinting(false);
+		if (ticks == 3) thePlayer.setSprinting(true);
 	}
-	else if (event->type == Event::Type::PRE_MOTION)
-	{
-		++ticks;
-		EntityPlayerSP thePlayer = Minecraft::getTheMinecraft(event->env).getThePlayer();
-		if (thePlayer.isSprinting())
-		{
-			if (ticks == 2) thePlayer.setSprinting(false);
-			if (ticks == 3) thePlayer.setSprinting(true);
-		}
-	}
+}
+
+void Ripterms::Modules::WTap::onAttack(JNIEnv* env, bool* cancel)
+{
+	if (!enabled) return;
+	ticks = 0;
 }
 
 void Ripterms::Modules::WTap::renderGUI()

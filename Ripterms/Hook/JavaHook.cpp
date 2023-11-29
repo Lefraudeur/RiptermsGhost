@@ -1,5 +1,6 @@
 #include "Hook.h"
 #include <unordered_map>
+#include "../Ripterms.h"
 
 static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr);
 static jobject(*make_local)(void* thread, void* oop, int alloc_failure) = nullptr;
@@ -28,7 +29,7 @@ void Ripterms::JavaHook::clean()
             VirtualFree(m.second.prev_i2i_entry, 0, MEM_RELEASE);
 
         int* access_flags = (int*)(method + 0x28);
-        *access_flags &= ~0x01000000;
+        //*access_flags &= ~0x01000000;
         *access_flags &= ~0x02000000;
         *access_flags &= ~0x04000000;
         *access_flags &= ~0x08000000;
@@ -64,41 +65,49 @@ bool Ripterms::JavaHook::init()
 
 void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t interpreted_callback)
 {
+    static int runonce = []()->int
+    {
+        jvmtiCapabilities capabilities{ .can_retransform_classes = JVMTI_ENABLE };
+        Ripterms::p_tienv->AddCapabilities(&capabilities);
+        return 0;
+    }();
+
+    jclass owner = nullptr;
+    Ripterms::p_tienv->GetMethodDeclaringClass(methodID, &owner);
+    Ripterms::p_tienv->RetransformClasses(1, &owner); //small trick to delete any already compiled / inlined code
+    Ripterms::p_env->DeleteLocalRef(owner);
+
     uint8_t* method = *((uint8_t**)methodID);
     HookedJavaMethodCache& m = hookedMethods[methodID];
     m.interpreted_callback = interpreted_callback;
 
-    int* access_flags = (int*)(method + 0x28);
-    while (((*access_flags & 0x01000000) != 0) 
-        && ((*access_flags & 0x04000000) == 0))
-    {} // wait for compilations in progress
-
     unsigned short* _flags = (unsigned short*)(method + 0x32);
     *_flags |= (1 << 2); //don't inline
 
-    *access_flags |= 0x01000000; //no compile
+    int* access_flags = (int*)(method + 0x28);
+    //*access_flags |= 0x01000000; //no compile
     *access_flags |= 0x02000000;
     *access_flags |= 0x04000000;
     *access_flags |= 0x08000000;
-
-    *((uint8_t**)(method + 0x48)) = nullptr; // delete compiled code
 
     uint8_t** p_i2i_entry = (uint8_t**)(method + 0x38);
     uint8_t* _i2i_entry = *p_i2i_entry;
     if (_i2i_entry && _i2i_entry != m.prev_i2i_entry)
     {
+        std::cout << "hooking" << '\n';
         uint8_t* new_i2i_entry = generate_detour_code(m.interpreted_callback, _i2i_entry);
         m.original_i2i_entry = _i2i_entry;
         *p_i2i_entry = new_i2i_entry;
-        if (m.prev_i2i_entry)
-            VirtualFree(m.prev_i2i_entry, 0, MEM_RELEASE);
-        m.prev_i2i_entry = new_i2i_entry;
         uint8_t** p_from_interpreted_entry = (uint8_t**)(method + 0x50);
         *p_from_interpreted_entry = *p_i2i_entry;
         uint8_t* _adapter = *(uint8_t**)(method + 0x20);
         uint8_t* _c2i_entry = *(uint8_t**)(_adapter + 0x20);
         uint8_t** p_from_compiled_entry = (uint8_t**)(method + 0x40);
         *p_from_compiled_entry = _c2i_entry;
+        if (m.prev_i2i_entry)
+            VirtualFree(m.prev_i2i_entry, 0, MEM_RELEASE);
+        m.prev_i2i_entry = new_i2i_entry;
+        //*((uint8_t**)(method + 0x48)) = nullptr; // delete compiled code
     }
     return;
 }

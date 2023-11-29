@@ -2,5 +2,5 @@
 
 void System::gc(JNIEnv* env)
 {
-	env->CallStaticVoidMethod(SystemClass.getJClass(), SystemClass.getMethodID("gc"));
+	env->CallStaticVoidMethod(SystemClass.getJClass(env), SystemClass.getMethodID("gc"));
 }
