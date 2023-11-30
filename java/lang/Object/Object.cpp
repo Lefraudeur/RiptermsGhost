@@ -5,7 +5,7 @@ Object::Object(jobject instance, JNIEnv* env, bool is_global)
 	this->is_global = is_global;
 	if (instance)
 	{
-		this->instance = (is_global ? env->NewGlobalRef(instance) : env->NewLocalRef(instance));
+		this->instance = (is_global ? env->NewGlobalRef(instance) : instance);
 	}
 	else this->instance = nullptr;
 	this->env = env;
@@ -25,12 +25,12 @@ Object::Object(JNIEnv* env, bool is_global)
 Object& Object::operator=(const Object& other_Object)
 {
 	this->env = other_Object.env;
-	if (this->instance)
+	if (this->instance && is_global)
 	{
-		(is_global ? env->DeleteGlobalRef(this->instance) : env->DeleteLocalRef(this->instance));
+		env->DeleteGlobalRef(this->instance);
 	}
 	if (other_Object.instance)
-		this->instance = (is_global ? env->NewGlobalRef(other_Object.instance) : env->NewLocalRef(other_Object.instance));
+		this->instance = (is_global ? env->NewGlobalRef(other_Object.instance) : other_Object.instance);
 	else this->instance = nullptr;
 	return *this;
 }
@@ -48,9 +48,9 @@ Object::operator jobject()
 
 void Object::setInstance(jobject instance, JNIEnv* env)
 {
-	if (this->instance)
+	if (this->instance && is_global)
 	{
-		(is_global ? env->DeleteGlobalRef(this->instance) : env->DeleteLocalRef(this->instance));
+		env->DeleteGlobalRef(this->instance);
 	}
 
 	if (!this->env) this->env = Ripterms::p_env;
@@ -58,7 +58,7 @@ void Object::setInstance(jobject instance, JNIEnv* env)
 
 	if (instance)
 	{
-		this->instance = (is_global ? env->NewGlobalRef(instance) : env->NewLocalRef(instance));
+		this->instance = (is_global ? env->NewGlobalRef(instance) : instance);
 	}
 	else this->instance = nullptr;
 }
@@ -112,7 +112,8 @@ void Object::clear()
 		return; // process termination scenario
 	if (isValid())
 	{
-		(is_global ? env->DeleteGlobalRef(instance) : env->DeleteLocalRef(instance));
+		if (is_global)
+			env->DeleteGlobalRef(instance);
 		this->instance = nullptr;
 	}
 }

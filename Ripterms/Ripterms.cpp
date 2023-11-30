@@ -29,9 +29,10 @@ static void mainLoop()
 {
 	static Ripterms::CTimer timer = std::chrono::milliseconds(5);
 	if (!timer.isElapsed() || !Ripterms::cache->fillCache()) return;
-	Ripterms::p_env->PushLocalFrame(50);
+	Ripterms::p_env->PushLocalFrame(100);
 	Ripterms::Modules::runAll();
 	Ripterms::p_env->PopLocalFrame(nullptr);
+	//every local reference created after PushLocalFrame will be deleted on PopLocalFrame
 }
 
 namespace

@@ -7,10 +7,6 @@
 
 static void callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13) //j_rarg0 is this object in non static methods
 {
-	uint8_t* _constMethod = *(uint8_t**)((uint8_t*)rbx + 0x08);
-	uint8_t* _constants = *(uint8_t**)(_constMethod + 0x08);
-	uint8_t* constant_pool_base = _constants + 0x48;
-	*(double*)((uint64_t*)constant_pool_base + 599) = 10.0;
 	//*should_return = true;
 	return;
 }

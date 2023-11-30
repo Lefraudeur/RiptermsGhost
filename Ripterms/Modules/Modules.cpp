@@ -42,14 +42,13 @@ void Ripterms::Modules::IModule::onShouldSideBeRendered(Object& blockAccess, Blo
 
 static void sendPacket_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13)
 {
-	if (Ripterms::Modules::IModule::onSendPacketNoEvent)
-		return;
+	if (Ripterms::Modules::IModule::onSendPacketNoEvent) return;
 	JNIEnv* env = Ripterms::get_current_thread_env();
 	if (!env) return;
-	env->PushLocalFrame(50);
 	jobject packet_o = Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread);
+	if (!packet_o) return;
 	Packet packet(packet_o, env);
-	if (!packet.isValid()) return;
+	env->PushLocalFrame(50);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
 		for (Ripterms::Modules::IModule* module : category.second)
@@ -81,10 +80,10 @@ static void attackTargetEntityWithCurrentItem_callback(void* sp, void* j_rarg0, 
 {
 	JNIEnv* env = Ripterms::get_current_thread_env();
 	if (!env) return;
-	env->PushLocalFrame(50);
 	jobject entity_o = Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread);
+	if (!entity_o) return;
 	Entity entity(entity_o, env);
-	if (!entity.isValid()) return;
+	env->PushLocalFrame(50);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
 		for (Ripterms::Modules::IModule* module : category.second)

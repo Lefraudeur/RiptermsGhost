@@ -32,7 +32,7 @@ void Ripterms::JavaHook::clean()
         //*_flags &= ~(1 << 2);
 
         int* access_flags = (int*)(method + 0x28);
-        //*access_flags &= ~0x01000000;
+        *access_flags &= ~0x01000000;
         *access_flags &= ~0x02000000;
         *access_flags &= ~0x04000000;
         *access_flags &= ~0x08000000;
@@ -88,7 +88,7 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t interpr
     *_flags |= (1 << 2); //don't inline
 
     int* access_flags = (int*)(method + 0x28);
-    //*access_flags |= 0x01000000; //no compile
+    *access_flags |= 0x01000000; //no compile
     *access_flags |= 0x02000000;
     *access_flags |= 0x04000000;
     *access_flags |= 0x08000000;
@@ -110,7 +110,7 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t interpr
         if (m.prev_i2i_entry)
             VirtualFree(m.prev_i2i_entry, 0, MEM_RELEASE);
         m.prev_i2i_entry = new_i2i_entry;
-        //*((uint8_t**)(method + 0x48)) = nullptr; // delete compiled code
+        *((uint8_t**)(method + 0x48)) = nullptr; // delete compiled code
     }
     return;
 }
