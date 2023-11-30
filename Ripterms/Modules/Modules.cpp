@@ -40,6 +40,7 @@ static void sendPacket_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_
 {
 	JNIEnv* env = Ripterms::get_current_thread_env();
 	if (!env) return;
+	env->PushLocalFrame(5);
 	jobject packet_o = Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread);
 	Packet packet(packet_o, env);
 	if (!packet.isValid()) return;
@@ -50,6 +51,7 @@ static void sendPacket_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_
 			module->onPacketSend(env, packet, should_return);
 		}
 	}
+	env->PopLocalFrame(nullptr);
 	return;
 }
 
@@ -57,6 +59,7 @@ static void getMouseOver_callback(void* sp, void* j_rarg0, void* j_rarg1, void* 
 {
 	JNIEnv* env = Ripterms::get_current_thread_env();
 	if (!env) return;
+	env->PushLocalFrame(5);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
 		for (Ripterms::Modules::IModule* module : category.second)
@@ -64,6 +67,7 @@ static void getMouseOver_callback(void* sp, void* j_rarg0, void* j_rarg1, void* 
 			module->onGetMouseOver(env, (float*)((uint64_t*)sp + 1), should_return);
 		}
 	}
+	env->PopLocalFrame(nullptr);
 	return;
 }
 
@@ -71,6 +75,7 @@ static void attackTargetEntityWithCurrentItem_callback(void* sp, void* j_rarg0, 
 {
 	JNIEnv* env = Ripterms::get_current_thread_env();
 	if (!env) return;
+	env->PushLocalFrame(5);
 	jobject entity_o = Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread);
 	Entity entity(entity_o, env);
 	if (!entity.isValid()) return;
@@ -81,6 +86,7 @@ static void attackTargetEntityWithCurrentItem_callback(void* sp, void* j_rarg0, 
 			module->onAttackTargetEntityWithCurrentItem(env, entity, should_return);
 		}
 	}
+	env->PopLocalFrame(nullptr);
 	return;
 }
 
@@ -88,6 +94,7 @@ static void onUpdateWalkingPlayer_callback(void* sp, void* j_rarg0, void* j_rarg
 {
 	JNIEnv* env = Ripterms::get_current_thread_env();
 	if (!env) return;
+	env->PushLocalFrame(5);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
 		for (Ripterms::Modules::IModule* module : category.second)
@@ -95,6 +102,7 @@ static void onUpdateWalkingPlayer_callback(void* sp, void* j_rarg0, void* j_rarg
 			module->onUpdateWalkingPlayer(env, should_return);
 		}
 	}
+	env->PopLocalFrame(nullptr);
 	return;
 }
 

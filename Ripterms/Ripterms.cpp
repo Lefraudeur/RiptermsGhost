@@ -29,7 +29,9 @@ static void mainLoop()
 {
 	static Ripterms::CTimer timer = std::chrono::milliseconds(5);
 	if (!timer.isElapsed() || !Ripterms::cache->fillCache()) return;
+	Ripterms::p_env->PushLocalFrame(20);
 	Ripterms::Modules::runAll();
+	Ripterms::p_env->PopLocalFrame(nullptr);
 }
 
 namespace

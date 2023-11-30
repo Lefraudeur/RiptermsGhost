@@ -4,6 +4,7 @@
 #include "../Maths/Maths.h"
 #include "../../net/minecraft/network/Packet/Packet.h"
 #include "../../net/minecraft/entity/Entity/Entity.h"
+#include "../../net/minecraft/entity/player/EntityPlayer/EntityPlayer.h"
 
 namespace Ripterms
 {
@@ -40,6 +41,7 @@ namespace Ripterms
 			float max_angle = 80.0f;
 			float multiplier = 1.0f;
 			float multiplierPitch = 0.5f;
+			EntityPlayer prev_selected_target{ Ripterms::p_env, true };
 		};
 
 		class Reach : public IModule
