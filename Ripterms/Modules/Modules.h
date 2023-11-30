@@ -5,6 +5,7 @@
 #include "../../net/minecraft/network/Packet/Packet.h"
 #include "../../net/minecraft/entity/Entity/Entity.h"
 #include "../../net/minecraft/entity/player/EntityPlayer/EntityPlayer.h"
+#include "../../net/minecraft/util/BlockPos/BlockPos.h"
 
 namespace Ripterms
 {
@@ -17,10 +18,14 @@ namespace Ripterms
 			virtual void renderGUI();
 			virtual void render();
 			virtual void disable();
-			virtual void onPacketSend(JNIEnv* env, Packet& packet, bool* cancel);
+
+			inline static bool onSendPacketNoEvent = false;
+			virtual void onSendPacket(JNIEnv* env, Packet& packet, bool* cancel);
+
 			virtual void onUpdateWalkingPlayer(JNIEnv* env, bool* cancel);
 			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, Entity& entity, bool* cancel);
 			virtual void onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel);
+			virtual void onShouldSideBeRendered(Object& blockAccess, BlockPos& blockPos, Object& enumFacing);
 
 		protected:
 			inline static std::random_device rd{};
@@ -36,6 +41,7 @@ namespace Ripterms
 			void run() override;
 			void renderGUI() override;
 			void render() override;
+			void disable() override;
 		private:
 			float max_distance = 6.0f;
 			float max_angle = 80.0f;
@@ -134,6 +140,9 @@ namespace Ripterms
 			void run() override;
 			void renderGUI() override;
 			void disable() override;
+			void onSendPacket(JNIEnv* env, Packet& packet, bool* cancel) override;
+		private:
+			std::vector<Packet> packets{};
 		};
 
 		class LegitScaffold : public IModule

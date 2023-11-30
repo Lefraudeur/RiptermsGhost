@@ -194,3 +194,8 @@ void Ripterms::Modules::AimAssist::renderGUI()
 void Ripterms::Modules::AimAssist::render()
 {
 }
+
+void Ripterms::Modules::AimAssist::disable()
+{
+	prev_selected_target.clear();
+}

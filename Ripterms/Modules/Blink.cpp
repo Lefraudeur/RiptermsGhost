@@ -17,4 +17,23 @@ void Ripterms::Modules::Blink::renderGUI()
 
 void Ripterms::Modules::Blink::disable()
 {
+	onSendPacketNoEvent = true;
+	for (Packet& packet : packets)
+	{
+		//TODO: send the packets here
+	}
+	packets.clear();
+	onSendPacketNoEvent = false;
+}
+
+void Ripterms::Modules::Blink::onSendPacket(JNIEnv* env, Packet& packet, bool* cancel)
+{
+	if (!enabled)
+	{
+		if (!packets.empty())
+			disable();
+		return;
+	}
+	*cancel = true;
+	packets.push_back(Packet(packet, env, true));
 }
