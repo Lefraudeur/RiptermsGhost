@@ -53,13 +53,15 @@ namespace Ripterms
 		class Reach : public IModule
 		{
 		public:
-			void run() override;
 			void renderGUI() override;
 			void disable() override;
 			void onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel) override;
 		private:
 			float reach_distance = 4.0f;
+			void* original_constant_pool = nullptr;
+			void* new_constant_pool = nullptr;
 			double* cp_reach_addr = nullptr;
+			uint8_t* _constMethod = nullptr;
 		};
 
 		class LeftClicker : public IModule

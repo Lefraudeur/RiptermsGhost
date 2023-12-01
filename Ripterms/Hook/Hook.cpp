@@ -186,7 +186,7 @@ int Ripterms::Hook::find_bytes_to_replace(const uint8_t* target)
     return bytes_to_replace;
 }
 
-uint8_t* Ripterms::Hook::AllocateNearbyMemory(uint8_t* nearby_addr, int size)
+uint8_t* Ripterms::Hook::AllocateNearbyMemory(uint8_t* nearby_addr, int size, int access)
 {
     //this is slow, maybe change the value
     int fail = 0;
@@ -194,13 +194,13 @@ uint8_t* Ripterms::Hook::AllocateNearbyMemory(uint8_t* nearby_addr, int size)
         i < 0x7FFFFFFF;
         i += 65536)
     {
-        uint8_t* allocated = (uint8_t*)VirtualAlloc(nearby_addr + i, size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+        uint8_t* allocated = (uint8_t*)VirtualAlloc(nearby_addr + i, size, MEM_COMMIT | MEM_RESERVE, access);
         if (allocated)
         {
             //std::cout << "fails: " << fail << std::endl;
             return allocated;
         }
-        allocated = (uint8_t*)VirtualAlloc(nearby_addr - i, size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+        allocated = (uint8_t*)VirtualAlloc(nearby_addr - i, size, MEM_COMMIT | MEM_RESERVE, access);
         if (allocated)
         {
             //std::cout << "fails: " << fail << std::endl;

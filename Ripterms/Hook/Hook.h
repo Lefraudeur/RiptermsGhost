@@ -23,7 +23,7 @@ namespace Ripterms
 		static bool init();
 		static void clean();
 
-		static uint8_t* AllocateNearbyMemory(uint8_t* nearby_addr, int size);
+		static uint8_t* AllocateNearbyMemory(uint8_t* nearby_addr, int size, int access = PAGE_EXECUTE_READWRITE);
 
 	private:
 		void hook_RELATIVE_5B_JMP(void* a_detour_function_addr, void** a_original_function_addr);

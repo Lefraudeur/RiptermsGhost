@@ -10,8 +10,10 @@ void Ripterms::Modules::WTap::onUpdateWalkingPlayer(JNIEnv* env, bool* cancel)
 	EntityPlayerSP thePlayer = Minecraft::getTheMinecraft(env).getThePlayer();
 	if (thePlayer.isSprinting())
 	{
-		if (ticks == 2) thePlayer.setSprinting(false);
-		if (ticks == 3) thePlayer.setSprinting(true);
+		if (ticks == 2 && thePlayer.isSprinting()) 
+			thePlayer.setSprinting(false);
+		if (ticks == 3 && !thePlayer.isSprinting()) 
+			thePlayer.setSprinting(true);
 	}
 }
 
