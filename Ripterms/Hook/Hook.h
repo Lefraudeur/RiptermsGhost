@@ -89,5 +89,6 @@ namespace Ripterms
 			return *(T*)((uint64_t*)sp + 1 + index);
 		}
 		jobject get_jobject_arg_at(void* sp, int index, void* thread);
+		JNIEnv* get_env_for_thread(void* thread);
 	}
 }

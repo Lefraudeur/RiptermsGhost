@@ -43,7 +43,7 @@ void Ripterms::Modules::IModule::onShouldSideBeRendered(Object& blockAccess, Blo
 static void sendPacket_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13)
 {
 	if (Ripterms::Modules::IModule::onSendPacketNoEvent) return;
-	JNIEnv* env = Ripterms::get_current_thread_env();
+	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
 	if (!env) return;
 	jobject packet_o = Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread);
 	if (!packet_o) return;
@@ -62,7 +62,7 @@ static void sendPacket_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_
 
 static void getMouseOver_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13)
 {
-	JNIEnv* env = Ripterms::get_current_thread_env();
+	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
 	if (!env) return;
 	env->PushLocalFrame(50);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
@@ -78,7 +78,7 @@ static void getMouseOver_callback(void* sp, void* j_rarg0, void* j_rarg1, void* 
 
 static void attackTargetEntityWithCurrentItem_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13)
 {
-	JNIEnv* env = Ripterms::get_current_thread_env();
+	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
 	if (!env) return;
 	jobject entity_o = Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread);
 	if (!entity_o) return;
@@ -97,7 +97,7 @@ static void attackTargetEntityWithCurrentItem_callback(void* sp, void* j_rarg0, 
 
 static void onUpdateWalkingPlayer_callback(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13)
 {
-	JNIEnv* env = Ripterms::get_current_thread_env();
+	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
 	if (!env) return;
 	env->PushLocalFrame(50);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)

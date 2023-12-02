@@ -128,6 +128,11 @@ jobject Ripterms::JavaHook::get_jobject_arg_at(void* sp, int index, void* thread
     return oop_to_jobject(oop, thread);
 }
 
+JNIEnv* Ripterms::JavaHook::get_env_for_thread(void* thread)
+{
+    return (JNIEnv*)((uint8_t*)thread + 688);
+}
+
 static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr)
 {
     uint8_t pre_call[] = //assembly code, save registers, move params to the corresponding registers, prepare stack to call detour
