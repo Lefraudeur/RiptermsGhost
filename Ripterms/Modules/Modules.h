@@ -6,6 +6,7 @@
 #include "../../net/minecraft/entity/Entity/Entity.h"
 #include "../../net/minecraft/entity/player/EntityPlayer/EntityPlayer.h"
 #include "../../net/minecraft/util/BlockPos/BlockPos.h"
+#include "../../net/minecraft/client/network/NetHandlerPlayClient/NetHandlerPlayClient.h"
 
 namespace Ripterms
 {
@@ -19,8 +20,8 @@ namespace Ripterms
 			virtual void render();
 			virtual void disable();
 
-			inline static bool onSendPacketNoEvent = false;
-			virtual void onSendPacket(JNIEnv* env, Packet& packet, bool* cancel);
+			inline static bool onAddToSendQueueNoEvent = false;
+			virtual void onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel);
 
 			virtual void onUpdateWalkingPlayer(JNIEnv* env, bool* cancel);
 			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, Entity& entity, bool* cancel);
@@ -142,8 +143,9 @@ namespace Ripterms
 			void run() override;
 			void renderGUI() override;
 			void disable() override;
-			void onSendPacket(JNIEnv* env, Packet& packet, bool* cancel) override;
+			void onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel) override;
 		private:
+			void sendPackets(JNIEnv* env);
 			std::vector<Packet> packets{};
 		};
 

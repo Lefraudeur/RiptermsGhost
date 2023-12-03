@@ -429,18 +429,6 @@ R"(
 			}
 		]
 	},
-	"net/minecraft/network/NetworkManager": {
-		"obfuscated": "net/minecraft/network/NetworkManager",
-		"fields": [],
-		"methods": [
-			{
-				"name": "sendPacket",
-				"obfuscated": "sendPacket",
-				"signature": "(Lnet/minecraft/network/Packet;)V",
-				"static": false
-			}
-		]
-	},
 	"net/minecraft/network/Packet": {
 		"obfuscated": "net/minecraft/network/Packet",
 		"fields": [],
@@ -481,35 +469,6 @@ R"(
 				"static": false
 			}
 		]
-	},
-	"net/minecraft/util/registry/Registry": {
-		"obfuscated": "net/minecraft/block/Block",
-		"fields": [
-			{
-				"name": "blockRegistry",
-				"obfuscated": "blockRegistry",
-				"signature": "Lnet/minecraft/util/RegistryNamespacedDefaultedByKey;",
-				"static": true
-			}
-		],
-		"methods": []
-	},
-	"net/minecraft/util/RegistryNamespaced": {
-		"obfuscated": "net/minecraft/util/RegistryNamespaced",
-		"fields": [],
-		"methods": [
-			{
-				"name": "getNameForObject",
-				"obfuscated": "getNameForObject",
-				"signature": "(Ljava/lang/Object;)Ljava/lang/Object;",
-				"static": false
-			}
-		]
-	},
-	"net/minecraft/util/ResourceLocation": {
-		"obfuscated": "net/minecraft/util/ResourceLocation",
-		"fields": [],
-		"methods": []
 	},
 	"net/minecraft/util/AxisAlignedBB": {
 		"obfuscated": "net/minecraft/util/AxisAlignedBB",

@@ -74,7 +74,7 @@ namespace Ripterms
 			//        | j_rarg5   j_rarg0  j_rarg1 j_rarg2 j_rarg3 j_rarg4    |
 
 			//        |-------------------------------------------------------|
-		typedef void(*callback_t)(void* sp, void* j_rarg0, void* j_rarg1, void* j_rarg2, void* j_rarg3, void* j_rarg4, void* j_rarg5, bool* should_return, void* rbx, void* thread, void* r13);
+		typedef void(*callback_t)(void* sp, bool* should_return, void* rbx, void* thread);
 		void clean();
 		bool init();
 		void add_to_java_hook(jmethodID methodID, callback_t interpreted_callback);
@@ -89,5 +89,6 @@ namespace Ripterms
 			return *(T*)((uint64_t*)sp + 1 + index);
 		}
 		jobject get_jobject_arg_at(void* sp, int index, void* thread);
+		JNIEnv* get_env_for_thread(void* thread);
 	}
 }

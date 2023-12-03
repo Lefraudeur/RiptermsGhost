@@ -32,7 +32,7 @@ void Ripterms::JavaHook::clean()
         //*_flags &= ~(1 << 2);
 
         int* access_flags = (int*)(method + 0x28);
-        *access_flags &= ~0x01000000;
+        //*access_flags &= ~0x01000000;
         *access_flags &= ~0x02000000;
         *access_flags &= ~0x04000000;
         *access_flags &= ~0x08000000;
@@ -88,7 +88,7 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t interpr
     *_flags |= (1 << 2); //don't inline
 
     int* access_flags = (int*)(method + 0x28);
-    *access_flags |= 0x01000000; //no compile
+    //*access_flags |= 0x01000000; //no compile
     *access_flags |= 0x02000000;
     *access_flags |= 0x04000000;
     *access_flags |= 0x08000000;
@@ -128,39 +128,38 @@ jobject Ripterms::JavaHook::get_jobject_arg_at(void* sp, int index, void* thread
     return oop_to_jobject(oop, thread);
 }
 
+JNIEnv* Ripterms::JavaHook::get_env_for_thread(void* thread)
+{
+    return (JNIEnv*)((uint8_t*)thread + 688);
+}
+
 static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr)
 {
-    uint8_t pre_call[] = //assembly code, save registers, move params to the corresponding registers, prepare stack to call detour
-    {
-        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41,
-        0x53, 0x55, 0x6A, 0x00, 0x48, 0x89, 0xE5, 0x48, 0x83, 0xE4,
-        0xF0, 0x6A, 0x00, 0x41, 0x55, 0x41, 0x57, 0x53, 0x55, 0x51,
-        0x56, 0x57, 0x48, 0x8D, 0x4D, 0x48, 0x48, 0x83, 0xEC, 0x20, 0x48, 0xB8
-    };
 
-    uint8_t post_call[] = //assembly code, call detour, restore registers and stack, and return or jmp back to continue execution
-    {
-        0xFF, 0xD0, 0x48, 0x89, 0xEC, 0x58, 0x48, 0x83, 0xF8, 0x00, 0x5D, 
-        0x41, 0x5B, 0x41, 0x5A, 0x41, 0x59, 0x41, 0x58, 0x5A, 0x59, 0x58, 
-        0x74, 0x06, 0x5F, 0x4C, 0x89, 0xEC, 0xFF, 0xE7
+    uint8_t assembly[] =
+    { 
+        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 0x55, 0x6A, 0x00, 
+        0x48, 0x89, 0xE5, 0x48, 0x83, 0xE4, 0xF0, 0x48, 0x8D, 0x4D, 0x48, 0x48, 0x89, 0xEA, 
+        0x49, 0x89, 0xD8, 0x4D, 0x89, 0xF9, 0x48, 0x83, 0xEC, 0x20, 0x48, 0xB8, 0x11, 0x11, 
+        0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0xFF, 0xD0, 0x48, 0x89, 0xEC, 0x58, 0x48, 0x83, 
+        0xF8, 0x00, 0x5D, 0x41, 0x5B, 0x41, 0x5A, 0x41, 0x59, 0x41, 0x58, 0x5A, 0x59, 0x58, 
+        0x74, 0x06, 0x5F, 0x4C, 0x89, 0xEC, 0xFF, 0xE7, 0xE9, 0x00, 0x00, 0x00, 0x00 
     };
 
     DWORD original_protection = 0;
-    uint8_t* allocated_instructions = Ripterms::Hook::AllocateNearbyMemory(original_addr, sizeof(pre_call) + 8 + sizeof(post_call) + 5);
+    uint8_t* allocated_instructions = Ripterms::Hook::AllocateNearbyMemory(original_addr, sizeof(assembly));
     if (!allocated_instructions)
         return nullptr;
 
+    memcpy(allocated_instructions, assembly, sizeof(assembly));
 
-    memcpy(allocated_instructions, pre_call, sizeof(pre_call));
-    *((uint64_t*)(allocated_instructions + sizeof(pre_call))) = (uint64_t)callback;
+    *(void**)(allocated_instructions + 0x28) = callback;
+    uint8_t* rip = allocated_instructions + 0x53;
+    int32_t offset = original_addr - rip;
+    *(int32_t*)(allocated_instructions + 0x4F) = offset;
 
 
-    memcpy(allocated_instructions + sizeof(pre_call) + 8, post_call, sizeof(post_call));
-    allocated_instructions[sizeof(pre_call) + 8 + sizeof(post_call)] = '\xE9';
-    int32_t allocated_target_offset = int32_t(original_addr - (allocated_instructions + sizeof(pre_call) + 8 + sizeof(post_call) + 5));
-    *((int32_t*)(allocated_instructions + sizeof(pre_call) + 8 + sizeof(post_call) + 1)) = allocated_target_offset;
-
-    if (!VirtualProtect(allocated_instructions, sizeof(pre_call) + 8 + sizeof(post_call) + 5, PAGE_EXECUTE_READ, &original_protection))
+    if (!VirtualProtect(allocated_instructions, sizeof(assembly), PAGE_EXECUTE_READ, &original_protection))
         return nullptr;
 
     return allocated_instructions;

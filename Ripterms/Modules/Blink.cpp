@@ -17,23 +17,31 @@ void Ripterms::Modules::Blink::renderGUI()
 
 void Ripterms::Modules::Blink::disable()
 {
-	onSendPacketNoEvent = true;
-	for (Packet& packet : packets)
-	{
-		//TODO: send the packets here
-	}
-	packets.clear();
-	onSendPacketNoEvent = false;
+	sendPackets(Ripterms::p_env);
 }
 
-void Ripterms::Modules::Blink::onSendPacket(JNIEnv* env, Packet& packet, bool* cancel)
+void Ripterms::Modules::Blink::onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel)
 {
 	if (!enabled)
 	{
 		if (!packets.empty())
-			disable();
+			sendPackets(env);
 		return;
 	}
 	*cancel = true;
 	packets.push_back(Packet(packet, env, true));
+}
+
+void Ripterms::Modules::Blink::sendPackets(JNIEnv* env)
+{
+	onAddToSendQueueNoEvent = true;
+	Minecraft theMinecraft = Minecraft::getTheMinecraft(env);
+	EntityPlayerSP thePlayer = theMinecraft.getThePlayer();
+	NetHandlerPlayClient sendQueue = thePlayer.getSendQueue();
+	for (Packet& packet : packets)
+	{
+		sendQueue.addToSendQueue(packet);
+	}
+	packets.clear();
+	onAddToSendQueueNoEvent = false;
 }

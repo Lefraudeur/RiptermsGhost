@@ -2,18 +2,24 @@
 
 Object::Object(jobject instance, JNIEnv* env, bool is_global)
 {
+	this->env = env;
 	this->is_global = is_global;
 	if (instance)
 	{
 		this->instance = (is_global ? env->NewGlobalRef(instance) : instance);
 	}
 	else this->instance = nullptr;
-	this->env = env;
 }
 
-Object::Object(const Object& other_Object) :
-	Object(other_Object.instance, other_Object.env, other_Object.is_global)
+Object::Object(const Object& other_Object)
 {
+	this->env = other_Object.env;
+	this->is_global = other_Object.is_global;
+	if (other_Object.instance)
+	{
+		this->instance = (is_global ? env->NewGlobalRef(other_Object.instance) : other_Object.instance);
+	}
+	else this->instance = nullptr;
 }
 
 Object::Object(JNIEnv* env, bool is_global)
