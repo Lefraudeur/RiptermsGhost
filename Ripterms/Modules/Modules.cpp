@@ -39,12 +39,16 @@ void Ripterms::Modules::IModule::onShouldSideBeRendered(Object& blockAccess, Blo
 {
 }
 
+void Ripterms::Modules::IModule::onSetEntityBoundingBox(JNIEnv* env, Entity& this_entity, AxisAlignedBB& boundingBox, bool* cancel)
+{
+}
+
 static void addToSendQueue_callback(void* sp, bool* should_return, void* rbx, void* thread)
 {
 	if (Ripterms::Modules::IModule::onAddToSendQueueNoEvent) return;
 	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
 
-	env->PushLocalFrame(50);
+	env->PushLocalFrame(20);
 
 	NetHandlerPlayClient sendQueue(Ripterms::JavaHook::get_jobject_arg_at(sp, 1, thread), env);
 	Packet packet(Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread), env);
@@ -62,23 +66,22 @@ static void addToSendQueue_callback(void* sp, bool* should_return, void* rbx, vo
 
 static void getMouseOver_callback(void* sp, bool* should_return, void* rbx, void* thread)
 {
-	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
-	env->PushLocalFrame(50);
+	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);	
+	float* f = (float*)((uint64_t*)sp + 1);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
 		for (Ripterms::Modules::IModule* module : category.second)
 		{
-			module->onGetMouseOver(env, (float*)((uint64_t*)sp + 1), should_return);
+			module->onGetMouseOver(env, f, should_return);
 		}
 	}
-	env->PopLocalFrame(nullptr);
 	return;
 }
 
 static void attackTargetEntityWithCurrentItem_callback(void* sp, bool* should_return, void* rbx, void* thread)
 {
 	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
-	env->PushLocalFrame(50);
+	env->PushLocalFrame(20);
 	Entity entity(Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread), env);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
@@ -94,12 +97,30 @@ static void attackTargetEntityWithCurrentItem_callback(void* sp, bool* should_re
 static void onUpdateWalkingPlayer_callback(void* sp, bool* should_return, void* rbx, void* thread)
 {
 	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
-	env->PushLocalFrame(50);
+	env->PushLocalFrame(20);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
 		for (Ripterms::Modules::IModule* module : category.second)
 		{
 			module->onUpdateWalkingPlayer(env, should_return);
+		}
+	}
+	env->PopLocalFrame(nullptr);
+	return;
+}
+
+static void setEntityBoundingBox_callback(void* sp, bool* should_return, void* rbx, void* thread)
+{
+	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
+	env->PushLocalFrame(20);
+
+	AxisAlignedBB boundingBox(Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread), env);
+	Entity this_entity(Ripterms::JavaHook::get_jobject_arg_at(sp, 1, thread), env);
+	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	{
+		for (Ripterms::Modules::IModule* module : category.second)
+		{
+			module->onSetEntityBoundingBox(env, this_entity, boundingBox, should_return);
 		}
 	}
 	env->PopLocalFrame(nullptr);
@@ -123,6 +144,10 @@ void Ripterms::Modules::setupEventHooks()
 	Ripterms::JavaClassV2 EntityPlayerSP("net/minecraft/client/entity/EntityPlayerSP");
 	jmethodID onUpdateWalkingPlayer = EntityPlayerSP.getMethodID("onUpdateWalkingPlayer");
 	Ripterms::JavaHook::add_to_java_hook(onUpdateWalkingPlayer, onUpdateWalkingPlayer_callback);
+
+	Ripterms::JavaClassV2 Entity("net/minecraft/entity/Entity");
+	jmethodID setEntityBoundingBox = Entity.getMethodID("setEntityBoundingBox");
+	Ripterms::JavaHook::add_to_java_hook(setEntityBoundingBox, setEntityBoundingBox_callback);
 }
 
 void Ripterms::Modules::runAll()

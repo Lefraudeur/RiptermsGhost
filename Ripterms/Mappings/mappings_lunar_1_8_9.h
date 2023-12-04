@@ -337,6 +337,12 @@ R"(
 				"obfuscated": "setPositionAndUpdate",
 				"signature": "(DDD)V",
 				"static": false
+			},
+			{
+				"name": "setEntityBoundingBox",
+				"obfuscated": "setEntityBoundingBox",
+				"signature": "(Lnet/minecraft/util/AxisAlignedBB;)V",
+				"static": false
 			}
 		]
 	},

@@ -27,6 +27,7 @@ namespace Ripterms
 			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, Entity& entity, bool* cancel);
 			virtual void onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel);
 			virtual void onShouldSideBeRendered(Object& blockAccess, BlockPos& blockPos, Object& enumFacing);
+			virtual void onSetEntityBoundingBox(JNIEnv* env, Entity& this_entity, AxisAlignedBB& boundingBox, bool* cancel);
 
 		protected:
 			inline static std::random_device rd{};
@@ -88,8 +89,8 @@ namespace Ripterms
 		class HitBoxes : public IModule
 		{
 		public:
-			void run();
 			void renderGUI();
+			void onSetEntityBoundingBox(JNIEnv* env, Entity& this_entity, AxisAlignedBB& boundingBox, bool* cancel) override;
 		private:
 			float x_expand = 0.5f;
 			float y_expand = 0.5f;
