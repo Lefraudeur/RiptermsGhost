@@ -146,7 +146,7 @@ namespace Ripterms
 			void disable() override;
 			void onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel) override;
 		private:
-			void sendPackets(JNIEnv* env);
+			void sendPackets(NetHandlerPlayClient& sendQueue);
 			std::vector<Packet> packets{};
 		};
 
