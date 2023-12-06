@@ -79,7 +79,7 @@ namespace Ripterms
 		bool init();
 		void add_to_java_hook(jmethodID methodID, callback_t interpreted_callback);
 		jobject oop_to_jobject(void* oop, void* thread);
-		template<typename T> inline T set_primitive_return_value(bool* should_return, T value)
+		template<typename T> inline void set_primitive_return_value(bool* should_return, T value)
 		{
 			*(T*)((uint64_t*)should_return + 8) = value;
 		}

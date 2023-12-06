@@ -187,11 +187,11 @@ BOOL Ripterms::init(HMODULE dll)
 
 void Ripterms::clean()
 {
-	Ripterms::Modules::cleanAll();
 	Ripterms::JavaHook::clean();
+	Ripterms::Modules::cleanAll();
 	Ripterms::Hook::clean();
 	delete Ripterms::cache;
-	System::gc();
+	//System::gc();
 	Ripterms::JavaClassV2::clean();
 	if (Ripterms::p_tienv)
 		Ripterms::p_tienv->DisposeEnvironment();
@@ -201,6 +201,7 @@ void Ripterms::clean()
 	fclose(console_buffer3);
 	FreeConsole();
 	delete hook;
+	Ripterms::p_env = nullptr;
 	std::thread(FreeLibrary, Ripterms::module).detach();
 }
 

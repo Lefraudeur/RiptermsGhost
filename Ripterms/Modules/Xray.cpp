@@ -1,24 +1,5 @@
 #include "Modules.h"
 #include <imgui.h>
-#include "../Cache/Cache.h"
-
-void Ripterms::Modules::Xray::run()
-{
-	static bool prev_enabled = false;
-	if (!enabled)
-	{
-		if (prev_enabled)
-		{
-			disable();
-			prev_enabled = false;
-		}
-		return;
-	}
-	if (!prev_enabled)
-	{
-		prev_enabled = true;
-	}
-}
 
 void Ripterms::Modules::Xray::renderGUI()
 {
@@ -29,6 +10,16 @@ void Ripterms::Modules::Xray::renderGUI()
 	ImGui::PopStyleVar();
 }
 
-void Ripterms::Modules::Xray::disable()
+void Ripterms::Modules::Xray::onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel)
 {
+	if (!enabled) return;
+	if (!block.instanceOf(Ripterms::JavaClassV2("net/minecraft/block/BlockOre").getJClass(env)))
+	{
+		Ripterms::JavaHook::set_primitive_return_value<int>(cancel, 0);
+	}
+	else
+	{
+		Ripterms::JavaHook::set_primitive_return_value<int>(cancel, 1);
+	}
+	*cancel = true;
 }

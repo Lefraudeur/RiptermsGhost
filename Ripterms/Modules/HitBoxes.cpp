@@ -17,8 +17,8 @@ void Ripterms::Modules::HitBoxes::renderGUI()
 	if (display_options) {
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderFloat("X Expand", &x_expand, 0.01f, 2.0f, "%.01f");
-		ImGui::SliderFloat("Y Expand", &y_expand, 0.01f, 2.0f, "%.01f");
+		ImGui::SliderFloat("X Expand", &x_expand, 0.01f, 2.0f, "%.2f");
+		ImGui::SliderFloat("Y Expand", &y_expand, 0.01f, 2.0f, "%.2f");
 		ImGui::EndGroup();
 	}
 }

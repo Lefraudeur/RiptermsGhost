@@ -7,6 +7,8 @@
 #include "../../net/minecraft/entity/player/EntityPlayer/EntityPlayer.h"
 #include "../../net/minecraft/util/BlockPos/BlockPos.h"
 #include "../../net/minecraft/client/network/NetHandlerPlayClient/NetHandlerPlayClient.h"
+#include "../../net/minecraft/world/World/World.h"
+#include "../../net/minecraft/client/entity/EntityPlayerSP/EntityPlayerSP.h"
 
 namespace Ripterms
 {
@@ -23,10 +25,10 @@ namespace Ripterms
 			inline static bool onAddToSendQueueNoEvent = false;
 			virtual void onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel);
 
-			virtual void onUpdateWalkingPlayer(JNIEnv* env, bool* cancel);
-			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, Entity& entity, bool* cancel);
+			virtual void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel);
+			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel);
 			virtual void onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel);
-			virtual void onShouldSideBeRendered(Object& blockAccess, BlockPos& blockPos, Object& enumFacing);
+			virtual void onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel);
 			virtual void onSetEntityBoundingBox(JNIEnv* env, Entity& this_entity, AxisAlignedBB& boundingBox, bool* cancel);
 
 		protected:
@@ -79,8 +81,8 @@ namespace Ripterms
 		class WTap : public IModule
 		{
 		public:
-			void onUpdateWalkingPlayer(JNIEnv* env, bool* cancel) override;
-			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, Entity& entity, bool* cancel) override;
+			void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel) override;
+			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel) override;
 			void renderGUI() override;
 		private:
 			int ticks = 0;
@@ -92,8 +94,8 @@ namespace Ripterms
 			void renderGUI();
 			void onSetEntityBoundingBox(JNIEnv* env, Entity& this_entity, AxisAlignedBB& boundingBox, bool* cancel) override;
 		private:
-			float x_expand = 0.5f;
-			float y_expand = 0.5f;
+			float x_expand = 0.1f;
+			float y_expand = 0.1f;
 		};
 
 
@@ -153,7 +155,7 @@ namespace Ripterms
 		class LegitScaffold : public IModule
 		{
 		public:
-			void onUpdateWalkingPlayer(JNIEnv* env, bool* cancel) override;
+			void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel) override;
 			void renderGUI() override;
 		private:
 			int tickDelay = 0;
@@ -180,9 +182,8 @@ namespace Ripterms
 		class Xray : public IModule
 		{
 		public:
-			void run() override;
 			void renderGUI() override;
-			void disable() override;
+			void onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel) override;
 		};
 
 		class ESP : public IModule

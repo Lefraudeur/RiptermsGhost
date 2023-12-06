@@ -554,6 +554,30 @@ R"(
 			}
 		]
 	},
+	"net/minecraft/util/Vec3i": {
+		"obfuscated": "net/minecraft/util/Vec3i",
+		"fields": [
+			{
+				"name": "x",
+				"obfuscated": "x",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "y",
+				"obfuscated": "y",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "z",
+				"obfuscated": "z",
+				"signature": "I",
+				"static": false
+			}
+		],
+		"methods": []
+	},
 	"net/minecraft/block/state/IBlockState": {
 		"obfuscated": "net/minecraft/block/state/IBlockState",
 		"fields": [],
@@ -681,6 +705,11 @@ R"(
 	},
 	"net/minecraft/client/gui/GuiScreen": {
 		"obfuscated": "net/minecraft/client/gui/GuiScreen",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/block/BlockOre": {
+		"obfuscated": "net/minecraft/block/BlockOre",
 		"fields": [],
 		"methods": []
 	}
