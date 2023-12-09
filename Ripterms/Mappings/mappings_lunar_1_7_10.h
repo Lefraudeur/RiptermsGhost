@@ -435,18 +435,6 @@ R"(
 			}
 		]
 	},
-	"net/minecraft/network/NetworkManager": {
-		"obfuscated": "net/minecraft/network/NetworkManager",
-		"fields": [],
-		"methods": [
-			{
-				"name": "sendPacket",
-				"obfuscated": "dispatchPacket",
-				"signature": "(Lnet/minecraft/network/Packet;[Lio/netty/util/concurrent/GenericFutureListener;)V",
-				"static": false
-			}
-		]
-	},
 	"net/minecraft/network/Packet": {
 		"obfuscated": "net/minecraft/network/Packet",
 		"fields": [],
@@ -458,19 +446,19 @@ R"(
 			{
 				"name": "typeOfHit",
 				"obfuscated": "typeOfHit",
-				"signature": "Lnet/minecraft/util/MovingObjectPosition_MovingObjectType;",
+				"signature": "Lnet/minecraft/util/MovingObjectPosition$MovingObjectType;",
 				"static": false
 			}
 		],
 		"methods": []
 	},
 	"net/minecraft/util/MovingObjectPosition$MovingObjectType": {
-		"obfuscated": "net/minecraft/util/MovingObjectPosition_MovingObjectType",
+		"obfuscated": "net/minecraft/util/MovingObjectPosition$MovingObjectType",
 		"fields": [
 			{
 				"name": "BLOCK",
 				"obfuscated": "BLOCK",
-				"signature": "Lnet/minecraft/util/MovingObjectPosition_MovingObjectType;",
+				"signature": "Lnet/minecraft/util/MovingObjectPosition$MovingObjectType;",
 				"static": true
 			}
 		],
@@ -484,30 +472,6 @@ R"(
 				"name": "shouldSideBeRendered",
 				"obfuscated": "shouldSideBeRendered",
 				"signature": "(Lnet/minecraft/world/IBlockAccess;IIII)Z",
-				"static": false
-			}
-		]
-	},
-	"net/minecraft/util/registry/Registry": {
-		"obfuscated": "net/minecraft/block/Block",
-		"fields": [
-			{
-				"name": "blockRegistry",
-				"obfuscated": "blockRegistry",
-				"signature": "Lnet/minecraft/util/RegistryNamespaced;",
-				"static": true
-			}
-		],
-		"methods": []
-	},
-	"net/minecraft/util/RegistryNamespaced": {
-		"obfuscated": "net/minecraft/util/RegistryNamespaced",
-		"fields": [],
-		"methods": [
-			{
-				"name": "getNameForObject",
-				"obfuscated": "getNameForObject",
-				"signature": "(Ljava/lang/Object;)Ljava/lang/String;",
 				"static": false
 			}
 		]
@@ -680,7 +644,7 @@ R"(
 		"methods": []
 	},
 	"net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition": {
-		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer_C04PacketPlayerPosition",
+		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition",
 		"fields": [],
 		"methods": [
 			{
@@ -693,6 +657,11 @@ R"(
 	},
 	"net/minecraft/client/gui/GuiScreen": {
 		"obfuscated": "net/minecraft/client/gui/GuiScreen",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/block/BlockOre": {
+		"obfuscated": "net/minecraft/block/BlockOre",
 		"fields": [],
 		"methods": []
 	}

@@ -1,6 +1,6 @@
 #include "Modules.h"
 #include <ImGui/imgui.h>
-#include "../../net/minecraft/client/Minecraft/Minecraft.h"
+#include "../Cache/Cache.h"
 
 void Ripterms::Modules::HitBoxes::renderGUI()
 {
@@ -23,15 +23,32 @@ void Ripterms::Modules::HitBoxes::renderGUI()
 	}
 }
 
-void Ripterms::Modules::HitBoxes::onSetEntityBoundingBox(JNIEnv* env, Entity& this_entity, AxisAlignedBB& boundingBox, bool* cancel)
+void Ripterms::Modules::HitBoxes::run()
 {
-	if (!enabled) return;
-	if (!this_entity.instanceOf(Ripterms::JavaClassV2("net/minecraft/entity/player/EntityPlayer").getJClass(env))) return;
-	if (this_entity.isEqualTo(Minecraft::getTheMinecraft(env).getThePlayer())) return;
-	boundingBox.setMaxX(boundingBox.getMaxX() + x_expand);
-	boundingBox.setMinX(boundingBox.getMinX() - x_expand);
-	boundingBox.setMaxZ(boundingBox.getMaxZ() + x_expand);
-	boundingBox.setMinZ(boundingBox.getMinZ() - x_expand);
-	boundingBox.setMinY(boundingBox.getMinY() - y_expand);
-	boundingBox.setMaxY(boundingBox.getMaxY() + y_expand);
+	static Ripterms::CTimer timer(std::chrono::milliseconds(10));
+	if (!enabled || !timer.isElapsed())
+		return;
+
+	Ripterms::Maths::Vector3d thePlayer_position = cache->thePlayer.getPosition();
+
+	for (EntityPlayer& target : cache->playerEntities.toVector<EntityPlayer>())
+	{
+		if (target.isEqualTo(cache->thePlayer))
+			continue;
+
+		AxisAlignedBB target_bb = target.getBoundingBox();
+		if
+		(
+			(target_bb.getMaxX() - target_bb.getMinX()) > 0.61f &&
+			(target_bb.getMaxY() - target_bb.getMinY()) > 1.81f
+		)
+			continue;
+		target_bb.setMinX(target_bb.getMinX() - x_expand);
+		target_bb.setMaxX(target_bb.getMaxX() + x_expand);
+		target_bb.setMinZ(target_bb.getMinZ() - x_expand);
+		target_bb.setMaxZ(target_bb.getMaxZ() + x_expand);
+
+		target_bb.setMinY(target_bb.getMinY() - y_expand);
+		target_bb.setMaxY(target_bb.getMaxY() + y_expand);
+	}
 }

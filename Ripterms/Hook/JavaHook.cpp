@@ -110,7 +110,7 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t interpr
         if (m.prev_i2i_entry)
             VirtualFree(m.prev_i2i_entry, 0, MEM_RELEASE);
         m.prev_i2i_entry = new_i2i_entry;
-        *((uint8_t**)(method + 0x48)) = nullptr; // delete compiled code
+        //*((uint8_t**)(method + 0x48)) = nullptr; // delete compiled code
     }
     return;
 }

@@ -654,6 +654,23 @@ R"(
 		"obfuscated": "net/minecraft/client/gui/screens/Screen",
 		"fields": [],
 		"methods": []
+	},
+	"net/minecraft/block/BlockOre": {
+		"obfuscated": "net/minecraft/world/level/block/OreBlock",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/block/Block": {
+		"obfuscated": "net/minecraft/world/level/block/Block",
+		"fields": [],
+		"methods": [
+			{
+				"name": "shouldSideBeRendered",
+				"obfuscated": "shouldRenderFace",
+				"signature": "(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Z",
+				"static": true
+			}
+		]
 	}
 }
 )";

@@ -337,12 +337,6 @@ R"(
 				"obfuscated": "setPositionAndUpdate",
 				"signature": "(DDD)V",
 				"static": false
-			},
-			{
-				"name": "setEntityBoundingBox",
-				"obfuscated": "setEntityBoundingBox",
-				"signature": "(Lnet/minecraft/util/AxisAlignedBB;)V",
-				"static": false
 			}
 		]
 	},
@@ -553,30 +547,6 @@ R"(
 				"static": false
 			}
 		]
-	},
-	"net/minecraft/util/Vec3i": {
-		"obfuscated": "net/minecraft/util/Vec3i",
-		"fields": [
-			{
-				"name": "x",
-				"obfuscated": "x",
-				"signature": "I",
-				"static": false
-			},
-			{
-				"name": "y",
-				"obfuscated": "y",
-				"signature": "I",
-				"static": false
-			},
-			{
-				"name": "z",
-				"obfuscated": "z",
-				"signature": "I",
-				"static": false
-			}
-		],
-		"methods": []
 	},
 	"net/minecraft/block/state/IBlockState": {
 		"obfuscated": "net/minecraft/block/state/IBlockState",

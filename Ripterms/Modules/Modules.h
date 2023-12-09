@@ -29,7 +29,6 @@ namespace Ripterms
 			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel);
 			virtual void onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel);
 			virtual void onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel);
-			virtual void onSetEntityBoundingBox(JNIEnv* env, Entity& this_entity, AxisAlignedBB& boundingBox, bool* cancel);
 
 		protected:
 			inline static std::random_device rd{};
@@ -92,7 +91,7 @@ namespace Ripterms
 		{
 		public:
 			void renderGUI();
-			void onSetEntityBoundingBox(JNIEnv* env, Entity& this_entity, AxisAlignedBB& boundingBox, bool* cancel) override;
+			void run() override;
 		private:
 			float x_expand = 0.1f;
 			float y_expand = 0.1f;

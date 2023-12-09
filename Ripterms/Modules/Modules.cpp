@@ -39,10 +39,6 @@ void Ripterms::Modules::IModule::onShouldSideBeRendered(JNIEnv* env, Block& bloc
 {
 }
 
-void Ripterms::Modules::IModule::onSetEntityBoundingBox(JNIEnv* env, Entity& this_entity, AxisAlignedBB& boundingBox, bool* cancel)
-{
-}
-
 static void addToSendQueue_callback(void* sp, bool* should_return, void* rbx, void* thread)
 {
 	if (!Ripterms::p_env) return;
@@ -116,32 +112,20 @@ static void onUpdateWalkingPlayer_callback(void* sp, bool* should_return, void* 
 	return;
 }
 
-static void setEntityBoundingBox_callback(void* sp, bool* should_return, void* rbx, void* thread)
-{
-	if (!Ripterms::p_env) return;
-	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
-
-	//env->PushLocalFrame(5);
-	AxisAlignedBB boundingBox(Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread), env);
-	Entity this_entity(Ripterms::JavaHook::get_jobject_arg_at(sp, 1, thread), env);
-
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
-	{
-		for (Ripterms::Modules::IModule* module : category.second)
-		{
-			module->onSetEntityBoundingBox(env, this_entity, boundingBox, should_return);
-		}
-	}
-	//env->PopLocalFrame(nullptr);
-	return;
-}
-
 static void shouldSideBeRendered_callback(void* sp, bool* should_return, void* rbx, void* thread)
 {
 	if (!Ripterms::p_env) return;
 	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
 
-	Block block(Ripterms::JavaHook::get_jobject_arg_at(sp, 3, thread), env);
+	Block block(env);
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
+	{
+		block = IBlockState(Ripterms::JavaHook::get_jobject_arg_at(sp, 3, thread), env).getBlock();
+	}
+	else
+	{
+		block = Ripterms::JavaHook::get_jobject_arg_at(sp, 3, thread);
+	}
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
 		for (Ripterms::Modules::IModule* module : category.second)
@@ -166,13 +150,13 @@ void Ripterms::Modules::setupEventHooks()
 	jmethodID attackTargetEntityWithCurrentItem = EntityPlayer.getMethodID("attackTargetEntityWithCurrentItem");
 	Ripterms::JavaHook::add_to_java_hook(attackTargetEntityWithCurrentItem, attackTargetEntityWithCurrentItem_callback);
 
-	Ripterms::JavaClassV2 EntityPlayerSP("net/minecraft/client/entity/EntityPlayerSP");
+	Ripterms::JavaClassV2 EntityPlayerSP
+	(
+		(Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10 ? "net/minecraft/client/entity/EntityClientPlayerMP" 
+			: "net/minecraft/client/entity/EntityPlayerSP")
+	);
 	jmethodID onUpdateWalkingPlayer = EntityPlayerSP.getMethodID("onUpdateWalkingPlayer");
 	Ripterms::JavaHook::add_to_java_hook(onUpdateWalkingPlayer, onUpdateWalkingPlayer_callback);
-
-	Ripterms::JavaClassV2 Entity("net/minecraft/entity/Entity");
-	jmethodID setEntityBoundingBox = Entity.getMethodID("setEntityBoundingBox");
-	Ripterms::JavaHook::add_to_java_hook(setEntityBoundingBox, setEntityBoundingBox_callback);
 
 	Ripterms::JavaClassV2 Block("net/minecraft/block/Block");
 	jmethodID shouldSideBeRendered = Block.getMethodID("shouldSideBeRendered");

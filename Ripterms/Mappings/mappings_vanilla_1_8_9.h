@@ -429,18 +429,6 @@ R"(
 			}
 		]
 	},
-	"net/minecraft/network/NetworkManager": {
-		"obfuscated": "ek",
-		"fields": [],
-		"methods": [
-			{
-				"name": "sendPacket",
-				"obfuscated": "a",
-				"signature": "(Lff;)V",
-				"static": false
-			}
-		]
-	},
 	"net/minecraft/network/Packet": {
 		"obfuscated": "ff",
 		"fields": [],
@@ -481,35 +469,6 @@ R"(
 				"static": false
 			}
 		]
-	},
-	"net/minecraft/util/registry/Registry": {
-		"obfuscated": "afh",
-		"fields": [
-			{
-				"name": "blockRegistry",
-				"obfuscated": "c",
-				"signature": "Lco;",
-				"static": true
-			}
-		],
-		"methods": []
-	},
-	"net/minecraft/util/RegistryNamespaced": {
-		"obfuscated": "cx",
-		"fields": [],
-		"methods": [
-			{
-				"name": "getNameForObject",
-				"obfuscated": "c",
-				"signature": "(Ljava/lang/Object;)Ljava/lang/Object;",
-				"static": false
-			}
-		]
-	},
-	"net/minecraft/util/ResourceLocation": {
-		"obfuscated": "jy",
-		"fields": [],
-		"methods": []
 	},
 	"net/minecraft/util/AxisAlignedBB": {
 		"obfuscated": "aug",
@@ -716,6 +675,11 @@ R"(
 	},
 	"net/minecraft/client/gui/GuiScreen": {
 		"obfuscated": "axu",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/block/BlockOre": {
+		"obfuscated": "aim",
 		"fields": [],
 		"methods": []
 	}
