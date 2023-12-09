@@ -56,13 +56,13 @@ void Ripterms::Modules::Reach::onGetMouseOver(JNIEnv* env, float* partialTicks, 
 		original_constant_pool = *(uint8_t**)(_constMethod + 0x08);
 
 		int cp_length = *(int*)((uint8_t*)original_constant_pool + 0x3C);
-		int cp_size = cp_length * 8 + 0x48;
+		int cp_size = cp_length * 8 + (Ripterms::JavaHook::is_old_java ? 0x50 : 0x48);
 
 		new_constant_pool = Ripterms::Hook::AllocateNearbyMemory((uint8_t*)original_constant_pool, cp_size, PAGE_READWRITE);
 		memcpy(new_constant_pool, original_constant_pool, cp_size);
 		*(void**)(_constMethod + 0x08) = new_constant_pool;
 
-		uint8_t* constant_pool_base = (uint8_t*)new_constant_pool + 0x48;
+		uint8_t* constant_pool_base = (uint8_t*)new_constant_pool + (Ripterms::JavaHook::is_old_java ? 0x50 : 0x48);
 		for (int i = 0; i < cp_length; ++i)
 		{
 			double* d = (double*)constant_pool_base + i;

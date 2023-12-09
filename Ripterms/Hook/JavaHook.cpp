@@ -18,7 +18,7 @@ void Ripterms::JavaHook::clean()
     for (const std::pair<jmethodID, HookedJavaMethodCache>& m : hookedMethods)
     {
         uint8_t* method = *((uint8_t**)m.first);
-        uint8_t** p_i2i_entry = (uint8_t**)(method + 0x38);
+        uint8_t** p_i2i_entry = (uint8_t**)(method + (is_old_java ? 0x30 : 0x38));
         uint8_t** p_from_interpreted_entry = (uint8_t**)(method + 0x50);
         if (m.second.original_i2i_entry)
         {
@@ -31,7 +31,7 @@ void Ripterms::JavaHook::clean()
         //unsigned short* _flags = (unsigned short*)(method + 0x32);
         //*_flags &= ~(1 << 2);
 
-        int* access_flags = (int*)(method + 0x28);
+        int* access_flags = (int*)(method + (is_old_java ? 0x20 : 0x28));
         //*access_flags &= ~0x01000000;
         *access_flags &= ~0x02000000;
         *access_flags &= ~0x04000000;
@@ -52,6 +52,7 @@ bool Ripterms::JavaHook::init()
         jvmdll.pattern_scan(make_local_pattern, sizeof(make_local_pattern), PAGE_EXECUTE_READ);
     if (!make_local)
     {
+        is_old_java = true;
         //try second pattern, for lower jvm versions
         uint8_t make_local_pattern2[] =
         {
@@ -84,16 +85,16 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t interpr
     HookedJavaMethodCache& m = hookedMethods[methodID];
     m.interpreted_callback = interpreted_callback;
 
-    unsigned short* _flags = (unsigned short*)(method + 0x32);
-    *_flags |= (1 << 2); //don't inline
+    //unsigned short* _flags = (unsigned short*)(method + 0x32);
+    //*_flags |= (1 << 2); //don't inline
 
-    int* access_flags = (int*)(method + 0x28);
-    //*access_flags |= 0x01000000; //no compile
-    *access_flags |= 0x02000000;
+    int* access_flags = (int*)(method + (is_old_java ? 0x20 : 0x28));
+    //*access_flags |= 0x01000000; //fake onqueue
+    *access_flags |= 0x02000000; //no compile
     *access_flags |= 0x04000000;
     *access_flags |= 0x08000000;
 
-    uint8_t** p_i2i_entry = (uint8_t**)(method + 0x38);
+    uint8_t** p_i2i_entry = (uint8_t**)(method + (is_old_java ? 0x30 : 0x38));
     uint8_t* _i2i_entry = *p_i2i_entry;
     if (_i2i_entry && _i2i_entry != m.prev_i2i_entry)
     {
@@ -103,7 +104,7 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t interpr
         *p_i2i_entry = new_i2i_entry;
         uint8_t** p_from_interpreted_entry = (uint8_t**)(method + 0x50);
         *p_from_interpreted_entry = *p_i2i_entry;
-        uint8_t* _adapter = *(uint8_t**)(method + 0x20);
+        uint8_t* _adapter = *(uint8_t**)(method + (is_old_java ? 0x38 : 0x20));
         uint8_t* _c2i_entry = *(uint8_t**)(_adapter + 0x20);
         uint8_t** p_from_compiled_entry = (uint8_t**)(method + 0x40);
         *p_from_compiled_entry = _c2i_entry;
@@ -130,7 +131,7 @@ jobject Ripterms::JavaHook::get_jobject_arg_at(void* sp, int index, void* thread
 
 JNIEnv* Ripterms::JavaHook::get_env_for_thread(void* thread)
 {
-    return (JNIEnv*)((uint8_t*)thread + 688);
+    return (JNIEnv*)((uint8_t*)thread + (is_old_java ? 504 : 688));
 }
 
 static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr)

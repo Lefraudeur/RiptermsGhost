@@ -144,8 +144,8 @@ BOOL Ripterms::init(HMODULE dll)
 	freopen_s(&console_buffer1, "CONOUT$", "w", stdout);
 	freopen_s(&console_buffer2, "CONOUT$", "w", stderr);
 	freopen_s(&console_buffer3, "CONIN$", "r", stdin);
-	if(!Ripterms::Hook::init())
-		return FALSE;
+	if(!Ripterms::Hook::init()) return FALSE;
+	if (!Ripterms::JavaHook::init()) return FALSE;
 	Ripterms::window = getCurrentWindow();
 	std::string windowName = getWindowName(window);
 	for (Version v : versions)
@@ -181,7 +181,6 @@ BOOL Ripterms::init(HMODULE dll)
 		return FALSE;
 	}
 	if (!GUI::init()) return FALSE;
-	if(!Ripterms::JavaHook::init()) return FALSE;
 	return TRUE;
 }
 

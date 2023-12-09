@@ -43,7 +43,7 @@ static void addToSendQueue_callback(void* sp, bool* should_return, void* rbx, vo
 {
 	if (!Ripterms::p_env) return;
 	if (Ripterms::Modules::IModule::onAddToSendQueueNoEvent) return;
-	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
+	JNIEnv* env = Ripterms::get_current_thread_env();
 
 	//env->PushLocalFrame(5);
 	NetHandlerPlayClient sendQueue(Ripterms::JavaHook::get_jobject_arg_at(sp, 1, thread), env);
@@ -63,7 +63,7 @@ static void addToSendQueue_callback(void* sp, bool* should_return, void* rbx, vo
 static void getMouseOver_callback(void* sp, bool* should_return, void* rbx, void* thread)
 {
 	if (!Ripterms::p_env) return;
-	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
+	JNIEnv* env = Ripterms::get_current_thread_env();
 	float* f = (float*)((uint64_t*)sp + 1);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
@@ -78,7 +78,7 @@ static void getMouseOver_callback(void* sp, bool* should_return, void* rbx, void
 static void attackTargetEntityWithCurrentItem_callback(void* sp, bool* should_return, void* rbx, void* thread)
 {
 	if (!Ripterms::p_env) return;
-	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
+	JNIEnv* env = Ripterms::get_current_thread_env();
 
 	//env->PushLocalFrame(5);
 	Entity entity(Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread), env);
@@ -97,7 +97,7 @@ static void attackTargetEntityWithCurrentItem_callback(void* sp, bool* should_re
 static void onUpdateWalkingPlayer_callback(void* sp, bool* should_return, void* rbx, void* thread)
 {
 	if (!Ripterms::p_env) return;
-	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
+	JNIEnv* env = Ripterms::get_current_thread_env();
 
 	//env->PushLocalFrame(20);
 	EntityPlayerSP this_player(Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread), env);
@@ -115,7 +115,7 @@ static void onUpdateWalkingPlayer_callback(void* sp, bool* should_return, void* 
 static void shouldSideBeRendered_callback(void* sp, bool* should_return, void* rbx, void* thread)
 {
 	if (!Ripterms::p_env) return;
-	JNIEnv* env = Ripterms::JavaHook::get_env_for_thread(thread);
+	JNIEnv* env = Ripterms::get_current_thread_env();
 
 	Block block(env);
 	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
