@@ -119,12 +119,11 @@ static void shouldSideBeRendered_callback(void* sp, bool* should_return, void* r
 
 	Block block(env);
 	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
-	{
 		block = IBlockState(Ripterms::JavaHook::get_jobject_arg_at(sp, 3, thread), env).getBlock();
-	}
 	else
 	{
-		block = Ripterms::JavaHook::get_jobject_arg_at(sp, 3, thread);
+		int index = (Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10 ? 5 : 3);
+		block.setInstance(Ripterms::JavaHook::get_jobject_arg_at(sp, index, thread));
 	}
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{

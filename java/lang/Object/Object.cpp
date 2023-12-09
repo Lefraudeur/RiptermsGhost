@@ -43,7 +43,7 @@ Object& Object::operator=(const Object& other_Object)
 
 Object& Object::operator=(jobject instance)
 {
-	setInstance(instance);
+	setInstance(instance, nullptr);
 	return *this;
 }
 

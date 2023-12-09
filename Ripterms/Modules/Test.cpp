@@ -15,9 +15,6 @@ static void callback(void* sp, bool* should_return, void* rbx, void* thread) //j
 	std::cout << "button: " << Ripterms::JavaHook::get_primitive_arg_at<int>(sp, 0) << '\n';
 	std::cout << "y: " << Ripterms::JavaHook::get_primitive_arg_at<int>(sp, 1) << '\n';
 	std::cout << "x: " << Ripterms::JavaHook::get_primitive_arg_at<int>(sp, 2) << "\n\n";
-	uint8_t* t = (uint8_t*)thread;
-	uint8_t* env = (uint8_t*)Ripterms::get_current_thread_env();
-	std::cout << env - t << '\n';
 	*should_return = true;
 	return;
 }

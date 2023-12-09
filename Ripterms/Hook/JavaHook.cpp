@@ -136,7 +136,43 @@ JNIEnv* Ripterms::JavaHook::get_env_for_thread(void* thread)
 
 static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr)
 {
-
+    /*
+        0:  50                      push   rax
+        1:  51                      push   rcx
+        2:  52                      push   rdx
+        3:  41 50                   push   r8
+        5:  41 51                   push   r9
+        7:  41 52                   push   r10
+        9:  41 53                   push   r11
+        b:  55                      push   rbp
+        c:  6a 00                   push   0x0
+        e:  48 89 e5                mov    rbp,rsp
+        11: 48 83 e4 f0             and    rsp,0xfffffffffffffff0
+        15: 48 8d 4d 48             lea    rcx,[rbp+0x48]
+        19: 48 89 ea                mov    rdx,rbp
+        1c: 49 89 d8                mov    r8,rbx
+        1f: 4d 89 f9                mov    r9,r15
+        22: 48 83 ec 20             sub    rsp,0x20
+        26: 48 b8 11 11 11 11 11    movabs rax,0x1111111111111111
+        2d: 11 11 11
+        30: ff d0                   call   rax
+        32: 48 89 ec                mov    rsp,rbp
+        35: 58                      pop    rax
+        36: 48 83 f8 00             cmp    rax,0x0
+        3a: 5d                      pop    rbp
+        3b: 41 5b                   pop    r11
+        3d: 41 5a                   pop    r10
+        3f: 41 59                   pop    r9
+        41: 41 58                   pop    r8
+        43: 5a                      pop    rdx
+        44: 59                      pop    rcx
+        45: 58                      pop    rax
+        46: 74 06                   je     0x4e
+        48: 5f                      pop    rdi
+        49: 4c 89 ec                mov    rsp,r13
+        4c: ff e7                   jmp    rdi
+        4e: e9 00 00 00 00          jmp    0x53
+    */
     uint8_t assembly[] =
     { 
         0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 0x55, 0x6A, 0x00, 
@@ -146,7 +182,6 @@ static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, ui
         0xF8, 0x00, 0x5D, 0x41, 0x5B, 0x41, 0x5A, 0x41, 0x59, 0x41, 0x58, 0x5A, 0x59, 0x58, 
         0x74, 0x06, 0x5F, 0x4C, 0x89, 0xEC, 0xFF, 0xE7, 0xE9, 0x00, 0x00, 0x00, 0x00 
     };
-
     DWORD original_protection = 0;
     uint8_t* allocated_instructions = Ripterms::Hook::AllocateNearbyMemory(original_addr, sizeof(assembly));
     if (!allocated_instructions)
