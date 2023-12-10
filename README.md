@@ -1,5 +1,6 @@
 # RiptermsGhost
 An example injectable cheat for minecraft using java native interface and jvmti + java asm
+#### This branch is an old version that was redefining game classes at runtime
 
 Currently in development.
 Uses weird jni export function hooking for better compatibility with clients that doesn't allow the creation of new JNIEnv*.
