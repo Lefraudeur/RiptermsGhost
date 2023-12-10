@@ -1,7 +1,7 @@
 #pragma once
 namespace Mappings
 {
-	constexpr inline char mappings_forge_1_7_10[] = R"(
+	constexpr static char mappings_forge_1_7_10[] = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -102,67 +102,6 @@ namespace Mappings
 				"static": false
 			}
 		]
-	},
-)"
-R"(
-	"io/github/lefraudeur/ClassPatcher": {
-		"obfuscated": "io/github/lefraudeur/ClassPatcher",
-		"fields": [],
-		"methods": [
-			{
-				"name": "patchEntityRenderer",
-				"obfuscated": "patchEntityRenderer",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchClientBrandRetriever",
-				"obfuscated": "patchClientBrandRetriever",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchNetworkManager",
-				"obfuscated": "patchNetworkManager1_7_10",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchBlock",
-				"obfuscated": "patchBlock",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchGL11",
-				"obfuscated": "patchGL11",
-				"signature": "([B)[B",
-				"static": true
-			},
-			{
-				"name": "patchMethod",
-				"obfuscated": "patchMethod",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[B",
-				"static": true
-			}
-		]
-	},
-	"org/apache/logging/log4j/ThreadContext": {
-		"obfuscated": "org/apache/logging/log4j/ThreadContext",
-		"fields": [
-			{
-				"name": "EMPTY_MAP",
-				"obfuscated": "EMPTY_MAP",
-				"signature": "Ljava/util/Map;",
-				"static": true
-			}
-		],
-		"methods": []
-	},
-	"org/lwjgl/opengl/GL11": {
-		"obfuscated": "org/lwjgl/opengl/GL11",
-		"fields": [],
-		"methods": []
 	},
 )"
 R"(
@@ -384,6 +323,12 @@ R"(
 				"obfuscated": "field_70122_E",
 				"signature": "Z",
 				"static": false
+			},
+			{
+				"name": "ridingEntity",
+				"obfuscated": "field_70154_o",
+				"signature": "Lnet/minecraft/entity/Entity;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -403,6 +348,12 @@ R"(
 				"name": "setSprinting",
 				"obfuscated": "func_70031_b",
 				"signature": "(Z)V",
+				"static": false
+			},
+			{
+				"name": "setPosition",
+				"obfuscated": "func_70107_b",
+				"signature": "(DDD)V",
 				"static": false
 			}
 		]
@@ -496,30 +447,6 @@ R"(
 			}
 		]
 	},
-	"org/apache/logging/log4j/ThreadContext": {
-		"obfuscated": "org/apache/logging/log4j/ThreadContext",
-		"fields": [
-			{
-				"name": "EMPTY_MAP",
-				"obfuscated": "EMPTY_MAP",
-				"signature": "Ljava/util/Map;",
-				"static": true
-			}
-		],
-		"methods": []
-	},
-	"net/minecraft/network/NetworkManager": {
-		"obfuscated": "net/minecraft/network/NetworkManager",
-		"fields": [],
-		"methods": [
-			{
-				"name": "sendPacket",
-				"obfuscated": "func_150732_b",
-				"signature": "(Lnet/minecraft/network/Packet;[Lio/netty/util/concurrent/GenericFutureListener;)V",
-				"static": false
-			}
-		]
-	},
 	"net/minecraft/network/Packet": {
 		"obfuscated": "net/minecraft/network/Packet",
 		"fields": [],
@@ -557,30 +484,6 @@ R"(
 				"name": "shouldSideBeRendered",
 				"obfuscated": "func_149646_a",
 				"signature": "(Lnet/minecraft/world/IBlockAccess;IIII)Z",
-				"static": false
-			}
-		]
-	},
-	"net/minecraft/util/registry/Registry": {
-		"obfuscated": "net/minecraft/block/Block",
-		"fields": [
-			{
-				"name": "blockRegistry",
-				"obfuscated": "field_149771_c",
-				"signature": "Lnet/minecraft/util/RegistryNamespaced;",
-				"static": true
-			}
-		],
-		"methods": []
-	},
-	"net/minecraft/util/RegistryNamespaced": {
-		"obfuscated": "net/minecraft/util/RegistryNamespaced",
-		"fields": [],
-		"methods": [
-			{
-				"name": "getNameForObject",
-				"obfuscated": "func_148750_c",
-				"signature": "(Ljava/lang/Object;)Ljava/lang/String;",
 				"static": false
 			}
 		]
@@ -766,6 +669,11 @@ R"(
 	},
 	"net/minecraft/client/gui/GuiScreen": {
 		"obfuscated": "net/minecraft/client/gui/GuiScreen",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/block/BlockOre": {
+		"obfuscated": "net/minecraft/block/BlockOre",
 		"fields": [],
 		"methods": []
 	}

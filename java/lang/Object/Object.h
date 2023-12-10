@@ -5,9 +5,11 @@
 
 class Object {
 public:
-	Object(jobject instance, JNIEnv* env = Ripterms::p_env);
+	//make global if you want to preserve the reference accross local frames,
+	//so if you want to reuse it in another Modules::run() call
+	Object(jobject instance, JNIEnv* env = Ripterms::p_env, bool is_global=false);
 	Object(const Object& other_Object);
-	Object(JNIEnv* env = Ripterms::p_env);
+	Object(JNIEnv* env = Ripterms::p_env, bool is_global = false);
 	~Object();
 
 	Object& operator=(const Object& other_Object);
@@ -25,4 +27,5 @@ protected:
 	inline static Ripterms::JavaClassV2 ObjectClass{ "java/lang/Object" };
 	JNIEnv* env = Ripterms::p_env;
 	jobject instance = nullptr;
+	bool is_global = false;
 };

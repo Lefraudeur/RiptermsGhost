@@ -1,7 +1,7 @@
 #pragma once
 namespace Mappings
 {
-	constexpr inline char mappings_lunar_1_16_5[] = R"(
+	constexpr static char mappings_lunar_1_16_5[] = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -102,56 +102,6 @@ namespace Mappings
 				"static": false
 			}
 		]
-	},
-)"
-R"(
-	"io/github/lefraudeur/ClassPatcher": {
-		"obfuscated": "io/github/lefraudeur/ClassPatcher",
-		"fields": [],
-		"methods": [
-			{
-				"name": "patchEntityRenderer",
-				"obfuscated": "patchEntityRenderer1_16_5",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchClientBrandRetriever",
-				"obfuscated": "patchClientBrandRetriever",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchNetworkManager",
-				"obfuscated": "patchNetworkManager",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchBlock",
-				"obfuscated": "patchBlock",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchMethod",
-				"obfuscated": "patchMethod",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[B",
-				"static": true
-			}
-		]
-	},
-	"org/apache/logging/log4j/ThreadContext": {
-		"obfuscated": "org/apache/logging/log4j/ThreadContext",
-		"fields": [
-			{
-				"name": "EMPTY_MAP",
-				"obfuscated": "EMPTY_MAP",
-				"signature": "Ljava/util/Map;",
-				"static": true
-			}
-		],
-		"methods": []
 	},
 )"
 R"(
@@ -337,6 +287,12 @@ R"(
 				"obfuscated": "onGround",
 				"signature": "Z",
 				"static": false
+			},
+			{
+				"name": "ridingEntity",
+				"obfuscated": "vehicle",
+				"signature": "Lnet/minecraft/world/entity/Entity;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -361,6 +317,12 @@ R"(
 			{
 				"name": "setPositionAndUpdate",
 				"obfuscated": "teleportTo",
+				"signature": "(DDD)V",
+				"static": false
+			},
+			{
+				"name": "setPosition",
+				"obfuscated": "setPos",
 				"signature": "(DDD)V",
 				"static": false
 			}
@@ -704,6 +666,17 @@ R"(
 		"obfuscated": "net/minecraft/client/gui/screens/Screen",
 		"fields": [],
 		"methods": []
+	},
+	"net/minecraft/block/BlockOre": {
+		"obfuscated": "net/minecraft/world/level/block/OreBlock",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/block/Block": {
+		"obfuscated": "net/minecraft/world/level/block/Block",
+		"fields": [],
+		"methods": [
+		]
 	}
 }
 )";

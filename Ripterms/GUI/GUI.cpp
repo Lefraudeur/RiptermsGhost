@@ -279,11 +279,12 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 					ImGui::SetCursorPos(ImVec2(4, 2));
 					ImGui::Text(current_tab.c_str());
 					ImGui::Separator();
-
+					Ripterms::p_env->PushLocalFrame(20);
 					for (Ripterms::Modules::IModule* module : Ripterms::Modules::categories[current_tab])
 					{
 						module->renderGUI();
 					}
+					Ripterms::p_env->PopLocalFrame(nullptr);
 				}
 			}
 			ImGui::EndChild();

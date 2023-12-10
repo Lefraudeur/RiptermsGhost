@@ -1,8 +1,14 @@
 #pragma once
 #include "../../java/lang/String/String.h"
 #include <random>
-#include "../Event/Event.h"
 #include "../Maths/Maths.h"
+#include "../../net/minecraft/network/Packet/Packet.h"
+#include "../../net/minecraft/entity/Entity/Entity.h"
+#include "../../net/minecraft/entity/player/EntityPlayer/EntityPlayer.h"
+#include "../../net/minecraft/util/BlockPos/BlockPos.h"
+#include "../../net/minecraft/client/network/NetHandlerPlayClient/NetHandlerPlayClient.h"
+#include "../../net/minecraft/world/World/World.h"
+#include "../../net/minecraft/client/entity/EntityPlayerSP/EntityPlayerSP.h"
 
 namespace Ripterms
 {
@@ -15,7 +21,16 @@ namespace Ripterms
 			virtual void renderGUI();
 			virtual void render();
 			virtual void disable();
-			virtual void onEvent(Ripterms::Event* event);
+
+			inline static bool onAddToSendQueueNoEvent = false;
+			virtual void onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel);
+
+			virtual void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel);
+			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel);
+			virtual void onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel);
+			virtual void onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel);
+			virtual void onGetClientModName(JNIEnv* env, bool* cancel);
+
 		protected:
 			inline static std::random_device rd{};
 			inline static std::mt19937 gen{rd()};
@@ -30,20 +45,27 @@ namespace Ripterms
 			void run() override;
 			void renderGUI() override;
 			void render() override;
+			void disable() override;
 		private:
 			float max_distance = 6.0f;
 			float max_angle = 80.0f;
 			float multiplier = 1.0f;
 			float multiplierPitch = 0.5f;
+			EntityPlayer prev_selected_target{ Ripterms::p_env, true };
 		};
 
 		class Reach : public IModule
 		{
 		public:
-			void run() override;
 			void renderGUI() override;
+			void disable() override;
+			void onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel) override;
 		private:
 			float reach_distance = 4.0f;
+			void* original_constant_pool = nullptr;
+			void* new_constant_pool = nullptr;
+			double* cp_reach_addr = nullptr;
+			uint8_t* _constMethod = nullptr;
 		};
 
 		class LeftClicker : public IModule
@@ -59,18 +81,21 @@ namespace Ripterms
 		class WTap : public IModule
 		{
 		public:
-			void onEvent(Ripterms::Event* event) override;
+			void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel) override;
+			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel) override;
 			void renderGUI() override;
+		private:
+			int ticks = 0;
 		};
 
 		class HitBoxes : public IModule
 		{
 		public:
-			void run();
 			void renderGUI();
+			void run() override;
 		private:
-			float x_expand = 0.5f;
-			float y_expand = 0.5f;
+			float x_expand = 0.1f;
+			float y_expand = 0.1f;
 		};
 
 
@@ -79,10 +104,9 @@ namespace Ripterms
 		{
 		public:
 			void renderGUI() override;
-			void disable() override;
+			void onGetClientModName(JNIEnv* env, bool* cancel) override;
 		private:
 			char name[128] = { 0 };
-			String old_ClientModName{};
 			String getClientModName();
 		};
 
@@ -121,12 +145,16 @@ namespace Ripterms
 			void run() override;
 			void renderGUI() override;
 			void disable() override;
+			void onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel) override;
+		private:
+			void sendPackets(NetHandlerPlayClient& sendQueue);
+			std::vector<Packet> packets{};
 		};
 
 		class LegitScaffold : public IModule
 		{
 		public:
-			void onEvent(Ripterms::Event* event) override;
+			void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel) override;
 			void renderGUI() override;
 		private:
 			int tickDelay = 0;
@@ -153,9 +181,8 @@ namespace Ripterms
 		class Xray : public IModule
 		{
 		public:
-			void run() override;
 			void renderGUI() override;
-			void disable() override;
+			void onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel) override;
 		};
 
 		class ESP : public IModule
@@ -172,6 +199,7 @@ namespace Ripterms
 			{"Whatever", {new ClientBrandChanger(), new Test()}}
 		};
 
+		void setupEventHooks();
 		void runAll();
 		void cleanAll();
 	}

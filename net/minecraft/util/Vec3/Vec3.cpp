@@ -13,7 +13,7 @@ Ripterms::Maths::Vector3d Vec3::getVector() const
 void Vec3::setVector(const Ripterms::Maths::Vector3d& vector)
 {
 	if (!instance) return;
-	env->SetDoubleField(instance, Vec3Class.getFieldID("xCoord"), vector.x);
-	env->SetDoubleField(instance, Vec3Class.getFieldID("yCoord"), vector.y);
-	env->SetDoubleField(instance, Vec3Class.getFieldID("zCoord"), vector.z);
+	env->SetDoubleField(instance, Vec3Class.getFieldID("xCoord"), (jdouble)vector.x);
+	env->SetDoubleField(instance, Vec3Class.getFieldID("yCoord"), (jdouble)vector.y);
+	env->SetDoubleField(instance, Vec3Class.getFieldID("zCoord"), (jdouble)vector.z);
 }

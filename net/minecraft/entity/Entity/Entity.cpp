@@ -92,6 +92,28 @@ float Entity::getEyeHeight() const
 	return env->CallFloatMethod(instance, EntityClass.getMethodID("getEyeHeight"));
 }
 
+Entity Entity::getRidingEntity() const
+{
+	if (!instance) return Entity(env);
+	return Entity
+	(
+		env->GetObjectField(instance, EntityClass.getFieldID("ridingEntity")),
+		env
+	);
+}
+
+void Entity::setPosition(const Ripterms::Maths::Vector3d& position)
+{
+	if (!instance) return;
+	env->CallVoidMethod(instance, EntityClass.getMethodID("setPosition"), (jdouble)position.x, (jdouble)position.y, (jdouble)position.z);
+}
+
+void Entity::setRidingEntity(Entity& entity)
+{
+	if (!instance) return;
+	env->SetObjectField(instance, EntityClass.getFieldID("ridingEntity"), entity.getInstance());
+}
+
 void Entity::setBoundingBox(const AxisAlignedBB& bb)
 {
 	if (!instance)

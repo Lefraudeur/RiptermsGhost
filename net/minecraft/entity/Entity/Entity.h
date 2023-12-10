@@ -19,7 +19,10 @@ public:
 	int getTicksExisted() const;
 	AxisAlignedBB getBoundingBox() const;
 	float getEyeHeight() const;
+	Entity getRidingEntity() const;
 
+	void setPosition(const Ripterms::Maths::Vector3d& position);
+	void setRidingEntity(Entity& entity);
 	void setBoundingBox(const AxisAlignedBB& bb);
 	void setSprinting(bool state);
 	void setMotion(const Ripterms::Maths::Vector3d& motion);

@@ -7,8 +7,7 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 	static bool runonce = true;
 	if (runonce)
 	{
-		old_ClientModName = getClientModName();
-		std::strcpy(name, old_ClientModName.toStdString().c_str());
+		std::strcpy(name, getClientModName().toStdString().c_str());
 		runonce = false;
 	}
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
@@ -18,28 +17,23 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 	if (ImGui::Button("change"))
 	{
-		Ripterms::cache->EMPTY_MAP.put
-		(
-			String("client_brand"),
-			String(name)
-		);
+		enabled = true;
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("reset"))
 	{
-		std::strcpy(name, old_ClientModName.toStdString().c_str());
-		disable();
+		enabled = false;
+		std::strcpy(name, getClientModName().toStdString().c_str());
 	}
 }
 
-void Ripterms::Modules::ClientBrandChanger::disable()
+void Ripterms::Modules::ClientBrandChanger::onGetClientModName(JNIEnv* env, bool* cancel)
 {
-	Ripterms::cache->EMPTY_MAP.put
-	(
-		String("client_brand"),
-		old_ClientModName
-	);
-	old_ClientModName.clear();
+	if (!enabled)
+		return;
+	jobject new_name = env->NewStringUTF(name);
+	Ripterms::JavaHook::set_primitive_return_value<void*>(cancel, *(void**)new_name);
+	*cancel = true;
 }
 
 String Ripterms::Modules::ClientBrandChanger::getClientModName()

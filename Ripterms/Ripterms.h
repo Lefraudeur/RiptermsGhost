@@ -5,11 +5,6 @@
 #include <Windows.h>
 #include <json.hpp>
 #include "Hook/Hook.h"
-#include "Mappings/mappings_lunar_1_8_9.h"
-#include "Mappings/mappings_lunar_1_7_10.h"
-#include "Mappings/mappings_lunar_1_16_5.h"
-#include "Mappings/mappings_vanilla_1_8_9.h"
-#include "Mappings/mappings_forge_1_7_10.h"
 
 namespace Ripterms
 {
@@ -28,17 +23,7 @@ namespace Ripterms
 			MAJOR_1_16_5
 		} type = UNDEFINED;
 	};
-	inline Version versions[] =
-	{
-		{"Lunar Client 1.18.2", Mappings::mappings_lunar_1_16_5, Version::MAJOR_1_16_5},
-		{"Lunar Client 1.17.1", Mappings::mappings_lunar_1_16_5, Version::MAJOR_1_16_5},
-		{"Lunar Client 1.16.5", Mappings::mappings_lunar_1_16_5, Version::MAJOR_1_16_5},
-		{"Lunar Client 1.8.9", Mappings::mappings_lunar_1_8_9, Version::MAJOR_1_8_9},
-		{"Badlion Minecraft Client", Mappings::mappings_vanilla_1_8_9, Version::MAJOR_1_8_9},
-		{"Lunar Client 1.7.10", Mappings::mappings_lunar_1_7_10, Version::MAJOR_1_7_10},
-		{"Minecraft 1.7.10", Mappings::mappings_forge_1_7_10, Version::MAJOR_1_7_10},
-		{"Paladium", Mappings::mappings_forge_1_7_10, Version::MAJOR_1_7_10}
-	};
+	extern Version versions[];
 	inline Version version{};
 
 	inline JavaVM* p_jvm = nullptr;
@@ -61,4 +46,6 @@ namespace Ripterms
 	BOOL init(HMODULE dll);
 	void clean();
 	void partialClean();
+
+	JNIEnv* get_current_thread_env();
 }

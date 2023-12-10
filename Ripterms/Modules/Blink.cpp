@@ -4,23 +4,6 @@
 
 void Ripterms::Modules::Blink::run()
 {
-	static bool prev_enabled = false;
-	if (!enabled)
-	{
-		if (prev_enabled)
-		{
-			disable();
-			prev_enabled = false;
-		}
-		return;
-	}
-	if (!prev_enabled)
-	{
-		List list = Ripterms::cache->EMPTY_MAP.get<List>(String("blink_packets"));
-		list.clear(); //clear the previously intercepted packets
-		Ripterms::cache->EMPTY_MAP.put(String("blink_enabled"), String("1"));
-		prev_enabled = true;
-	}
 }
 
 void Ripterms::Modules::Blink::renderGUI()
@@ -34,6 +17,28 @@ void Ripterms::Modules::Blink::renderGUI()
 
 void Ripterms::Modules::Blink::disable()
 {
-	Ripterms::cache->EMPTY_MAP.put(String("blink_enabled"), String("0"));
-	Ripterms::cache->EMPTY_MAP.put(String("blink_send"), String("1"));
+	sendPackets(Ripterms::cache->sendQueue);
+}
+
+void Ripterms::Modules::Blink::onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel)
+{
+	if (!enabled)
+	{
+		if (!packets.empty())
+			sendPackets(sendQueue);
+		return;
+	}
+	*cancel = true;
+	packets.push_back(Packet(packet, env, true));
+}
+
+void Ripterms::Modules::Blink::sendPackets(NetHandlerPlayClient& sendQueue)
+{
+	onAddToSendQueueNoEvent = true;
+	for (Packet& packet : packets)
+	{
+		sendQueue.addToSendQueue(packet);
+	}
+	packets.clear();
+	onAddToSendQueueNoEvent = false;
 }

@@ -1,7 +1,7 @@
 #pragma once
 namespace Mappings
 {
-	constexpr inline char mappings_lunar_1_8_9[] = R"(
+	constexpr static char mappings_lunar_1_8_9[] = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -102,67 +102,6 @@ namespace Mappings
 				"static": false
 			}
 		]
-	},
-)"
-R"(
-	"io/github/lefraudeur/ClassPatcher": {
-		"obfuscated": "io/github/lefraudeur/ClassPatcher",
-		"fields": [],
-		"methods": [
-			{
-				"name": "patchEntityRenderer",
-				"obfuscated": "patchEntityRenderer",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchClientBrandRetriever",
-				"obfuscated": "patchClientBrandRetriever",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchNetworkManager",
-				"obfuscated": "patchNetworkManager",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchBlock",
-				"obfuscated": "patchBlock",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)[B",
-				"static": true
-			},
-			{
-				"name": "patchGL11",
-				"obfuscated": "patchGL11",
-				"signature": "([B)[B",
-				"static": true
-			},
-			{
-				"name": "patchMethod",
-				"obfuscated": "patchMethod",
-				"signature": "([BLjava/lang/String;Ljava/lang/String;Ljava/lang/String;II)[B",
-				"static": true
-			}
-		]
-	},
-	"org/apache/logging/log4j/ThreadContext": {
-		"obfuscated": "org/apache/logging/log4j/ThreadContext",
-		"fields": [
-			{
-				"name": "EMPTY_MAP",
-				"obfuscated": "EMPTY_MAP",
-				"signature": "Ljava/util/Map;",
-				"static": true
-			}
-		],
-		"methods": []
-	},
-	"org/lwjgl/opengl/GL11": {
-		"obfuscated": "org/lwjgl/opengl/GL11",
-		"fields": [],
-		"methods": []
 	},
 )"
 R"(
@@ -372,6 +311,12 @@ R"(
 				"obfuscated": "onGround",
 				"signature": "Z",
 				"static": false
+			},
+			{
+				"name": "ridingEntity",
+				"obfuscated": "ridingEntity",
+				"signature": "Lnet/minecraft/entity/Entity;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -396,6 +341,12 @@ R"(
 			{
 				"name": "setPositionAndUpdate",
 				"obfuscated": "setPositionAndUpdate",
+				"signature": "(DDD)V",
+				"static": false
+			},
+			{
+				"name": "setPosition",
+				"obfuscated": "setPosition",
 				"signature": "(DDD)V",
 				"static": false
 			}
@@ -490,18 +441,6 @@ R"(
 			}
 		]
 	},
-	"net/minecraft/network/NetworkManager": {
-		"obfuscated": "net/minecraft/network/NetworkManager",
-		"fields": [],
-		"methods": [
-			{
-				"name": "sendPacket",
-				"obfuscated": "sendPacket",
-				"signature": "(Lnet/minecraft/network/Packet;)V",
-				"static": false
-			}
-		]
-	},
 	"net/minecraft/network/Packet": {
 		"obfuscated": "net/minecraft/network/Packet",
 		"fields": [],
@@ -542,35 +481,6 @@ R"(
 				"static": false
 			}
 		]
-	},
-	"net/minecraft/util/registry/Registry": {
-		"obfuscated": "net/minecraft/block/Block",
-		"fields": [
-			{
-				"name": "blockRegistry",
-				"obfuscated": "blockRegistry",
-				"signature": "Lnet/minecraft/util/RegistryNamespacedDefaultedByKey;",
-				"static": true
-			}
-		],
-		"methods": []
-	},
-	"net/minecraft/util/RegistryNamespaced": {
-		"obfuscated": "net/minecraft/util/RegistryNamespaced",
-		"fields": [],
-		"methods": [
-			{
-				"name": "getNameForObject",
-				"obfuscated": "getNameForObject",
-				"signature": "(Ljava/lang/Object;)Ljava/lang/Object;",
-				"static": false
-			}
-		]
-	},
-	"net/minecraft/util/ResourceLocation": {
-		"obfuscated": "net/minecraft/util/ResourceLocation",
-		"fields": [],
-		"methods": []
 	},
 	"net/minecraft/util/AxisAlignedBB": {
 		"obfuscated": "net/minecraft/util/AxisAlignedBB",
@@ -777,6 +687,11 @@ R"(
 	},
 	"net/minecraft/client/gui/GuiScreen": {
 		"obfuscated": "net/minecraft/client/gui/GuiScreen",
+		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/block/BlockOre": {
+		"obfuscated": "net/minecraft/block/BlockOre",
 		"fields": [],
 		"methods": []
 	}
