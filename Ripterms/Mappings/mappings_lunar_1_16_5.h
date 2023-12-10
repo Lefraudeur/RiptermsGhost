@@ -319,6 +319,12 @@ R"(
 				"obfuscated": "teleportTo",
 				"signature": "(DDD)V",
 				"static": false
+			},
+			{
+				"name": "setPosition",
+				"obfuscated": "setPos",
+				"signature": "(DDD)V",
+				"static": false
 			}
 		]
 	},
