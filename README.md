@@ -35,7 +35,7 @@ Change mappings to add new versions
 - Blink (hooks and cancels addToSendQueue)
 - FastPlace
 - LegitScaffold
-- Xray (not stable, seems to work only on 1.7.10 and 1.8.9 with optifine)
+- Xray (not stable, seems to work only on 1.7.10 and 1.8.9 with optifine, will be replaced by block esp anyway)
 - WTap
 - Sprint
 - HitBoxes
