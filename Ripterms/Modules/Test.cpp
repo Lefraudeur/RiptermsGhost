@@ -12,9 +12,6 @@ static void callback(void* sp, bool* should_return, void* rbx, void* thread) //j
 	static int call_count = 0;
 	call_count++;
 	std::cout << "number of calls: " << call_count << '\n';
-	std::cout << "button: " << Ripterms::JavaHook::get_primitive_arg_at<int>(sp, 0) << '\n';
-	std::cout << "y: " << Ripterms::JavaHook::get_primitive_arg_at<int>(sp, 1) << '\n';
-	std::cout << "x: " << Ripterms::JavaHook::get_primitive_arg_at<int>(sp, 2) << "\n\n";
 	*should_return = true;
 	return;
 }
@@ -48,6 +45,7 @@ void Ripterms::Modules::Test::renderGUI()
 		Ripterms::JavaHook::add_to_java_hook(mid, callback);
 
 		return;
+		/*
 		std::thread a([mid] {
 			JNIEnv* env = Ripterms::get_current_thread_env();
 			while (true)
@@ -60,5 +58,6 @@ void Ripterms::Modules::Test::renderGUI()
 			}
 		});
 		a.detach();
+		*/
 	}
 }

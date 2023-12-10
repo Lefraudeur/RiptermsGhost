@@ -29,6 +29,7 @@ namespace Ripterms
 			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel);
 			virtual void onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel);
 			virtual void onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel);
+			virtual void onGetClientModName(JNIEnv* env, bool* cancel);
 
 		protected:
 			inline static std::random_device rd{};
@@ -103,10 +104,9 @@ namespace Ripterms
 		{
 		public:
 			void renderGUI() override;
-			void disable() override;
+			void onGetClientModName(JNIEnv* env, bool* cancel) override;
 		private:
 			char name[128] = { 0 };
-			String old_ClientModName{};
 			String getClientModName();
 		};
 

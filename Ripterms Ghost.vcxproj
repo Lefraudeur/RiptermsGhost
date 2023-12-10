@@ -161,7 +161,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Lib;$(SolutionDir)Lib\JNI;$(SolutionDir)Lib\miniz;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>jvm.lib;opengl32.lib;capstone.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>

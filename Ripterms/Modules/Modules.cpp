@@ -39,6 +39,10 @@ void Ripterms::Modules::IModule::onShouldSideBeRendered(JNIEnv* env, Block& bloc
 {
 }
 
+void Ripterms::Modules::IModule::onGetClientModName(JNIEnv* env, bool* cancel)
+{
+}
+
 static void addToSendQueue_callback(void* sp, bool* should_return, void* rbx, void* thread)
 {
 	if (!Ripterms::p_env) return;
@@ -135,6 +139,21 @@ static void shouldSideBeRendered_callback(void* sp, bool* should_return, void* r
 	return;
 }
 
+static void getClientModName_callback(void* sp, bool* should_return, void* rbx, void* thread)
+{
+	if (!Ripterms::p_env) return;
+	JNIEnv* env = Ripterms::get_current_thread_env();
+
+	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	{
+		for (Ripterms::Modules::IModule* module : category.second)
+		{
+			module->onGetClientModName(env, should_return);
+		}
+	}
+	return;
+}
+
 void Ripterms::Modules::setupEventHooks()
 {
 	Ripterms::JavaClassV2 NetHandlerPlayClient("net/minecraft/client/network/NetHandlerPlayClient");
@@ -160,6 +179,10 @@ void Ripterms::Modules::setupEventHooks()
 	Ripterms::JavaClassV2 Block("net/minecraft/block/Block");
 	jmethodID shouldSideBeRendered = Block.getMethodID("shouldSideBeRendered");
 	Ripterms::JavaHook::add_to_java_hook(shouldSideBeRendered, shouldSideBeRendered_callback);
+
+	Ripterms::JavaClassV2 ClientBrandRetriever("net/minecraft/client/ClientBrandRetriever");
+	jmethodID getClientModName = ClientBrandRetriever.getMethodID("getClientModName");
+	Ripterms::JavaHook::add_to_java_hook(getClientModName, getClientModName_callback);
 }
 
 void Ripterms::Modules::runAll()
