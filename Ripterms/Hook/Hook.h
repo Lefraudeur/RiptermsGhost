@@ -77,6 +77,7 @@ namespace Ripterms
 		typedef void(*callback_t)(void* sp, bool* should_return, void* rbx, void* thread);
 
 		void clean();
+		void partial_clean();
 		bool init();
 
 		void add_to_java_hook(jmethodID methodID, callback_t interpreted_callback);

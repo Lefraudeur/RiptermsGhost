@@ -13,9 +13,17 @@ Ripterms::Cache::~Cache()
 bool Ripterms::Cache::fillCache()
 {
 	theMinecraft = Minecraft::getTheMinecraft();
-	if (!theMinecraft.isValid()) return false;
+	if (!theMinecraft.isValid())
+	{
+		is_valid = false;
+		return false;
+	}
 	thePlayer = theMinecraft.getThePlayer();
-	if (!thePlayer.isValid()) return false;
+	if (!thePlayer.isValid())
+	{
+		is_valid = false;
+		return false;
+	}
 	if (!prev_thePlayer.isEqualTo(thePlayer))
 	{
 		std::clog << "object updated" << std::endl;
@@ -27,5 +35,6 @@ bool Ripterms::Cache::fillCache()
 		playerController = theMinecraft.getPlayerController();
 		sendQueue = thePlayer.getSendQueue();
 	}
+	is_valid = true;
 	return true;
 }

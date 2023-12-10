@@ -22,6 +22,7 @@ extern Ripterms::Version Ripterms::versions[] =
 	{"Badlion Minecraft Client", Mappings::mappings_vanilla_1_8_9, Version::MAJOR_1_8_9},
 	{"Lunar Client 1.7.10", Mappings::mappings_lunar_1_7_10, Version::MAJOR_1_7_10},
 	{"Minecraft 1.7.10", Mappings::mappings_forge_1_7_10, Version::MAJOR_1_7_10},
+	{"Minecraft 1.8.9", Mappings::mappings_vanilla_1_8_9, Version::MAJOR_1_8_9},
 	{"Paladium", Mappings::mappings_forge_1_7_10, Version::MAJOR_1_7_10}
 };
 
@@ -190,6 +191,7 @@ void Ripterms::clean()
 	Ripterms::Modules::cleanAll();
 	Ripterms::Hook::clean();
 	delete Ripterms::cache;
+	Ripterms::cache = nullptr;
 	//System::gc();
 	Ripterms::JavaClassV2::clean();
 	if (Ripterms::p_tienv)
@@ -208,8 +210,9 @@ void Ripterms::partialClean()
 {
 	Ripterms::p_env = nullptr;
 	Ripterms::Modules::cleanAll();
-	Ripterms::JavaClassV2::clean();
+	Ripterms::JavaHook::partial_clean();
 	delete Ripterms::cache;
+	Ripterms::cache = nullptr;
 	Ripterms::Hook::clean();
 }
 

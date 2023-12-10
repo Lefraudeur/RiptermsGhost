@@ -39,6 +39,15 @@ void Ripterms::JavaHook::clean()
     }
 }
 
+void Ripterms::JavaHook::partial_clean()
+{
+    for (const std::pair<jmethodID, HookedJavaMethodCache>& m : hookedMethods)
+    {
+        if (m.second.prev_i2i_entry)
+            VirtualFree(m.second.prev_i2i_entry, 0, MEM_RELEASE);
+    }
+}
+
 bool Ripterms::JavaHook::init()
 {
     Module jvmdll("jvm.dll");

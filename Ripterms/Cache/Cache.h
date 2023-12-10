@@ -22,6 +22,7 @@ namespace Ripterms
 		NetHandlerPlayClient sendQueue{ Ripterms::p_env, true };
 
 		bool fillCache();
+		bool is_valid = false;
 	private:
 		EntityPlayerSP prev_thePlayer{ Ripterms::p_env, true };
 	};
