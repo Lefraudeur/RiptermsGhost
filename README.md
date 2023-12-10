@@ -1,6 +1,10 @@
 # RiptermsGhost
 An example injectable cheat for minecraft using java native interface, jvmti, unique java method hooking, and constant pool editing.
 
+This branch is really different from the previous Ripterms you might know. 
+<br/>If this version doesn't work, or if you are searching for the version that was redefining classes with jvmti and java asm, 
+<br/>go here: https://github.com/Lefraudeur/RiptermsGhost/tree/original-asm-redefineclass
+
 Currently in development.
 Uses weird jni export function hooking for better compatibility with clients that doesn't allow the creation of new JNIEnv*.
 
@@ -14,7 +18,7 @@ or on this nice discord server: https://discord.gg/JBrr7c8PDZ
 ### Supported versions :
 x64 windows only. Because of the way ripterms hooks java methods, it supports only some jvm versions (tested on zulu17, openjdk8, openjdk17).
 Please open an issue if it doesn't work on your jvm version.
-- Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1, 1.18.2
+- Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1
 - Forge: 1.7.10
 - Badlion Client: 1.8.9
 - Vanilla: 1.8.9
@@ -65,7 +69,7 @@ TODO:
 You can also test the cheat and tell me about bugs you find, you can try the dev branch, it sometimes contains unstable modules that only works with lunar 1.8.9.
 
 ### Future of the project ?
-I've implemented the jvm tricks I found but it really lacks of stability and compatibility.
+This branch implements the jvm tricks I found but it really lacks of stability and compatibility.
 Ripterms is more like a proof of concept right now, with all kind of ways to play with the jvm in c++.
 So future updates will be mainly bug fixes / code restructure for better scalability, to make it usable as a base.
 

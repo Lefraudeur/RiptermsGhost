@@ -676,12 +676,6 @@ R"(
 		"obfuscated": "net/minecraft/world/level/block/Block",
 		"fields": [],
 		"methods": [
-			{
-				"name": "shouldSideBeRendered",
-				"obfuscated": "shouldRenderFace",
-				"signature": "(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;)Z",
-				"static": true
-			}
 		]
 	}
 }

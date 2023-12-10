@@ -177,9 +177,13 @@ void Ripterms::Modules::setupEventHooks()
 	jmethodID onUpdateWalkingPlayer = EntityPlayerSP.getMethodID("onUpdateWalkingPlayer");
 	Ripterms::JavaHook::add_to_java_hook(onUpdateWalkingPlayer, onUpdateWalkingPlayer_callback);
 
-	Ripterms::JavaClassV2 Block("net/minecraft/block/Block");
-	jmethodID shouldSideBeRendered = Block.getMethodID("shouldSideBeRendered");
-	Ripterms::JavaHook::add_to_java_hook(shouldSideBeRendered, shouldSideBeRendered_callback);
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10
+		|| Ripterms::version.type == Ripterms::Version::MAJOR_1_8_9)
+	{
+		Ripterms::JavaClassV2 Block("net/minecraft/block/Block");
+		jmethodID shouldSideBeRendered = Block.getMethodID("shouldSideBeRendered");
+		Ripterms::JavaHook::add_to_java_hook(shouldSideBeRendered, shouldSideBeRendered_callback);
+	}
 
 	Ripterms::JavaClassV2 ClientBrandRetriever("net/minecraft/client/ClientBrandRetriever");
 	jmethodID getClientModName = ClientBrandRetriever.getMethodID("getClientModName");
