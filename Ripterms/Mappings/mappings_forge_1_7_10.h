@@ -323,6 +323,12 @@ R"(
 				"obfuscated": "field_70122_E",
 				"signature": "Z",
 				"static": false
+			},
+			{
+				"name": "ridingEntity",
+				"obfuscated": "field_70154_o",
+				"signature": "Lnet/minecraft/entity/Entity;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -342,6 +348,12 @@ R"(
 				"name": "setSprinting",
 				"obfuscated": "func_70031_b",
 				"signature": "(Z)V",
+				"static": false
+			},
+			{
+				"name": "setPosition",
+				"obfuscated": "func_70107_b",
+				"signature": "(DDD)V",
 				"static": false
 			}
 		]

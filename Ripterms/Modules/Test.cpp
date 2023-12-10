@@ -44,6 +44,16 @@ void Ripterms::Modules::Test::renderGUI()
 
 		Ripterms::JavaHook::add_to_java_hook(mid, callback);
 
+		Minecraft theMinecraft = Minecraft::getTheMinecraft(Ripterms::p_env);
+		EntityPlayerSP thePlayer = theMinecraft.getThePlayer();
+		std::cout << thePlayer.getRidingEntity().getPosition().x << std::endl;
+		float x = thePlayer.getPosition().x;
+		float y = thePlayer.getPosition().y;
+		float z = thePlayer.getPosition().y;
+		thePlayer.getRidingEntity().setPosition({ x + 5, y + 5, z + 5 });
+		thePlayer.setPosition({ x + 5, y + 5, z + 5 });
+
+
 		return;
 		/*
 		std::thread a([mid] {

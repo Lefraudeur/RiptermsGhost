@@ -323,6 +323,12 @@ R"(
 				"obfuscated": "onGround",
 				"signature": "Z",
 				"static": false
+			},
+			{
+				"name": "ridingEntity",
+				"obfuscated": "ridingEntity",
+				"signature": "Lnet/minecraft/entity/Entity;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -342,6 +348,12 @@ R"(
 				"name": "setSprinting",
 				"obfuscated": "setSprinting",
 				"signature": "(Z)V",
+				"static": false
+			},
+			{
+				"name": "setPosition",
+				"obfuscated": "setPosition",
+				"signature": "(DDD)V",
 				"static": false
 			}
 		]

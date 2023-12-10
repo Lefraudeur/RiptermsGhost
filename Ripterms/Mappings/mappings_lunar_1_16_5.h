@@ -287,6 +287,12 @@ R"(
 				"obfuscated": "onGround",
 				"signature": "Z",
 				"static": false
+			},
+			{
+				"name": "ridingEntity",
+				"obfuscated": "vehicle",
+				"signature": "Lnet/minecraft/world/entity/Entity;",
+				"static": false
 			}
 		],
 		"methods": [

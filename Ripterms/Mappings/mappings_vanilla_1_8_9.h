@@ -311,6 +311,12 @@ R"(
 				"obfuscated": "C",
 				"signature": "Z",
 				"static": false
+			},
+			{
+				"name": "ridingEntity",
+				"obfuscated": "m",
+				"signature": "Lpk;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -335,6 +341,12 @@ R"(
 			{
 				"name": "setPositionAndUpdate",
 				"obfuscated": "a",
+				"signature": "(DDD)V",
+				"static": false
+			},
+			{
+				"name": "setPosition",
+				"obfuscated": "b",
 				"signature": "(DDD)V",
 				"static": false
 			}
