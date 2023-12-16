@@ -102,11 +102,13 @@ void Ripterms::Hook::hook_RELATIVE_5B_JMP(void* a_detour_function_addr, void** a
 void Ripterms::Hook::remove_RELATIVE_5B_JMP()
 {
     DWORD original_protection = 0;
-    VirtualProtect(target_function_addr, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection);
 
-    memcpy(target_function_addr, allocated_instructions, bytes_to_replace);
-
-    VirtualProtect(target_function_addr, bytes_to_replace, original_protection, &original_protection);
+    if (VirtualProtect(target_function_addr, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_protection)
+        && ((uint8_t*)target_function_addr)[0] == 0xE9U)
+    {
+        memcpy(target_function_addr, allocated_instructions, bytes_to_replace);
+        VirtualProtect(target_function_addr, bytes_to_replace, original_protection, &original_protection);
+    }
 
     VirtualFree(our_tmp_instructions, 0, MEM_RELEASE);
     VirtualFree(allocated_instructions, 0, MEM_RELEASE);

@@ -1,5 +1,7 @@
 #include "JavaClass.h"
 #include <iostream>
+#include "../../java/lang/ClassLoader/ClassLoader.h"
+
 
 std::unordered_map<std::string, Ripterms::JavaClassV2::JavaClassData> Ripterms::JavaClassV2::data{};
 std::unordered_map<JNIEnv*, std::unordered_map<std::string, Ripterms::JavaClassV2::JClass>> Ripterms::JavaClassV2::jclassCache{};
@@ -68,7 +70,9 @@ bool Ripterms::JavaClassV2::init()
 void Ripterms::JavaClassV2::clean()
 {
 	if (Ripterms::p_env)
+	{
 		jclassCache[Ripterms::p_env].clear();
+	}
 }
 
 Ripterms::JavaClassV2::JavaClassV2(const std::string& class_path)
@@ -207,6 +211,7 @@ jclass Ripterms::JavaClassV2::findClass(const std::string& class_path, JNIEnv* e
 	jclass* loaded_classes = nullptr;
 	jint loaded_classes_count = 0;
 	jclass found_class = nullptr;
+	jobject minecraft_classloader = nullptr;
 	jvmtiEnv* tienv = Ripterms::p_tienv;
 	tienv->GetLoadedClasses(&loaded_classes_count, &loaded_classes);
 	for (jint i = 0; i < loaded_classes_count; ++i)
@@ -222,12 +227,23 @@ jclass Ripterms::JavaClassV2::findClass(const std::string& class_path, JNIEnv* e
 			found_class = (jclass)env->NewLocalRef(loaded_classes[i]);
 			break;
 		}
+		if (signature == Ripterms::JavaClassV2("net/minecraft/client/Minecraft").getObfuscatedClassName())
+		{
+			Ripterms::p_tienv->GetClassLoader(loaded_classes[i], &minecraft_classloader);
+		}
 	}
 	for (jint i = 0; i < loaded_classes_count; ++i)
 	{
 		env->DeleteLocalRef(loaded_classes[i]);
 	}
 	tienv->Deallocate((unsigned char*)loaded_classes);
+
+	if (!found_class)
+	{
+		ClassLoader classLoader(minecraft_classloader, env);
+		found_class = classLoader.findClass(class_path);
+	}
+	env->DeleteLocalRef(minecraft_classloader);
 	return found_class;
 }
 

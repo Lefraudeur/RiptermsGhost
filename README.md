@@ -52,10 +52,7 @@ Insert to open the gui / end key to self destruct
 - onUpdateWalkingPlayer
 - onAttackTargetEntityWithCurrentItem
 
-To test it, just build visual studio project ON RELEASE PROFILE, and inject it using any injector.
-
-You have to inject while in game (otherwise some classes are not loaded)
-
+To test it, just build the project with visual studio 2022, and inject the dll using any injector (process hacker, extreme injector...).
 
 Help would be appreciated, this repo is here to share your knowledge with other people. You can also make suggestions. (open an issue or a pull request to dev branch)
 

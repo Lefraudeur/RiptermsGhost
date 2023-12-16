@@ -189,7 +189,6 @@ void Ripterms::clean()
 {
 	Ripterms::JavaHook::clean();
 	Ripterms::Modules::cleanAll();
-	Ripterms::Hook::clean();
 	delete Ripterms::cache;
 	Ripterms::cache = nullptr;
 	//System::gc();
@@ -202,6 +201,7 @@ void Ripterms::clean()
 	fclose(console_buffer3);
 	FreeConsole();
 	delete hook;
+	Ripterms::Hook::clean();
 	Ripterms::p_env = nullptr;
 	std::thread(FreeLibrary, Ripterms::module).detach();
 }
@@ -213,6 +213,8 @@ void Ripterms::partialClean()
 	Ripterms::JavaHook::partial_clean();
 	delete Ripterms::cache;
 	Ripterms::cache = nullptr;
+	GUI::clean();
+	delete hook;
 	Ripterms::Hook::clean();
 }
 
