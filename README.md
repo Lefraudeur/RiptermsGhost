@@ -11,7 +11,7 @@ Uses weird jni export function hooking for better compatibility with clients tha
 This cheat is open source, mainly to show you a combination of all the techniques I found to make injectable cheats for minecraft java.
 
 Any question ? Contact me on discord: lefraudeur
-or on this nice discord server: https://discord.gg/JBrr7c8PDZ
+or on this nice discord server: https://discord.gg/FhzDdAZgCx
 
 #### Download: https://github.com/Lefraudeur/RiptermsGhost/actions
 
