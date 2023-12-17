@@ -17,6 +17,7 @@ void Ripterms::Modules::IModule::render()
 
 void Ripterms::Modules::IModule::disable()
 {
+	enabled = false;
 }
 
 void Ripterms::Modules::IModule::onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel)
@@ -49,7 +50,7 @@ static void addToSendQueue_callback(void* sp, bool* should_return, void* rbx, vo
 	if (Ripterms::Modules::IModule::onAddToSendQueueNoEvent) return;
 	JNIEnv* env = Ripterms::get_current_thread_env();
 
-	//env->PushLocalFrame(5);
+	//env->PushLocalFrame(5); this is supposed to deletelocal refs but it somehow crashes
 	NetHandlerPlayClient sendQueue(Ripterms::JavaHook::get_jobject_arg_at(sp, 1, thread), env);
 	Packet packet(Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread), env);
 

@@ -109,7 +109,8 @@ bool Object::isValid()
 
 Object::~Object()
 {
-	clear();
+	if (is_global)
+		clear();
 }
 
 void Object::clear()
@@ -120,6 +121,8 @@ void Object::clear()
 	{
 		if (is_global)
 			env->DeleteGlobalRef(instance);
+		else
+			env->DeleteLocalRef(instance);
 		this->instance = nullptr;
 	}
 }
