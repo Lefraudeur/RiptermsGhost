@@ -16,7 +16,7 @@ uint8_t* Ripterms::Module::pattern_scan(uint8_t pattern[], int size, int access)
 {
 	MEMORY_BASIC_INFORMATION memInfo{};
 	for (uint8_t* ptr = (uint8_t*)moduleInfo.lpBaseOfDll;
-		ptr < ptr + moduleInfo.SizeOfImage && VirtualQuery(ptr, &memInfo, sizeof(MEMORY_BASIC_INFORMATION));
+		ptr < (uint8_t*)moduleInfo.lpBaseOfDll + moduleInfo.SizeOfImage && VirtualQuery(ptr, &memInfo, sizeof(MEMORY_BASIC_INFORMATION));
 		ptr = (uint8_t*)memInfo.BaseAddress + memInfo.RegionSize
 		)
 	{
@@ -47,7 +47,7 @@ std::vector<uint8_t*> Ripterms::Module::pattern_scan_all(uint8_t pattern[], int 
 	std::vector<uint8_t*> results{};
 	MEMORY_BASIC_INFORMATION memInfo{};
 	for (uint8_t* ptr = (uint8_t*)moduleInfo.lpBaseOfDll;
-		ptr < ptr + moduleInfo.SizeOfImage && VirtualQuery(ptr, &memInfo, sizeof(MEMORY_BASIC_INFORMATION));
+		ptr < (uint8_t*)moduleInfo.lpBaseOfDll + moduleInfo.SizeOfImage && VirtualQuery(ptr, &memInfo, sizeof(MEMORY_BASIC_INFORMATION));
 		ptr = (uint8_t*)memInfo.BaseAddress + memInfo.RegionSize
 		)
 	{

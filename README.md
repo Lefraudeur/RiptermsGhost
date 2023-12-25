@@ -1,12 +1,9 @@
 # RiptermsGhost
-An example injectable cheat for minecraft using java native interface, jvmti, unique java method hooking, and constant pool editing.
+An example injectable cheat for minecraft using java native interface, jvmti, java method hooking, and constant pool editing.
 
 This branch is really different from the previous Ripterms you might know. 
 <br/>If this version doesn't work, or if you are searching for the version that was redefining classes with jvmti and java asm, 
 <br/>go here: https://github.com/Lefraudeur/RiptermsGhost/tree/original-asm-redefineclass
-
-Currently in development.
-Uses weird jni export function hooking for better compatibility with clients that doesn't allow the creation of new JNIEnv*.
 
 This cheat is open source, mainly to show you a combination of all the techniques I found to make injectable cheats for minecraft java.
 
@@ -63,7 +60,6 @@ TODO:
 - More events
 - Better stability and compatibility
 
-You can also test the cheat and tell me about bugs you find, you can try the dev branch, it sometimes contains unstable modules that only works with lunar 1.8.9.
 
 ### Future of the project ?
 This branch implements the jvm tricks I found but it really lacks of stability and compatibility.
