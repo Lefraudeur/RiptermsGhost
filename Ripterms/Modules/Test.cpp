@@ -7,7 +7,7 @@
 #include "../../net/minecraft/client/Minecraft/Minecraft.h"
 
 
-static void callback(void* sp, bool* should_return, void* rbx, void* thread) //j_rarg0 is this object in non static methods
+static void callback(void* sp, bool* should_return, HotSpot::Method* rbx, HotSpot::Thread* thread) //j_rarg0 is this object in non static methods
 {
 	static int call_count = 0;
 	call_count++;
@@ -39,22 +39,11 @@ void Ripterms::Modules::Test::renderGUI()
 		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/gui/GuiScreen"));
 		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "func_73864_a", "(III)V");
 
-		Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/entity/player/EntityPlayer"));
-		jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "func_70664_aZ", "()V");
-
-		Ripterms::JavaHook::add_to_java_hook(mid, callback);
-
-		Minecraft theMinecraft = Minecraft::getTheMinecraft(Ripterms::p_env);
-		EntityPlayerSP thePlayer = theMinecraft.getThePlayer();
-		std::cout << thePlayer.getRidingEntity().getPosition().x << std::endl;
-		float x = thePlayer.getPosition().x;
-		float y = thePlayer.getPosition().y;
-		float z = thePlayer.getPosition().y;
-		thePlayer.getRidingEntity().setPosition({ x + 5, y + 5, z + 5 });
-		thePlayer.setPosition({ x + 5, y + 5, z + 5 });
+		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("pr"));
+		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "bw", "()V");
+		//Ripterms::JavaHook::add_to_java_hook(mid, callback);
 
 
-		return;
 		/*
 		std::thread a([mid] {
 			JNIEnv* env = Ripterms::get_current_thread_env();

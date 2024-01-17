@@ -6,20 +6,20 @@
 
 Ripterms::Maths::Vector2d Ripterms::Maths::getYawPitch(Vector3d playerPos, Vector3d facingPos)
 {
-	float pi = 3.1415926535f;
+	constexpr float pi = 3.14159265f;
 	Vector3d delta = facingPos - playerPos;
 
 	float hypxz = std::sqrt(delta.x * delta.x + delta.z * delta.z);
 
-	float pitchRad = std::atan(delta.y / hypxz);
+	float pitchRad = std::atan(-delta.y / hypxz);
 
 	float yawDeg = 0.0f;
-	float pitchDeg = pitchRad * (180.0f / pi) * -1.0f;
+	float pitchDeg = pitchRad * (180.0f / pi);
 
 	if (delta.x != 0.0f)
 	{
-		float yawRad = std::atan(delta.z / delta.x);
-		yawDeg = yawRad * (180.0f / pi) + (delta.x < 0.0f ? 90.0f : -90.0f);
+		float yawRad = std::atan2(delta.z, delta.x) - pi/2;
+		yawDeg = yawRad * (180.0f / pi);
 	}
 
 	return Vector2d(yawDeg, pitchDeg);

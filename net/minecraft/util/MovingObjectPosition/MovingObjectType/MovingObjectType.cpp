@@ -6,7 +6,7 @@ MovingObjectType MovingObjectType::getType(const std::string& name, JNIEnv* env)
 	(
 		env->GetStaticObjectField
 		(
-			MovingObjectTypeClass.getJClass(),
+			MovingObjectTypeClass.get_jclass(env),
 			MovingObjectTypeClass.getFieldID(name)
 		), env
 	);

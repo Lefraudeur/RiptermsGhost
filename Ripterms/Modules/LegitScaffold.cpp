@@ -33,7 +33,7 @@ void Ripterms::Modules::LegitScaffold::onUpdateWalkingPlayer(JNIEnv* env, Entity
 		);
 		playerPosition.y -= 0.1f;
 		Block playerBlock = theWorld.getBlock(playerPosition);
-		if (playerBlock.instanceOf(JavaClassV2("net/minecraft/block/BlockAir").getJClass(env)))
+		if (playerBlock.instanceOf(JavaClassV2("net/minecraft/block/BlockAir").get_jclass(env)))
 		{
 			sneaked = true;
 			keyBindSneak.setPressed(true);

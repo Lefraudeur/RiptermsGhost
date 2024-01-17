@@ -6,7 +6,7 @@ BlockPos BlockPos::newObject(const Ripterms::Maths::Vector3d& vector, JNIEnv* en
 	(
 		env->NewObject
 		(
-			BlockPosClass.getJClass(), 
+			BlockPosClass.get_jclass(env),
 			BlockPosClass.getMethodID("<init>"),
 			(jdouble)vector.x,
 			(jdouble)vector.y,

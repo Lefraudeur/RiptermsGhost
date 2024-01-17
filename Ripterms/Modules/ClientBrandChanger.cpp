@@ -39,5 +39,5 @@ void Ripterms::Modules::ClientBrandChanger::onGetClientModName(JNIEnv* env, bool
 String Ripterms::Modules::ClientBrandChanger::getClientModName()
 {
 	Ripterms::JavaClassV2 ClientBrandRetrieverClass("net/minecraft/client/ClientBrandRetriever");
-	return Ripterms::p_env->CallStaticObjectMethod(ClientBrandRetrieverClass.getJClass(), ClientBrandRetrieverClass.getMethodID("getClientModName"));
+	return Ripterms::p_env->CallStaticObjectMethod(ClientBrandRetrieverClass.get_jclass(), ClientBrandRetrieverClass.getMethodID("getClientModName"));
 }

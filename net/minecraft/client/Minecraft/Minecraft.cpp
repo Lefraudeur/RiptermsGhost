@@ -2,7 +2,7 @@
 
 Minecraft Minecraft::getTheMinecraft(JNIEnv* env)
 {
-	return Minecraft(env->GetStaticObjectField(MinecraftClass.getJClass(), MinecraftClass.getFieldID("theMinecraft")), env);
+	return Minecraft(env->GetStaticObjectField(MinecraftClass.get_jclass(env), MinecraftClass.getFieldID("theMinecraft")), env);
 }
 
 EntityPlayerSP Minecraft::getThePlayer()

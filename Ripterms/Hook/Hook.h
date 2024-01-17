@@ -5,6 +5,7 @@
 #include <JNI/jni.h>
 #include <vector>
 #include <capstone/capstone.h>
+#include "../../HotSpot/HotSpot.hpp"
 
 namespace Ripterms
 {
@@ -74,7 +75,7 @@ namespace Ripterms
 			//        | j_rarg5   j_rarg0  j_rarg1 j_rarg2 j_rarg3 j_rarg4    |
 
 			//        |-------------------------------------------------------|
-		typedef void(*callback_t)(void* sp, bool* should_return, void* rbx, void* thread);
+		typedef void(*callback_t)(void* sp, bool* should_return, HotSpot::Method* rbx, HotSpot::Thread* thread);
 
 		void clean();
 		void partial_clean();
@@ -82,7 +83,7 @@ namespace Ripterms
 
 		void add_to_java_hook(jmethodID methodID, callback_t interpreted_callback);
 
-		jobject oop_to_jobject(void* oop, void* thread);
+		jobject oop_to_jobject(void* oop, HotSpot::Thread* thread);
 		template<typename T> inline void set_primitive_return_value(bool* should_return, T value)
 		{
 			*(T*)((uint64_t*)should_return + 8) = value;
@@ -93,9 +94,7 @@ namespace Ripterms
 		{
 			return *(T*)((uint64_t*)sp + 1 + index);
 		}
-		jobject get_jobject_arg_at(void* sp, int index, void* thread);
-
-		JNIEnv* get_env_for_thread(void* thread);
+		jobject get_jobject_arg_at(void* sp, int index, HotSpot::Thread* thread);
 
 		inline bool is_old_java = false;
 	}

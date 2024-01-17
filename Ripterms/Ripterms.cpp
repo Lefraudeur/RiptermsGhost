@@ -12,6 +12,7 @@
 #include "Mappings/mappings_lunar_1_16_5.h"
 #include "Mappings/mappings_vanilla_1_8_9.h"
 #include "Mappings/mappings_forge_1_7_10.h"
+#include <mutex>
 
 extern Ripterms::Version Ripterms::versions[] =
 {
@@ -28,12 +29,13 @@ extern Ripterms::Version Ripterms::versions[] =
 
 static void mainLoop()
 {
-	static Ripterms::CTimer timer = std::chrono::milliseconds(5);
-	if (!timer.isElapsed() || !Ripterms::cache->fillCache()) return;
-	Ripterms::p_env->PushLocalFrame(100);
+	{
+		Ripterms::JNIFrame jni_frame(Ripterms::p_env, 20);
+		static Ripterms::CTimer timer = std::chrono::milliseconds(2);
+		if (!timer.isElapsed() || !Ripterms::cache->fillCache()) return;
+	}
+	Ripterms::JNIFrame jni_frame(Ripterms::p_env, 80);
 	Ripterms::Modules::runAll();
-	Ripterms::p_env->PopLocalFrame(nullptr);
-	//every local reference created after PushLocalFrame will be deleted on PopLocalFrame
 }
 
 namespace
@@ -221,9 +223,12 @@ void Ripterms::partialClean()
 JNIEnv* Ripterms::get_current_thread_env()
 {
 	static std::unordered_map<std::thread::id, JNIEnv*> env_cache{};
+	static std::mutex env_cache_mutex{};
+
+	const std::lock_guard lock_guard{ env_cache_mutex };
 	try
 	{
-		return env_cache.at(std::this_thread::get_id());
+		return env_cache.at(std::this_thread::get_id());;
 	}
 	catch (...)
 	{
@@ -238,4 +243,15 @@ JNIEnv* Ripterms::get_current_thread_env()
 		return env;
 	}
 	return nullptr;
+}
+
+Ripterms::JNIFrame::JNIFrame(JNIEnv* env, int ref_count) :
+	env(env)
+{
+	env->PushLocalFrame(ref_count);
+}
+
+Ripterms::JNIFrame::~JNIFrame()
+{
+	env->PopLocalFrame(nullptr);
 }

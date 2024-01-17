@@ -11,7 +11,7 @@ struct HookedJavaMethodCache
     uint8_t* prev_i2i_entry = nullptr;
     uint8_t* original_i2i_entry = nullptr;
 };
-static std::unordered_map<jmethodID, HookedJavaMethodCache> hookedMethods{}; //man overusing global variables
+static std::unordered_map<jmethodID, HookedJavaMethodCache> hookedMethods{};
 
 void Ripterms::JavaHook::clean()
 {
@@ -126,21 +126,16 @@ void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t interpr
 }
 
 
-jobject Ripterms::JavaHook::oop_to_jobject(void* oop, void* thread)
+jobject Ripterms::JavaHook::oop_to_jobject(void* oop, HotSpot::Thread* thread)
 {
     return make_local(thread, oop, 0);
 }
 
-jobject Ripterms::JavaHook::get_jobject_arg_at(void* sp, int index, void* thread)
+jobject Ripterms::JavaHook::get_jobject_arg_at(void* sp, int index, HotSpot::Thread* thread)
 {
     void* oop = get_primitive_arg_at<void*>(sp, index);
     if (!oop) return nullptr;
     return oop_to_jobject(oop, thread);
-}
-
-JNIEnv* Ripterms::JavaHook::get_env_for_thread(void* thread)
-{
-    return (JNIEnv*)((uint8_t*)thread + (is_old_java ? 504 : 688));
 }
 
 static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr)

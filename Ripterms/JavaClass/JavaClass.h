@@ -1,6 +1,7 @@
 #pragma once
 #include "../Ripterms/Ripterms.h"
 #include <json.hpp>
+#include <mutex>
 
 namespace Ripterms
 {
@@ -15,28 +16,9 @@ namespace Ripterms
 		JavaClassV2(const std::string& class_path);
 		JavaClassV2(const JavaClassV2& otherJavaClass);
 
-		struct JClass
-		{
-			JClass();
-			JClass(jclass javaClass, JNIEnv* env = Ripterms::p_env);
-			JClass(const JClass& other);
-			~JClass();
-
-			void clear(); //delete ref
-			bool isValid() const;
-			bool isEqualTo(const JClass& other);
-			const jclass& getInstance() const;
-
-			operator jclass();
-		private:
-			jclass javaClass = nullptr;
-			JNIEnv* env = Ripterms::p_env;
-		};
-
 		void reload(); //refill the data with correct fields / methods
 
-		void removeFromJClassCache();
-		JClass& getJClass(JNIEnv* env = Ripterms::p_env) const; // a class reference is env / thread specific
+		jclass get_jclass(JNIEnv* env = Ripterms::p_env) const; // a class reference is env / thread specific
 		jfieldID getFieldID(const std::string& name) const;
 		jmethodID getMethodID(const std::string& name) const;
 		std::string getObfuscatedClassName() const;
@@ -51,7 +33,14 @@ namespace Ripterms
 			std::unordered_map<std::string, jmethodID> methods{};
 		};
 
-		static std::unordered_map<JNIEnv*, std::unordered_map<std::string, JClass>> jclassCache;
+		struct JClassCache
+		{
+			JNIEnv* owning_env;
+			std::unordered_map<std::string, jclass> cached_classes;
+		};
+		inline static std::vector<JClassCache> JClass_caches{};
+		static JClassCache& get_JClass_cache(JNIEnv* env);
+
 		static std::unordered_map<std::string, JavaClassData> data;
 		inline static nlohmann::json mappings{};
 		std::string class_path{};

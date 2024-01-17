@@ -82,11 +82,11 @@ bool Object::isEqualTo(const Object& other_Object)
 	return false;
 }
 
-bool Object::instanceOf(const Ripterms::JavaClassV2::JClass& classRef)
+bool Object::instanceOf(jclass classRef)
 {
-	if (!isValid() || !classRef.isValid())
+	if (!isValid() || !classRef)
 		return false;
-	return env->IsInstanceOf(instance, classRef.getInstance()) == JNI_TRUE;
+	return env->IsInstanceOf(instance, classRef) == JNI_TRUE;
 }
 
 bool Object::equals(const Object& other_Object)

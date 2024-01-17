@@ -167,6 +167,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="HotSpot\HotSpot.cpp" />
     <ClCompile Include="Include\ImGui\imgui.cpp" />
     <ClCompile Include="Include\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Include\ImGui\imgui_draw.cpp" />
@@ -235,6 +236,7 @@
     <ClCompile Include="Ripterms\CTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="HotSpot\HotSpot.hpp" />
     <ClInclude Include="java\lang\ClassLoader\ClassLoader.h" />
     <ClInclude Include="java\lang\Object\Object.h" />
     <ClInclude Include="java\lang\String\String.h" />

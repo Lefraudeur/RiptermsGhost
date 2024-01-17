@@ -4,10 +4,31 @@
 
 
 std::unordered_map<std::string, Ripterms::JavaClassV2::JavaClassData> Ripterms::JavaClassV2::data{};
-std::unordered_map<JNIEnv*, std::unordered_map<std::string, Ripterms::JavaClassV2::JClass>> Ripterms::JavaClassV2::jclassCache{};
+
+Ripterms::JavaClassV2::JClassCache& Ripterms::JavaClassV2::get_JClass_cache(JNIEnv* env)
+{
+	//couldn't find a good solution to cache jclass while remaining thread safe and fast
+	static std::atomic<bool> is_writing_JClass_caches = false;
+	while (is_writing_JClass_caches);
+
+	for (JClassCache& jclass_cache : JClass_caches)
+	{
+		if (jclass_cache.owning_env != env)
+			continue;
+		return jclass_cache;
+	}
+
+	is_writing_JClass_caches = true;
+	JClass_caches.push_back({env, {}});
+	JClassCache& jclass_cache = *(JClass_caches.end() - 1);
+	is_writing_JClass_caches = false;
+	return jclass_cache;
+}
+
 
 bool Ripterms::JavaClassV2::init()
 {
+	JNIFrame jni_frame(Ripterms::p_env, 100);
 	try
 	{
 		Ripterms::JavaClassV2::mappings = nlohmann::json::parse(version.mappings_text);
@@ -23,8 +44,8 @@ bool Ripterms::JavaClassV2::init()
 		return false;
 	for (auto& [className, classContent] : mappings.items())
 	{
-		JClass javaClass = findClass(classContent["obfuscated"]);
-		if (!javaClass.isValid()) continue;
+		jclass javaClass = findClass(classContent["obfuscated"]);
+		if (!javaClass) continue;
 		JavaClassData classData{};
 		for (auto& field : classContent["fields"])
 		{
@@ -64,14 +85,19 @@ bool Ripterms::JavaClassV2::init()
 		}
 		data.insert({className, classData});
 	}
+	JClass_caches.reserve(100);
 	return true;
 }
 
 void Ripterms::JavaClassV2::clean()
 {
-	if (Ripterms::p_env)
+	if (Ripterms::p_env) //can't think of a way to clear cache of other envs
 	{
-		jclassCache[Ripterms::p_env].clear();
+		JClassCache& env_JClass_cache = get_JClass_cache(Ripterms::p_env);
+		for (std::pair<const std::string, jclass>& entry : env_JClass_cache.cached_classes)
+		{
+			Ripterms::p_env->DeleteGlobalRef(entry.second);
+		}
 	}
 }
 
@@ -85,17 +111,16 @@ Ripterms::JavaClassV2::JavaClassV2(const JavaClassV2& otherJavaClass) :
 {
 }
 
-Ripterms::JavaClassV2::JClass& Ripterms::JavaClassV2::getJClass(JNIEnv* env) const
+jclass Ripterms::JavaClassV2::get_jclass(JNIEnv* env) const
 {
-	try
+	JClassCache& env_JClass_cache = get_JClass_cache(env);
+	if (!env_JClass_cache.cached_classes.contains(class_path))
 	{
-		return jclassCache[env].at(class_path);
+		jclass global_ref = (jclass)env->NewGlobalRef(findClass(getObfuscatedClassName(), env));
+		env_JClass_cache.cached_classes.insert({ class_path,  global_ref });
+		return global_ref;
 	}
-	catch (...)
-	{
-		jclassCache[env].insert({ class_path, JClass(findClass(getObfuscatedClassName(), env), env)});
-		return jclassCache[env].at(class_path);
-	}
+	return env_JClass_cache.cached_classes.at(class_path);
 }
 
 jfieldID Ripterms::JavaClassV2::getFieldID(const std::string& name) const
@@ -247,47 +272,11 @@ jclass Ripterms::JavaClassV2::findClass(const std::string& class_path, JNIEnv* e
 	return found_class;
 }
 
-void Ripterms::JavaClassV2::removeFromJClassCache()
-{
-	for (auto& entry : jclassCache)
-	{
-		entry.second.erase(class_path);
-	}
-}
-
-Ripterms::JavaClassV2::JClass::JClass()
-{
-}
-
-Ripterms::JavaClassV2::JClass::JClass(jclass javaClass, JNIEnv* env)
-{
-	if (javaClass)
-	{
-		this->javaClass = (jclass)env->NewGlobalRef(javaClass);
-		if (env->GetObjectRefType(javaClass) == JNILocalRefType)
-			env->DeleteLocalRef(javaClass);
-	}
-	else
-	{
-		this->javaClass = nullptr;
-	}
-	this->env = env;
-}
-
-Ripterms::JavaClassV2::JClass::JClass(const JClass& other) :
-	JClass(other.javaClass, other.env)
-{
-}
-
-Ripterms::JavaClassV2::JClass::~JClass()
-{
-	clear();
-}
-
 void Ripterms::JavaClassV2::reload()
 {
+	JNIFrame jni_frame(Ripterms::p_env, 1);
 	auto& classMapping = Ripterms::JavaClassV2::mappings[class_path];
-	JClass javaClass = findClass(classMapping["obfuscated"]);
+	jclass javaClass = findClass(classMapping["obfuscated"]);
 	Ripterms::JavaClassV2::JavaClassData classData{};
 	for (auto& field : classMapping["fields"])
 	{
@@ -318,34 +307,4 @@ void Ripterms::JavaClassV2::reload()
 		classData.methods.insert({ method["name"], methodID });
 	}
 	data[class_path] = classData;
-}
-
-void Ripterms::JavaClassV2::JClass::clear()
-{
-	if (!Ripterms::p_env) return; //process termination scenario
-	if (isValid()) env->DeleteGlobalRef(javaClass);
-	this->javaClass = nullptr;
-}
-
-bool Ripterms::JavaClassV2::JClass::isValid() const
-{
-	return javaClass != nullptr;
-}
-
-bool Ripterms::JavaClassV2::JClass::isEqualTo(const JClass& other)
-{
-	if (this->javaClass == other.javaClass)
-		return true;
-	return this->javaClass && other.javaClass
-		&& env->IsSameObject(javaClass, other.javaClass) == JNI_TRUE;
-}
-
-const jclass& Ripterms::JavaClassV2::JClass::getInstance() const
-{
-	return javaClass;
-}
-
-Ripterms::JavaClassV2::JClass::operator jclass()
-{
-	return getInstance();
 }

@@ -44,13 +44,12 @@ void Ripterms::Modules::IModule::onGetClientModName(JNIEnv* env, bool* cancel)
 {
 }
 
-static void addToSendQueue_callback(void* sp, bool* should_return, void* rbx, void* thread)
+static void addToSendQueue_callback(void* sp, bool* should_return, HotSpot::Method* rbx, HotSpot::Thread* thread)
 {
 	if (!Ripterms::p_env) return;
 	if (Ripterms::Modules::IModule::onAddToSendQueueNoEvent) return;
-	JNIEnv* env = Ripterms::get_current_thread_env();
+	JNIEnv* env = thread->get_env();
 
-	//env->PushLocalFrame(5); this is supposed to deletelocal refs but it somehow crashes
 	NetHandlerPlayClient sendQueue(Ripterms::JavaHook::get_jobject_arg_at(sp, 1, thread), env);
 	Packet packet(Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread), env);
 
@@ -61,14 +60,13 @@ static void addToSendQueue_callback(void* sp, bool* should_return, void* rbx, vo
 			module->onAddToSendQueue(env, sendQueue, packet, should_return);
 		}
 	}
-	//env->PopLocalFrame(nullptr);
 	return;
 }
 
-static void getMouseOver_callback(void* sp, bool* should_return, void* rbx, void* thread)
+static void getMouseOver_callback(void* sp, bool* should_return, HotSpot::Method* rbx, HotSpot::Thread* thread)
 {
 	if (!Ripterms::p_env) return;
-	JNIEnv* env = Ripterms::get_current_thread_env();
+	JNIEnv* env = thread->get_env();
 	float* f = (float*)((uint64_t*)sp + 1);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
@@ -80,12 +78,11 @@ static void getMouseOver_callback(void* sp, bool* should_return, void* rbx, void
 	return;
 }
 
-static void attackTargetEntityWithCurrentItem_callback(void* sp, bool* should_return, void* rbx, void* thread)
+static void attackTargetEntityWithCurrentItem_callback(void* sp, bool* should_return, HotSpot::Method* rbx, HotSpot::Thread* thread)
 {
 	if (!Ripterms::p_env) return;
-	JNIEnv* env = Ripterms::get_current_thread_env();
+	JNIEnv* env = thread->get_env();
 
-	//env->PushLocalFrame(5);
 	Entity entity(Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread), env);
 	EntityPlayer this_player(Ripterms::JavaHook::get_jobject_arg_at(sp, 1, thread), env);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
@@ -95,16 +92,14 @@ static void attackTargetEntityWithCurrentItem_callback(void* sp, bool* should_re
 			module->onAttackTargetEntityWithCurrentItem(env, this_player, entity, should_return);
 		}
 	}
-	//env->PopLocalFrame(nullptr);
 	return;
 }
 
-static void onUpdateWalkingPlayer_callback(void* sp, bool* should_return, void* rbx, void* thread)
+static void onUpdateWalkingPlayer_callback(void* sp, bool* should_return, HotSpot::Method* rbx, HotSpot::Thread* thread)
 {
 	if (!Ripterms::p_env) return;
-	JNIEnv* env = Ripterms::get_current_thread_env();
+	JNIEnv* env = thread->get_env();
 
-	//env->PushLocalFrame(20);
 	EntityPlayerSP this_player(Ripterms::JavaHook::get_jobject_arg_at(sp, 0, thread), env);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
@@ -113,14 +108,13 @@ static void onUpdateWalkingPlayer_callback(void* sp, bool* should_return, void* 
 			module->onUpdateWalkingPlayer(env, this_player, should_return);
 		}
 	}
-	//env->PopLocalFrame(nullptr);
 	return;
 }
 
-static void shouldSideBeRendered_callback(void* sp, bool* should_return, void* rbx, void* thread)
+static void shouldSideBeRendered_callback(void* sp, bool* should_return, HotSpot::Method* rbx, HotSpot::Thread* thread)
 {
 	if (!Ripterms::p_env) return;
-	JNIEnv* env = Ripterms::get_current_thread_env();
+	JNIEnv* env = thread->get_env();
 
 	Block block(env);
 	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
@@ -141,10 +135,10 @@ static void shouldSideBeRendered_callback(void* sp, bool* should_return, void* r
 	return;
 }
 
-static void getClientModName_callback(void* sp, bool* should_return, void* rbx, void* thread)
+static void getClientModName_callback(void* sp, bool* should_return, HotSpot::Method* rbx, HotSpot::Thread* thread)
 {
 	if (!Ripterms::p_env) return;
-	JNIEnv* env = Ripterms::get_current_thread_env();
+	JNIEnv* env = thread->get_env();
 
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{

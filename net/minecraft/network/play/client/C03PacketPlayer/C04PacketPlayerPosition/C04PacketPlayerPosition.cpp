@@ -8,7 +8,7 @@ C04PacketPlayerPosition C04PacketPlayerPosition::newObject(const Ripterms::Maths
 	(
 		env->NewObject
 		(
-			C04PacketPlayerPositionClass.getJClass(env),
+			C04PacketPlayerPositionClass.get_jclass(env),
 			C04PacketPlayerPositionClass.getMethodID("<init>"),
 			(jdouble)position.x,
 			(jdouble)position.y,
@@ -27,7 +27,7 @@ C04PacketPlayerPosition C04PacketPlayerPosition::newObject1_7_10(const Ripterms:
 	(
 		env->NewObject
 		(
-			C04PacketPlayerPositionClass.getJClass(env),
+			C04PacketPlayerPositionClass.get_jclass(env),
 			C04PacketPlayerPositionClass.getMethodID("<init>"),
 			(jdouble)position.x,
 			(jdouble)position.y,

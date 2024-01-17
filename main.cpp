@@ -2,6 +2,8 @@
 #include <iostream>
 #include "Ripterms/Ripterms.h"
 
+#define RIPTERMS_INJECTOR 66666
+
 BOOL WINAPI DllMain(
     HINSTANCE hinstDLL,  // handle to DLL module
     DWORD fdwReason,     // reason for calling function
@@ -10,6 +12,7 @@ BOOL WINAPI DllMain(
     // Perform actions based on the reason for calling.
     switch (fdwReason)
     {
+    case RIPTERMS_INJECTOR:
     case DLL_PROCESS_ATTACH:
     {
         // Initialize once for each new process.

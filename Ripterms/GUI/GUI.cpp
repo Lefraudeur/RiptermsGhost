@@ -141,15 +141,16 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 		ImGuiWindowFlags_NoScrollbar | 
 		ImGuiWindowFlags_NoInputs | 
 		ImGuiWindowFlags_NoBackground);
-	Ripterms::p_env->PushLocalFrame(50);
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* m : category.second)
+		Ripterms::JNIFrame jni_frame(Ripterms::p_env, 30);
+		for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 		{
-			m->render();
+			for (Ripterms::Modules::IModule* m : category.second)
+			{
+				m->render();
+			}
 		}
 	}
-	Ripterms::p_env->PopLocalFrame(nullptr);
 	ImGui::End();
 
 	if (Ripterms::GUI::draw)
@@ -281,12 +282,13 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 					ImGui::SetCursorPos(ImVec2(4, 2));
 					ImGui::Text(current_tab.c_str());
 					ImGui::Separator();
-					Ripterms::p_env->PushLocalFrame(50);
-					for (Ripterms::Modules::IModule* module : Ripterms::Modules::categories[current_tab])
 					{
-						module->renderGUI();
+						Ripterms::JNIFrame jni_frame(Ripterms::p_env, 30);
+						for (Ripterms::Modules::IModule* module : Ripterms::Modules::categories[current_tab])
+						{
+							module->renderGUI();
+						}
 					}
-					Ripterms::p_env->PopLocalFrame(nullptr);
 				}
 			}
 			ImGui::EndChild();
