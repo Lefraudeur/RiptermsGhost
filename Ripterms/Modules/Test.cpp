@@ -12,7 +12,7 @@ static void callback(void* sp, bool* should_return, HotSpot::Method* rbx, HotSpo
 	static int call_count = 0;
 	call_count++;
 	std::cout << "number of calls: " << call_count << '\n';
-	*should_return = true;
+	*should_return = false;
 	return;
 }
 
@@ -43,6 +43,9 @@ void Ripterms::Modules::Test::renderGUI()
 		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "bw", "()V");
 		//Ripterms::JavaHook::add_to_java_hook(mid, callback);
 
+		jclass lol2(Ripterms::JavaClassV2::findClass("biv"));
+		jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "a", "(Lpk;DDDFF)V");
+		Ripterms::JavaHook::add_to_java_hook(mid, callback);
 
 		/*
 		std::thread a([mid] {
