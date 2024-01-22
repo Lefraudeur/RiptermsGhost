@@ -1,206 +1,227 @@
-#include "Hook.h"
-#include <unordered_map>
+#include "JavaHook.h"
+#include <vector>
+#include <Windows.h>
+#include "Module.h"
+#include <iostream>
 #include "../Ripterms.h"
 
-static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr);
-static jobject(*make_local)(void* thread, void* oop, int alloc_failure) = nullptr;
+static void* find_correct_hook_place(void* _i2i_entry);
+static void common_detour(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel);
 
-struct HookedJavaMethodCache
+struct i2iHookData
 {
-    Ripterms::JavaHook::callback_t interpreted_callback;
-    uint8_t* prev_i2i_entry = nullptr;
-    uint8_t* original_i2i_entry = nullptr;
+    void* _i2i_entry = nullptr;
+    Ripterms::JavaHook::Midi2iHook* hook = nullptr;
 };
-static std::unordered_map<jmethodID, HookedJavaMethodCache> hookedMethods{};
+static std::vector<i2iHookData> hooked_i2i_entries{};
+struct HookedMethod
+{
+    HotSpot::Method* method = nullptr;
+    Ripterms::JavaHook::i2i_detour_t detour = nullptr;
+};
+static std::vector<HookedMethod> hooked_methods{};
 
 void Ripterms::JavaHook::clean()
 {
-    for (const std::pair<jmethodID, HookedJavaMethodCache>& m : hookedMethods)
+    for (i2iHookData& hk : hooked_i2i_entries)
     {
-        uint8_t* method = *((uint8_t**)m.first);
-        uint8_t** p_i2i_entry = (uint8_t**)(method + (is_old_java ? 0x30 : 0x38));
-        uint8_t** p_from_interpreted_entry = (uint8_t**)(method + 0x50);
-        if (m.second.original_i2i_entry)
-        {
-            *p_from_interpreted_entry = m.second.original_i2i_entry; //restore entries
-            *p_i2i_entry = m.second.original_i2i_entry;
-        }
-        if (m.second.prev_i2i_entry)
-            VirtualFree(m.second.prev_i2i_entry, 0, MEM_RELEASE);
-
-        //unsigned short* _flags = (unsigned short*)(method + 0x32);
-        //*_flags &= ~(1 << 2);
-
-        int* access_flags = (int*)(method + (is_old_java ? 0x20 : 0x28));
-        //*access_flags &= ~0x01000000;
-        *access_flags &= ~0x02000000;
-        *access_flags &= ~0x04000000;
-        *access_flags &= ~0x08000000;
+        delete hk.hook;
     }
 }
 
-void Ripterms::JavaHook::partial_clean()
-{
-    for (const std::pair<jmethodID, HookedJavaMethodCache>& m : hookedMethods)
-    {
-        if (m.second.prev_i2i_entry)
-            VirtualFree(m.second.prev_i2i_entry, 0, MEM_RELEASE);
-    }
-}
-
-bool Ripterms::JavaHook::init()
-{
-    Module jvmdll("jvm.dll");
-    uint8_t make_local_pattern[] =
-    {
-        0x48, 0x85, 0xD2, 0x75, 0x03, 0x33, 0xC0, 0xC3,
-        0x48, 0x8B, 0x89, 0xD8, 0x00, 0x00, 0x00, 0xE9,
-        0x6C, 0xF7, 0xFF, 0xFF
-    };
-    make_local = (jobject(*)(void*, void*, int))
-        jvmdll.pattern_scan(make_local_pattern, sizeof(make_local_pattern), PAGE_EXECUTE_READ);
-    if (!make_local)
-    {
-        is_old_java = true;
-        //try second pattern, for lower jvm versions
-        uint8_t make_local_pattern2[] =
-        {
-            0x48, 0x85, 0xD2, 0x75, 0x03, 0x33, 0xC0, 0xC3, 0x48, 0x8B, 0x49
-        };
-        make_local = (jobject(*)(void*, void*, int))
-            jvmdll.pattern_scan(make_local_pattern2, sizeof(make_local_pattern2), PAGE_EXECUTE_READ);
-    }
-    if (!make_local)
-        return false;
-    return true;
-}
-
-
-void Ripterms::JavaHook::add_to_java_hook(jmethodID methodID, callback_t interpreted_callback)
+bool Ripterms::JavaHook::hook(jmethodID methodID, i2i_detour_t detour)
 {
     static int runonce = []()->int
     {
-        jvmtiCapabilities capabilities{ .can_retransform_classes = JVMTI_ENABLE };
-        Ripterms::p_tienv->AddCapabilities(&capabilities);
-        return 0;
+            jvmtiCapabilities capabilities{ .can_retransform_classes = JVMTI_ENABLE };
+            Ripterms::p_tienv->AddCapabilities(&capabilities);
+            return 0;
     }();
+    if (!methodID || !detour) 
+        return false;
+
+    HotSpot::Method* method = *(HotSpot::Method**)methodID;
+    for (HookedMethod& hk : hooked_methods)
+    {
+        if (hk.method == method)
+            return true;
+    }
+    int* flags = (int*)method->get_access_flags();
+    *flags |= (HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE);
 
     jclass owner = nullptr;
     Ripterms::p_tienv->GetMethodDeclaringClass(methodID, &owner);
     Ripterms::p_tienv->RetransformClasses(1, &owner); //small trick to delete any already compiled / inlined code
     Ripterms::p_env->DeleteLocalRef(owner);
 
-    uint8_t* method = *((uint8_t**)methodID);
-    HookedJavaMethodCache& m = hookedMethods[methodID];
-    m.interpreted_callback = interpreted_callback;
+    method = *(HotSpot::Method**)methodID;
+    flags = (int*)method->get_access_flags();
+    *flags |= (HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE);
 
-    //unsigned short* _flags = (unsigned short*)(method + 0x32);
-    //*_flags |= (1 << 2); //don't inline
 
-    int* access_flags = (int*)(method + (is_old_java ? 0x20 : 0x28));
-    //*access_flags |= 0x01000000; //fake onqueue
-    *access_flags |= 0x02000000; //no compile
-    *access_flags |= 0x04000000;
-    *access_flags |= 0x08000000;
+    hooked_methods.push_back({ method, detour });
 
-    uint8_t** p_i2i_entry = (uint8_t**)(method + (is_old_java ? 0x30 : 0x38));
-    uint8_t* _i2i_entry = *p_i2i_entry;
-    if (_i2i_entry && _i2i_entry != m.prev_i2i_entry)
+    bool hook_new_i2i = true;
+    void* i2i = method->get_i2i_entry();
+    for (i2iHookData& hk : hooked_i2i_entries)
     {
-        //std::cout << "hooking" << '\n';
-        uint8_t* new_i2i_entry = generate_detour_code(m.interpreted_callback, _i2i_entry);
-        m.original_i2i_entry = _i2i_entry;
-        *p_i2i_entry = new_i2i_entry;
-        uint8_t** p_from_interpreted_entry = (uint8_t**)(method + 0x50);
-        *p_from_interpreted_entry = *p_i2i_entry;
-        uint8_t* _adapter = *(uint8_t**)(method + (is_old_java ? 0x38 : 0x20));
-        uint8_t* _c2i_entry = *(uint8_t**)(_adapter + 0x20);
-        uint8_t** p_from_compiled_entry = (uint8_t**)(method + 0x40);
-        *p_from_compiled_entry = _c2i_entry;
-        if (m.prev_i2i_entry)
-            VirtualFree(m.prev_i2i_entry, 0, MEM_RELEASE);
-        m.prev_i2i_entry = new_i2i_entry;
-        //*((uint8_t**)(method + 0x48)) = nullptr; // delete compiled code
+        if (hk._i2i_entry == i2i)
+            hook_new_i2i = false;
     }
-    return;
+
+
+    if (!hook_new_i2i) return true;
+
+    uint8_t* target = (uint8_t*)find_correct_hook_place(i2i);
+    if (!target)
+    {
+        std::cerr << "Failed to find correct i2i hook location\n";
+        return false;
+    }
+    Midi2iHook* hook = new Midi2iHook(target, common_detour);
+    if (!hook)
+        return false;
+
+    hooked_i2i_entries.push_back({ i2i, hook });
+    return true;
 }
 
-
-jobject Ripterms::JavaHook::oop_to_jobject(void* oop, HotSpot::Thread* thread)
+void* find_correct_hook_place(void* _i2i_entry)
 {
-    return make_local(thread, oop, 0);
+    uint8_t pattern[] =
+    {
+        0x89, 0x84, 0x24, 0x90, 0x90, 0x90, 0x90,
+        0x89, 0x84, 0x24, 0x90, 0x90, 0x90, 0x90,
+        0x89, 0x84, 0x24, 0x90, 0x90, 0x90, 0x90,
+        0x89, 0x84, 0x24, 0x90, 0x90, 0x90, 0x90,
+        0x41, 0xC6, 0x87, 0x90, 0x90, 0x90, 0x90, 0x00
+    };
+
+    uint8_t* curr = (uint8_t*)_i2i_entry;
+    while (curr < (uint8_t*)_i2i_entry + 0x350)
+    {
+        int matches = 0;
+        for (int i = 0; i < sizeof(pattern); ++i)
+        {
+            if (pattern[i] == 0x90 || pattern[i] == curr[i])
+                matches++;
+            else
+                break;
+        }
+        if (matches == sizeof(pattern))
+            return curr + sizeof(pattern) - 8;
+        curr += 1;
+    }
+
+    //8: sizeof : mov    BYTE PTR [r15+_do_not_unlock_if_synchronized_offset],0x0
+    //we place the hook here because enough size and correct time
+    return nullptr;
 }
 
-jobject Ripterms::JavaHook::get_jobject_arg_at(void* sp, int index, HotSpot::Thread* thread)
+void common_detour(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-    void* oop = get_primitive_arg_at<void*>(sp, index);
-    if (!oop) return nullptr;
-    return oop_to_jobject(oop, thread);
+    HotSpot::JavaThreadState state = thread->get_thread_state();
+    thread->set_thread_state(HotSpot::_thread_in_native);
+    for (HookedMethod& hk : hooked_methods)
+    {
+        if (hk.method == frame->get_method())
+            hk.detour(frame, thread, cancel);
+    }
+    thread->set_thread_state(state);
 }
 
-static uint8_t* generate_detour_code(Ripterms::JavaHook::callback_t callback, uint8_t* original_addr)
+Ripterms::JavaHook::Midi2iHook::Midi2iHook(uint8_t* target, i2i_detour_t detour) :
+    target(target)
 {
+    constexpr int hook_size = 8;
     /*
-        0:  50                      push   rax
-        1:  51                      push   rcx
-        2:  52                      push   rdx
-        3:  41 50                   push   r8
-        5:  41 51                   push   r9
-        7:  41 52                   push   r10
-        9:  41 53                   push   r11
-        b:  55                      push   rbp
-        c:  6a 00                   push   0x0
-        e:  48 89 e5                mov    rbp,rsp
-        11: 48 83 e4 f0             and    rsp,0xfffffffffffffff0
-        15: 48 8d 4d 48             lea    rcx,[rbp+0x48]
-        19: 48 89 ea                mov    rdx,rbp
-        1c: 49 89 d8                mov    r8,rbx
-        1f: 4d 89 f9                mov    r9,r15
-        22: 48 83 ec 20             sub    rsp,0x20
-        26: 48 b8 11 11 11 11 11    movabs rax,0x1111111111111111
-        2d: 11 11 11
-        30: ff d0                   call   rax
-        32: 48 89 ec                mov    rsp,rbp
-        35: 58                      pop    rax
-        36: 48 83 f8 00             cmp    rax,0x0
-        3a: 5d                      pop    rbp
-        3b: 41 5b                   pop    r11
-        3d: 41 5a                   pop    r10
-        3f: 41 59                   pop    r9
-        41: 41 58                   pop    r8
-        43: 5a                      pop    rdx
-        44: 59                      pop    rcx
-        45: 58                      pop    rax
-        46: 74 06                   je     0x4e
-        48: 5f                      pop    rdi
-        49: 4c 89 ec                mov    rsp,r13
-        4c: ff e7                   jmp    rdi
-        4e: e9 00 00 00 00          jmp    0x53
+0:  50                      push   rax
+1:  51                      push   rcx
+2:  52                      push   rdx
+3:  41 50                   push   r8
+5:  41 51                   push   r9
+7:  41 52                   push   r10
+9:  41 53                   push   r11
+b:  55                      push   rbp
+c:  6a 00                   push   0x0
+e:  48 89 e9                mov    rcx,rbp
+11: 4c 89 fa                mov    rdx,r15
+14: 4c 8d 04 24             lea    r8,[rsp]
+18: 48 89 e5                mov    rbp,rsp
+1b: 48 83 e4 f0             and    rsp,0xfffffffffffffff0
+1f: 48 83 ec 20             sub    rsp,0x20
+23: ff 15 3d 00 00 00       call   QWORD PTR [rip+0x3d]        # 0x66
+29: 48 89 ec                mov    rsp,rbp
+2c: 58                      pop    rax
+2d: 48 83 f8 00             cmp    rax,0x0
+31: 5d                      pop    rbp
+32: 41 5b                   pop    r11
+34: 41 5a                   pop    r10
+36: 41 59                   pop    r9
+38: 41 58                   pop    r8
+3a: 5a                      pop    rdx
+3b: 59                      pop    rcx
+3c: 58                      pop    rax
+3d: 0f 84 00 00 00 00       je     0x43
+43: 66 48 0f 6e c0          movq   xmm0,rax
+48: 4c 8b 6d c0             mov    r13,QWORD PTR [rbp-0x40]
+4c: 4c 8b 75 c8             mov    r14,QWORD PTR [rbp-0x38]
+50: 48 c7 45 f0 00 00 00    mov    QWORD PTR [rbp-0x10],0x0
+57: 00
+58: 48 8b 5d f8             mov    rbx,QWORD PTR [rbp-0x8]
+5c: 48 89 ec                mov    rsp,rbp
+5f: 5d                      pop    rbp
+60: 5e                      pop    rsi
+61: 48 89 dc                mov    rsp,rbx
+64: ff e6                   jmp    rsi
     */
     uint8_t assembly[] =
     { 
-        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 0x55, 0x6A, 0x00, 
-        0x48, 0x89, 0xE5, 0x48, 0x83, 0xE4, 0xF0, 0x48, 0x8D, 0x4D, 0x48, 0x48, 0x89, 0xEA, 
-        0x49, 0x89, 0xD8, 0x4D, 0x89, 0xF9, 0x48, 0x83, 0xEC, 0x20, 0x48, 0xB8, 0x11, 0x11, 
-        0x11, 0x11, 0x11, 0x11, 0x11, 0x11, 0xFF, 0xD0, 0x48, 0x89, 0xEC, 0x58, 0x48, 0x83, 
-        0xF8, 0x00, 0x5D, 0x41, 0x5B, 0x41, 0x5A, 0x41, 0x59, 0x41, 0x58, 0x5A, 0x59, 0x58, 
-        0x74, 0x06, 0x5F, 0x4C, 0x89, 0xEC, 0xFF, 0xE7, 0xE9, 0x00, 0x00, 0x00, 0x00 
+        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 0x55, 0x6A, 0x00, 0x48, 0x89, 0xE9, 0x4C, 0x89, 0xFA, 0x4C, 
+        0x8D, 0x04, 0x24, 0x48, 0x89, 0xE5, 0x48, 0x83, 0xE4, 0xF0, 0x48, 0x83, 0xEC, 0x20, 0xFF, 0x15, 0x3D, 0x00, 0x00, 0x00, 0x48, 
+        0x89, 0xEC, 0x58, 0x48, 0x83, 0xF8, 0x00, 0x5D, 0x41, 0x5B, 0x41, 0x5A, 0x41, 0x59, 0x41, 0x58, 0x5A, 0x59, 0x58, 0x0F, 0x84, 
+        0x00, 0x00, 0x00, 0x00, 0x66, 0x48, 0x0F, 0x6E, 0xC0, 0x4C, 0x8B, 0x6D, 0xC0, 0x4C, 0x8B, 0x75, 0xC8, 0x48, 0xC7, 0x45, 0xF0, 
+        0x00, 0x00, 0x00, 0x00, 0x48, 0x8B, 0x5D, 0xF8, 0x48, 0x89, 0xEC, 0x5D, 0x5E, 0x48, 0x89, 0xDC, 0xFF, 0xE6,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
     };
-    DWORD original_protection = 0;
-    uint8_t* allocated_instructions = Ripterms::Hook::AllocateNearbyMemory(original_addr, sizeof(assembly));
-    if (!allocated_instructions)
-        return nullptr;
 
-    memcpy(allocated_instructions, assembly, sizeof(assembly));
+    allocated_assembly = Module::allocate_nearby_memory(target, hook_size + sizeof(assembly), PAGE_EXECUTE_READWRITE);
+    if (!allocated_assembly)
+    {
+        std::cerr << "Failed to allocate memory for i2i hook\n";
+        return;
+    }
+    int32_t jmp_back_delta = (int32_t)(target + hook_size - (allocated_assembly + hook_size + 0x43));
+    *(int32_t*)(assembly + 0x3F) = jmp_back_delta;
 
-    *(void**)(allocated_instructions + 0x28) = callback;
-    uint8_t* rip = allocated_instructions + 0x53;
-    int32_t offset = original_addr - rip;
-    *(int32_t*)(allocated_instructions + 0x4F) = offset;
+    *(i2i_detour_t*)(assembly + 0x66) = detour;
 
+    memcpy(allocated_assembly, target, hook_size);
+    memcpy(allocated_assembly + hook_size, assembly, sizeof(assembly));
+    
+    DWORD original_prot = 0;
+    VirtualProtect(allocated_assembly, hook_size + sizeof(assembly), PAGE_EXECUTE_READ, &original_prot);
 
-    if (!VirtualProtect(allocated_instructions, sizeof(assembly), PAGE_EXECUTE_READ, &original_protection))
-        return nullptr;
+    VirtualProtect(target, 5, PAGE_EXECUTE_READWRITE, &original_prot);
+    target[0] = 0xE9U;
+    int32_t jmp_detour_delta = (int32_t)(allocated_assembly - (target + 5));
+    *(int32_t*)(target + 1) = jmp_detour_delta;
+    VirtualProtect(target, 5, original_prot, &original_prot);
 
-    return allocated_instructions;
+    is_error = false;
+}
+
+Ripterms::JavaHook::Midi2iHook::~Midi2iHook()
+{
+    if (is_error)
+        return;
+
+    DWORD original = 0;
+    if (target[0] == 0xE9U && VirtualProtect(target, 5, PAGE_EXECUTE_READWRITE, &original))
+    {
+        memcpy(target, allocated_assembly, 5);
+        VirtualProtect(target, 5, original, &original);
+    }
+
+    VirtualFree(allocated_assembly, 0, MEM_RELEASE);
 }

@@ -1,8 +1,6 @@
 #include "HotSpot.hpp"
 #include <iostream>
-#include <jni.h>
-#include <filesystem>
-#include <fstream>
+#include <JNI/jni.h>
 
 extern "C" JNIIMPORT HotSpot::VMStructEntry * gHotSpotVMStructs;
 extern "C" JNIIMPORT HotSpot::VMTypeEntry* gHotSpotVMTypes;
@@ -276,6 +274,14 @@ void HotSpot::Method::set_from_compiled_entry(void* entry)
     return;
 }
 
+void* HotSpot::Method::get_i2i_entry()
+{
+    static VMStructEntry* vm_entry = find_VMStructEntry("Method", "_i2i_entry", false);
+    if (!vm_entry) return nullptr;
+
+    return *(void**)((uint8_t*)this + vm_entry->offset);
+}
+
 HotSpot::ConstantPool* HotSpot::ConstMethod::get_constants()
 {
     if (!this) return nullptr;
@@ -284,6 +290,16 @@ HotSpot::ConstantPool* HotSpot::ConstMethod::get_constants()
     if (!_constants_entry) return nullptr;
 
     return *(ConstantPool**)((uint8_t*)this + _constants_entry->offset);
+}
+
+void HotSpot::ConstMethod::set_constants(ConstantPool* _constants)
+{
+    if (!this) return;
+
+    static VMStructEntry* _constants_entry = find_VMStructEntry("ConstMethod", "_constants", false);
+    if (!_constants_entry) return;
+
+    *(ConstantPool**)((uint8_t*)this + _constants_entry->offset) = _constants;
 }
 
 unsigned short HotSpot::ConstMethod::get_name_index()
@@ -306,14 +322,32 @@ unsigned short HotSpot::ConstMethod::get_signature_index()
     return *(unsigned short*)((uint8_t*)this + _signature_index_entry->offset);
 }
 
+int HotSpot::ConstantPool::get_size()
+{
+    static VMTypeEntry* ConstantPool_entry = find_VMTypeEntry("ConstantPool");
+    if (!ConstantPool_entry) return 0;
+
+    return (int)ConstantPool_entry->size;
+}
+
 void** HotSpot::ConstantPool::get_base()
 {
     if (!this) return nullptr;
 
-    static VMTypeEntry* ConstantPool_entry = find_VMTypeEntry("ConstantPool");
-    if (!ConstantPool_entry) return nullptr;
+    int size = get_size();
+    if (!size) return nullptr;
 
-    return (void**)((uint8_t*)this + ConstantPool_entry->size);
+    return (void**)((uint8_t*)this + size);
+}
+
+int HotSpot::ConstantPool::get_length()
+{
+    if (!this) return 0;
+
+    static VMStructEntry* entry = find_VMStructEntry("ConstantPool", "_length", false);
+    if (!entry) return 0;
+
+    return *(int*)((uint8_t*)this + entry->offset);
 }
 
 int HotSpot::Array_u2::get_length()
@@ -416,4 +450,50 @@ int HotSpot::Dictionary::get_table_size()
 bool HotSpot::AccessFlags::is_static()
 {
     return (_flags & JVM_ACC_STATIC) != 0;
+}
+
+uint32_t HotSpot::Thread::get_suspend_flags()
+{
+    static VMStructEntry* vm_entry = find_VMStructEntry("Thread", "_suspend_flags", false);
+    if (!vm_entry) return 0;
+
+    return *(uint32_t*)((uint8_t*)this + vm_entry->offset);
+}
+
+void** HotSpot::frame::get_locals()
+{
+    if (!this) return nullptr;
+    return *(void***)((uint8_t*)this - 56);
+}
+
+HotSpot::Method* HotSpot::frame::get_method()
+{
+    if (!this) return nullptr;
+    return *(Method**)((uint8_t*)this - 24);
+}
+
+unsigned short* HotSpot::Method::get_flags()
+{
+    if (!this) return nullptr;
+    static VMStructEntry* vm_entry = find_VMStructEntry("Method", "_flags", false);
+    if (!vm_entry)
+        return nullptr;
+    return (unsigned short*)((uint8_t*)this + vm_entry->offset);
+}
+
+HotSpot::JavaThreadState HotSpot::Thread::get_thread_state()
+{
+    if (!this) return _thread_uninitialized;
+    static VMStructEntry* vm_entry = find_VMStructEntry("JavaThread", "_thread_state", false);
+    if (!vm_entry) return _thread_uninitialized;
+    return *(JavaThreadState*)((uint8_t*)this + vm_entry->offset);
+}
+
+void HotSpot::Thread::set_thread_state(JavaThreadState state)
+{
+    if (!this) return;
+    static VMStructEntry* vm_entry = find_VMStructEntry("JavaThread", "_thread_state", false);
+    if (!vm_entry) return;
+
+    *(JavaThreadState*)((uint8_t*)this + vm_entry->offset) = state;
 }

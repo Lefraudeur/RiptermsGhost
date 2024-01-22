@@ -1,5 +1,6 @@
 #include "Modules.h"
 #include <imgui.h>
+#include "../Hook/JavaHook.h"
 
 void Ripterms::Modules::Xray::renderGUI()
 {
@@ -15,11 +16,11 @@ void Ripterms::Modules::Xray::onShouldSideBeRendered(JNIEnv* env, Block& block, 
 	if (!enabled) return;
 	if (!block.instanceOf(Ripterms::JavaClassV2("net/minecraft/block/BlockOre").get_jclass(env)))
 	{
-		Ripterms::JavaHook::set_primitive_return_value<int>(cancel, 0);
+		Ripterms::JavaHook::set_return_value<int>(cancel, 0);
 	}
 	else
 	{
-		Ripterms::JavaHook::set_primitive_return_value<int>(cancel, 1);
+		Ripterms::JavaHook::set_return_value<int>(cancel, 1);
 	}
 	*cancel = true;
 }

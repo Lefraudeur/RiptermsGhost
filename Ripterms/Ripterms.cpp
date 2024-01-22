@@ -13,6 +13,7 @@
 #include "Mappings/mappings_vanilla_1_8_9.h"
 #include "Mappings/mappings_forge_1_7_10.h"
 #include <mutex>
+#include "Hook/JavaHook.h"
 
 extern Ripterms::Version Ripterms::versions[] =
 {
@@ -29,11 +30,9 @@ extern Ripterms::Version Ripterms::versions[] =
 
 static void mainLoop()
 {
-	{
-		Ripterms::JNIFrame jni_frame(Ripterms::p_env, 20);
-		static Ripterms::CTimer timer = std::chrono::milliseconds(2);
-		if (!timer.isElapsed() || !Ripterms::cache->fillCache()) return;
-	}
+	static Ripterms::CTimer timer = std::chrono::milliseconds(2);
+	if (!timer.isElapsed() || !Ripterms::cache->fillCache()) return;
+
 	Ripterms::JNIFrame jni_frame(Ripterms::p_env, 80);
 	Ripterms::Modules::runAll();
 }
@@ -43,12 +42,12 @@ namespace
 	typedef void(JNICALL* nglClearType)(JNIEnv* env, jclass clazz, jint mask, jlong function_pointer);
 	nglClearType originalnglClear = nullptr;
 	nglClearType targetnglClear = nullptr;
+	Ripterms::Hook<nglClearType>* hook_nglClear = nullptr;
 
 	typedef void(JNICALL* glClearType)(JNIEnv* env, jclass clazz, jint mask);
 	glClearType originalglClear = nullptr;
 	glClearType targetglClear = nullptr;
-
-	Ripterms::Hook* hook = nullptr;
+	Ripterms::Hook<glClearType>* hook_glClear = nullptr;
 
 	bool runMainLoop = false;
 
@@ -147,8 +146,7 @@ BOOL Ripterms::init(HMODULE dll)
 	freopen_s(&console_buffer1, "CONOUT$", "w", stdout);
 	freopen_s(&console_buffer2, "CONOUT$", "w", stderr);
 	freopen_s(&console_buffer3, "CONIN$", "r", stdin);
-	if(!Ripterms::Hook::init()) return FALSE;
-	if (!Ripterms::JavaHook::init()) return FALSE;
+	if(!Ripterms::Capstone::init()) return FALSE;
 	Ripterms::window = getCurrentWindow();
 	std::string windowName = getWindowName(window);
 	for (Version v : versions)
@@ -168,7 +166,9 @@ BOOL Ripterms::init(HMODULE dll)
 		if (!lwjgl)
 			return FALSE;
 		targetnglClear = (nglClearType)lwjgl.getProcAddress("Java_org_lwjgl_opengl_GL11_nglClear");
-		hook = new Ripterms::Hook(0, targetnglClear, detournglClear, (void**)&originalnglClear, Ripterms::Hook::RELATIVE_5B_JMP);
+		if (!targetnglClear) return FALSE;
+		hook_nglClear = new Ripterms::Hook<nglClearType>(targetnglClear, detournglClear, &originalnglClear);
+		if (hook_nglClear->is_error) return FALSE;
 		break;
 	}
 	case Version::MAJOR_1_16_5:
@@ -177,7 +177,9 @@ BOOL Ripterms::init(HMODULE dll)
 		if (!lwjgl)
 			return FALSE;
 		targetglClear = (glClearType)lwjgl.getProcAddress("Java_org_lwjgl_opengl_GL11C_glClear");
-		hook = new Ripterms::Hook(0, targetglClear, detourglClear, (void**)&originalglClear, Ripterms::Hook::RELATIVE_5B_JMP);
+		if (!targetglClear) return FALSE;
+		hook_glClear = new Ripterms::Hook<glClearType>(targetglClear, detourglClear, &originalglClear);
+		if (hook_glClear->is_error) return FALSE;
 		break;
 	}
 	default:
@@ -202,8 +204,11 @@ void Ripterms::clean()
 	fclose(console_buffer2);
 	fclose(console_buffer3);
 	FreeConsole();
-	delete hook;
-	Ripterms::Hook::clean();
+	if (hook_glClear)
+		delete hook_glClear;
+	if (hook_nglClear)
+		delete hook_nglClear;
+	Ripterms::Capstone::clean();
 	Ripterms::p_env = nullptr;
 	std::thread(FreeLibrary, Ripterms::module).detach();
 }
@@ -212,12 +217,15 @@ void Ripterms::partialClean()
 {
 	Ripterms::p_env = nullptr;
 	Ripterms::Modules::cleanAll();
-	Ripterms::JavaHook::partial_clean();
+	Ripterms::JavaHook::clean();
 	delete Ripterms::cache;
 	Ripterms::cache = nullptr;
 	GUI::clean();
-	delete hook;
-	Ripterms::Hook::clean();
+	if (hook_glClear)
+		delete hook_glClear;
+	if (hook_nglClear)
+		delete hook_nglClear;
+	Ripterms::Capstone::clean();
 }
 
 JNIEnv* Ripterms::get_current_thread_env()
@@ -245,13 +253,30 @@ JNIEnv* Ripterms::get_current_thread_env()
 	return nullptr;
 }
 
-Ripterms::JNIFrame::JNIFrame(JNIEnv* env, int ref_count) :
-	env(env)
+JNIEnv* Ripterms::get_ct_env_nocache()
 {
-	env->PushLocalFrame(ref_count);
+	JNIEnv* env = nullptr;
+	JavaVM* jvm = Ripterms::p_jvm;
+	if (!jvm)
+		return nullptr;
+	if (jvm->GetEnv((void**)&env, JNI_VERSION_1_8) == JNI_EDETACHED)
+		jvm->AttachCurrentThread((void**)&env, nullptr);
+	return env;
+}
+
+Ripterms::JNIFrame::JNIFrame(JNIEnv* env, int ref_count) :
+	env(env),
+	is_success(false)
+{
+	is_success = env->PushLocalFrame(ref_count) == JNI_OK;
 }
 
 Ripterms::JNIFrame::~JNIFrame()
 {
 	env->PopLocalFrame(nullptr);
+}
+
+Ripterms::JNIFrame::operator bool()
+{
+	return is_success;
 }

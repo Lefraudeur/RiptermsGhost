@@ -10,8 +10,6 @@ namespace Ripterms
 	class Cache
 	{
 	public:
-		Cache();
-		~Cache();
 		Minecraft theMinecraft{Ripterms::p_env, true};
 		EntityPlayerSP thePlayer{ Ripterms::p_env, true };
 		PlayerControllerMP playerController{ Ripterms::p_env, true };

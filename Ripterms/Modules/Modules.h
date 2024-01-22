@@ -1,4 +1,5 @@
 #pragma once
+#include "../../HotSpot/HotSpot.hpp"
 #include "../../java/lang/String/String.h"
 #include <random>
 #include "../Maths/Maths.h"
@@ -22,12 +23,12 @@ namespace Ripterms
 			virtual void render();
 			virtual void disable();
 
-			inline static bool onAddToSendQueueNoEvent = false;
+			inline static std::atomic<bool> onAddToSendQueueNoEvent = false;
 			virtual void onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel);
 
 			virtual void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel);
 			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel);
-			virtual void onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel);
+			virtual void onGetMouseOver(JNIEnv* env, float partialTicks, bool* cancel);
 			virtual void onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel);
 			virtual void onGetClientModName(JNIEnv* env, bool* cancel);
 
@@ -59,13 +60,13 @@ namespace Ripterms
 		public:
 			void renderGUI() override;
 			void disable() override;
-			void onGetMouseOver(JNIEnv* env, float* partialTicks, bool* cancel) override;
+			void onGetMouseOver(JNIEnv* env, float partialTicks, bool* cancel) override;
 		private:
 			float reach_distance = 4.0f;
-			void* original_constant_pool = nullptr;
-			void* new_constant_pool = nullptr;
+			HotSpot::ConstantPool* original_constant_pool = nullptr;
+			HotSpot::ConstantPool* new_constant_pool = nullptr;
 			double* cp_reach_addr = nullptr;
-			uint8_t* _constMethod = nullptr;
+			HotSpot::ConstMethod* _constMethod = nullptr;
 		};
 
 		class LeftClicker : public IModule

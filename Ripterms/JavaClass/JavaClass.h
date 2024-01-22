@@ -38,7 +38,7 @@ namespace Ripterms
 			JNIEnv* owning_env;
 			std::unordered_map<std::string, jclass> cached_classes;
 		};
-		inline static std::vector<JClassCache> JClass_caches{};
+		inline static std::vector<JClassCache> JClass_caches{100};
 		static JClassCache& get_JClass_cache(JNIEnv* env);
 
 		static std::unordered_map<std::string, JavaClassData> data;

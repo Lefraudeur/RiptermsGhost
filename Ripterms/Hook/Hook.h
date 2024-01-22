@@ -1,101 +1,94 @@
 #pragma once
 #include <windows.h>
-#include <Psapi.h>
 #include <iostream>
-#include <JNI/jni.h>
-#include <vector>
-#include <capstone/capstone.h>
-#include "../../HotSpot/HotSpot.hpp"
+#include <type_traits>
+#include <cstdint>
+#include "Module.h"
+#include "Capstone.h"
 
 namespace Ripterms
 {
+	template<typename T, typename = typename std::enable_if<std::is_function_v<T>>>
 	class Hook
 	{
 	public:
-		enum Mode
+
+		Hook(T a_target_function, T a_detour_function, T* a_p_original_function, uint8_t a_bytes_to_replace = 0U) :
+			target_function(a_target_function),
+			detour_function(a_detour_function),
+			original_function(nullptr),
+			bytes_to_replace(a_bytes_to_replace),
+			target_detour_tramp(nullptr),
+			JMP_ABSOLUTE
+			{
+				0xff, 0x25, 0x00, 0x00, 0x00, 0x00,
+				0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01
+			}
 		{
-			RELATIVE_5B_JMP,
-			JAVA_ENTRY_HOOK
-		};
-		Hook(int a_bytes_to_replace, void* a_target_function_addr, void* a_detour_function_addr, void** a_original_function_addr, Mode a_mode);
-		~Hook();
-		void remove();
+			if (this->bytes_to_replace < RELATIVE_JMP_SIZE)
+				this->bytes_to_replace = Capstone::find_bytes_to_replace((uint8_t*)a_target_function);
 
-		static bool init();
-		static void clean();
+			target_detour_tramp = Module::allocate_nearby_memory((uint8_t*)target_function, sizeof(JMP_ABSOLUTE), PAGE_EXECUTE_READWRITE);
+			if (!target_detour_tramp)
+			{
+				std::cerr << "Hook: Failed to allocate memory\n";
+				return;
+			}
+			*(T*)(JMP_ABSOLUTE + JMP_ABSOLUTE_DEST_INDEX) = detour_function;
+			memcpy(target_detour_tramp, JMP_ABSOLUTE, sizeof(JMP_ABSOLUTE));
 
-		static uint8_t* AllocateNearbyMemory(uint8_t* nearby_addr, int size, int access = PAGE_EXECUTE_READWRITE);
+			original_function = (T)VirtualAlloc(nullptr, bytes_to_replace + sizeof(JMP_ABSOLUTE), MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+			if (!original_function)
+			{
+				std::cerr << "Hook: Failed to allocate memory\n";
+				return;
+			}
+			*a_p_original_function = original_function;
+			memcpy(original_function, target_function, bytes_to_replace);
+			uint8_t* jmp_back_addr = (uint8_t*)target_function + bytes_to_replace;
+			*(uint8_t**)(JMP_ABSOLUTE + JMP_ABSOLUTE_DEST_INDEX) = jmp_back_addr;
+			memcpy((uint8_t*)original_function + bytes_to_replace, JMP_ABSOLUTE, sizeof(JMP_ABSOLUTE));
 
-	private:
-		void hook_RELATIVE_5B_JMP(void* a_detour_function_addr, void** a_original_function_addr);
-		void remove_RELATIVE_5B_JMP();
+			int32_t jmp_offset = (int32_t)((uint8_t*)target_detour_tramp - ((uint8_t*)target_function + RELATIVE_JMP_SIZE));
+			DWORD original_prot = 0;
+			if (!VirtualProtect(target_function, 5, PAGE_EXECUTE_READWRITE, &original_prot))
+			{
+				std::cerr << "Hook: Failed to change target function protection\n";
+				return;
+			}
+			*(uint8_t*)target_function = 0xE9U;
+			*(int32_t*)((uint8_t*)target_function + 1) = jmp_offset;
+			VirtualProtect(target_function, 5, original_prot, &original_prot);
 
-		void hook_JAVA_ENTRY_HOOK(void* a_detour_function_addr, void** a_original_function_addr);
-		void remove_JAVA_ENTRY_HOOK();
-		int find_bytes_to_replace(const uint8_t* target);
-
-		int bytes_to_replace;
-		void* target_function_addr;
-		uint8_t* our_tmp_instructions;
-		uint8_t* allocated_instructions;
-		Mode mode;
-		inline static csh handle = 0;
-	};
-
-	class Module
-	{
-	public:
-		Module(const char* module_name);
-		Module(HMODULE a_module);
-
-		uint8_t* pattern_scan(uint8_t pattern[], int size, int access = PAGE_EXECUTE_READ) const;
-		std::vector<uint8_t*> pattern_scan_all(uint8_t pattern[], int size, int access = PAGE_EXECUTE_READ) const;
-		void* getProcAddress(const char* name);
-
-		operator bool() const;
-	private:
-		MODULEINFO moduleInfo{};
-		HMODULE module = nullptr;
-	};
-
-	namespace JavaHook
-	{
-			//        |-------------------------------------------------------|
-
-			//        | c_rarg0   c_rarg1  c_rarg2 c_rarg3 c_rarg4 c_rarg5    |
-
-			//        |-------------------------------------------------------|
-
-			//        | rcx       rdx      r8      r9      rdi*    rsi*       | windows (* not a c_rarg)
-
-			//        | rdi       rsi      rdx     rcx     r8      r9         | solaris/linux
-
-			//        |-------------------------------------------------------|
-
-			//        | j_rarg5   j_rarg0  j_rarg1 j_rarg2 j_rarg3 j_rarg4    |
-
-			//        |-------------------------------------------------------|
-		typedef void(*callback_t)(void* sp, bool* should_return, HotSpot::Method* rbx, HotSpot::Thread* thread);
-
-		void clean();
-		void partial_clean();
-		bool init();
-
-		void add_to_java_hook(jmethodID methodID, callback_t interpreted_callback);
-
-		jobject oop_to_jobject(void* oop, HotSpot::Thread* thread);
-		template<typename T> inline void set_primitive_return_value(bool* should_return, T value)
-		{
-			*(T*)((uint64_t*)should_return + 8) = value;
+			is_error = false;
 		}
 
-		//args right to left (including this pointer)
-		template<typename T> inline T get_primitive_arg_at(void* sp, int index)
+		~Hook()
 		{
-			return *(T*)((uint64_t*)sp + 1 + index);
+			if (is_error)
+				return;
+			DWORD original_prot = 0;
+			if (*(uint8_t*)target_function == 0xE9U && VirtualProtect(target_function, bytes_to_replace, PAGE_EXECUTE_READWRITE, &original_prot))
+			{
+				memcpy(target_function, original_function, bytes_to_replace);
+				VirtualProtect(target_function, bytes_to_replace, original_prot, &original_prot);
+			}
+			VirtualFree(target_detour_tramp, 0, MEM_RELEASE);
+			VirtualFree(original_function, 0, MEM_RELEASE);
 		}
-		jobject get_jobject_arg_at(void* sp, int index, HotSpot::Thread* thread);
 
-		inline bool is_old_java = false;
-	}
+		bool is_error = true;
+
+	private:
+
+		static const uint8_t RELATIVE_JMP_SIZE = 5U;
+		static const uint8_t JMP_ABSOLUTE_DEST_INDEX = 6U;
+
+		uint8_t bytes_to_replace;
+		T detour_function;
+		T target_function;
+		T original_function;
+		uint8_t* target_detour_tramp;
+		uint8_t JMP_ABSOLUTE[14];
+	};
 }

@@ -5,14 +5,14 @@
 #include "../../net/minecraft/network/play/client/C03PacketPlayer/C03PacketPlayer.h"
 #include <thread>
 #include "../../net/minecraft/client/Minecraft/Minecraft.h"
+#include "../Hook/JavaHook.h"
 
 
-static void callback(void* sp, bool* should_return, HotSpot::Method* rbx, HotSpot::Thread* thread) //j_rarg0 is this object in non static methods
+static void callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-	static int call_count = 0;
-	call_count++;
-	std::cout << "number of calls: " << call_count << '\n';
-	*should_return = false;
+	jclass cl = thread->get_env()->FindClass("java/lang/Object");
+	thread->get_env()->DeleteLocalRef(cl);
+	Sleep(1);
 	return;
 }
 
@@ -21,8 +21,8 @@ void Ripterms::Modules::Test::renderGUI()
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 	if (ImGui::Button("Run Test"))
 	{
-		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/gui/GuiScreen"));
-		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "mouseClicked", "(III)V");
+		//jclass lol2 = Ripterms::JavaClassV2::findClass("net/minecraft/client/gui/GuiScreen");
+		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "mouseClicked", "(III)V");
 
 		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/entity/EntityPlayerSP"));
 		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "swingItem", "()V");
@@ -42,10 +42,20 @@ void Ripterms::Modules::Test::renderGUI()
 		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("pr"));
 		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "bw", "()V");
 		//Ripterms::JavaHook::add_to_java_hook(mid, callback);
-
+		
 		jclass lol2(Ripterms::JavaClassV2::findClass("biv"));
 		jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "a", "(Lpk;DDDFF)V");
-		Ripterms::JavaHook::add_to_java_hook(mid, callback);
+		HotSpot::Method* method = *(HotSpot::Method**)mid;
+
+		uint8_t* i2i = (uint8_t*)method->get_i2i_entry();
+		std::cout << (void*)i2i << '\n';
+
+		Ripterms::JavaHook::hook(mid, callback);
+
+
+		//00000000031210E0
+		//0000000003121341
+		//0x261
 
 		/*
 		std::thread a([mid] {

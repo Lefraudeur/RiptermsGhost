@@ -18,7 +18,7 @@ BOOL WINAPI DllMain(
         // Initialize once for each new process.
         // Return FALSE to fail DLL load.
 
-        if (Ripterms::init(hinstDLL) == FALSE)
+        if (!Ripterms::init(hinstDLL))
         {
             std::cin.ignore();
             FreeConsole();

@@ -21,7 +21,7 @@ namespace
 	HGLRC new_context = nullptr;
 	HGLRC old_context = nullptr;
 
-	Ripterms::Hook* guiHook = nullptr;
+	Ripterms::Hook<type_wglSwapBuffers>* guiHook = nullptr;
 }
 
 static void update_style()
@@ -314,7 +314,9 @@ bool Ripterms::GUI::init()
 	if (!opengl)
 		return false;
 	target_wglSwapBuffers = (type_wglSwapBuffers)opengl.getProcAddress("wglSwapBuffers");
-	guiHook = new Ripterms::Hook(5, target_wglSwapBuffers, detour_wglSwapBuffers, (void**)&original_wglSwapBuffers, Ripterms::Hook::RELATIVE_5B_JMP);
+	if (!target_wglSwapBuffers) return false;
+	guiHook = new Ripterms::Hook<type_wglSwapBuffers>(target_wglSwapBuffers, detour_wglSwapBuffers, &original_wglSwapBuffers);
+	if (guiHook->is_error) return false;
 	original_WndProc = (WNDPROC)SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)&detour_WndProc);
 	return true;
 }

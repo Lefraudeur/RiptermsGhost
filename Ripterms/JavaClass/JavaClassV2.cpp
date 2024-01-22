@@ -85,7 +85,6 @@ bool Ripterms::JavaClassV2::init()
 		}
 		data.insert({className, classData});
 	}
-	JClass_caches.reserve(100);
 	return true;
 }
 

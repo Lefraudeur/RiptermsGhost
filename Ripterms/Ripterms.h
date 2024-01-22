@@ -48,13 +48,17 @@ namespace Ripterms
 	void partialClean();
 
 	JNIEnv* get_current_thread_env();
+	JNIEnv* get_ct_env_nocache();
 
 	class JNIFrame
 	{
 	public:
 		JNIFrame(JNIEnv* env = Ripterms::p_env, int ref_count = 10);
 		~JNIFrame();
+
+		operator bool();
 	private:
 		JNIEnv* env;
+		bool is_success;
 	};
 }

@@ -1,4 +1,4 @@
-#include "Hook.h"
+#include "Module.h"
 
 
 Ripterms::Module::Module(const char* module_name) :
@@ -83,4 +83,20 @@ void* Ripterms::Module::getProcAddress(const char* name)
 Ripterms::Module::operator bool() const
 {
 	return module && moduleInfo.lpBaseOfDll;
+}
+
+uint8_t* Ripterms::Module::allocate_nearby_memory(uint8_t* nearby_addr, int size, int access)
+{
+	for (int i = 65536;
+		i < 0x7FFFFFFF;
+		i += 65536)
+	{
+		uint8_t* allocated = (uint8_t*)VirtualAlloc(nearby_addr + i, size, MEM_COMMIT | MEM_RESERVE, access);
+		if (allocated)
+			return allocated;
+		allocated = (uint8_t*)VirtualAlloc(nearby_addr - i, size, MEM_COMMIT | MEM_RESERVE, access);
+		if (allocated)
+			return allocated;
+	}
+	return nullptr;
 }
