@@ -23,9 +23,14 @@ static std::vector<HookedMethod> hooked_methods{};
 
 void Ripterms::JavaHook::clean()
 {
-    for (i2iHookData& hk : hooked_i2i_entries)
+    for (i2iHookData hk : hooked_i2i_entries)
     {
         delete hk.hook;
+    }
+    for (HookedMethod hm : hooked_methods)
+    {
+        int* flags = (int*)hm.method->get_access_flags();
+        *flags &= ~(HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE);
     }
 }
 

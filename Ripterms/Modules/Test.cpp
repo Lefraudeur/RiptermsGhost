@@ -12,7 +12,7 @@ static void callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cance
 {
 	jclass cl = thread->get_env()->FindClass("java/lang/Object");
 	thread->get_env()->DeleteLocalRef(cl);
-	Sleep(1);
+	std::this_thread::sleep_for(std::chrono::milliseconds(2));
 	return;
 }
 
@@ -39,9 +39,8 @@ void Ripterms::Modules::Test::renderGUI()
 		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/gui/GuiScreen"));
 		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "func_73864_a", "(III)V");
 
-		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("pr"));
-		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "bw", "()V");
-		//Ripterms::JavaHook::add_to_java_hook(mid, callback);
+		//jclass lol2 = Ripterms::JavaClassV2::findClass("pr");
+		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "bw", "()V");
 		
 		jclass lol2(Ripterms::JavaClassV2::findClass("biv"));
 		jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "a", "(Lpk;DDDFF)V");
