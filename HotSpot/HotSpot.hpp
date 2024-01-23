@@ -251,7 +251,7 @@ namespace HotSpot
 
     struct frame
     {
-        void** get_locals(); //contains parameters, grows downward (arg0: -0; arg1: -8...)
+        void** get_locals();
         Method* get_method();
     };
 };

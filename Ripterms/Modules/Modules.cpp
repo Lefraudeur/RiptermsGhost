@@ -54,7 +54,6 @@ static void addToSendQueue_callback(HotSpot::frame* frame, HotSpot::Thread* thre
 	NetHandlerPlayClient sendQueue(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
 	Packet packet(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env);
 
-	Ripterms::JNIFrame jni_frame(env, 10);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
 		for (Ripterms::Modules::IModule* module : category.second)
@@ -90,7 +89,6 @@ static void attackTargetEntityWithCurrentItem_callback(HotSpot::frame* frame, Ho
 	EntityPlayer this_player(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
 	Entity entity(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env);
 
-	Ripterms::JNIFrame jni_frame(env, 10);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
 		for (Ripterms::Modules::IModule* module : category.second)
@@ -109,7 +107,6 @@ static void onUpdateWalkingPlayer_callback(HotSpot::frame* frame, HotSpot::Threa
 
 	EntityPlayerSP this_player(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
 
-	Ripterms::JNIFrame jni_frame(env, 10);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
 		for (Ripterms::Modules::IModule* module : category.second)
@@ -123,12 +120,10 @@ static void onUpdateWalkingPlayer_callback(HotSpot::frame* frame, HotSpot::Threa
 
 static void shouldSideBeRendered_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-	return; //fix
 	if (!Ripterms::p_env) return;
 	JNIEnv* env = thread->get_env();
-	Block block(env);
+	Block block(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
 
-	Ripterms::JNIFrame jni_frame(env, 1);
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
 		for (Ripterms::Modules::IModule* module : category.second)
@@ -177,8 +172,8 @@ void Ripterms::Modules::setupEventHooks()
 	jmethodID onUpdateWalkingPlayer = EntityPlayerSP.getMethodID("onUpdateWalkingPlayer");
 	Ripterms::JavaHook::hook(onUpdateWalkingPlayer, onUpdateWalkingPlayer_callback);
 
-	if (false && (Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10
-		|| Ripterms::version.type == Ripterms::Version::MAJOR_1_8_9))
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10 ||
+		Ripterms::version.type == Ripterms::Version::MAJOR_1_8_9)
 	{
 		Ripterms::JavaClassV2 Block("net/minecraft/block/Block");
 		jmethodID shouldSideBeRendered = Block.getMethodID("shouldSideBeRendered");

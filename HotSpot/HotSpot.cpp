@@ -463,7 +463,7 @@ uint32_t HotSpot::Thread::get_suspend_flags()
 void** HotSpot::frame::get_locals()
 {
     if (!this) return nullptr;
-    return *(void***)((uint8_t*)this - 56);
+    return *(void***)((uint8_t*)this - 56); //48 on java8
 }
 
 HotSpot::Method* HotSpot::frame::get_method()

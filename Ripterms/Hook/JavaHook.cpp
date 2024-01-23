@@ -23,11 +23,11 @@ static std::vector<HookedMethod> hooked_methods{};
 
 void Ripterms::JavaHook::clean()
 {
-    for (i2iHookData hk : hooked_i2i_entries)
+    for (i2iHookData& hk : hooked_i2i_entries)
     {
         delete hk.hook;
     }
-    for (HookedMethod hm : hooked_methods)
+    for (HookedMethod& hm : hooked_methods)
     {
         int* flags = (int*)hm.method->get_access_flags();
         *flags &= ~(HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE);
@@ -125,14 +125,19 @@ void* find_correct_hook_place(void* _i2i_entry)
 
 void common_detour(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-    HotSpot::JavaThreadState state = thread->get_thread_state();
-    thread->set_thread_state(HotSpot::_thread_in_native);
     for (HookedMethod& hk : hooked_methods)
     {
         if (hk.method == frame->get_method())
+        {
+            HotSpot::JavaThreadState state = thread->get_thread_state();
+            thread->set_thread_state(HotSpot::_thread_in_native);
+            Ripterms::JNIFrame jni_frame(thread->get_env(), 30);
             hk.detour(frame, thread, cancel);
+            jni_frame.pop();
+            thread->set_thread_state(state);
+            break;
+        }
     }
-    thread->set_thread_state(state);
 }
 
 Ripterms::JavaHook::Midi2iHook::Midi2iHook(uint8_t* target, i2i_detour_t detour) :
@@ -169,9 +174,9 @@ e:  48 89 e9                mov    rcx,rbp
 3c: 58                      pop    rax
 3d: 0f 84 00 00 00 00       je     0x43
 43: 66 48 0f 6e c0          movq   xmm0,rax
-48: 4c 8b 6d c0             mov    r13,QWORD PTR [rbp-0x40]
-4c: 4c 8b 75 c8             mov    r14,QWORD PTR [rbp-0x38]
-50: 48 c7 45 f0 00 00 00    mov    QWORD PTR [rbp-0x10],0x0
+48: 4c 8b 6d c0             mov    r13,QWORD PTR [rbp-0x40] //kinda useless
+4c: 4c 8b 75 c8             mov    r14,QWORD PTR [rbp-0x38] //kinda useless
+50: 48 c7 45 f0 00 00 00    mov    QWORD PTR [rbp-0x10],0x0 //kinda useless
 57: 00
 58: 48 8b 5d f8             mov    rbx,QWORD PTR [rbp-0x8]
 5c: 48 89 ec                mov    rsp,rbp

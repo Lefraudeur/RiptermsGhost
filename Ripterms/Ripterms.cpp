@@ -273,7 +273,17 @@ Ripterms::JNIFrame::JNIFrame(JNIEnv* env, int ref_count) :
 
 Ripterms::JNIFrame::~JNIFrame()
 {
+	if (!is_success)
+		return;
+	pop();
+}
+
+void Ripterms::JNIFrame::pop()
+{
+	if (!is_success)
+		return;
 	env->PopLocalFrame(nullptr);
+	is_success = false; //prevent multiple pops
 }
 
 Ripterms::JNIFrame::operator bool()

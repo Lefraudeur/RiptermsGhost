@@ -10,9 +10,8 @@
 
 static void callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-	jclass cl = thread->get_env()->FindClass("java/lang/Object");
-	thread->get_env()->DeleteLocalRef(cl);
-	std::this_thread::sleep_for(std::chrono::milliseconds(2));
+	*cancel = true;
+	Ripterms::JavaHook::set_return_value<uint64_t>(cancel, 0);
 	return;
 }
 
@@ -42,8 +41,11 @@ void Ripterms::Modules::Test::renderGUI()
 		//jclass lol2 = Ripterms::JavaClassV2::findClass("pr");
 		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "bw", "()V");
 		
-		jclass lol2(Ripterms::JavaClassV2::findClass("biv"));
-		jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "a", "(Lpk;DDDFF)V");
+		//jclass lol2(Ripterms::JavaClassV2::findClass("biv"));
+		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "a", "(Lpk;DDDFF)V");
+		
+		jclass lol2(Ripterms::JavaClassV2::findClass("bjl"));
+		jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "a", "(Lpr;DDDFF)V");
 		HotSpot::Method* method = *(HotSpot::Method**)mid;
 
 		uint8_t* i2i = (uint8_t*)method->get_i2i_entry();

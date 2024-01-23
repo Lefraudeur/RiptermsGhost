@@ -56,6 +56,7 @@ namespace Ripterms
 		JNIFrame(JNIEnv* env = Ripterms::p_env, int ref_count = 10);
 		~JNIFrame();
 
+		void pop();
 		operator bool();
 	private:
 		JNIEnv* env;

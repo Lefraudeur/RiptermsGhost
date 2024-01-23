@@ -1,6 +1,7 @@
 #include "Modules.h"
 #include "../Cache/Cache.h"
 #include <ImGui/imgui.h>
+#include "../Hook/JavaHook.h"
 
 void Ripterms::Modules::Blink::run()
 {
@@ -28,6 +29,7 @@ void Ripterms::Modules::Blink::onAddToSendQueue(JNIEnv* env, NetHandlerPlayClien
 			sendPackets(sendQueue);
 		return;
 	}
+	Ripterms::JavaHook::set_return_value<uint64_t>(cancel, 0);
 	*cancel = true;
 	packets.push_back(Packet(packet, env, true));
 }
