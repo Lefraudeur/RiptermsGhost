@@ -172,8 +172,8 @@ void Ripterms::Modules::setupEventHooks()
 	jmethodID onUpdateWalkingPlayer = EntityPlayerSP.getMethodID("onUpdateWalkingPlayer");
 	Ripterms::JavaHook::hook(onUpdateWalkingPlayer, onUpdateWalkingPlayer_callback);
 
-	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10 ||
-		Ripterms::version.type == Ripterms::Version::MAJOR_1_8_9)
+	if (false && (Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10 ||
+		Ripterms::version.type == Ripterms::Version::MAJOR_1_8_9))
 	{
 		Ripterms::JavaClassV2 Block("net/minecraft/block/Block");
 		jmethodID shouldSideBeRendered = Block.getMethodID("shouldSideBeRendered");
