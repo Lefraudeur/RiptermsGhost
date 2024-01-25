@@ -6,6 +6,10 @@
 
 namespace HotSpot
 {
+
+    inline bool is_old = false;
+    bool init();
+
     typedef struct {
         const char* typeName;            // The type name containing the given field (example: "Klass")
         const char* fieldName;           // The field name within the type           (example: "_name")
@@ -224,6 +228,7 @@ namespace HotSpot
         uint32_t get_suspend_flags();
         JavaThreadState get_thread_state();
         void set_thread_state(JavaThreadState state);
+        static int get_thread_state_offset();
     };
 
     struct Klass
@@ -253,5 +258,11 @@ namespace HotSpot
     {
         void** get_locals();
         Method* get_method();
+    };
+
+    struct ThreadStateTransition
+    {
+        inline static void(*transition_from_native)(Thread* thread, JavaThreadState to) = nullptr;
+        inline static void(*transition)(Thread* thread, JavaThreadState from, JavaThreadState to) = nullptr;
     };
 };

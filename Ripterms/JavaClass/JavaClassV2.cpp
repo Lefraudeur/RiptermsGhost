@@ -28,6 +28,7 @@ Ripterms::JavaClassV2::JClassCache& Ripterms::JavaClassV2::get_JClass_cache(JNIE
 
 bool Ripterms::JavaClassV2::init()
 {
+	JClass_caches.reserve(50);
 	JNIFrame jni_frame(Ripterms::p_env, 100);
 	try
 	{
@@ -44,7 +45,7 @@ bool Ripterms::JavaClassV2::init()
 		return false;
 	for (auto& [className, classContent] : mappings.items())
 	{
-		jclass javaClass = findClass(classContent["obfuscated"]);
+		jclass javaClass = findClass(classContent["obfuscated"], Ripterms::p_env);
 		if (!javaClass) continue;
 		JavaClassData classData{};
 		for (auto& field : classContent["fields"])
@@ -100,9 +101,9 @@ void Ripterms::JavaClassV2::clean()
 	}
 }
 
-Ripterms::JavaClassV2::JavaClassV2(const std::string& class_path)
+Ripterms::JavaClassV2::JavaClassV2(const std::string& class_path) :
+	class_path(class_path)
 {
-	this->class_path = class_path;
 }
 
 Ripterms::JavaClassV2::JavaClassV2(const JavaClassV2& otherJavaClass) :
@@ -275,7 +276,7 @@ void Ripterms::JavaClassV2::reload()
 {
 	JNIFrame jni_frame(Ripterms::p_env, 1);
 	auto& classMapping = Ripterms::JavaClassV2::mappings[class_path];
-	jclass javaClass = findClass(classMapping["obfuscated"]);
+	jclass javaClass = findClass(classMapping["obfuscated"], Ripterms::p_env);
 	Ripterms::JavaClassV2::JavaClassData classData{};
 	for (auto& field : classMapping["fields"])
 	{

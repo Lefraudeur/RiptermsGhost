@@ -131,10 +131,11 @@ void common_detour(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
         {
             HotSpot::JavaThreadState state = thread->get_thread_state();
             thread->set_thread_state(HotSpot::_thread_in_native);
-            Ripterms::JNIFrame jni_frame(thread->get_env(), 30);
-            hk.detour(frame, thread, cancel);
-            jni_frame.pop();
-            thread->set_thread_state(state);
+            {
+                Ripterms::JNIFrame jni_frame(thread->get_env(), 30);
+                hk.detour(frame, thread, cancel);
+            }
+            HotSpot::ThreadStateTransition::transition_from_native(thread, state);
             break;
         }
     }
@@ -143,80 +144,80 @@ void common_detour(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 Ripterms::JavaHook::Midi2iHook::Midi2iHook(uint8_t* target, i2i_detour_t detour) :
     target(target)
 {
-    constexpr int hook_size = 8;
+    constexpr int HOOK_SIZE = 8;
+    constexpr int JMP_SIZE = 5;
+    constexpr int JE_OFFSET = 0x3d;
+    constexpr int JE_SIZE = 6;
+    constexpr int DETOUR_ADDRESS_OFFSET = 0x56;
     /*
-0:  50                      push   rax
-1:  51                      push   rcx
-2:  52                      push   rdx
-3:  41 50                   push   r8
-5:  41 51                   push   r9
-7:  41 52                   push   r10
-9:  41 53                   push   r11
-b:  55                      push   rbp
-c:  6a 00                   push   0x0
-e:  48 89 e9                mov    rcx,rbp
-11: 4c 89 fa                mov    rdx,r15
-14: 4c 8d 04 24             lea    r8,[rsp]
-18: 48 89 e5                mov    rbp,rsp
-1b: 48 83 e4 f0             and    rsp,0xfffffffffffffff0
-1f: 48 83 ec 20             sub    rsp,0x20
-23: ff 15 3d 00 00 00       call   QWORD PTR [rip+0x3d]        # 0x66
-29: 48 89 ec                mov    rsp,rbp
-2c: 58                      pop    rax
-2d: 48 83 f8 00             cmp    rax,0x0
-31: 5d                      pop    rbp
-32: 41 5b                   pop    r11
-34: 41 5a                   pop    r10
-36: 41 59                   pop    r9
-38: 41 58                   pop    r8
-3a: 5a                      pop    rdx
-3b: 59                      pop    rcx
-3c: 58                      pop    rax
-3d: 0f 84 00 00 00 00       je     0x43
-43: 66 48 0f 6e c0          movq   xmm0,rax
-48: 4c 8b 6d c0             mov    r13,QWORD PTR [rbp-0x40] //kinda useless
-4c: 4c 8b 75 c8             mov    r14,QWORD PTR [rbp-0x38] //kinda useless
-50: 48 c7 45 f0 00 00 00    mov    QWORD PTR [rbp-0x10],0x0 //kinda useless
-57: 00
-58: 48 8b 5d f8             mov    rbx,QWORD PTR [rbp-0x8]
-5c: 48 89 ec                mov    rsp,rbp
-5f: 5d                      pop    rbp
-60: 5e                      pop    rsi
-61: 48 89 dc                mov    rsp,rbx
-64: ff e6                   jmp    rsi
+push   rax
+push   rcx
+push   rdx
+push   r8
+push   r9
+push   r10
+push   r11
+push   rbp
+push   0x0
+mov    rcx,rbp
+mov    rdx,r15
+lea    r8,[rsp]
+mov    rbp,rsp
+and    rsp,0xfffffffffffffff0
+sub    rsp,0x20
+call   [rip+data]
+mov    rsp,rbp
+pop    rax
+cmp    rax,0x0
+pop    rbp
+pop    r11
+pop    r10
+pop    r9
+pop    r8
+pop    rdx
+pop    rcx
+pop    rax
+je     0x11111111
+movq   xmm0,rax
+mov    rbx,QWORD PTR [rbp-0x8]
+mov    rsp,rbp
+pop    rbp
+pop    rsi
+mov    rsp,rbx
+jmp    rsi
+data:
     */
     uint8_t assembly[] =
     { 
-        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 0x55, 0x6A, 0x00, 0x48, 0x89, 0xE9, 0x4C, 0x89, 0xFA, 0x4C, 
-        0x8D, 0x04, 0x24, 0x48, 0x89, 0xE5, 0x48, 0x83, 0xE4, 0xF0, 0x48, 0x83, 0xEC, 0x20, 0xFF, 0x15, 0x3D, 0x00, 0x00, 0x00, 0x48, 
-        0x89, 0xEC, 0x58, 0x48, 0x83, 0xF8, 0x00, 0x5D, 0x41, 0x5B, 0x41, 0x5A, 0x41, 0x59, 0x41, 0x58, 0x5A, 0x59, 0x58, 0x0F, 0x84, 
-        0x00, 0x00, 0x00, 0x00, 0x66, 0x48, 0x0F, 0x6E, 0xC0, 0x4C, 0x8B, 0x6D, 0xC0, 0x4C, 0x8B, 0x75, 0xC8, 0x48, 0xC7, 0x45, 0xF0, 
-        0x00, 0x00, 0x00, 0x00, 0x48, 0x8B, 0x5D, 0xF8, 0x48, 0x89, 0xEC, 0x5D, 0x5E, 0x48, 0x89, 0xDC, 0xFF, 0xE6,
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+        0x50, 0x51, 0x52, 0x41, 0x50, 0x41, 0x51, 0x41, 0x52, 0x41, 0x53, 0x55, 0x6A, 0x00, 0x48, 0x89, 0xE9, 0x4C, 0x89, 0xFA, 0x4C, 0x8D, 0x04, 
+        0x24, 0x48, 0x89, 0xE5, 0x48, 0x83, 0xE4, 0xF0, 0x48, 0x83, 0xEC, 0x20, 0xFF, 0x15, 0x2D, 0x00, 0x00, 0x00, 0x48, 0x89, 0xEC, 0x58, 0x48, 
+        0x83, 0xF8, 0x00, 0x5D, 0x41, 0x5B, 0x41, 0x5A, 0x41, 0x59, 0x41, 0x58, 0x5A, 0x59, 0x58, 0x0F, 0x84, 0x00, 0x00, 0x00, 0x00, 0x66, 0x48, 
+        0x0F, 0x6E, 0xC0, 0x48, 0x8B, 0x5D, 0xF8, 0x48, 0x89, 0xEC, 0x5D, 0x5E, 0x48, 0x89, 0xDC, 0xFF, 0xE6,
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 //detour address
     };
 
-    allocated_assembly = Module::allocate_nearby_memory(target, hook_size + sizeof(assembly), PAGE_EXECUTE_READWRITE);
+    allocated_assembly = Module::allocate_nearby_memory(target, HOOK_SIZE + sizeof(assembly), PAGE_EXECUTE_READWRITE);
     if (!allocated_assembly)
     {
         std::cerr << "Failed to allocate memory for i2i hook\n";
         return;
     }
-    int32_t jmp_back_delta = (int32_t)(target + hook_size - (allocated_assembly + hook_size + 0x43));
-    *(int32_t*)(assembly + 0x3F) = jmp_back_delta;
+    int32_t jmp_back_delta = (int32_t)(target + HOOK_SIZE - (allocated_assembly + HOOK_SIZE + JE_OFFSET + JE_SIZE));
+    *(int32_t*)(assembly + JE_OFFSET + 2) = jmp_back_delta;
 
-    *(i2i_detour_t*)(assembly + 0x66) = detour;
+    *(i2i_detour_t*)(assembly + DETOUR_ADDRESS_OFFSET) = detour;
 
-    memcpy(allocated_assembly, target, hook_size);
-    memcpy(allocated_assembly + hook_size, assembly, sizeof(assembly));
+    memcpy(allocated_assembly, target, HOOK_SIZE);
+    memcpy(allocated_assembly + HOOK_SIZE, assembly, sizeof(assembly));
     
     DWORD original_prot = 0;
-    VirtualProtect(allocated_assembly, hook_size + sizeof(assembly), PAGE_EXECUTE_READ, &original_prot);
+    VirtualProtect(allocated_assembly, HOOK_SIZE + sizeof(assembly), PAGE_EXECUTE_READ, &original_prot);
 
-    VirtualProtect(target, 5, PAGE_EXECUTE_READWRITE, &original_prot);
+    VirtualProtect(target, JMP_SIZE, PAGE_EXECUTE_READWRITE, &original_prot);
     target[0] = 0xE9U;
-    int32_t jmp_detour_delta = (int32_t)(allocated_assembly - (target + 5));
+    int32_t jmp_detour_delta = (int32_t)(allocated_assembly - (target + JMP_SIZE));
     *(int32_t*)(target + 1) = jmp_detour_delta;
-    VirtualProtect(target, 5, original_prot, &original_prot);
+    VirtualProtect(target, JMP_SIZE, original_prot, &original_prot);
 
     is_error = false;
 }

@@ -185,7 +185,7 @@ BOOL Ripterms::init(HMODULE dll)
 	default:
 		return FALSE;
 	}
-	if (!GUI::init()) return FALSE;
+	if (!GUI::init() ||!HotSpot::init()) return FALSE;
 	return TRUE;
 }
 

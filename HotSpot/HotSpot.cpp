@@ -1,13 +1,64 @@
 #include "HotSpot.hpp"
 #include <iostream>
 #include <JNI/jni.h>
+#include "../Ripterms/Modules/Modules.h"
 
 extern "C" JNIIMPORT HotSpot::VMStructEntry * gHotSpotVMStructs;
 extern "C" JNIIMPORT HotSpot::VMTypeEntry* gHotSpotVMTypes;
+extern "C" JNIIMPORT HotSpot::VMIntConstantEntry* gHotSpotVMIntConstants;
+extern "C" JNIIMPORT HotSpot::VMLongConstantEntry* gHotSpotVMLongConstants;
 
 static HotSpot::VMStructEntry* find_VMStructEntry(const char* typeName, const char* fieldName, bool isStatic);
 static HotSpot::VMStructEntry* find_VMStructEntry(const char* fieldName, bool isStatic);
 static HotSpot::VMTypeEntry* find_VMTypeEntry(const char* typeName);
+static HotSpot::VMIntConstantEntry* find_VMIntConstantEntry(const char* constant_name);
+static HotSpot::VMLongConstantEntry* find_VMLongConstantEntry(const char* constant_name);
+
+bool HotSpot::init()
+{
+    if (!gHotSpotVMStructs || !gHotSpotVMTypes || !gHotSpotVMIntConstants || !gHotSpotVMLongConstants)
+    {
+        std::cerr << "[-] Failed to find gHotSpotVMStructs\n";
+        return false;
+    }
+    constexpr uint8_t WILDCARD = 0x90U;
+
+    uint8_t pattern[] =
+    {
+        0x48, 0x89, 0x5C, 0x24, 0x08, 0x57, 0x48, 0x83, 0xEC, 0x20, 0x8B, 0xFA, 0xC7, 0x81,
+        WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x05, 0x00, 0x00, 0x00, 0x48, 0x8B, 0xD9
+    };
+    *(int32_t*)(pattern + 0xe) = HotSpot::Thread::get_thread_state_offset();
+    Ripterms::Module jvmdll("jvm.dll");
+    if (!jvmdll) return false;
+
+    ThreadStateTransition::transition_from_native = (void(*)(Thread*, JavaThreadState))jvmdll.pattern_scan_text_section(pattern, sizeof(pattern), WILDCARD);
+    if (!ThreadStateTransition::transition_from_native)
+    {
+        uint8_t pattern2[] =
+        {
+            0x48, 0x89, 0x5C, 0x24, 0x08, 0x57, 0x48, 0x83, 0xEC, 0x20, 0xC7, 0x81, WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x05, 0x00, 0x00, 0x00,
+            0x83, 0x3D, WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x01, 0x8B, 0xFA, 0x48, 0x8B, 0xD9
+        };
+        *(int32_t*)(pattern2 + 0xc) = HotSpot::Thread::get_thread_state_offset();
+        ThreadStateTransition::transition_from_native = (void(*)(Thread*, JavaThreadState))jvmdll.pattern_scan_text_section(pattern2, sizeof(pattern2), WILDCARD);
+        is_old = true;
+    }
+
+    if (is_old)
+    {
+        uint8_t pattern3[] =
+        {
+            0x48, 0x89, 0x5C, 0x24, 0x08, 0x57, 0x48, 0x83, 0xEC, 0x20, 0x8D, 0x42, 0x01, 0x41, 0x8B, 0xF8, 0x48, 0x8B, 0xD9,
+            0x89, 0x81, WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x83, 0x3D, WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x01, 0x75, 0x09,
+            0x80, 0x3D, WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x00, 0x74, 0x2B, 0x80, 0x3D, WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x00, 0x74, 0x07
+        };
+        *(int32_t*)(pattern3 + 0x15) = HotSpot::Thread::get_thread_state_offset();
+        ThreadStateTransition::transition = (void(*)(Thread*, JavaThreadState, JavaThreadState))jvmdll.pattern_scan_text_section(pattern3, sizeof(pattern3), WILDCARD);
+    }
+
+    return ThreadStateTransition::transition_from_native && ThreadStateTransition::transition;
+}
 
 static HotSpot::VMStructEntry* find_VMStructEntry(const char* typeName, const char* fieldName, bool isStatic)
 {
@@ -60,6 +111,38 @@ static HotSpot::VMTypeEntry* find_VMTypeEntry(const char* typeName)
     }
     std::cerr << "[-] Failed to find VMTypeEntry: \n"
         "type: " << typeName << "\n\n";
+    return nullptr;
+}
+
+HotSpot::VMIntConstantEntry* find_VMIntConstantEntry(const char* constant_name)
+{
+    if (!constant_name || !gHotSpotVMIntConstants) return nullptr;
+    for (HotSpot::VMIntConstantEntry* entry = gHotSpotVMIntConstants; entry->name != nullptr; ++entry)
+    {
+        if (std::strcmp(constant_name, entry->name)) continue;
+        std::clog << "[+] Found VMIntConstantEntry: \n"
+            "name: " << entry->name << "\n"
+            "value: " << entry->value << "\n\n";
+        return entry;
+    }
+    std::cerr << "[-] Failed to find VMTypeEntry: \n"
+        "name: " << constant_name << "\n\n";
+    return nullptr;
+}
+
+HotSpot::VMLongConstantEntry* find_VMLongConstantEntry(const char* constant_name)
+{
+    if (!constant_name || !gHotSpotVMLongConstants) return nullptr;
+    for (HotSpot::VMLongConstantEntry* entry = gHotSpotVMLongConstants; entry->name != nullptr; ++entry)
+    {
+        if (std::strcmp(constant_name, entry->name)) continue;
+        std::clog << "[+] Found VMIntConstantEntry: \n"
+            "name: " << entry->name << "\n"
+            "value: " << entry->value << "\n\n";
+        return entry;
+    }
+    std::cerr << "[-] Failed to find VMTypeEntry: \n"
+        "name: " << constant_name << "\n\n";
     return nullptr;
 }
 
@@ -463,12 +546,14 @@ uint32_t HotSpot::Thread::get_suspend_flags()
 void** HotSpot::frame::get_locals()
 {
     if (!this) return nullptr;
-    return *(void***)((uint8_t*)this - 56); //48 on java8
+
+    return *(void***)((uint8_t*)this - (is_old ? 48 : 56)); //48 on java8, 56 on java17
 }
 
 HotSpot::Method* HotSpot::frame::get_method()
 {
     if (!this) return nullptr;
+
     return *(Method**)((uint8_t*)this - 24);
 }
 
@@ -481,19 +566,24 @@ unsigned short* HotSpot::Method::get_flags()
     return (unsigned short*)((uint8_t*)this + vm_entry->offset);
 }
 
+int HotSpot::Thread::get_thread_state_offset()
+{
+    static VMStructEntry* vm_entry = find_VMStructEntry("JavaThread", "_thread_state", false);
+    if (!vm_entry)
+        return 0;
+    return vm_entry->offset;
+}
+
 HotSpot::JavaThreadState HotSpot::Thread::get_thread_state()
 {
     if (!this) return _thread_uninitialized;
-    static VMStructEntry* vm_entry = find_VMStructEntry("JavaThread", "_thread_state", false);
-    if (!vm_entry) return _thread_uninitialized;
-    return *(JavaThreadState*)((uint8_t*)this + vm_entry->offset);
+
+    return *(JavaThreadState*)((uint8_t*)this + get_thread_state_offset());
 }
 
 void HotSpot::Thread::set_thread_state(JavaThreadState state)
 {
     if (!this) return;
-    static VMStructEntry* vm_entry = find_VMStructEntry("JavaThread", "_thread_state", false);
-    if (!vm_entry) return;
 
-    *(JavaThreadState*)((uint8_t*)this + vm_entry->offset) = state;
+    *(JavaThreadState*)((uint8_t*)this + get_thread_state_offset()) = state;
 }
