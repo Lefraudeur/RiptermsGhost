@@ -30,7 +30,7 @@ void Ripterms::JavaHook::clean()
     for (HookedMethod& hm : hooked_methods)
     {
         int* flags = (int*)hm.method->get_access_flags();
-        *flags &= ~(HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE);
+        *flags &= ~(HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE | HotSpot::JVM_ACC_QUEUED);
     }
 }
 
@@ -52,7 +52,7 @@ bool Ripterms::JavaHook::hook(jmethodID methodID, i2i_detour_t detour)
             return true;
     }
     int* flags = (int*)method->get_access_flags();
-    *flags |= (HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE);
+    *flags |= (HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE | HotSpot::JVM_ACC_QUEUED);
 
     jclass owner = nullptr;
     Ripterms::p_tienv->GetMethodDeclaringClass(methodID, &owner);
@@ -61,7 +61,7 @@ bool Ripterms::JavaHook::hook(jmethodID methodID, i2i_detour_t detour)
 
     method = *(HotSpot::Method**)methodID;
     flags = (int*)method->get_access_flags();
-    *flags |= (HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE);
+    *flags |= (HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE | HotSpot::JVM_ACC_QUEUED);
 
 
     hooked_methods.push_back({ method, detour });
@@ -130,7 +130,10 @@ void common_detour(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
         if (hk.method == frame->get_method())
         {
             HotSpot::JavaThreadState state = thread->get_thread_state();
-            thread->set_thread_state(HotSpot::_thread_in_native);
+            if (state == HotSpot::_thread_in_Java)
+                thread->set_thread_state(HotSpot::_thread_in_native);
+            else
+                HotSpot::ThreadStateTransition::transition(thread, state, HotSpot::_thread_in_native);
             {
                 Ripterms::JNIFrame jni_frame(thread->get_env(), 30);
                 hk.detour(frame, thread, cancel);
