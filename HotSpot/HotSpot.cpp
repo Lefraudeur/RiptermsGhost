@@ -45,19 +45,7 @@ bool HotSpot::init()
         is_old = true;
     }
 
-    if (is_old)
-    {
-        uint8_t pattern3[] =
-        {
-            0x48, 0x89, 0x5C, 0x24, 0x08, 0x57, 0x48, 0x83, 0xEC, 0x20, 0x8D, 0x42, 0x01, 0x41, 0x8B, 0xF8, 0x48, 0x8B, 0xD9,
-            0x89, 0x81, WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x83, 0x3D, WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x01, 0x75, 0x09,
-            0x80, 0x3D, WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x00, 0x74, 0x2B, 0x80, 0x3D, WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x00, 0x74, 0x07
-        };
-        *(int32_t*)(pattern3 + 0x15) = HotSpot::Thread::get_thread_state_offset();
-        ThreadStateTransition::transition = (void(*)(Thread*, JavaThreadState, JavaThreadState))jvmdll.pattern_scan_text_section(pattern3, sizeof(pattern3), WILDCARD);
-    }
-
-    return ThreadStateTransition::transition_from_native && ThreadStateTransition::transition;
+    return ThreadStateTransition::transition_from_native;
 }
 
 static HotSpot::VMStructEntry* find_VMStructEntry(const char* typeName, const char* fieldName, bool isStatic)

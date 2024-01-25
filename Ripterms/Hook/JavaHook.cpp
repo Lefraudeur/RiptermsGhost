@@ -7,6 +7,7 @@
 
 static void* find_correct_hook_place(void* _i2i_entry);
 static void common_detour(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel);
+static constexpr int NO_COMPILE = HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE | HotSpot::JVM_ACC_QUEUED;
 
 struct i2iHookData
 {
@@ -30,7 +31,7 @@ void Ripterms::JavaHook::clean()
     for (HookedMethod& hm : hooked_methods)
     {
         int* flags = (int*)hm.method->get_access_flags();
-        *flags &= ~(HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE | HotSpot::JVM_ACC_QUEUED);
+        *flags &= ~(NO_COMPILE);
     }
 }
 
@@ -52,7 +53,7 @@ bool Ripterms::JavaHook::hook(jmethodID methodID, i2i_detour_t detour)
             return true;
     }
     int* flags = (int*)method->get_access_flags();
-    *flags |= (HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE | HotSpot::JVM_ACC_QUEUED);
+    *flags |= (NO_COMPILE);
 
     jclass owner = nullptr;
     Ripterms::p_tienv->GetMethodDeclaringClass(methodID, &owner);
@@ -61,7 +62,7 @@ bool Ripterms::JavaHook::hook(jmethodID methodID, i2i_detour_t detour)
 
     method = *(HotSpot::Method**)methodID;
     flags = (int*)method->get_access_flags();
-    *flags |= (HotSpot::JVM_ACC_NOT_C2_COMPILABLE | HotSpot::JVM_ACC_NOT_C1_COMPILABLE | HotSpot::JVM_ACC_NOT_C2_OSR_COMPILABLE | HotSpot::JVM_ACC_QUEUED);
+    *flags |= (NO_COMPILE);
 
 
     hooked_methods.push_back({ method, detour });
@@ -132,8 +133,7 @@ void common_detour(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
             HotSpot::JavaThreadState state = thread->get_thread_state();
             if (state == HotSpot::_thread_in_Java)
                 thread->set_thread_state(HotSpot::_thread_in_native);
-            else
-                HotSpot::ThreadStateTransition::transition(thread, state, HotSpot::_thread_in_native);
+            else return;
             {
                 Ripterms::JNIFrame jni_frame(thread->get_env(), 30);
                 hk.detour(frame, thread, cancel);

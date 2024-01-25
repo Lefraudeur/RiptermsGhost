@@ -263,6 +263,5 @@ namespace HotSpot
     struct ThreadStateTransition
     {
         inline static void(*transition_from_native)(Thread* thread, JavaThreadState to) = nullptr;
-        inline static void(*transition)(Thread* thread, JavaThreadState from, JavaThreadState to) = nullptr;
     };
 };
