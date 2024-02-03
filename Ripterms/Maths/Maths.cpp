@@ -57,7 +57,7 @@ bool Ripterms::Maths::worldToScreen(Vector3d world_pos, Matrix modelView, Matrix
 	if (std::abs(ndc.x) <= 1.0f && std::abs(ndc.y) <= 1.0f && ndc.z <= 1.0f)
 	{
 		screen_pos.x = ((ndc.x + 1.0f) / 2.0f) * screenWidth;
-		screen_pos.y = ((1.0f - ndc.y) / 2.0f) * screenHeight;
+		screen_pos.y = ((-ndc.y + 1.0f) / 2.0f) * screenHeight; //-1 is bottom of screen, whereas 0px is top of window
 		return true;
 	}
 	return false;

@@ -56,6 +56,8 @@ namespace Ripterms
 			void destroy_data();
 		};
 
-		 bool worldToScreen(Vector3d world_pos, Matrix modelView, Matrix projection, int screenWidth, int screenHeight, Vector2d& screen_pos); //return true if on screen
+		//relative to camera pos
+		//returns true if visible
+		bool worldToScreen(Vector3d world_pos, Matrix modelView, Matrix projection, int screenWidth, int screenHeight, Vector2d& screen_pos);
 	}
 }

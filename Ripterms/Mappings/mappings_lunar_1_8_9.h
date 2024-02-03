@@ -709,12 +709,6 @@ R"(
 				"obfuscated": "PROJECTION",
 				"signature": "Ljava/nio/FloatBuffer;",
 				"static": true
-			},
-			{
-				"name": "position",
-				"obfuscated": "position",
-				"signature": "Lnet/minecraft/util/Vec3;",
-				"static": true
 			}
 		],
 		"methods": []

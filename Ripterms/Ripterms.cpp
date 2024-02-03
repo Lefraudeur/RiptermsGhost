@@ -12,8 +12,8 @@
 #include "Mappings/mappings_lunar_1_16_5.h"
 #include "Mappings/mappings_vanilla_1_8_9.h"
 #include "Mappings/mappings_forge_1_7_10.h"
-#include <mutex>
 #include "Hook/JavaHook.h"
+#include "../net/minecraft/client/renderer/ActiveRenderInfo/ActiveRenderInfo.h"
 
 extern Ripterms::Version Ripterms::versions[] =
 {
@@ -34,6 +34,9 @@ static void mainLoop()
 	if (!timer.isElapsed() || !Ripterms::cache->fillCache()) return;
 
 	Ripterms::JNIFrame jni_frame(Ripterms::p_env, 80);
+
+	ActiveRenderInfo::update_cache();
+
 	Ripterms::Modules::runAll();
 }
 

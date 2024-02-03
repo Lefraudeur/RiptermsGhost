@@ -34,12 +34,3 @@ Ripterms::Maths::Matrix ActiveRenderInfo::get_cached_PROJECTION()
 {
 	return PROJECTION;
 }
-
-Ripterms::Maths::Vector3d ActiveRenderInfo::get_position(JNIEnv* env)
-{
-	return Vec3
-	(
-		env->GetStaticObjectField(ActiveRenderInfoClass.get_jclass(env), ActiveRenderInfoClass.getFieldID("position")),
-		env
-	).getVector();
-}

@@ -11,7 +11,6 @@ public:
 	static void update_cache(JNIEnv* env = Ripterms::p_env);
 	static Ripterms::Maths::Matrix get_cached_MODELVIEW();
 	static Ripterms::Maths::Matrix get_cached_PROJECTION();
-	static Ripterms::Maths::Vector3d get_position(JNIEnv* env = Ripterms::p_env);
 protected:
 	inline static Ripterms::JavaClassV2 ActiveRenderInfoClass{ "net/minecraft/client/renderer/ActiveRenderInfo" };
 private:
