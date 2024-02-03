@@ -8,6 +8,7 @@
 #include "font.h"
 #include "../Hook/Hook.h"
 #include "GUI_conf.h"
+#include "../../net/minecraft/client/renderer/ActiveRenderInfo/ActiveRenderInfo.h"
 
 namespace
 {
@@ -131,6 +132,7 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
+	ActiveRenderInfo::update_cache();
 
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);

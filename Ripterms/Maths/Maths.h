@@ -40,6 +40,7 @@ namespace Ripterms
 			Matrix(std::initializer_list<std::initializer_list<float>> init);
 			~Matrix();
 
+			Matrix& operator=(const Matrix& other_matrix);
 			float* operator [](int index);
 			operator bool() const;
 			Matrix operator *(const Matrix& other_matrix) const;
@@ -48,13 +49,13 @@ namespace Ripterms
 			bool is_valid() const;
 			std::string to_string() const;
 		private:
-			const int line_number;
-			const int column_number;
+			int line_number;
+			int column_number;
 			float** data;
+
+			void destroy_data();
 		};
 
-		Vector2d worldToScreen(
-			const Vector3d& world_pos, Matrix& view_matrix,
-			Matrix& projection_matrix, Matrix& view_port);
+		 bool worldToScreen(Vector3d world_pos, Matrix modelView, Matrix projection, int screenWidth, int screenHeight, Vector2d& screen_pos); //return true if on screen
 	}
 }

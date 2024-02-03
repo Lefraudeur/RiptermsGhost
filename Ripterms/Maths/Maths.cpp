@@ -39,6 +39,30 @@ float Ripterms::Maths::cropAngle360(float angle)
 	return angle;
 }
 
+bool Ripterms::Maths::worldToScreen(Vector3d world_pos, Matrix modelView, Matrix projection, int screenWidth, int screenHeight, Vector2d& screen_pos)
+{
+	Matrix world_matrix =
+	{
+		{world_pos.x, world_pos.y, world_pos.z, 1.0f}
+	};
+
+	Matrix clip_space_pos = (world_matrix * modelView) * projection;
+	Vector3d ndc
+	(
+		clip_space_pos[0][0] / clip_space_pos[0][3],
+		clip_space_pos[0][1] / clip_space_pos[0][3],
+		clip_space_pos[0][2] / clip_space_pos[0][3]
+	);
+
+	if (std::abs(ndc.x) <= 1.0f && std::abs(ndc.y) <= 1.0f && ndc.z <= 1.0f)
+	{
+		screen_pos.x = ((ndc.x + 1.0f) / 2.0f) * screenWidth;
+		screen_pos.y = ((1.0f - ndc.y) / 2.0f) * screenHeight;
+		return true;
+	}
+	return false;
+}
+
 
 Ripterms::Maths::Vector3d::Vector3d()
 {
@@ -125,6 +149,27 @@ Ripterms::Maths::Matrix::Matrix(std::initializer_list<std::initializer_list<floa
 	}
 }
 
+Ripterms::Maths::Matrix& Ripterms::Maths::Matrix::operator=(const Matrix& other_matrix)
+{
+	if (other_matrix.line_number != this->line_number || other_matrix.column_number != this->column_number)
+	{
+		destroy_data();
+		this->line_number = other_matrix.line_number;
+		this->column_number = other_matrix.column_number;
+		data = new float* [line_number] {nullptr};
+		for (int i = 0; i < line_number; ++i)
+		{
+			data[i] = new float[column_number] {0.0f};
+		}
+	}
+
+	for (int i = 0; i < line_number; ++i)
+	{
+		memcpy(data[i], other_matrix.data[i], column_number * sizeof(float));
+	}
+	return *this;
+}
+
 float* Ripterms::Maths::Matrix::operator[](int index)
 {
 	if (is_valid() && index < line_number)
@@ -192,7 +237,7 @@ std::string Ripterms::Maths::Matrix::to_string() const
 	return result;
 }
 
-Ripterms::Maths::Matrix::~Matrix()
+void Ripterms::Maths::Matrix::destroy_data()
 {
 	if (data)
 	{
@@ -200,15 +245,11 @@ Ripterms::Maths::Matrix::~Matrix()
 		{
 			delete[] data[i];
 		}
-		delete data;
+		delete[] data;
 	}
 }
 
-Ripterms::Maths::Vector2d Ripterms::Maths::worldToScreen(
-	const Vector3d& world_pos, Matrix& view_matrix,
-	Matrix& projection_matrix, Matrix& view_port)
+Ripterms::Maths::Matrix::~Matrix()
 {
-	// not done
-	Vector2d ndc(0.0f, 0.0f);
-	return ndc;
+	destroy_data();
 }

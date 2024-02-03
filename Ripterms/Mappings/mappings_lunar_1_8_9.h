@@ -694,6 +694,30 @@ R"(
 		"obfuscated": "net/minecraft/block/BlockOre",
 		"fields": [],
 		"methods": []
+	},
+	"net/minecraft/client/renderer/ActiveRenderInfo": {
+		"obfuscated": "net/minecraft/client/renderer/ActiveRenderInfo",
+		"fields": [
+			{
+				"name": "MODELVIEW",
+				"obfuscated": "MODELVIEW",
+				"signature": "Ljava/nio/FloatBuffer;",
+				"static": true
+			},
+			{
+				"name": "PROJECTION",
+				"obfuscated": "PROJECTION",
+				"signature": "Ljava/nio/FloatBuffer;",
+				"static": true
+			},
+			{
+				"name": "position",
+				"obfuscated": "position",
+				"signature": "Lnet/minecraft/util/Vec3;",
+				"static": true
+			}
+		],
+		"methods": []
 	}
 }
 )";

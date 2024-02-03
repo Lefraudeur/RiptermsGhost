@@ -6,6 +6,7 @@
 #include <thread>
 #include "../../net/minecraft/client/Minecraft/Minecraft.h"
 #include "../Hook/JavaHook.h"
+#include "../Cache/Cache.h"
 
 
 static void callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
@@ -44,15 +45,28 @@ void Ripterms::Modules::Test::renderGUI()
 		//jclass lol2(Ripterms::JavaClassV2::findClass("biv"));
 		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "a", "(Lpk;DDDFF)V");
 		
-		jclass lol2(Ripterms::JavaClassV2::findClass("bjl"));
-		jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "a", "(Lpr;DDDFF)V");
-		HotSpot::Method* method = *(HotSpot::Method**)mid;
+		//jclass lol2(Ripterms::JavaClassV2::findClass("bjl"));
+		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "a", "(Lpr;DDDFF)V");
+		//HotSpot::Method* method = *(HotSpot::Method**)mid;
 
-		uint8_t* i2i = (uint8_t*)method->get_i2i_entry();
-		std::cout << (void*)i2i << '\n';
+		//* i2i = (uint8_t*)method->get_i2i_entry();
+		//std::cout << (void*)i2i << '\n';
 
-		Ripterms::JavaHook::hook(mid, callback);
+		//Ripterms::JavaHook::hook(mid, callback);
 
+		Ripterms::Maths::Matrix a =
+		{
+			{14.0f, 18.561f, 489.0f, 1.0f}
+		};
+		Ripterms::Maths::Matrix b =
+		{
+			{0.0f, 7584.0f, 145.0f, 4788.51f},
+			{587.0f, 0.0f, 486.321f, 14.0f},
+			{14.0f, 18.561f, 489.0f, 0.0f},
+			{4128.12f, 19.0f, 745.0f, 1.0f}
+		};
+
+		std::cout << (a * b).to_string() << '\n';
 
 		//00000000031210E0
 		//0000000003121341

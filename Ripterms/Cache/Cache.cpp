@@ -1,4 +1,5 @@
 #include "Cache.h"
+#include "../../net/minecraft/client/renderer/ActiveRenderInfo/ActiveRenderInfo.h"
 #include <iostream>
 
 bool Ripterms::Cache::fillCache()

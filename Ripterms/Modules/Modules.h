@@ -183,6 +183,7 @@ namespace Ripterms
 		{
 		public:
 			void renderGUI() override;
+			void render() override;
 			void onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel) override;
 		};
 
