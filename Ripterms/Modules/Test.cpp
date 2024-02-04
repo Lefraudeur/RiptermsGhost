@@ -7,6 +7,7 @@
 #include "../../net/minecraft/client/Minecraft/Minecraft.h"
 #include "../Hook/JavaHook.h"
 #include "../Cache/Cache.h"
+#include <gl/GL.h>
 
 
 static void callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
@@ -54,19 +55,6 @@ void Ripterms::Modules::Test::renderGUI()
 
 		//Ripterms::JavaHook::hook(mid, callback);
 
-		Ripterms::Maths::Matrix a =
-		{
-			{14.0f, 18.561f, 489.0f, 1.0f}
-		};
-		Ripterms::Maths::Matrix b =
-		{
-			{0.0f, 7584.0f, 145.0f, 4788.51f},
-			{587.0f, 0.0f, 486.321f, 14.0f},
-			{14.0f, 18.561f, 489.0f, 0.0f},
-			{4128.12f, 19.0f, 745.0f, 1.0f}
-		};
-
-		std::cout << (a * b).to_string() << '\n';
 
 		//00000000031210E0
 		//0000000003121341

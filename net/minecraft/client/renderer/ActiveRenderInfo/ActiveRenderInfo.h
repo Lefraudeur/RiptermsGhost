@@ -12,6 +12,14 @@ public:
 	static Ripterms::Maths::Matrix get_cached_MODELVIEW();
 	static Ripterms::Maths::Matrix get_cached_PROJECTION();
 	static Ripterms::Maths::Vector3d get_cached_cameraPos();
+	static void set_MODELVIEW(Ripterms::Maths::Matrix& modelview)
+	{
+		MODELVIEW = modelview;
+	}
+	static void set_PROJECTION(Ripterms::Maths::Matrix& projection)
+	{
+		PROJECTION = projection;
+	}
 protected:
 	inline static Ripterms::JavaClassV2 ActiveRenderInfoClass{ "net/minecraft/client/renderer/ActiveRenderInfo" };
 private:

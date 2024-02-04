@@ -173,6 +173,12 @@ R"(
 				"obfuscated": "screen",
 				"signature": "Lnet/minecraft/client/gui/screens/Screen;",
 				"static": false
+			},
+			{
+				"name": "renderViewEntity",
+				"obfuscated": "cameraEntity",
+				"signature": "Lnet/minecraft/world/entity/Entity;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -298,6 +304,18 @@ R"(
 				"name": "ridingEntity",
 				"obfuscated": "vehicle",
 				"signature": "Lnet/minecraft/world/entity/Entity;",
+				"static": false
+			},
+			{
+				"name": "prevRotationYaw",
+				"obfuscated": "yRotO",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "prevRotationPitch",
+				"obfuscated": "xRotO",
+				"signature": "F",
 				"static": false
 			}
 		],
