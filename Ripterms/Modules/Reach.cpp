@@ -19,7 +19,7 @@ void Ripterms::Modules::Reach::renderGUI()
 	if (display_options) {
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderFloat("Reach Distance", &reach_distance, 3.0f, 4.0f, "%.1f");
+		ImGui::SliderFloat("Reach Distance", &reach_distance, 3.0f, 4.0f, "%.2f");
 		ImGui::EndGroup();
 	}
 }
@@ -27,8 +27,11 @@ void Ripterms::Modules::Reach::renderGUI()
 void Ripterms::Modules::Reach::disable()
 {
 	if (!cp_reach_addr) return;
-	*cp_reach_addr = (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 ? 9.0 : 3.0);
-	_constMethod->set_constants(original_constant_pool);
+	if (Ripterms::p_env)
+	{ 
+		*cp_reach_addr = (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 ? 9.0 : 3.0);
+		_constMethod->set_constants(original_constant_pool);
+	}
 	VirtualFree(new_constant_pool, 0, MEM_RELEASE);
 }
 
@@ -76,8 +79,8 @@ void Ripterms::Modules::Reach::onGetMouseOver(JNIEnv* env, float partialTicks, b
 	}
 
 	if (!cp_reach_addr) return;
-	double d = (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 ? reach_distance * reach_distance : reach_distance);
+	float d = (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 ? reach_distance * reach_distance : reach_distance);
 	if (prev_reach_distance == d) return;
-	*cp_reach_addr = d;
+	*cp_reach_addr = (double)d;
 	prev_reach_distance = d;
 }

@@ -259,9 +259,4 @@ namespace HotSpot
         void** get_locals();
         Method* get_method();
     };
-
-    struct ThreadStateTransition
-    {
-        inline static void(*transition_from_native)(Thread* thread, JavaThreadState to) = nullptr;
-    };
 };

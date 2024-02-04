@@ -10,6 +10,8 @@
 #include "../../net/minecraft/client/network/NetHandlerPlayClient/NetHandlerPlayClient.h"
 #include "../../net/minecraft/world/World/World.h"
 #include "../../net/minecraft/client/entity/EntityPlayerSP/EntityPlayerSP.h"
+#include <thread>
+#include <mutex>
 
 namespace Ripterms
 {
@@ -128,7 +130,6 @@ namespace Ripterms
 			float motionY = 0.0f;
 			float motionZ = 0.0f;
 			int tickDelay = 1;
-			bool only_facing = false;
 		};
 
 		class FastPlace : public IModule
@@ -176,7 +177,7 @@ namespace Ripterms
 			void renderGUI() override;
 			void disable() override;
 		private:
-			float old_gamma = -1.0f;
+			double old_gamma = -1.0;
 		};
 
 		class Xray : public IModule
@@ -184,7 +185,26 @@ namespace Ripterms
 		public:
 			void renderGUI() override;
 			void render() override;
+			void disable() override;
 			void onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel) override;
+		private:
+			static void updateRenderData();
+			static void addRenderData(Ripterms::Maths::Vector3d blockPos);
+			static constexpr int RADIUS = 16;
+
+			struct RenderData
+			{
+				struct Quad
+				{
+					Ripterms::Maths::Vector3d p1, p2, p3, p4;
+				} quads[6];
+				
+			};
+			inline static std::vector<RenderData> renderDatas{};
+			inline static std::mutex renderData_mutex{};
+			inline static volatile bool thread_running = true;
+			inline static volatile bool update_blocks = false;
+			std::thread blockFinderThread{ updateRenderData };
 		};
 
 		class ESP : public IModule

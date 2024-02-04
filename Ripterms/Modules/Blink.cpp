@@ -18,6 +18,7 @@ void Ripterms::Modules::Blink::renderGUI()
 
 void Ripterms::Modules::Blink::disable()
 {
+	if (!Ripterms::p_env) return;
 	sendPackets(Ripterms::cache->sendQueue);
 }
 

@@ -138,7 +138,7 @@ void common_detour(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
                 Ripterms::JNIFrame jni_frame(thread->get_env(), 30);
                 hk.detour(frame, thread, cancel);
             }
-            HotSpot::ThreadStateTransition::transition_from_native(thread, state);
+            thread->set_thread_state(HotSpot::_thread_in_Java);
             break;
         }
     }

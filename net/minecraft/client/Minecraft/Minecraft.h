@@ -19,6 +19,7 @@ public:
 	GameSettings getGameSettings();
 	MovingObjectPosition getObjectMouseOver();
 	Entity getPointedEntity();
+	Entity getRenderViewEntity();
 	Timer getTimer();
 	GuiScreen getCurrentScreen();
 	int getRightClickDelayTimer();

@@ -41,6 +41,12 @@ Entity Minecraft::getPointedEntity()
 	return Entity(env->GetObjectField(instance, MinecraftClass.getFieldID("pointedEntity")), env);
 }
 
+Entity Minecraft::getRenderViewEntity()
+{
+	if (!instance) return Entity(nullptr, env);
+	return Entity(env->GetObjectField(instance, MinecraftClass.getFieldID("renderViewEntity")), env);
+}
+
 Timer Minecraft::getTimer()
 {
 	if(!instance) return Timer(env);

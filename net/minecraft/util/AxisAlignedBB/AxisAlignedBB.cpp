@@ -1,70 +1,70 @@
 #include "AxisAlignedBB.h"
 
-float AxisAlignedBB::getMinX() const
+double AxisAlignedBB::getMinX() const
 {
-	if (!instance) return 0.0f;
-	return (float)env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("minX"));
+	if (!instance) return 0.0;
+	return env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("minX"));
 }
 
-float AxisAlignedBB::getMinY() const
+double AxisAlignedBB::getMinY() const
 {
-	if (!instance) return 0.0f;
-	return (float)env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("minY"));
+	if (!instance) return 0.0;
+	return env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("minY"));
 }
 
-float AxisAlignedBB::getMinZ() const
+double AxisAlignedBB::getMinZ() const
 {
-	if (!instance) return 0.0f;
-	return (float)env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("minZ"));
+	if (!instance) return 0.0;
+	return env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("minZ"));
 }
 
-float AxisAlignedBB::getMaxX() const
+double AxisAlignedBB::getMaxX() const
 {
-	if (!instance) return 0.0f;
-	return (float)env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("maxX"));
+	if (!instance) return 0.0;
+	return env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("maxX"));
 }
 
-float AxisAlignedBB::getMaxY() const
+double AxisAlignedBB::getMaxY() const
 {
-	if (!instance) return 0.0f;
-	return (float)env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("maxY"));
+	if (!instance) return 0.0;
+	return env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("maxY"));
 }
 
-float AxisAlignedBB::getMaxZ() const
+double AxisAlignedBB::getMaxZ() const
 {
-	if (!instance) return 0.0f;
-	return (float)env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("maxZ"));
+	if (!instance) return 0.0;
+	return env->GetDoubleField(instance, AxisAlignedBBClass.getFieldID("maxZ"));
 }
 
 
-void AxisAlignedBB::setMinX(float  value)
+void AxisAlignedBB::setMinX(double  value)
 {
 	if (!instance) return;
 	env->SetDoubleField(instance, AxisAlignedBBClass.getFieldID("minX"), (jdouble)value);
 }
-void AxisAlignedBB::setMinY(float  value)
+void AxisAlignedBB::setMinY(double  value)
 {
 	if (!instance) return;
 	env->SetDoubleField(instance, AxisAlignedBBClass.getFieldID("minY"), (jdouble)value);
 }
-void AxisAlignedBB::setMinZ(float  value)
+void AxisAlignedBB::setMinZ(double  value)
 {
 	if (!instance) return;
 	env->SetDoubleField(instance, AxisAlignedBBClass.getFieldID("minZ"), (jdouble)value);
 }
 
 
-void AxisAlignedBB::setMaxX(float  value)
+void AxisAlignedBB::setMaxX(double  value)
 {
 	if (!instance) return;
 	env->SetDoubleField(instance, AxisAlignedBBClass.getFieldID("maxX"), (jdouble)value);
 }
-void AxisAlignedBB::setMaxY(float  value)
+void AxisAlignedBB::setMaxY(double  value)
 {
 	if (!instance) return;
 	env->SetDoubleField(instance, AxisAlignedBBClass.getFieldID("maxY"), (jdouble)value);
 }
-void AxisAlignedBB::setMaxZ(float  value)
+void AxisAlignedBB::setMaxZ(double  value)
 {
 	if (!instance) return;
 	env->SetDoubleField(instance, AxisAlignedBBClass.getFieldID("maxZ"), (jdouble)value);

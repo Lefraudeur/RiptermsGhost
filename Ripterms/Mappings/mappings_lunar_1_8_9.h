@@ -167,6 +167,12 @@ R"(
 				"obfuscated": "currentScreen",
 				"signature": "Lnet/minecraft/client/gui/GuiScreen;",
 				"static": false
+			},
+			{
+				"name": "renderViewEntity",
+				"obfuscated": "renderViewEntity",
+				"signature": "Lnet/minecraft/entity/Entity;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -316,6 +322,18 @@ R"(
 				"name": "ridingEntity",
 				"obfuscated": "ridingEntity",
 				"signature": "Lnet/minecraft/entity/Entity;",
+				"static": false
+			},
+			{
+				"name": "prevRotationYaw",
+				"obfuscated": "prevRotationYaw",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "prevRotationPitch",
+				"obfuscated": "prevRotationPitch",
+				"signature": "F",
 				"static": false
 			}
 		],

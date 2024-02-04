@@ -6,9 +6,9 @@ Ripterms::Maths::Vector3d C03PacketPlayer::getXYZ()
 		return Ripterms::Maths::Vector3d();
 	return Ripterms::Maths::Vector3d
 	(
-		(float)env->GetDoubleField(instance, C03PacketPlayerClass.getFieldID("x")),
-		(float)env->GetDoubleField(instance, C03PacketPlayerClass.getFieldID("y")),
-		(float)env->GetDoubleField(instance, C03PacketPlayerClass.getFieldID("z"))
+		env->GetDoubleField(instance, C03PacketPlayerClass.getFieldID("x")),
+		env->GetDoubleField(instance, C03PacketPlayerClass.getFieldID("y")),
+		env->GetDoubleField(instance, C03PacketPlayerClass.getFieldID("z"))
 	);
 }
 

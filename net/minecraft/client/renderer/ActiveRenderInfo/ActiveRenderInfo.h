@@ -11,9 +11,11 @@ public:
 	static void update_cache(JNIEnv* env = Ripterms::p_env);
 	static Ripterms::Maths::Matrix get_cached_MODELVIEW();
 	static Ripterms::Maths::Matrix get_cached_PROJECTION();
+	static Ripterms::Maths::Vector3d get_cached_cameraPos();
 protected:
 	inline static Ripterms::JavaClassV2 ActiveRenderInfoClass{ "net/minecraft/client/renderer/ActiveRenderInfo" };
 private:
 	inline static Ripterms::Maths::Matrix MODELVIEW = { {0} };
 	inline static Ripterms::Maths::Matrix PROJECTION = { {0} };
+	inline static Ripterms::Maths::Vector3d cameraPos = { 0.0, 0.0, 0.0 };
 };

@@ -6,19 +6,19 @@ class AxisAlignedBB : public Object
 public:
 	using Object::Object;
 
-	float getMinX() const;
-	float getMinY() const;
-	float getMinZ() const;
-	float getMaxX() const;
-	float getMaxY() const;
-	float getMaxZ() const;
+	double getMinX() const;
+	double getMinY() const;
+	double getMinZ() const;
+	double getMaxX() const;
+	double getMaxY() const;
+	double getMaxZ() const;
 
-	void setMinX(float value);
-	void setMinY(float value);
-	void setMinZ(float value);
-	void setMaxX(float value);
-	void setMaxY(float value);
-	void setMaxZ(float value);
+	void setMinX(double value);
+	void setMinY(double value);
+	void setMinZ(double value);
+	void setMaxX(double value);
+	void setMaxY(double value);
+	void setMaxZ(double value);
 
 protected:
 	inline static Ripterms::JavaClassV2 AxisAlignedBBClass{ "net/minecraft/util/AxisAlignedBB" };

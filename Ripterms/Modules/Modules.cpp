@@ -123,6 +123,7 @@ static void shouldSideBeRendered_callback(HotSpot::frame* frame, HotSpot::Thread
 	if (!Ripterms::p_env) return;
 	JNIEnv* env = thread->get_env();
 	Block block(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
+	jclass testClass = env->FindClass("java/lang/Object");
 
 	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
@@ -198,12 +199,11 @@ void Ripterms::Modules::runAll()
 
 void Ripterms::Modules::cleanAll()
 {
-	bool should_disable = Ripterms::p_env != nullptr;
 	for (const std::pair<std::string, std::vector<IModule*>>& category : categories)
 	{
 		for (IModule* m : category.second)
 		{
-			if (should_disable) m->disable();
+			m->disable();
 			delete m;
 		}
 	}

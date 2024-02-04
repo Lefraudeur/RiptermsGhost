@@ -6,11 +6,11 @@ class GameSettings : public Object {
 public:
 	using Object::Object;
 
-	float getGammaSetting();
+	double getGammaSetting();
 	KeyBinding getKeyBindSneak();
 	KeyBinding getKeyBindSprint();
 
-	void setGammaSetting(float value);
+	void setGammaSetting(double value);
 protected:
 	inline static Ripterms::JavaClassV2 GameSettingsClass{ "net/minecraft/client/settings/GameSettings" };
 };

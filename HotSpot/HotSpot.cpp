@@ -21,31 +21,9 @@ bool HotSpot::init()
         std::cerr << "[-] Failed to find gHotSpotVMStructs\n";
         return false;
     }
-    constexpr uint8_t WILDCARD = 0x90U;
+    //is_old = true;
 
-    uint8_t pattern[] =
-    {
-        0x48, 0x89, 0x5C, 0x24, 0x08, 0x57, 0x48, 0x83, 0xEC, 0x20, 0x8B, 0xFA, 0xC7, 0x81,
-        WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x05, 0x00, 0x00, 0x00, 0x48, 0x8B, 0xD9
-    };
-    *(int32_t*)(pattern + 0xe) = HotSpot::Thread::get_thread_state_offset();
-    Ripterms::Module jvmdll("jvm.dll");
-    if (!jvmdll) return false;
-
-    ThreadStateTransition::transition_from_native = (void(*)(Thread*, JavaThreadState))jvmdll.pattern_scan_text_section(pattern, sizeof(pattern), WILDCARD);
-    if (!ThreadStateTransition::transition_from_native)
-    {
-        uint8_t pattern2[] =
-        {
-            0x48, 0x89, 0x5C, 0x24, 0x08, 0x57, 0x48, 0x83, 0xEC, 0x20, 0xC7, 0x81, WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x05, 0x00, 0x00, 0x00,
-            0x83, 0x3D, WILDCARD, WILDCARD, WILDCARD, WILDCARD, 0x01, 0x8B, 0xFA, 0x48, 0x8B, 0xD9
-        };
-        *(int32_t*)(pattern2 + 0xc) = HotSpot::Thread::get_thread_state_offset();
-        ThreadStateTransition::transition_from_native = (void(*)(Thread*, JavaThreadState))jvmdll.pattern_scan_text_section(pattern2, sizeof(pattern2), WILDCARD);
-        is_old = true;
-    }
-
-    return ThreadStateTransition::transition_from_native;
+    return true;
 }
 
 static HotSpot::VMStructEntry* find_VMStructEntry(const char* typeName, const char* fieldName, bool isStatic)
@@ -54,7 +32,7 @@ static HotSpot::VMStructEntry* find_VMStructEntry(const char* typeName, const ch
     {
         if (typeName && std::strcmp(typeName, entry->typeName)) continue;
         if (fieldName && std::strcmp(fieldName, entry->fieldName)) continue;
-        if (isStatic != entry->isStatic) continue;
+        if (isStatic != (bool)entry->isStatic) continue;
         std::clog << "[+] Found VMStructEntry: \n"
             "type: " << typeName << "\n"
             "field: " << fieldName << "\n"
@@ -75,7 +53,7 @@ static HotSpot::VMStructEntry* find_VMStructEntry(const char* fieldName, bool is
     for (HotSpot::VMStructEntry* entry = gHotSpotVMStructs; entry->typeName != nullptr; ++entry)
     {
         if (fieldName && std::strcmp(fieldName, entry->fieldName)) continue;
-        if (isStatic != entry->isStatic) continue;
+        if (isStatic != (bool)entry->isStatic) continue;
         std::clog << "[+] Found VMStructEntry: \n"
             "type: " << entry->typeName << "\n"
             "field: " << fieldName << "\n"
@@ -92,9 +70,7 @@ static HotSpot::VMTypeEntry* find_VMTypeEntry(const char* typeName)
     {
         if (typeName && std::strcmp(typeName, entry->typeName)) continue;
         std::clog << "[+] Found VMTypeEntry: \n"
-            "type: " << typeName << "\n"
-            "super: " << entry->superclassName << "\n"
-            "size: " << entry->size << "\n\n";
+            "type: " << typeName << "\n";
         return entry;
     }
     std::cerr << "[-] Failed to find VMTypeEntry: \n"
@@ -124,12 +100,12 @@ HotSpot::VMLongConstantEntry* find_VMLongConstantEntry(const char* constant_name
     for (HotSpot::VMLongConstantEntry* entry = gHotSpotVMLongConstants; entry->name != nullptr; ++entry)
     {
         if (std::strcmp(constant_name, entry->name)) continue;
-        std::clog << "[+] Found VMIntConstantEntry: \n"
+        std::clog << "[+] Found VMLongConstantEntry: \n"
             "name: " << entry->name << "\n"
             "value: " << entry->value << "\n\n";
         return entry;
     }
-    std::cerr << "[-] Failed to find VMTypeEntry: \n"
+    std::cerr << "[-] Failed to find VMLongEntry: \n"
         "name: " << constant_name << "\n\n";
     return nullptr;
 }
@@ -559,7 +535,7 @@ int HotSpot::Thread::get_thread_state_offset()
     static VMStructEntry* vm_entry = find_VMStructEntry("JavaThread", "_thread_state", false);
     if (!vm_entry)
         return 0;
-    return vm_entry->offset;
+    return (int)vm_entry->offset;
 }
 
 HotSpot::JavaThreadState HotSpot::Thread::get_thread_state()

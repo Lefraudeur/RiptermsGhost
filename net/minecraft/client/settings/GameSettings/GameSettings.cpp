@@ -1,11 +1,11 @@
 #include "GameSettings.h"
 
-float GameSettings::getGammaSetting()
+double GameSettings::getGammaSetting()
 {
 	if(!instance)
-		return 0.0f;
+		return 0.0;
 	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
-		return (float)env->GetDoubleField(instance, GameSettingsClass.getFieldID("gammaSetting"));
+		return env->GetDoubleField(instance, GameSettingsClass.getFieldID("gammaSetting"));
 	return env->GetFloatField(instance, GameSettingsClass.getFieldID("gammaSetting"));
 }
 
@@ -23,7 +23,7 @@ KeyBinding GameSettings::getKeyBindSprint()
 	return KeyBinding(env->GetObjectField(instance, GameSettingsClass.getFieldID("keyBindSprint")), env);
 }
 
-void GameSettings::setGammaSetting(float value)
+void GameSettings::setGammaSetting(double value)
 {
 	if (!instance)
 		return;
@@ -32,5 +32,5 @@ void GameSettings::setGammaSetting(float value)
 		env->SetDoubleField(instance, GameSettingsClass.getFieldID("gammaSetting"), (jdouble)value);
 		return;
 	}
-	env->SetFloatField(instance, GameSettingsClass.getFieldID("gammaSetting"), value);
+	env->SetFloatField(instance, GameSettingsClass.getFieldID("gammaSetting"), (jfloat)value);
 }

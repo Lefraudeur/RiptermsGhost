@@ -4,9 +4,9 @@ Ripterms::Maths::Vector3d Vec3::getVector() const
 {
 	if (!instance) return Ripterms::Maths::Vector3d();
 	return Ripterms::Maths::Vector3d(
-		(float)env->GetDoubleField(instance, Vec3Class.getFieldID("xCoord")),
-		(float)env->GetDoubleField(instance, Vec3Class.getFieldID("yCoord")),
-		(float)env->GetDoubleField(instance, Vec3Class.getFieldID("zCoord"))
+		env->GetDoubleField(instance, Vec3Class.getFieldID("xCoord")),
+		env->GetDoubleField(instance, Vec3Class.getFieldID("yCoord")),
+		env->GetDoubleField(instance, Vec3Class.getFieldID("zCoord"))
 	);
 }
 

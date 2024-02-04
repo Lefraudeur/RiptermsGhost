@@ -160,6 +160,7 @@ BOOL Ripterms::init(HMODULE dll)
 			break;
 		}
 	}
+	if (!HotSpot::init()) return FALSE;
 	switch (version.type)
 	{
 	case Version::MAJOR_1_8_9:
@@ -188,7 +189,7 @@ BOOL Ripterms::init(HMODULE dll)
 	default:
 		return FALSE;
 	}
-	if (!GUI::init() ||!HotSpot::init()) return FALSE;
+	if (!GUI::init()) return FALSE;
 	return TRUE;
 }
 

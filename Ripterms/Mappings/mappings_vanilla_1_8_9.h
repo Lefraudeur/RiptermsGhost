@@ -167,6 +167,12 @@ R"(
 				"obfuscated": "m",
 				"signature": "Laxu;",
 				"static": false
+			},
+			{
+				"name": "renderViewEntity",
+				"obfuscated": "ad",
+				"signature": "Lpk;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -316,6 +322,18 @@ R"(
 				"name": "ridingEntity",
 				"obfuscated": "m",
 				"signature": "Lpk;",
+				"static": false
+			},
+			{
+				"name": "prevRotationYaw",
+				"obfuscated": "A",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "prevRotationPitch",
+				"obfuscated": "B",
+				"signature": "F",
 				"static": false
 			}
 		],
@@ -693,6 +711,24 @@ R"(
 	"net/minecraft/block/BlockOre": {
 		"obfuscated": "aim",
 		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/client/renderer/ActiveRenderInfo": {
+		"obfuscated": "auz",
+		"fields": [
+			{
+				"name": "MODELVIEW",
+				"obfuscated": "b",
+				"signature": "Ljava/nio/FloatBuffer;",
+				"static": true
+			},
+			{
+				"name": "PROJECTION",
+				"obfuscated": "c",
+				"signature": "Ljava/nio/FloatBuffer;",
+				"static": true
+			}
+		],
 		"methods": []
 	}
 }
