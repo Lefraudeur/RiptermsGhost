@@ -8,6 +8,9 @@
 #include "font.h"
 #include "../Hook/Hook.h"
 #include "GUI_conf.h"
+#include "gl/GL.h"
+#include "../Cache/Cache.h"
+#include "../../net/minecraft/client/renderer/ActiveRenderInfo/ActiveRenderInfo.h"
 
 namespace
 {
@@ -127,9 +130,13 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 	}
 
 	wglMakeCurrent(unnamedParam1, new_context);
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+
+	if (Ripterms::p_env && Ripterms::cache->is_valid)
+		ActiveRenderInfo::update_cache();
 
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
@@ -303,6 +310,7 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 	wglMakeCurrent(unnamedParam1, old_context);
 	return original_wglSwapBuffers(unnamedParam1);
 }

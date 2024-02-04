@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "../String/String.h"
 
 Object::Object(jobject instance, JNIEnv* env, bool is_global)
 {

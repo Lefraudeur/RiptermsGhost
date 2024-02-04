@@ -21,8 +21,6 @@ bool HotSpot::init()
         std::cerr << "[-] Failed to find gHotSpotVMStructs\n";
         return false;
     }
-    //is_old = true;
-
     return true;
 }
 
@@ -511,7 +509,7 @@ void** HotSpot::frame::get_locals()
 {
     if (!this) return nullptr;
 
-    return *(void***)((uint8_t*)this - (is_old ? 48 : 56)); //48 on java8, 56 on java17
+    return *(void***)((uint8_t*)this + locals_offset); //48 on java8, 56 on java17
 }
 
 HotSpot::Method* HotSpot::frame::get_method()

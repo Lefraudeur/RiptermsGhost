@@ -35,8 +35,6 @@ static void mainLoop()
 
 	Ripterms::JNIFrame jni_frame(Ripterms::p_env, 80);
 
-	ActiveRenderInfo::update_cache();
-
 	Ripterms::Modules::runAll();
 }
 

@@ -6,8 +6,6 @@
 
 namespace HotSpot
 {
-
-    inline bool is_old = false;
     bool init();
 
     typedef struct {
@@ -256,6 +254,7 @@ namespace HotSpot
 
     struct frame
     {
+        inline static int locals_offset = -56;
         void** get_locals();
         Method* get_method();
     };

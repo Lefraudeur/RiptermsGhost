@@ -12,6 +12,12 @@ namespace Mappings
 				"obfuscated": "equals",
 				"signature": "(Ljava/lang/Object;)Z",
 				"static": false
+			},
+			{
+				"name": "toString",
+				"obfuscated": "toString",
+				"signature": "()Ljava/lang/String;",
+				"static": false
 			}
 		]
 	},

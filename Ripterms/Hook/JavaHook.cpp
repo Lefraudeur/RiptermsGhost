@@ -84,6 +84,7 @@ bool Ripterms::JavaHook::hook(jmethodID methodID, i2i_detour_t detour)
         std::cerr << "Failed to find correct i2i hook location\n";
         return false;
     }
+    std::cout << "placed i2i hook at: " << (void*)target << '\n';
     Midi2iHook* hook = new Midi2iHook(target, common_detour);
     if (!hook)
         return false;
@@ -103,6 +104,11 @@ void* find_correct_hook_place(void* _i2i_entry)
         0x41, 0xC6, 0x87, 0x90, 0x90, 0x90, 0x90, 0x00
     };
 
+    uint8_t pattern2[] =
+    {
+        0x4C, 0x8B, 0x75, 0x90, 0xC3
+    };
+
     uint8_t* curr = (uint8_t*)_i2i_entry;
     while (curr < (uint8_t*)_i2i_entry + 0x350)
     {
@@ -115,7 +121,23 @@ void* find_correct_hook_place(void* _i2i_entry)
                 break;
         }
         if (matches == sizeof(pattern))
+        {
+            for (uint8_t* curr2 = curr; curr2 > curr - 100; --curr2)
+            {
+                int matches2 = 0;
+                for (int j = 0; j < sizeof(pattern2); ++j)
+                {
+                    if (pattern2[j] == 0x90 || pattern2[j] == curr2[j])
+                        matches2++;
+                    else
+                        break;
+                }
+                if (matches2 == sizeof(pattern2))
+                    HotSpot::frame::locals_offset = *(char*)(curr2 + 3);
+
+            }
             return curr + sizeof(pattern) - 8;
+        }
         curr += 1;
     }
 

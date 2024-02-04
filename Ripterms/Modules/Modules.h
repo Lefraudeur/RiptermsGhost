@@ -12,6 +12,7 @@
 #include "../../net/minecraft/client/entity/EntityPlayerSP/EntityPlayerSP.h"
 #include <thread>
 #include <mutex>
+#include <imgui.h>
 
 namespace Ripterms
 {
@@ -188,23 +189,34 @@ namespace Ripterms
 			void disable() override;
 			void onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel) override;
 		private:
-			static void updateRenderData();
-			static void addRenderData(Ripterms::Maths::Vector3d blockPos);
-			static constexpr int RADIUS = 16;
-
 			struct RenderData
 			{
+				RenderData(const Ripterms::Maths::Vector3d& blockPos, const std::string& blockName, Xray* xray);
 				struct Quad
 				{
 					Ripterms::Maths::Vector3d p1, p2, p3, p4;
 				} quads[6];
-				
+				ImColor color{ 209, 100, 245, 40 };
+				bool render = true;
 			};
-			inline static std::vector<RenderData> renderDatas{};
-			inline static std::mutex renderData_mutex{};
-			inline static volatile bool thread_running = true;
-			inline static volatile bool update_blocks = false;
-			std::thread blockFinderThread{ updateRenderData };
+
+			static void updateRenderData(Xray* xray);
+
+			int RADIUS = 20;
+			bool coal = false;
+			bool redstone = false;
+			bool diamond = true;
+			bool gold = true;
+			bool iron = true;
+			bool emerald = true;
+			bool lapis = true;
+			bool other = true;
+
+			std::vector<RenderData> renderDatas{};
+			std::mutex renderData_mutex{};
+			volatile bool thread_running = true;
+			volatile bool update_blocks = false;
+			std::thread blockFinderThread{ updateRenderData, this };
 		};
 
 		class ESP : public IModule
