@@ -19,7 +19,7 @@ void Ripterms::Modules::Xray::renderGUI()
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderInt("Radius", &RADIUS, 5, 30);
+		ImGui::SliderInt("Radius", &RADIUS, 5, 50);
 		ImGui::Checkbox("Coal", &coal);
 		ImGui::Checkbox("Redstone", &redstone);
 		ImGui::Checkbox("Diamond", &diamond);
@@ -125,7 +125,7 @@ void Ripterms::Modules::Xray::updateRenderData(Xray* xray)
 					{
 						Ripterms::Maths::Vector3d pos1(base_x + x, base_y + y, base_z + z);
 						Block block = theWorld.getBlock(pos1);
-						std::string name = block.toString().toStdString();
+						std::string name = block.getName();
 						if(name.find("ore") != std::string::npos)
 							data_cache.push_back(RenderData(pos1, name, xray));
 					}

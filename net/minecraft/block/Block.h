@@ -7,6 +7,7 @@ class Block : public Object
 public:
 	using Object::Object;
 	String toString();
+	std::string getName();
 protected:
 	inline static Ripterms::JavaClassV2 BlockClass{ "net/minecraft/block/Block" };
 };

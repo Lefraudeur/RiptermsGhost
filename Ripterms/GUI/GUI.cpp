@@ -135,7 +135,8 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_8_9 && Ripterms::p_env && Ripterms::cache->is_valid)
+	if ((Ripterms::version.type == Ripterms::Version::MAJOR_1_8_9 || Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10) 
+		&& Ripterms::p_env && Ripterms::cache->is_valid)
 		ActiveRenderInfo::update_cache();
 
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
