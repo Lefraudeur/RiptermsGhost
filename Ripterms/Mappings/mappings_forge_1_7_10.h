@@ -173,6 +173,12 @@ R"(
 				"obfuscated": "field_71462_r",
 				"signature": "Lnet/minecraft/client/gui/GuiScreen;",
 				"static": false
+			},
+			{
+				"name": "renderViewEntity",
+				"obfuscated": "field_71451_h",
+				"signature": "Lnet/minecraft/entity/EntityLivingBase;",
+				"static": false
 			}
 		],
 		"methods": [
@@ -335,6 +341,18 @@ R"(
 				"obfuscated": "field_70154_o",
 				"signature": "Lnet/minecraft/entity/Entity;",
 				"static": false
+			},
+			{
+				"name": "prevRotationYaw",
+				"obfuscated": "field_70126_B",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "prevRotationPitch",
+				"obfuscated": "field_70127_C",
+				"signature": "F",
+				"static": false
 			}
 		],
 		"methods": [
@@ -484,7 +502,14 @@ R"(
 	},
 	"net/minecraft/block/Block": {
 		"obfuscated": "net/minecraft/block/Block",
-		"fields": [],
+		"fields": [
+			{
+				"name": "unlocalizedName",
+				"obfuscated": "field_149770_b",
+				"signature": "Ljava/lang/String;",
+				"static": false
+			}
+		],
 		"methods": [
 			{
 				"name": "shouldSideBeRendered",
@@ -681,6 +706,24 @@ R"(
 	"net/minecraft/block/BlockOre": {
 		"obfuscated": "net/minecraft/block/BlockOre",
 		"fields": [],
+		"methods": []
+	},
+	"net/minecraft/client/renderer/ActiveRenderInfo": {
+		"obfuscated": "net/minecraft/client/renderer/ActiveRenderInfo",
+		"fields": [
+			{
+				"name": "MODELVIEW",
+				"obfuscated": "field_74594_j",
+				"signature": "Ljava/nio/FloatBuffer;",
+				"static": true
+			},
+			{
+				"name": "PROJECTION",
+				"obfuscated": "field_74595_k",
+				"signature": "Ljava/nio/FloatBuffer;",
+				"static": true
+			}
+		],
 		"methods": []
 	}
 }
