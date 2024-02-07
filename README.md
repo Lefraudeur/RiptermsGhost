@@ -1,4 +1,7 @@
 # RiptermsGhost
+
+### Archived until I have time to recode it
+
 An example injectable cheat for minecraft using java native interface, jvmti, java method hooking, and constant pool editing.
 
 This branch is really different from the previous Ripterms you might know. 
@@ -8,7 +11,6 @@ This branch is really different from the previous Ripterms you might know.
 This cheat is open source, mainly to show you a combination of all the techniques I found to make injectable cheats for minecraft java.
 
 Any question ? Contact me on discord: lefraudeur
-or on this nice discord server: https://discord.gg/FhzDdAZgCx
 
 #### Download: https://github.com/Lefraudeur/RiptermsGhost/actions
 
