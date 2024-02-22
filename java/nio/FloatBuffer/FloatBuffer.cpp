@@ -12,7 +12,6 @@ Ripterms::Maths::Matrix FloatBuffer::toMatrix(int lines, int columns)
 	Ripterms::Maths::Matrix result(lines, columns);
 	if (!instance)
 		return result;
-
 	int c = 0;
 	for (int i = 0; i < lines; ++i)
 	{

@@ -2,7 +2,7 @@
 
 Minecraft Minecraft::getTheMinecraft(JNIEnv* env)
 {
-	return Minecraft(env->GetStaticObjectField(MinecraftClass.getJClass(), MinecraftClass.getFieldID("theMinecraft")), env);
+	return Minecraft(env->GetStaticObjectField(MinecraftClass.get_jclass(env), MinecraftClass.getFieldID("theMinecraft")), env);
 }
 
 EntityPlayerSP Minecraft::getThePlayer()
@@ -39,6 +39,12 @@ Entity Minecraft::getPointedEntity()
 {
 	if (!instance) return Entity(nullptr, env);
 	return Entity(env->GetObjectField(instance, MinecraftClass.getFieldID("pointedEntity")), env);
+}
+
+Entity Minecraft::getRenderViewEntity()
+{
+	if (!instance) return Entity(nullptr, env);
+	return Entity(env->GetObjectField(instance, MinecraftClass.getFieldID("renderViewEntity")), env);
 }
 
 Timer Minecraft::getTimer()

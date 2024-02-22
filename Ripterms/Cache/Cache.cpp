@@ -1,17 +1,11 @@
 #include "Cache.h"
+#include "../../net/minecraft/client/renderer/ActiveRenderInfo/ActiveRenderInfo.h"
 #include <iostream>
-
-Ripterms::Cache::Cache()
-{
-}
-
-Ripterms::Cache::~Cache()
-{
-	prev_thePlayer.clear();
-}
 
 bool Ripterms::Cache::fillCache()
 {
+	Ripterms::JNIFrame jni_frame(Ripterms::p_env, 20);
+
 	theMinecraft = Minecraft::getTheMinecraft();
 	if (!theMinecraft.isValid())
 	{

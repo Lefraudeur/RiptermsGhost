@@ -1,14 +1,21 @@
 #include "C03PacketPlayer.h"
 
+C03PacketPlayer C03PacketPlayer::newObject(bool isOnGround, JNIEnv* env)
+{
+	if (!env)
+		return C03PacketPlayer(nullptr, env);
+	return C03PacketPlayer(env->NewObject(C03PacketPlayerClass.get_jclass(env), C03PacketPlayerClass.getMethodID("<init>"), (isOnGround ? JNI_TRUE : JNI_FALSE)), env);
+}
+
 Ripterms::Maths::Vector3d C03PacketPlayer::getXYZ()
 {
 	if (!instance)
 		return Ripterms::Maths::Vector3d();
 	return Ripterms::Maths::Vector3d
 	(
-		(float)env->GetDoubleField(instance, C03PacketPlayerClass.getFieldID("x")),
-		(float)env->GetDoubleField(instance, C03PacketPlayerClass.getFieldID("y")),
-		(float)env->GetDoubleField(instance, C03PacketPlayerClass.getFieldID("z"))
+		env->GetDoubleField(instance, C03PacketPlayerClass.getFieldID("x")),
+		env->GetDoubleField(instance, C03PacketPlayerClass.getFieldID("y")),
+		env->GetDoubleField(instance, C03PacketPlayerClass.getFieldID("z"))
 	);
 }
 

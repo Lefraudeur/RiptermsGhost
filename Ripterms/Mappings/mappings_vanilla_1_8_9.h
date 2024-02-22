@@ -12,6 +12,12 @@ namespace Mappings
 				"obfuscated": "equals",
 				"signature": "(Ljava/lang/Object;)Z",
 				"static": false
+			},
+			{
+				"name": "toString",
+				"obfuscated": "toString",
+				"signature": "()Ljava/lang/String;",
+				"static": false
 			}
 		]
 	},
@@ -103,6 +109,24 @@ namespace Mappings
 			}
 		]
 	},
+	"java/lang/Double": {
+		"obfuscated": "java/lang/Double",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(D)V",
+				"static": false
+			},
+			{
+				"name": "doubleValue",
+				"obfuscated": "doubleValue",
+				"signature": "()D",
+				"static": false
+			}
+		]
+	},
 )"
 R"(
 	"net/minecraft/client/Minecraft": {
@@ -166,6 +190,12 @@ R"(
 				"name": "currentScreen",
 				"obfuscated": "m",
 				"signature": "Laxu;",
+				"static": false
+			},
+			{
+				"name": "renderViewEntity",
+				"obfuscated": "ad",
+				"signature": "Lpk;",
 				"static": false
 			}
 		],
@@ -316,6 +346,18 @@ R"(
 				"name": "ridingEntity",
 				"obfuscated": "m",
 				"signature": "Lpk;",
+				"static": false
+			},
+			{
+				"name": "prevRotationYaw",
+				"obfuscated": "A",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "prevRotationPitch",
+				"obfuscated": "B",
+				"signature": "F",
 				"static": false
 			}
 		],
@@ -473,14 +515,7 @@ R"(
 	"net/minecraft/block/Block": {
 		"obfuscated": "afh",
 		"fields": [],
-		"methods": [
-			{
-				"name": "shouldSideBeRendered",
-				"obfuscated": "a",
-				"signature": "(Ladq;Lcj;Lcq;)Z",
-				"static": false
-			}
-		]
+		"methods": []
 	},
 	"net/minecraft/util/AxisAlignedBB": {
 		"obfuscated": "aug",
@@ -671,7 +706,14 @@ R"(
 				"static": false
 			}
 		],
-		"methods": []
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(Z)V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition": {
 		"obfuscated": "ip$a",
@@ -685,14 +727,39 @@ R"(
 			}
 		]
 	},
+	"net/minecraft/network/play/client/C03PacketPlayer$C06PacketPlayerPosLook": {
+		"obfuscated": "ip$b",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(DDDFFZ)V",
+				"static": false
+			}
+		]
+	},
 	"net/minecraft/client/gui/GuiScreen": {
 		"obfuscated": "axu",
 		"fields": [],
 		"methods": []
 	},
-	"net/minecraft/block/BlockOre": {
-		"obfuscated": "aim",
-		"fields": [],
+	"net/minecraft/client/renderer/ActiveRenderInfo": {
+		"obfuscated": "auz",
+		"fields": [
+			{
+				"name": "MODELVIEW",
+				"obfuscated": "b",
+				"signature": "Ljava/nio/FloatBuffer;",
+				"static": true
+			},
+			{
+				"name": "PROJECTION",
+				"obfuscated": "c",
+				"signature": "Ljava/nio/FloatBuffer;",
+				"static": true
+			}
+		],
 		"methods": []
 	}
 }

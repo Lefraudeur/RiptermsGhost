@@ -4,14 +4,14 @@
 Ripterms::Maths::Vector3d Entity::getPosition() const
 {
 	if (!instance) return Ripterms::Maths::Vector3d();
-	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 || Ripterms::version.type == Ripterms::Version::MAJOR_1_19_4)
 	{
 		return Vec3(env->GetObjectField(instance, EntityClass.getFieldID("positionVec")), env).getVector();
 	}
 	return Ripterms::Maths::Vector3d(
-		(float)env->GetDoubleField(instance, EntityClass.getFieldID("posX")),
-		(float)env->GetDoubleField(instance, EntityClass.getFieldID("posY")),
-		(float)env->GetDoubleField(instance, EntityClass.getFieldID("posZ"))
+		env->GetDoubleField(instance, EntityClass.getFieldID("posX")),
+		env->GetDoubleField(instance, EntityClass.getFieldID("posY")),
+		env->GetDoubleField(instance, EntityClass.getFieldID("posZ"))
 	);
 }
 
@@ -20,9 +20,9 @@ Ripterms::Maths::Vector3d Entity::getLastTickPosition() const
 	if (!instance) return Ripterms::Maths::Vector3d();
 	return Ripterms::Maths::Vector3d
 	(
-		(float)env->GetDoubleField(instance, EntityClass.getFieldID("lastTickPosX")),
-		(float)env->GetDoubleField(instance, EntityClass.getFieldID("lastTickPosY")),
-		(float)env->GetDoubleField(instance, EntityClass.getFieldID("lastTickPosZ"))
+		env->GetDoubleField(instance, EntityClass.getFieldID("lastTickPosX")),
+		env->GetDoubleField(instance, EntityClass.getFieldID("lastTickPosY")),
+		env->GetDoubleField(instance, EntityClass.getFieldID("lastTickPosZ"))
 	);
 }
 
@@ -30,6 +30,11 @@ Ripterms::Maths::Vector3d Entity::getMovementVector(float partialTicks) const
 {
 	if (!instance) return Ripterms::Maths::Vector3d();
 	return (getPosition() - getLastTickPosition()) * partialTicks;
+}
+
+Ripterms::Maths::Vector3d Entity::getRenderPos(float partialTicks) const
+{
+	return getLastTickPosition() + getMovementVector(partialTicks);
 }
 
 Ripterms::Maths::Vector2d Entity::getRotation() const
@@ -41,18 +46,32 @@ Ripterms::Maths::Vector2d Entity::getRotation() const
 	);
 }
 
+Ripterms::Maths::Vector2d Entity::getPrevRotation() const
+{
+	if (!instance) return Ripterms::Maths::Vector2d();
+	return Ripterms::Maths::Vector2d(
+		env->GetFloatField(instance, EntityClass.getFieldID("prevRotationYaw")),
+		env->GetFloatField(instance, EntityClass.getFieldID("prevRotationPitch"))
+	);
+}
+
+Ripterms::Maths::Vector2d Entity::getRenderRotation(float partialTicks) const
+{
+	return getPrevRotation() + ((getRotation() - getPrevRotation()) * partialTicks);
+}
+
 Ripterms::Maths::Vector3d Entity::getMotion() const
 {
 	if (!instance) return Ripterms::Maths::Vector3d();
-	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 || Ripterms::version.type == Ripterms::Version::MAJOR_1_19_4)
 	{
 		return Vec3(env->GetObjectField(instance, EntityClass.getFieldID("motion")), env).getVector();
 	}
 	return Ripterms::Maths::Vector3d
 	(
-		(float)env->GetDoubleField(instance, EntityClass.getFieldID("motionX")),
-		(float)env->GetDoubleField(instance, EntityClass.getFieldID("motionY")),
-		(float)env->GetDoubleField(instance, EntityClass.getFieldID("motionZ"))
+		env->GetDoubleField(instance, EntityClass.getFieldID("motionX")),
+		env->GetDoubleField(instance, EntityClass.getFieldID("motionY")),
+		env->GetDoubleField(instance, EntityClass.getFieldID("motionZ"))
 	);
 }
 
@@ -130,7 +149,7 @@ void Entity::setSprinting(bool state)
 void Entity::setMotion(const Ripterms::Maths::Vector3d& motion)
 {
 	if (!instance) return;
-	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 || Ripterms::version.type == Ripterms::Version::MAJOR_1_19_4)
 	{
 		Vec3 motion_obj(env->GetObjectField(instance, EntityClass.getFieldID("motion")), env);
 		motion_obj.setVector(motion);
@@ -144,8 +163,8 @@ void Entity::setMotion(const Ripterms::Maths::Vector3d& motion)
 void Entity::setRotation(const Ripterms::Maths::Vector2d& yawPitch)
 {
 	if (!instance) return;
-	env->SetFloatField(instance, EntityClass.getFieldID("rotationYaw"), yawPitch.x);
-	env->SetFloatField(instance, EntityClass.getFieldID("rotationPitch"), yawPitch.y);
+	env->SetFloatField(instance, EntityClass.getFieldID("rotationYaw"), (jfloat)yawPitch.x);
+	env->SetFloatField(instance, EntityClass.getFieldID("rotationPitch"), (jfloat)yawPitch.y);
 }
 
 void Entity::setPositionAndUpdate(const Ripterms::Maths::Vector3d& position)

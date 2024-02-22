@@ -11,7 +11,10 @@ public:
 	Ripterms::Maths::Vector3d getPosition() const;
 	Ripterms::Maths::Vector3d getLastTickPosition() const;
 	Ripterms::Maths::Vector3d getMovementVector(float partialTicks) const; //(currpos - lastpos) * partial ticks
+	Ripterms::Maths::Vector3d getRenderPos(float partialTicks) const;
 	Ripterms::Maths::Vector2d getRotation() const;
+	Ripterms::Maths::Vector2d getPrevRotation() const;
+	Ripterms::Maths::Vector2d getRenderRotation(float partialTicks) const;
 	Ripterms::Maths::Vector3d getMotion() const;
 	bool isOnGround() const;
 	bool isSprinting() const;

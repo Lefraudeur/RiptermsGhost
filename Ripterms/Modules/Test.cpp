@@ -5,14 +5,15 @@
 #include "../../net/minecraft/network/play/client/C03PacketPlayer/C03PacketPlayer.h"
 #include <thread>
 #include "../../net/minecraft/client/Minecraft/Minecraft.h"
+#include "../Hook/JavaHook.h"
+#include "../Cache/Cache.h"
+#include <gl/GL.h>
 
 
-static void callback(void* sp, bool* should_return, void* rbx, void* thread) //j_rarg0 is this object in non static methods
+static void callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-	static int call_count = 0;
-	call_count++;
-	std::cout << "number of calls: " << call_count << '\n';
-	*should_return = true;
+	*cancel = true;
+	Ripterms::JavaHook::set_return_value<uint64_t>(cancel, 0);
 	return;
 }
 
@@ -21,8 +22,8 @@ void Ripterms::Modules::Test::renderGUI()
 	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 	if (ImGui::Button("Run Test"))
 	{
-		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/gui/GuiScreen"));
-		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "mouseClicked", "(III)V");
+		//jclass lol2 = Ripterms::JavaClassV2::findClass("net/minecraft/client/gui/GuiScreen");
+		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "mouseClicked", "(III)V");
 
 		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/entity/EntityPlayerSP"));
 		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "swingItem", "()V");
@@ -39,22 +40,26 @@ void Ripterms::Modules::Test::renderGUI()
 		//Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/client/gui/GuiScreen"));
 		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "func_73864_a", "(III)V");
 
-		Ripterms::JavaClassV2::JClass lol2(Ripterms::JavaClassV2::findClass("net/minecraft/entity/player/EntityPlayer"));
-		jmethodID mid = Ripterms::p_env->GetMethodID(lol2.getInstance(), "func_70664_aZ", "()V");
+		//jclass lol2 = Ripterms::JavaClassV2::findClass("pr");
+		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "bw", "()V");
+		
+		//jclass lol2(Ripterms::JavaClassV2::findClass("biv"));
+		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "a", "(Lpk;DDDFF)V");
+		
+		//jclass lol2(Ripterms::JavaClassV2::findClass("bjl"));
+		//jmethodID mid = Ripterms::p_env->GetMethodID(lol2, "a", "(Lpr;DDDFF)V");
+		//HotSpot::Method* method = *(HotSpot::Method**)mid;
 
-		Ripterms::JavaHook::add_to_java_hook(mid, callback);
+		//* i2i = (uint8_t*)method->get_i2i_entry();
+		//std::cout << (void*)i2i << '\n';
 
-		Minecraft theMinecraft = Minecraft::getTheMinecraft(Ripterms::p_env);
-		EntityPlayerSP thePlayer = theMinecraft.getThePlayer();
-		std::cout << thePlayer.getRidingEntity().getPosition().x << std::endl;
-		float x = thePlayer.getPosition().x;
-		float y = thePlayer.getPosition().y;
-		float z = thePlayer.getPosition().y;
-		thePlayer.getRidingEntity().setPosition({ x + 5, y + 5, z + 5 });
-		thePlayer.setPosition({ x + 5, y + 5, z + 5 });
+		//Ripterms::JavaHook::hook(mid, callback);
 
 
-		return;
+		//00000000031210E0
+		//0000000003121341
+		//0x261
+
 		/*
 		std::thread a([mid] {
 			JNIEnv* env = Ripterms::get_current_thread_env();
@@ -69,5 +74,7 @@ void Ripterms::Modules::Test::renderGUI()
 		});
 		a.detach();
 		*/
+
+		Ripterms::cache->thePlayer.getSendQueue().addToSendQueue(C03PacketPlayer::newObject(true));
 	}
 }

@@ -27,13 +27,13 @@ void Ripterms::Modules::LegitScaffold::onUpdateWalkingPlayer(JNIEnv* env, Entity
 		AxisAlignedBB thePlayerbb = thePlayer.getBoundingBox();
 		Ripterms::Maths::Vector3d playerPosition
 		(
-			thePlayerbb.getMinX() + (thePlayerbb.getMaxX() - thePlayerbb.getMinX()) / 2.0f,
+			thePlayerbb.getMinX() + (thePlayerbb.getMaxX() - thePlayerbb.getMinX()) / 2.0,
 			thePlayerbb.getMinY(),
-			thePlayerbb.getMinZ() + (thePlayerbb.getMaxZ() - thePlayerbb.getMinZ()) / 2.0f
+			thePlayerbb.getMinZ() + (thePlayerbb.getMaxZ() - thePlayerbb.getMinZ()) / 2.0
 		);
-		playerPosition.y -= 0.1f;
+		playerPosition.y -= 0.1;
 		Block playerBlock = theWorld.getBlock(playerPosition);
-		if (playerBlock.instanceOf(JavaClassV2("net/minecraft/block/BlockAir").getJClass(env)))
+		if (playerBlock.instanceOf(JavaClassV2("net/minecraft/block/BlockAir").get_jclass(env)))
 		{
 			sneaked = true;
 			keyBindSneak.setPressed(true);

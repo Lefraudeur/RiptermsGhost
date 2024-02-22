@@ -1,6 +1,7 @@
 #include "Modules.h"
 #include "../Cache/Cache.h"
 #include <ImGui/imgui.h>
+#include "../Hook/JavaHook.h"
 
 void Ripterms::Modules::ClientBrandChanger::renderGUI()
 {
@@ -32,12 +33,12 @@ void Ripterms::Modules::ClientBrandChanger::onGetClientModName(JNIEnv* env, bool
 	if (!enabled)
 		return;
 	jobject new_name = env->NewStringUTF(name);
-	Ripterms::JavaHook::set_primitive_return_value<void*>(cancel, *(void**)new_name);
+	Ripterms::JavaHook::set_return_value<void*>(cancel, *(void**)new_name);
 	*cancel = true;
 }
 
 String Ripterms::Modules::ClientBrandChanger::getClientModName()
 {
 	Ripterms::JavaClassV2 ClientBrandRetrieverClass("net/minecraft/client/ClientBrandRetriever");
-	return Ripterms::p_env->CallStaticObjectMethod(ClientBrandRetrieverClass.getJClass(), ClientBrandRetrieverClass.getMethodID("getClientModName"));
+	return Ripterms::p_env->CallStaticObjectMethod(ClientBrandRetrieverClass.get_jclass(), ClientBrandRetrieverClass.getMethodID("getClientModName"));
 }

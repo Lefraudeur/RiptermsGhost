@@ -12,6 +12,12 @@ namespace Mappings
 				"obfuscated": "equals",
 				"signature": "(Ljava/lang/Object;)Z",
 				"static": false
+			},
+			{
+				"name": "toString",
+				"obfuscated": "toString",
+				"signature": "()Ljava/lang/String;",
+				"static": false
 			}
 		]
 	},
@@ -103,6 +109,24 @@ namespace Mappings
 			}
 		]
 	},
+	"java/lang/Double": {
+		"obfuscated": "java/lang/Double",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(D)V",
+				"static": false
+			},
+			{
+				"name": "doubleValue",
+				"obfuscated": "doubleValue",
+				"signature": "()D",
+				"static": false
+			}
+		]
+	},
 )"
 R"(
 	"net/minecraft/client/Minecraft": {
@@ -166,6 +190,12 @@ R"(
 				"name": "currentScreen",
 				"obfuscated": "field_71462_r",
 				"signature": "Lnet/minecraft/client/gui/GuiScreen;",
+				"static": false
+			},
+			{
+				"name": "renderViewEntity",
+				"obfuscated": "field_71451_h",
+				"signature": "Lnet/minecraft/entity/EntityLivingBase;",
 				"static": false
 			}
 		],
@@ -329,6 +359,18 @@ R"(
 				"obfuscated": "field_70154_o",
 				"signature": "Lnet/minecraft/entity/Entity;",
 				"static": false
+			},
+			{
+				"name": "prevRotationYaw",
+				"obfuscated": "field_70126_B",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "prevRotationPitch",
+				"obfuscated": "field_70127_C",
+				"signature": "F",
+				"static": false
 			}
 		],
 		"methods": [
@@ -478,14 +520,15 @@ R"(
 	},
 	"net/minecraft/block/Block": {
 		"obfuscated": "net/minecraft/block/Block",
-		"fields": [],
-		"methods": [
+		"fields": [
 			{
-				"name": "shouldSideBeRendered",
-				"obfuscated": "func_149646_a",
-				"signature": "(Lnet/minecraft/world/IBlockAccess;IIII)Z",
+				"name": "unlocalizedName",
+				"obfuscated": "field_149770_b",
+				"signature": "Ljava/lang/String;",
 				"static": false
 			}
+		],
+		"methods": [
 		]
 	},
 	"net/minecraft/util/AxisAlignedBB": {
@@ -653,7 +696,14 @@ R"(
 				"static": false
 			}
 		],
-		"methods": []
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(Z)V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition": {
 		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition",
@@ -667,14 +717,39 @@ R"(
 			}
 		]
 	},
+	"net/minecraft/network/play/client/C03PacketPlayer$C06PacketPlayerPosLook": {
+		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer$C06PacketPlayerPosLook",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(DDDDFFZ)V",
+				"static": false
+			}
+		]
+	},
 	"net/minecraft/client/gui/GuiScreen": {
 		"obfuscated": "net/minecraft/client/gui/GuiScreen",
 		"fields": [],
 		"methods": []
 	},
-	"net/minecraft/block/BlockOre": {
-		"obfuscated": "net/minecraft/block/BlockOre",
-		"fields": [],
+	"net/minecraft/client/renderer/ActiveRenderInfo": {
+		"obfuscated": "net/minecraft/client/renderer/ActiveRenderInfo",
+		"fields": [
+			{
+				"name": "MODELVIEW",
+				"obfuscated": "field_74594_j",
+				"signature": "Ljava/nio/FloatBuffer;",
+				"static": true
+			},
+			{
+				"name": "PROJECTION",
+				"obfuscated": "field_74595_k",
+				"signature": "Ljava/nio/FloatBuffer;",
+				"static": true
+			}
+		],
 		"methods": []
 	}
 }

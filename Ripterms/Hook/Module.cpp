@@ -1,4 +1,5 @@
-#include "Hook.h"
+#include "Module.h"
+#include <iostream>
 
 
 Ripterms::Module::Module(const char* module_name) :
@@ -6,9 +7,9 @@ Ripterms::Module::Module(const char* module_name) :
 {
 }
 
-Ripterms::Module::Module(HMODULE a_module)
+Ripterms::Module::Module(HMODULE a_module) :
+	module(a_module)
 {
-	this->module = a_module;
 	GetModuleInformation(GetCurrentProcess(), module, &moduleInfo, sizeof(MODULEINFO));
 }
 
@@ -29,7 +30,7 @@ uint8_t* Ripterms::Module::pattern_scan(uint8_t pattern[], int size, int access)
 			int matches = 0;
 			for (int i = 0; i < size; i++)
 			{
-				if (pattern[i] == 0x90 || pattern[i] == rg_ptr[i])
+				if (pattern[i] == rg_ptr[i])
 					matches++;
 				else
 					break;
@@ -75,6 +76,29 @@ std::vector<uint8_t*> Ripterms::Module::pattern_scan_all(uint8_t pattern[], int 
 	return results;
 }
 
+uint8_t* Ripterms::Module::pattern_scan_text_section(uint8_t* const pattern_start, const int pattern_size, const uint8_t wildcard) const
+{
+	if (!module) return nullptr;
+
+	for (PIMAGE_SECTION_HEADER section : get_section_headers())
+	{
+		if (!(section->Characteristics & (IMAGE_SCN_MEM_EXECUTE | IMAGE_SCN_CNT_CODE))) continue;
+		uint8_t* search_start = (uint8_t*)module + section->VirtualAddress;
+		uint8_t* search_end = search_start + section->SizeOfRawData;
+		for (uint8_t* curr = search_start; curr < search_end; ++curr)
+		{
+			for (int i = 0; i < pattern_size; ++i)
+			{
+				if (curr[i] != pattern_start[i] && pattern_start[i] != wildcard)
+					break;
+				if (i == pattern_size - 1)
+					return curr;
+			}
+		}
+	}
+	return nullptr;
+}
+
 void* Ripterms::Module::getProcAddress(const char* name)
 {
 	return GetProcAddress(module, name);
@@ -83,4 +107,44 @@ void* Ripterms::Module::getProcAddress(const char* name)
 Ripterms::Module::operator bool() const
 {
 	return module && moduleInfo.lpBaseOfDll;
+}
+
+uint8_t* Ripterms::Module::allocate_nearby_memory(uint8_t* nearby_addr, int size, int access)
+{
+	for (int i = 65536;
+		i < 0x7FFFFFFF;
+		i += 65536)
+	{
+		uint8_t* allocated = (uint8_t*)VirtualAlloc(nearby_addr + i, size, MEM_COMMIT | MEM_RESERVE, access);
+		if (allocated)
+			return allocated;
+		allocated = (uint8_t*)VirtualAlloc(nearby_addr - i, size, MEM_COMMIT | MEM_RESERVE, access);
+		if (allocated)
+			return allocated;
+	}
+	return nullptr;
+}
+
+PIMAGE_NT_HEADERS Ripterms::Module::get_nt_headers() const
+{
+	PIMAGE_DOS_HEADER dos_header = (PIMAGE_DOS_HEADER)module;
+	return (PIMAGE_NT_HEADERS)((uint8_t*)module + dos_header->e_lfanew);
+}
+
+std::vector<PIMAGE_SECTION_HEADER> Ripterms::Module::get_section_headers() const
+{
+	PIMAGE_NT_HEADERS nt_headers = get_nt_headers();
+	int number_of_sections = nt_headers->FileHeader.NumberOfSections;
+	std::vector<PIMAGE_SECTION_HEADER> section_headers{};
+	section_headers.reserve(number_of_sections);
+
+	PIMAGE_OPTIONAL_HEADER optional_header = &nt_headers->OptionalHeader;
+	PIMAGE_SECTION_HEADER section = (PIMAGE_SECTION_HEADER)((uint8_t*)optional_header + nt_headers->FileHeader.SizeOfOptionalHeader);
+
+	for (int i = 0; i < number_of_sections; ++i, ++section)
+	{
+		section_headers.push_back(section);
+	}
+
+	return section_headers;
 }

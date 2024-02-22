@@ -39,8 +39,8 @@ void Ripterms::Modules::HitBoxes::run()
 		AxisAlignedBB target_bb = target.getBoundingBox();
 		if
 		(
-			(target_bb.getMaxX() - target_bb.getMinX()) > 0.61f &&
-			(target_bb.getMaxY() - target_bb.getMinY()) > 1.81f
+			(target_bb.getMaxX() - target_bb.getMinX()) > 0.61 &&
+			(target_bb.getMaxY() - target_bb.getMinY()) > 1.81
 		)
 			continue;
 		target_bb.setMinX(target_bb.getMinX() - x_expand);

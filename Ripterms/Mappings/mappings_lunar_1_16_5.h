@@ -12,6 +12,12 @@ namespace Mappings
 				"obfuscated": "equals",
 				"signature": "(Ljava/lang/Object;)Z",
 				"static": false
+			},
+			{
+				"name": "toString",
+				"obfuscated": "toString",
+				"signature": "()Ljava/lang/String;",
+				"static": false
 			}
 		]
 	},
@@ -103,6 +109,24 @@ namespace Mappings
 			}
 		]
 	},
+	"java/lang/Double": {
+		"obfuscated": "java/lang/Double",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(D)V",
+				"static": false
+			},
+			{
+				"name": "doubleValue",
+				"obfuscated": "doubleValue",
+				"signature": "()D",
+				"static": false
+			}
+		]
+	},
 )"
 R"(
 	"net/minecraft/client/Minecraft": {
@@ -166,6 +190,12 @@ R"(
 				"name": "currentScreen",
 				"obfuscated": "screen",
 				"signature": "Lnet/minecraft/client/gui/screens/Screen;",
+				"static": false
+			},
+			{
+				"name": "renderViewEntity",
+				"obfuscated": "cameraEntity",
+				"signature": "Lnet/minecraft/world/entity/Entity;",
 				"static": false
 			}
 		],
@@ -292,6 +322,18 @@ R"(
 				"name": "ridingEntity",
 				"obfuscated": "vehicle",
 				"signature": "Lnet/minecraft/world/entity/Entity;",
+				"static": false
+			},
+			{
+				"name": "prevRotationYaw",
+				"obfuscated": "yRotO",
+				"signature": "F",
+				"static": false
+			},
+			{
+				"name": "prevRotationPitch",
+				"obfuscated": "xRotO",
+				"signature": "F",
 				"static": false
 			}
 		],
@@ -648,7 +690,14 @@ R"(
 				"static": false
 			}
 		],
-		"methods": []
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(Z)V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition": {
 		"obfuscated": "net/minecraft/network/protocol/game/ServerboundMovePlayerPacket$Pos",
@@ -662,13 +711,20 @@ R"(
 			}
 		]
 	},
+	"net/minecraft/network/play/client/C03PacketPlayer$C06PacketPlayerPosLook": {
+		"obfuscated": "net/minecraft/network/protocol/game/ServerboundMovePlayerPacket$PosRot",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(DDDFFZ)V",
+				"static": false
+			}
+		]
+	},
 	"net/minecraft/client/gui/GuiScreen": {
 		"obfuscated": "net/minecraft/client/gui/screens/Screen",
-		"fields": [],
-		"methods": []
-	},
-	"net/minecraft/block/BlockOre": {
-		"obfuscated": "net/minecraft/world/level/block/OreBlock",
 		"fields": [],
 		"methods": []
 	},

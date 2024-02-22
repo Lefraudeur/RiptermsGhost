@@ -6,37 +6,61 @@
 
 Ripterms::Maths::Vector2d Ripterms::Maths::getYawPitch(Vector3d playerPos, Vector3d facingPos)
 {
-	float pi = 3.1415926535f;
+	constexpr double pi = 3.14159265;
 	Vector3d delta = facingPos - playerPos;
 
-	float hypxz = std::sqrt(delta.x * delta.x + delta.z * delta.z);
+	double hypxz = std::sqrt(delta.x * delta.x + delta.z * delta.z);
 
-	float pitchRad = std::atan(delta.y / hypxz);
+	double pitchRad = std::atan(-delta.y / hypxz);
 
-	float yawDeg = 0.0f;
-	float pitchDeg = pitchRad * (180.0f / pi) * -1.0f;
+	double yawDeg = 0.0;
+	double pitchDeg = pitchRad * (180.0 / pi);
 
-	if (delta.x != 0.0f)
+	if (delta.x != 0.0)
 	{
-		float yawRad = std::atan(delta.z / delta.x);
-		yawDeg = yawRad * (180.0f / pi) + (delta.x < 0.0f ? 90.0f : -90.0f);
+		double yawRad = std::atan2(delta.z, delta.x) - pi / 2;
+		yawDeg = yawRad * (180.0 / pi);
 	}
 
 	return Vector2d(yawDeg, pitchDeg);
 }
 
-float Ripterms::Maths::cropAngle180(float angle)
+double Ripterms::Maths::cropAngle180(double angle)
 {
-	while (angle <= -180.0f) angle += 360.0f;
-	while (angle > 180.0f) angle -= 360.0f;
+	while (angle <= -180.0) angle += 360.0;
+	while (angle > 180.0) angle -= 360.0;
 	return angle;
 }
 
-float Ripterms::Maths::cropAngle360(float angle)
+double Ripterms::Maths::cropAngle360(double angle)
 {
-	while (angle < 0) angle += 360.0f;
-	while (angle >= 360.0f) angle -= 360.0f;
+	while (angle < 0.0) angle += 360.0;
+	while (angle >= 360.0) angle -= 360.0;
 	return angle;
+}
+
+double Ripterms::Maths::worldToScreen(Vector3d world_pos, Matrix modelView, Matrix projection, int screenWidth, int screenHeight, Vector2d& screen_pos)
+{
+	Matrix world_matrix =
+	{
+		{world_pos.x, world_pos.y, world_pos.z, 1.0}
+	};
+
+	Matrix clip_space_pos = (world_matrix * modelView) * projection;
+	Vector3d ndc
+	(
+		clip_space_pos[0][0] / clip_space_pos[0][3],
+		clip_space_pos[0][1] / clip_space_pos[0][3],
+		clip_space_pos[0][2] / clip_space_pos[0][3]
+	);
+
+	if (std::abs(ndc.x) <= 1.0 && std::abs(ndc.y) <= 1.0 && ndc.z < 0.999)
+	{
+		screen_pos.x = ((ndc.x + 1.0) / 2.0) * screenWidth;
+		screen_pos.y = ((-ndc.y + 1.0) / 2.0) * screenHeight; //-1 is bottom of screen, whereas 0px is top of window
+		return ndc.z;
+	}
+	return 0.0;
 }
 
 
@@ -44,7 +68,7 @@ Ripterms::Maths::Vector3d::Vector3d()
 {
 }
 
-Ripterms::Maths::Vector3d::Vector3d(float x, float y, float z)
+Ripterms::Maths::Vector3d::Vector3d(double x, double y, double z)
 {
 	this->x = x;
 	this->y = y;
@@ -61,12 +85,12 @@ Ripterms::Maths::Vector3d Ripterms::Maths::Vector3d::operator+(const Vector3d& o
 	return Vector3d(x + other_vector.x, y + other_vector.y, z + other_vector.z);
 }
 
-Ripterms::Maths::Vector3d Ripterms::Maths::Vector3d::operator*(float coef)
+Ripterms::Maths::Vector3d Ripterms::Maths::Vector3d::operator*(double coef)
 {
 	return Vector3d(x * coef, y * coef, z * coef);
 }
 
-float Ripterms::Maths::Vector3d::distance()
+double Ripterms::Maths::Vector3d::distance()
 {
 	return std::sqrt(x*x + y*y + z*z);
 }
@@ -75,7 +99,7 @@ Ripterms::Maths::Vector2d::Vector2d()
 {
 }
 
-Ripterms::Maths::Vector2d::Vector2d(float x, float y)
+Ripterms::Maths::Vector2d::Vector2d(double x, double y)
 {
 	this->x = x;
 	this->y = y;
@@ -86,20 +110,30 @@ Ripterms::Maths::Vector2d Ripterms::Maths::Vector2d::operator-(const Vector2d& o
 	return Vector2d(x - other_vector.x, y - other_vector.y);
 }
 
-float Ripterms::Maths::Vector2d::distance()
+Ripterms::Maths::Vector2d Ripterms::Maths::Vector2d::operator+(const Vector2d& other_vector)
+{
+	return Vector2d(x + other_vector.x, y + other_vector.y);
+}
+
+Ripterms::Maths::Vector2d Ripterms::Maths::Vector2d::operator*(double coef)
+{
+	return Vector2d(x * coef, y * coef);
+}
+
+double Ripterms::Maths::Vector2d::distance()
 {
 	return std::sqrt(x * x + y * y);
 }
 
-Ripterms::Maths::Matrix::Matrix(int line_number, int column_number, float fill_number) :
+Ripterms::Maths::Matrix::Matrix(int line_number, int column_number, double fill_number) :
 	line_number(line_number),
 	column_number(column_number),
-	data(new float*[line_number]{nullptr})
+	data(new double*[line_number]{nullptr})
 {
 	for (int i = 0; i < line_number; ++i)
 	{
-		data[i] = new float[column_number] {0};
-		if (fill_number != 0.0f)
+		data[i] = new double[column_number] {0};
+		if (fill_number != 0.0)
 		{
 			for (int b = 0; b < column_number; b++)
 				data[i][b] = fill_number;
@@ -112,20 +146,41 @@ Ripterms::Maths::Matrix::Matrix(const Matrix& other_matrix) :
 {
 	for (int i = 0; i < line_number; ++i)
 	{
-		memcpy(data[i], other_matrix.data[i], column_number * sizeof(float));
+		memcpy(data[i], other_matrix.data[i], column_number * sizeof(double));
 	}
 }
 
-Ripterms::Maths::Matrix::Matrix(std::initializer_list<std::initializer_list<float>> init) :
+Ripterms::Maths::Matrix::Matrix(std::initializer_list<std::initializer_list<double>> init) :
 	Matrix((int)init.size(), (int)init.begin()->size())
 {
 	for (int i = 0; i < line_number; ++i)
 	{
-		memcpy(data[i], (init.begin() + i)->begin(), column_number * sizeof(float));
+		memcpy(data[i], (init.begin() + i)->begin(), column_number * sizeof(double));
 	}
 }
 
-float* Ripterms::Maths::Matrix::operator[](int index)
+Ripterms::Maths::Matrix& Ripterms::Maths::Matrix::operator=(const Matrix& other_matrix)
+{
+	if (other_matrix.line_number != this->line_number || other_matrix.column_number != this->column_number)
+	{
+		destroy_data();
+		this->line_number = other_matrix.line_number;
+		this->column_number = other_matrix.column_number;
+		data = new double* [line_number] {nullptr};
+		for (int i = 0; i < line_number; ++i)
+		{
+			data[i] = new double[column_number] {0.0};
+		}
+	}
+
+	for (int i = 0; i < line_number; ++i)
+	{
+		memcpy(data[i], other_matrix.data[i], column_number * sizeof(double));
+	}
+	return *this;
+}
+
+double* Ripterms::Maths::Matrix::operator[](int index)
 {
 	if (is_valid() && index < line_number)
 		return data[index];
@@ -192,7 +247,7 @@ std::string Ripterms::Maths::Matrix::to_string() const
 	return result;
 }
 
-Ripterms::Maths::Matrix::~Matrix()
+void Ripterms::Maths::Matrix::destroy_data()
 {
 	if (data)
 	{
@@ -200,15 +255,11 @@ Ripterms::Maths::Matrix::~Matrix()
 		{
 			delete[] data[i];
 		}
-		delete data;
+		delete[] data;
 	}
 }
 
-Ripterms::Maths::Vector2d Ripterms::Maths::worldToScreen(
-	const Vector3d& world_pos, Matrix& view_matrix,
-	Matrix& projection_matrix, Matrix& view_port)
+Ripterms::Maths::Matrix::~Matrix()
 {
-	// not done
-	Vector2d ndc(0.0f, 0.0f);
-	return ndc;
+	destroy_data();
 }

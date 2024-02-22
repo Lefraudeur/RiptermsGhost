@@ -20,7 +20,8 @@ namespace Ripterms
 			UNDEFINED,
 			MAJOR_1_7_10,
 			MAJOR_1_8_9,
-			MAJOR_1_16_5
+			MAJOR_1_16_5,
+			MAJOR_1_19_4
 		} type = UNDEFINED;
 	};
 	extern Version versions[];
@@ -48,4 +49,18 @@ namespace Ripterms
 	void partialClean();
 
 	JNIEnv* get_current_thread_env();
+	JNIEnv* get_ct_env_nocache();
+
+	class JNIFrame
+	{
+	public:
+		JNIFrame(JNIEnv* env = Ripterms::p_env, int ref_count = 10);
+		~JNIFrame();
+
+		void pop();
+		operator bool();
+	private:
+		JNIEnv* env;
+		bool is_success;
+	};
 }

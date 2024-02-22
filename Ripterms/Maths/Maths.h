@@ -9,38 +9,41 @@ namespace Ripterms
 		{
 		public:
 			Vector3d();
-			Vector3d(float x, float y, float z);
-			float x = 0.0f, y = 0.0f, z = 0.0f;
+			Vector3d(double x, double y, double z);
+			double x = 0.0f, y = 0.0f, z = 0.0f;
 			Vector3d operator-(const Vector3d& other_vector);
 			Vector3d operator+(const Vector3d& other_vector);
-			Vector3d operator*(float coef);
-			float distance();
+			Vector3d operator*(double coef);
+			double distance();
 		};
 
 		class Vector2d
 		{
 		public:
 			Vector2d();
-			Vector2d(float x, float y);
-			float x = 0.0f, y = 0.0f; //in ripterms, little bit weird but x is yaw and y is pitch
+			Vector2d(double x, double y);
+			double x = 0.0f, y = 0.0f; //in ripterms, little bit weird but x is yaw and y is pitch
 			Vector2d operator-(const Vector2d& other_vector);
-			float distance();
+			Vector2d operator+(const Vector2d& other_vector);
+			Vector2d operator*(double coef);
+			double distance();
 		};
 
 		Vector2d getYawPitch(Vector3d playerPos, Vector3d facingPos);
 
-		float cropAngle180(float angle);
-		float cropAngle360(float angle);
+		double cropAngle180(double angle);
+		double cropAngle360(double angle);
 
 		class Matrix
 		{
 		public:
-			Matrix(int line_number, int column_number, float fill_number = 0.0f);
+			Matrix(int line_number, int column_number, double fill_number = 0.0);
 			Matrix(const Matrix& other_matrix);
-			Matrix(std::initializer_list<std::initializer_list<float>> init);
+			Matrix(std::initializer_list<std::initializer_list<double>> init);
 			~Matrix();
 
-			float* operator [](int index);
+			Matrix& operator=(const Matrix& other_matrix);
+			double* operator [](int index);
 			operator bool() const;
 			Matrix operator *(const Matrix& other_matrix) const;
 			Matrix operator +(const Matrix& other_matrix) const;
@@ -48,13 +51,15 @@ namespace Ripterms
 			bool is_valid() const;
 			std::string to_string() const;
 		private:
-			const int line_number;
-			const int column_number;
-			float** data;
+			int line_number;
+			int column_number;
+			double** data;
+
+			void destroy_data();
 		};
 
-		Vector2d worldToScreen(
-			const Vector3d& world_pos, Matrix& view_matrix,
-			Matrix& projection_matrix, Matrix& view_port);
+		//relative to camera pos
+		//returns z, closer to 0 when closer to camera (negative when behind camera), but this func returns 0 when outside of cam
+		double worldToScreen(Vector3d world_pos, Matrix modelView, Matrix projection, int screenWidth, int screenHeight, Vector2d& screen_pos);
 	}
 }

@@ -14,8 +14,8 @@ void Ripterms::Modules::LeftClicker::run()
 		return;
 	POINT cursorPos{};
 	GetCursorPos(&cursorPos);
-	SendMessageA(Ripterms::window, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
-	SendMessageA(Ripterms::window, WM_LBUTTONUP, MK_LBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
+	PostMessageA(Ripterms::window, WM_LBUTTONDOWN, MK_LBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
+	PostMessageA(Ripterms::window, WM_LBUTTONUP, MK_LBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
 	std::uniform_int_distribution<> distr(min_cps, max_cps);
 	timer.setEvery(std::chrono::milliseconds(1000 / distr(gen)));
 }

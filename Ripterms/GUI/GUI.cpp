@@ -8,6 +8,9 @@
 #include "font.h"
 #include "../Hook/Hook.h"
 #include "GUI_conf.h"
+#include "gl/GL.h"
+#include "../Cache/Cache.h"
+#include "../../net/minecraft/client/renderer/ActiveRenderInfo/ActiveRenderInfo.h"
 
 namespace
 {
@@ -21,7 +24,7 @@ namespace
 	HGLRC new_context = nullptr;
 	HGLRC old_context = nullptr;
 
-	Ripterms::Hook* guiHook = nullptr;
+	Ripterms::Hook<type_wglSwapBuffers>* guiHook = nullptr;
 }
 
 static void update_style()
@@ -127,10 +130,14 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 	}
 
 	wglMakeCurrent(unnamedParam1, new_context);
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
+	if ((Ripterms::version.type == Ripterms::Version::MAJOR_1_8_9 || Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10) 
+		&& Ripterms::p_env && Ripterms::cache->is_valid)
+		ActiveRenderInfo::update_cache();
 
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
@@ -141,15 +148,16 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 		ImGuiWindowFlags_NoScrollbar | 
 		ImGuiWindowFlags_NoInputs | 
 		ImGuiWindowFlags_NoBackground);
-	Ripterms::p_env->PushLocalFrame(50);
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* m : category.second)
+		Ripterms::JNIFrame jni_frame(Ripterms::p_env, 30);
+		for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
 		{
-			m->render();
+			for (Ripterms::Modules::IModule* m : category.second)
+			{
+				m->render();
+			}
 		}
 	}
-	Ripterms::p_env->PopLocalFrame(nullptr);
 	ImGui::End();
 
 	if (Ripterms::GUI::draw)
@@ -281,12 +289,13 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 					ImGui::SetCursorPos(ImVec2(4, 2));
 					ImGui::Text(current_tab.c_str());
 					ImGui::Separator();
-					Ripterms::p_env->PushLocalFrame(50);
-					for (Ripterms::Modules::IModule* module : Ripterms::Modules::categories[current_tab])
 					{
-						module->renderGUI();
+						Ripterms::JNIFrame jni_frame(Ripterms::p_env, 30);
+						for (Ripterms::Modules::IModule* module : Ripterms::Modules::categories[current_tab])
+						{
+							module->renderGUI();
+						}
 					}
-					Ripterms::p_env->PopLocalFrame(nullptr);
 				}
 			}
 			ImGui::EndChild();
@@ -302,6 +311,7 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 	ImGui::EndFrame();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 	wglMakeCurrent(unnamedParam1, old_context);
 	return original_wglSwapBuffers(unnamedParam1);
 }
@@ -312,7 +322,9 @@ bool Ripterms::GUI::init()
 	if (!opengl)
 		return false;
 	target_wglSwapBuffers = (type_wglSwapBuffers)opengl.getProcAddress("wglSwapBuffers");
-	guiHook = new Ripterms::Hook(5, target_wglSwapBuffers, detour_wglSwapBuffers, (void**)&original_wglSwapBuffers, Ripterms::Hook::RELATIVE_5B_JMP);
+	if (!target_wglSwapBuffers) return false;
+	guiHook = new Ripterms::Hook<type_wglSwapBuffers>(target_wglSwapBuffers, detour_wglSwapBuffers, &original_wglSwapBuffers);
+	if (guiHook->is_error) return false;
 	original_WndProc = (WNDPROC)SetWindowLongPtrA(Ripterms::window, GWLP_WNDPROC, (LONG_PTR)&detour_WndProc);
 	return true;
 }
