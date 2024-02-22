@@ -1,3 +1,5 @@
+![image](https://github.com/Lefraudeur/RiptermsGhost/assets/73477238/0d8f6308-1036-4480-b487-eaf02d07259d)
+
 # RiptermsGhost
 
 #### Not maintained
