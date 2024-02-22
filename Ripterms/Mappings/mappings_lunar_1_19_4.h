@@ -1,7 +1,7 @@
 #pragma once
 namespace Mappings
 {
-	constexpr static char mappings_lunar_1_7_10[] = R"(
+	constexpr static char mappings_lunar_1_19_4[] = R"(
 {
 	"java/lang/Object": {
 		"obfuscated": "java/lang/Object",
@@ -134,217 +134,181 @@ R"(
 		"fields": [
 			{
 				"name": "theMinecraft",
-				"obfuscated": "theMinecraft",
+				"obfuscated": "instance",
 				"signature": "Lnet/minecraft/client/Minecraft;",
 				"static": true
 			},
 			{
 				"name": "thePlayer",
-				"obfuscated": "thePlayer",
-				"signature": "Lnet/minecraft/client/entity/EntityClientPlayerMP;",
+				"obfuscated": "player",
+				"signature": "Lnet/minecraft/client/player/LocalPlayer;",
 				"static": false
 			},
 			{
 				"name": "theWorld",
-				"obfuscated": "theWorld",
-				"signature": "Lnet/minecraft/client/multiplayer/WorldClient;",
+				"obfuscated": "level",
+				"signature": "Lnet/minecraft/client/multiplayer/ClientLevel;",
 				"static": false
 			},
 			{
 				"name": "gameSettings",
-				"obfuscated": "gameSettings",
-				"signature": "Lnet/minecraft/client/settings/GameSettings;",
+				"obfuscated": "options",
+				"signature": "Lnet/minecraft/client/Options;",
 				"static": false
 			},
 			{
 				"name": "objectMouseOver",
-				"obfuscated": "objectMouseOver",
-				"signature": "Lnet/minecraft/util/MovingObjectPosition;",
+				"obfuscated": "hitResult",
+				"signature": "Lnet/minecraft/world/phys/HitResult;",
 				"static": false
 			},
 			{
 				"name": "rightClickDelayTimer",
-				"obfuscated": "rightClickDelayTimer",
+				"obfuscated": "rightClickDelay",
 				"signature": "I",
 				"static": false
 			},
 			{
 				"name": "pointedEntity",
-				"obfuscated": "pointedEntity",
-				"signature": "Lnet/minecraft/entity/Entity;",
+				"obfuscated": "crosshairPickEntity",
+				"signature": "Lnet/minecraft/world/entity/Entity;",
 				"static": false
 			},
 			{
 				"name": "timer",
 				"obfuscated": "timer",
-				"signature": "Lnet/minecraft/util/Timer;",
+				"signature": "Lnet/minecraft/client/Timer;",
 				"static": false
 			},
 			{
 				"name": "playerController",
-				"obfuscated": "playerController",
-				"signature": "Lnet/minecraft/client/multiplayer/PlayerControllerMP;",
+				"obfuscated": "gameMode",
+				"signature": "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;",
 				"static": false
 			},
 			{
 				"name": "currentScreen",
-				"obfuscated": "currentScreen",
-				"signature": "Lnet/minecraft/client/gui/GuiScreen;",
+				"obfuscated": "screen",
+				"signature": "Lnet/minecraft/client/gui/screens/Screen;",
 				"static": false
 			},
 			{
 				"name": "renderViewEntity",
-				"obfuscated": "renderViewEntity",
-				"signature": "Lnet/minecraft/entity/EntityLivingBase;",
+				"obfuscated": "cameraEntity",
+				"signature": "Lnet/minecraft/world/entity/Entity;",
 				"static": false
 			}
 		],
 		"methods": [
 			{
 				"name": "clickMouse",
-				"obfuscated": "clickMouse",
-				"signature": "()V",
+				"obfuscated": "startAttack",
+				"signature": "()Z",
 				"static": false
 			}
 		]
 	},
-	"net/minecraft/client/entity/EntityClientPlayerMP": {
-		"obfuscated": "net/minecraft/client/entity/EntityClientPlayerMP",
+	"net/minecraft/client/entity/EntityPlayerSP": {
+		"obfuscated": "net/minecraft/client/player/LocalPlayer",
 		"fields": [
 			{
 				"name": "sendQueue",
-				"obfuscated": "sendQueue",
-				"signature": "Lnet/minecraft/client/network/NetHandlerPlayClient;",
+				"obfuscated": "connection",
+				"signature": "Lnet/minecraft/client/multiplayer/ClientPacketListener;",
 				"static": false
 			}
 		],
 		"methods": [
 			{
 				"name": "onUpdateWalkingPlayer",
-				"obfuscated": "sendMotionUpdates",
+				"obfuscated": "sendPosition",
 				"signature": "()V",
 				"static": false
 			}
 		]
 	},
-	"net/minecraft/client/entity/EntityPlayerSP": {
-		"obfuscated": "net/minecraft/client/entity/EntityPlayerSP",
-		"fields": [],
-		"methods": []
-	},
 	"net/minecraft/client/entity/AbstractClientPlayer": {
-		"obfuscated": "net/minecraft/client/entity/AbstractClientPlayer",
+		"obfuscated": "net/minecraft/client/player/AbstractClientPlayer",
 		"fields": [],
 		"methods": []
 	},
 	"net/minecraft/entity/player/EntityPlayer": {
-		"obfuscated": "net/minecraft/entity/player/EntityPlayer",
+		"obfuscated": "net/minecraft/world/entity/player/Player",
 		"fields": [],
 		"methods": [
 			{
 				"name": "attackTargetEntityWithCurrentItem",
-				"obfuscated": "attackTargetEntityWithCurrentItem",
-				"signature": "(Lnet/minecraft/entity/Entity;)V",
+				"obfuscated": "attack",
+				"signature": "(Lnet/minecraft/world/entity/Entity;)V",
 				"static": false
 			}
 		]
 	},
 	"net/minecraft/entity/EntityLivingBase": {
-		"obfuscated": "net/minecraft/entity/EntityLivingBase",
+		"obfuscated": "net/minecraft/world/entity/LivingEntity",
 		"fields": [],
-		"methods": [
-			{
-				"name": "setPositionAndUpdate",
-				"obfuscated": "setPositionAndUpdate",
-				"signature": "(DDD)V",
-				"static": false
-			}
-		]
+		"methods": []
 	},
 	"net/minecraft/entity/Entity": {
-		"obfuscated": "net/minecraft/entity/Entity",
+		"obfuscated": "net/minecraft/world/entity/Entity",
 		"fields": [
 			{
-				"name": "posX",
-				"obfuscated": "posX",
-				"signature": "D",
-				"static": false
-			},
-			{
-				"name": "posY",
-				"obfuscated": "posY",
-				"signature": "D",
-				"static": false
-			},
-			{
-				"name": "posZ",
-				"obfuscated": "posZ",
-				"signature": "D",
+				"name": "positionVec",
+				"obfuscated": "position",
+				"signature": "Lnet/minecraft/world/phys/Vec3;",
 				"static": false
 			},
 			{
 				"name": "rotationYaw",
-				"obfuscated": "rotationYaw",
+				"obfuscated": "yRot",
 				"signature": "F",
 				"static": false
 			},
 			{
 				"name": "rotationPitch",
-				"obfuscated": "rotationPitch",
+				"obfuscated": "xRot",
 				"signature": "F",
 				"static": false
 			},
 			{
-				"name": "motionX",
-				"obfuscated": "motionX",
-				"signature": "D",
-				"static": false
-			},
-			{
-				"name": "motionY",
-				"obfuscated": "motionY",
-				"signature": "D",
-				"static": false
-			},
-			{
-				"name": "motionZ",
-				"obfuscated": "motionZ",
-				"signature": "D",
+				"name": "motion",
+				"obfuscated": "deltaMovement",
+				"signature": "Lnet/minecraft/world/phys/Vec3;",
 				"static": false
 			},
 			{
 				"name": "hurtResistantTime",
-				"obfuscated": "hurtResistantTime",
+				"obfuscated": "invulnerableTime",
 				"signature": "I",
 				"static": false
 			},
 			{
 				"name": "ticksExisted",
-				"obfuscated": "ticksExisted",
+				"obfuscated": "tickCount",
 				"signature": "I",
 				"static": false
 			},
 			{
 				"name": "boundingBox",
-				"obfuscated": "boundingBox",
-				"signature": "Lnet/minecraft/util/AxisAlignedBB;",
+				"obfuscated": "bb",
+				"signature": "Lnet/minecraft/world/phys/AABB;",
 				"static": false
 			},
 			{
 				"name": "lastTickPosX",
-				"obfuscated": "lastTickPosX",
+				"obfuscated": "xOld",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "lastTickPosY",
-				"obfuscated": "lastTickPosY",
+				"obfuscated": "yOld",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "lastTickPosZ",
-				"obfuscated": "lastTickPosZ",
+				"obfuscated": "zOld",
 				"signature": "D",
 				"static": false
 			},
@@ -356,19 +320,19 @@ R"(
 			},
 			{
 				"name": "ridingEntity",
-				"obfuscated": "ridingEntity",
-				"signature": "Lnet/minecraft/entity/Entity;",
+				"obfuscated": "vehicle",
+				"signature": "Lnet/minecraft/world/entity/Entity;",
 				"static": false
 			},
 			{
 				"name": "prevRotationYaw",
-				"obfuscated": "prevRotationYaw",
+				"obfuscated": "yRotO",
 				"signature": "F",
 				"static": false
 			},
 			{
 				"name": "prevRotationPitch",
-				"obfuscated": "prevRotationPitch",
+				"obfuscated": "xRotO",
 				"signature": "F",
 				"static": false
 			}
@@ -393,48 +357,55 @@ R"(
 				"static": false
 			},
 			{
+				"name": "setPositionAndUpdate",
+				"obfuscated": "teleportTo",
+				"signature": "(DDD)V",
+				"static": false
+			},
+			{
 				"name": "setPosition",
-				"obfuscated": "setPosition",
+				"obfuscated": "setPos",
 				"signature": "(DDD)V",
 				"static": false
 			}
 		]
 	},
 	"net/minecraft/client/multiplayer/WorldClient": {
-		"obfuscated": "net/minecraft/client/multiplayer/WorldClient",
-		"fields": [],
-		"methods": []
-	},
-	"net/minecraft/world/World": {
-		"obfuscated": "net/minecraft/world/World",
+		"obfuscated": "net/minecraft/client/multiplayer/ClientLevel",
 		"fields": [
 			{
-				"name": "playerEntities",
-				"obfuscated": "playerEntities",
+				"name": "players",
+				"obfuscated": "players",
 				"signature": "Ljava/util/List;",
 				"static": false
 			}
 		],
 		"methods": []
 	},
+	"net/minecraft/world/World": {
+		"obfuscated": "net/minecraft/world/level/Level",
+		"fields": [
+		],
+		"methods": []
+	},
 	"net/minecraft/util/Vec3": {
-		"obfuscated": "net/minecraft/util/Vec3",
+		"obfuscated": "net/minecraft/world/phys/Vec3",
 		"fields": [
 			{
 				"name": "xCoord",
-				"obfuscated": "xCoord",
+				"obfuscated": "x",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "yCoord",
-				"obfuscated": "yCoord",
+				"obfuscated": "y",
 				"signature": "D",
 				"static": false
 			},
 			{
 				"name": "zCoord",
-				"obfuscated": "zCoord",
+				"obfuscated": "z",
 				"signature": "D",
 				"static": false
 			}
@@ -442,36 +413,36 @@ R"(
 		"methods": []
 	},
 	"net/minecraft/client/renderer/EntityRenderer": {
-		"obfuscated": "net/minecraft/client/renderer/EntityRenderer",
+		"obfuscated": "net/minecraft/client/renderer/GameRenderer",
 		"fields": [],
 		"methods": [
 			{
 				"name": "getMouseOver",
-				"obfuscated": "getMouseOver",
+				"obfuscated": "pick",
 				"signature": "(F)V",
 				"static": false
 			}
 		]
 	},
 	"net/minecraft/client/settings/GameSettings": {
-		"obfuscated": "net/minecraft/client/settings/GameSettings",
+		"obfuscated": "net/minecraft/client/Options",
 		"fields": [
 			{
 				"name": "gammaSetting",
-				"obfuscated": "gammaSetting",
-				"signature": "F",
+				"obfuscated": "gamma",
+				"signature": "Lnet/minecraft/client/OptionInstance;",
 				"static": false
 			},
 			{
 				"name": "keyBindSneak",
-				"obfuscated": "keyBindSneak",
-				"signature": "Lnet/minecraft/client/settings/KeyBinding;",
+				"obfuscated": "keyShift",
+				"signature": "Lnet/minecraft/client/KeyMapping;",
 				"static": false
 			},
 			{
 				"name": "keyBindSprint",
-				"obfuscated": "keyBindSprint",
-				"signature": "Lnet/minecraft/client/settings/KeyBinding;",
+				"obfuscated": "keySprint",
+				"signature": "Lnet/minecraft/client/KeyMapping;",
 				"static": false
 			}
 		],
@@ -489,50 +460,49 @@ R"(
 			}
 		]
 	},
+	"net/minecraft/network/NetworkManager": {
+		"obfuscated": "net/minecraft/network/Connection",
+		"fields": [],
+		"methods": [
+			{
+				"name": "sendPacket",
+				"obfuscated": "send",
+				"signature": "(Lnet/minecraft/network/protocol/Packet;)V",
+				"static": false
+			}
+		]
+	},
 	"net/minecraft/network/Packet": {
-		"obfuscated": "net/minecraft/network/Packet",
+		"obfuscated": "net/minecraft/network/protocol/Packet",
 		"fields": [],
 		"methods": []
 	},
 	"net/minecraft/util/MovingObjectPosition": {
-		"obfuscated": "net/minecraft/util/MovingObjectPosition",
-		"fields": [
+		"obfuscated": "net/minecraft/world/phys/HitResult",
+		"fields": [],
+		"methods": [
 			{
-				"name": "typeOfHit",
-				"obfuscated": "typeOfHit",
-				"signature": "Lnet/minecraft/util/MovingObjectPosition$MovingObjectType;",
+				"name": "getType",
+				"obfuscated": "getType",
+				"signature": "()Lnet/minecraft/world/phys/HitResult$Type;",
 				"static": false
 			}
-		],
-		"methods": []
+		]
 	},
 	"net/minecraft/util/MovingObjectPosition$MovingObjectType": {
-		"obfuscated": "net/minecraft/util/MovingObjectPosition$MovingObjectType",
+		"obfuscated": "net/minecraft/world/phys/HitResult$Type",
 		"fields": [
 			{
 				"name": "BLOCK",
 				"obfuscated": "BLOCK",
-				"signature": "Lnet/minecraft/util/MovingObjectPosition$MovingObjectType;",
+				"signature": "Lnet/minecraft/world/phys/HitResult$Type;",
 				"static": true
 			}
 		],
 		"methods": []
 	},
-	"net/minecraft/block/Block": {
-		"obfuscated": "net/minecraft/block/Block",
-		"fields": [
-			{
-				"name": "unlocalizedName",
-				"obfuscated": "unlocalizedName",
-				"signature": "Ljava/lang/String;",
-				"static": false
-			}
-		],
-		"methods": [
-		]
-	},
 	"net/minecraft/util/AxisAlignedBB": {
-		"obfuscated": "net/minecraft/util/AxisAlignedBB",
+		"obfuscated": "net/minecraft/world/phys/AABB",
 		"fields": [
 			{
 				"name": "minX",
@@ -574,78 +544,102 @@ R"(
 		"methods": []
 	},
 	"net/minecraft/util/Timer": {
-		"obfuscated": "net/minecraft/util/Timer",
+		"obfuscated": "net/minecraft/client/Timer",
 		"fields": [
 			{
 				"name": "renderPartialTicks",
-				"obfuscated": "renderPartialTicks",
+				"obfuscated": "partialTick",
 				"signature": "F",
 				"static": false
 			}
 		],
 		"methods": []
 	},
+	"net/minecraft/world/IBlockAccess": {
+		"obfuscated": "net/minecraft/world/level/BlockGetter",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getBlockState",
+				"obfuscated": "getBlockState",
+				"signature": "(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/util/BlockPos": {
+		"obfuscated": "net/minecraft/core/BlockPos",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(III)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/block/state/IBlockState": {
+		"obfuscated": "net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase",
+		"fields": [],
+		"methods": [
+			{
+				"name": "getBlock",
+				"obfuscated": "getBlock",
+				"signature": "()Lnet/minecraft/world/level/block/Block;",
+				"static": false
+			}
+		]
+	},
 	"net/minecraft/block/BlockAir": {
-		"obfuscated": "net/minecraft/block/BlockAir",
+		"obfuscated": "net/minecraft/world/level/block/AirBlock",
 		"fields": [],
 		"methods": []
 	},
 	"net/minecraft/client/settings/KeyBinding": {
-		"obfuscated": "net/minecraft/client/settings/KeyBinding",
+		"obfuscated": "net/minecraft/client/KeyMapping",
 		"fields": [
 			{
 				"name": "pressed",
-				"obfuscated": "pressed",
+				"obfuscated": "isDown",
 				"signature": "Z",
 				"static": false
 			},
 			{
 				"name": "pressTime",
-				"obfuscated": "pressTime",
+				"obfuscated": "clickCount",
 				"signature": "I",
 				"static": false
 			}
 		],
 		"methods": []
 	},
-	"net/minecraft/world/IBlockAccess": {
-		"obfuscated": "net/minecraft/world/IBlockAccess",
-		"fields": [],
-		"methods": [
-			{
-				"name": "getBlock",
-				"obfuscated": "getBlock",
-				"signature": "(III)Lnet/minecraft/block/Block;",
-				"static": false
-			}
-		]
-	},
 	"net/minecraft/client/multiplayer/PlayerControllerMP": {
-		"obfuscated": "net/minecraft/client/multiplayer/PlayerControllerMP",
+		"obfuscated": "net/minecraft/client/multiplayer/MultiPlayerGameMode",
 		"fields": [],
 		"methods": [
 			{
 				"name": "attackEntity",
-				"obfuscated": "attackEntity",
-				"signature": "(Lnet/minecraft/entity/player/EntityPlayer;Lnet/minecraft/entity/Entity;)V",
+				"obfuscated": "attack",
+				"signature": "(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/entity/Entity;)V",
 				"static": false
 			}
 		]
 	},
 	"net/minecraft/client/network/NetHandlerPlayClient": {
-		"obfuscated": "net/minecraft/client/network/NetHandlerPlayClient",
+		"obfuscated": "net/minecraft/client/multiplayer/ClientPacketListener",
 		"fields": [],
 		"methods": [
 			{
 				"name": "addToSendQueue",
-				"obfuscated": "addToSendQueue",
-				"signature": "(Lnet/minecraft/network/Packet;)V",
+				"obfuscated": "send",
+				"signature": "(Lnet/minecraft/network/protocol/Packet;)V",
 				"static": false
 			}
 		]
 	},
 	"net/minecraft/network/play/client/C03PacketPlayer": {
-		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer",
+		"obfuscated": "net/minecraft/network/protocol/game/ServerboundMovePlayerPacket",
 		"fields": [
 			{
 				"name": "x",
@@ -667,87 +661,80 @@ R"(
 			},
 			{
 				"name": "yaw",
-				"obfuscated": "yaw",
+				"obfuscated": "xRot",
 				"signature": "F",
 				"static": false
 			},
 			{
 				"name": "pitch",
-				"obfuscated": "pitch",
+				"obfuscated": "yRot",
 				"signature": "F",
 				"static": false
 			},
 			{
 				"name": "onGround",
-				"obfuscated": "field_149474_g",
+				"obfuscated": "onGround",
 				"signature": "Z",
 				"static": false
 			},
 			{
 				"name": "moving",
-				"obfuscated": "field_149480_h",
+				"obfuscated": "hasPos",
 				"signature": "Z",
 				"static": false
 			},
 			{
 				"name": "rotating",
-				"obfuscated": "rotating",
+				"obfuscated": "hasRot",
 				"signature": "Z",
 				"static": false
 			}
 		],
-		"methods": [
-			{
-				"name": "<init>",
-				"obfuscated": "<init>",
-				"signature": "(Z)V",
-				"static": false
-			}
-		]
+		"methods": []
 	},
 	"net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition": {
-		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition",
+		"obfuscated": "net/minecraft/network/protocol/game/ServerboundMovePlayerPacket$Pos",
 		"fields": [],
 		"methods": [
 			{
 				"name": "<init>",
 				"obfuscated": "<init>",
-				"signature": "(DDDDZ)V",
+				"signature": "(DDDZ)V",
 				"static": false
 			}
 		]
 	},
 	"net/minecraft/network/play/client/C03PacketPlayer$C06PacketPlayerPosLook": {
-		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer$C06PacketPlayerPosLook",
+		"obfuscated": "net/minecraft/network/protocol/game/ServerboundMovePlayerPacket$PosRot",
 		"fields": [],
 		"methods": [
 			{
 				"name": "<init>",
 				"obfuscated": "<init>",
-				"signature": "(DDDDFFZ)V",
+				"signature": "(DDDFFZ)V",
 				"static": false
 			}
 		]
 	},
 	"net/minecraft/client/gui/GuiScreen": {
-		"obfuscated": "net/minecraft/client/gui/GuiScreen",
+		"obfuscated": "net/minecraft/client/gui/screens/Screen",
 		"fields": [],
 		"methods": []
 	},
-	"net/minecraft/client/renderer/ActiveRenderInfo": {
-		"obfuscated": "net/minecraft/client/renderer/ActiveRenderInfo",
+	"net/minecraft/block/Block": {
+		"obfuscated": "net/minecraft/world/level/block/Block",
+		"fields": [],
+		"methods": [
+		]
+	},
+	"net/minecraft/client/OptionInstance": {
+		"obfuscated": "net/minecraft/client/OptionInstance",
 		"fields": [
 			{
-				"name": "MODELVIEW",
-				"obfuscated": "modelview",
-				"signature": "Ljava/nio/FloatBuffer;",
-				"static": true
-			},
-			{
-				"name": "PROJECTION",
-				"obfuscated": "projection",
-				"signature": "Ljava/nio/FloatBuffer;",
-				"static": true
+				"name": "value",
+				"obfuscated": "value",
+				"signature": "Ljava/lang/Object;",
+				"static": false
 			}
 		],
 		"methods": []

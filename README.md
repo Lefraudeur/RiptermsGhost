@@ -1,6 +1,6 @@
 # RiptermsGhost
 
-### Archived until I have time to recode it
+#### Not maintained
 
 An example injectable cheat for minecraft using java native interface, jvmti, java method hooking, and constant pool editing.
 
@@ -9,6 +9,7 @@ This branch is really different from the previous Ripterms you might know.
 <br/>go here: https://github.com/Lefraudeur/RiptermsGhost/tree/original-asm-redefineclass
 
 This cheat is open source, mainly to show you a combination of all the techniques I found to make injectable cheats for minecraft java.
+Don't expect crazy modules, as this cheat is not meant to be used.
 
 Any question ? Contact me on discord: lefraudeur
 
@@ -17,7 +18,7 @@ Any question ? Contact me on discord: lefraudeur
 ### Supported versions :
 x64 windows only. Because of the way ripterms hooks java methods, it supports only some jvm versions (tested on zulu17, openjdk8, openjdk17).
 Please open an issue if it doesn't work on your jvm version.
-- Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1
+- Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1, 1.19.4, 1.20.4
 - Forge: 1.7.10
 - Badlion Client: 1.8.9
 - Vanilla: 1.8.9
@@ -34,7 +35,7 @@ Change mappings to add new versions
 - Blink (hooks and cancels addToSendQueue)
 - FastPlace
 - LegitScaffold
-- Xray (not stable, seems to work only on 1.7.10 and 1.8.9 with optifine, will be replaced by block esp anyway)
+- Xray (works only on 1.7.10 and 1.8.9)
 - WTap
 - Sprint
 - HitBoxes
@@ -52,11 +53,12 @@ Insert to open the gui / end key to self destruct
 - onAttackTargetEntityWithCurrentItem
 
 To test it, just build the project with visual studio 2022, and inject the dll using any injector (process hacker, extreme injector...).
+You can also take a look at RiptermsInjector: https://github.com/Lefraudeur/RiptermsInjector
 
 Help would be appreciated, this repo is here to share your knowledge with other people. You can also make suggestions. (open an issue or a pull request to dev branch)
 
 TODO: 
-- Good world to screen, to make player and block ESP (so I can get rid of the xray)
+- Good world to screen, to make player and block ESP (missing w2s for 1.16.5)
 - Customizable key binds
 - Enabled modules list
 - More events

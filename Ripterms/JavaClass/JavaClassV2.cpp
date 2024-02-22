@@ -61,7 +61,8 @@ bool Ripterms::JavaClassV2::init()
 			}
 			if (!fieldID)
 			{
-				std::cerr << "Failed to find field ID: " + std::string(field["name"]) << std::endl;
+				std::cerr << "Failed to find field ID: " + std::string(field["name"]) << '\n'
+					<< "For class: " << className << '\n';
 				continue;
 			}
 			classData.fields.insert({ field["name"], fieldID });
@@ -79,7 +80,8 @@ bool Ripterms::JavaClassV2::init()
 			}
 			if (!methodID)
 			{
-				std::cerr << "Failed to find method ID: " + std::string(method["name"]) << std::endl;
+				std::cerr << "Failed to find method ID: " + std::string(method["name"]) << '\n'
+					<< "For class: " << className << '\n';
 				continue;
 			}
 			classData.methods.insert({ method["name"], methodID });

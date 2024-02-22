@@ -32,7 +32,6 @@ namespace Ripterms
 			virtual void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel);
 			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel);
 			virtual void onGetMouseOver(JNIEnv* env, float partialTicks, bool* cancel);
-			virtual void onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel);
 			virtual void onGetClientModName(JNIEnv* env, bool* cancel);
 
 		protected:
@@ -187,7 +186,6 @@ namespace Ripterms
 			void renderGUI() override;
 			void render() override;
 			void disable() override;
-			void onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel) override;
 		private:
 			struct RenderData
 			{
@@ -225,10 +223,17 @@ namespace Ripterms
 			void render() override;
 		};
 
+		class NoFall : public IModule
+		{
+		public:
+			void renderGUI() override;
+			void onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel) override;
+		};
+
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
 			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap(), new HitBoxes()}},
-			{"Player", {new Velocity(), new FastPlace(), new Blink(), new LegitScaffold(), new Sprint()}},
+			{"Player", {new Velocity(), new FastPlace(), new Blink(), new LegitScaffold(), new Sprint(), new NoFall()}},
 			{"Render", {new Xray(), new FullBright(), new ESP()}},
 			{"Whatever", {new ClientBrandChanger(), new Test()}}
 		};

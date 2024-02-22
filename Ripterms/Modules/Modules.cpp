@@ -37,10 +37,6 @@ void Ripterms::Modules::IModule::onGetMouseOver(JNIEnv* env, float partialTicks,
 {
 }
 
-void Ripterms::Modules::IModule::onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel)
-{
-}
-
 void Ripterms::Modules::IModule::onGetClientModName(JNIEnv* env, bool* cancel)
 {
 }
@@ -118,24 +114,6 @@ static void onUpdateWalkingPlayer_callback(HotSpot::frame* frame, HotSpot::Threa
 	return;
 }
 
-static void shouldSideBeRendered_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
-{
-	if (!Ripterms::p_env) return;
-	JNIEnv* env = thread->get_env();
-	Block block(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
-	jclass testClass = env->FindClass("java/lang/Object");
-
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
-	{
-		for (Ripterms::Modules::IModule* module : category.second)
-		{
-			module->onShouldSideBeRendered(env, block, cancel);
-		}
-	}
-
-	return;
-}
-
 static void getClientModName_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
 	if (!Ripterms::p_env) return;
@@ -172,14 +150,6 @@ void Ripterms::Modules::setupEventHooks()
 	);
 	jmethodID onUpdateWalkingPlayer = EntityPlayerSP.getMethodID("onUpdateWalkingPlayer");
 	Ripterms::JavaHook::hook(onUpdateWalkingPlayer, onUpdateWalkingPlayer_callback);
-
-	if (false && (Ripterms::version.type == Ripterms::Version::MAJOR_1_7_10 || //disabled temprorarily because of random crash
-		Ripterms::version.type == Ripterms::Version::MAJOR_1_8_9))
-	{
-		Ripterms::JavaClassV2 Block("net/minecraft/block/Block");
-		jmethodID shouldSideBeRendered = Block.getMethodID("shouldSideBeRendered");
-		Ripterms::JavaHook::hook(shouldSideBeRendered, shouldSideBeRendered_callback);
-	}
 
 	Ripterms::JavaClassV2 ClientBrandRetriever("net/minecraft/client/ClientBrandRetriever");
 	jmethodID getClientModName = ClientBrandRetriever.getMethodID("getClientModName");

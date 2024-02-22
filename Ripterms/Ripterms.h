@@ -20,7 +20,8 @@ namespace Ripterms
 			UNDEFINED,
 			MAJOR_1_7_10,
 			MAJOR_1_8_9,
-			MAJOR_1_16_5
+			MAJOR_1_16_5,
+			MAJOR_1_19_4
 		} type = UNDEFINED;
 	};
 	extern Version versions[];

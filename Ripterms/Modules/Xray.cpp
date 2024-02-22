@@ -75,16 +75,6 @@ void Ripterms::Modules::Xray::disable()
 	blockFinderThread.join();
 }
 
-void Ripterms::Modules::Xray::onShouldSideBeRendered(JNIEnv* env, Block& block, bool* cancel)
-{
-	if (!enabled) return;
-	if (!block.instanceOf(Ripterms::JavaClassV2("net/minecraft/block/BlockOre").get_jclass(env)))
-		Ripterms::JavaHook::set_return_value<uint64_t>(cancel, 0);
-	else
-		Ripterms::JavaHook::set_return_value<uint64_t>(cancel, 1);
-	*cancel = true;
-}
-
 void Ripterms::Modules::Xray::updateRenderData(Xray* xray)
 {
 	JavaVM* jvm = nullptr;

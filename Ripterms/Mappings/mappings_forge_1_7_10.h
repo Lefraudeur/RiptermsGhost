@@ -109,6 +109,24 @@ namespace Mappings
 			}
 		]
 	},
+	"java/lang/Double": {
+		"obfuscated": "java/lang/Double",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(D)V",
+				"static": false
+			},
+			{
+				"name": "doubleValue",
+				"obfuscated": "doubleValue",
+				"signature": "()D",
+				"static": false
+			}
+		]
+	},
 )"
 R"(
 	"net/minecraft/client/Minecraft": {
@@ -511,12 +529,6 @@ R"(
 			}
 		],
 		"methods": [
-			{
-				"name": "shouldSideBeRendered",
-				"obfuscated": "func_149646_a",
-				"signature": "(Lnet/minecraft/world/IBlockAccess;IIII)Z",
-				"static": false
-			}
 		]
 	},
 	"net/minecraft/util/AxisAlignedBB": {
@@ -684,7 +696,14 @@ R"(
 				"static": false
 			}
 		],
-		"methods": []
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(Z)V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition": {
 		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition",
@@ -698,13 +717,20 @@ R"(
 			}
 		]
 	},
+	"net/minecraft/network/play/client/C03PacketPlayer$C06PacketPlayerPosLook": {
+		"obfuscated": "net/minecraft/network/play/client/C03PacketPlayer$C06PacketPlayerPosLook",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(DDDDFFZ)V",
+				"static": false
+			}
+		]
+	},
 	"net/minecraft/client/gui/GuiScreen": {
 		"obfuscated": "net/minecraft/client/gui/GuiScreen",
-		"fields": [],
-		"methods": []
-	},
-	"net/minecraft/block/BlockOre": {
-		"obfuscated": "net/minecraft/block/BlockOre",
 		"fields": [],
 		"methods": []
 	},

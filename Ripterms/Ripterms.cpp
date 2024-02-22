@@ -10,6 +10,7 @@
 #include "Mappings/mappings_lunar_1_8_9.h"
 #include "Mappings/mappings_lunar_1_7_10.h"
 #include "Mappings/mappings_lunar_1_16_5.h"
+#include "Mappings/mappings_lunar_1_19_4.h"
 #include "Mappings/mappings_vanilla_1_8_9.h"
 #include "Mappings/mappings_forge_1_7_10.h"
 #include "Hook/JavaHook.h"
@@ -17,6 +18,8 @@
 
 extern Ripterms::Version Ripterms::versions[] =
 {
+	{"Lunar Client 1.20.4", Mappings::mappings_lunar_1_19_4, Version::MAJOR_1_19_4},
+	{"Lunar Client 1.19.4", Mappings::mappings_lunar_1_19_4, Version::MAJOR_1_19_4},
 	{"Lunar Client 1.18.2", Mappings::mappings_lunar_1_16_5, Version::MAJOR_1_16_5},
 	{"Lunar Client 1.17.1", Mappings::mappings_lunar_1_16_5, Version::MAJOR_1_16_5},
 	{"Lunar Client 1.16.5", Mappings::mappings_lunar_1_16_5, Version::MAJOR_1_16_5},
@@ -173,6 +176,7 @@ BOOL Ripterms::init(HMODULE dll)
 		if (hook_nglClear->is_error) return FALSE;
 		break;
 	}
+	case Version::MAJOR_1_19_4:
 	case Version::MAJOR_1_16_5:
 	{
 		Ripterms::Module lwjgl("lwjgl_opengl.dll");

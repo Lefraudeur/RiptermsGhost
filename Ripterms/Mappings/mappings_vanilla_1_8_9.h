@@ -109,6 +109,24 @@ namespace Mappings
 			}
 		]
 	},
+	"java/lang/Double": {
+		"obfuscated": "java/lang/Double",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(D)V",
+				"static": false
+			},
+			{
+				"name": "doubleValue",
+				"obfuscated": "doubleValue",
+				"signature": "()D",
+				"static": false
+			}
+		]
+	},
 )"
 R"(
 	"net/minecraft/client/Minecraft": {
@@ -497,14 +515,7 @@ R"(
 	"net/minecraft/block/Block": {
 		"obfuscated": "afh",
 		"fields": [],
-		"methods": [
-			{
-				"name": "shouldSideBeRendered",
-				"obfuscated": "a",
-				"signature": "(Ladq;Lcj;Lcq;)Z",
-				"static": false
-			}
-		]
+		"methods": []
 	},
 	"net/minecraft/util/AxisAlignedBB": {
 		"obfuscated": "aug",
@@ -695,7 +706,14 @@ R"(
 				"static": false
 			}
 		],
-		"methods": []
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(Z)V",
+				"static": false
+			}
+		]
 	},
 	"net/minecraft/network/play/client/C03PacketPlayer$C04PacketPlayerPosition": {
 		"obfuscated": "ip$a",
@@ -709,13 +727,20 @@ R"(
 			}
 		]
 	},
+	"net/minecraft/network/play/client/C03PacketPlayer$C06PacketPlayerPosLook": {
+		"obfuscated": "ip$b",
+		"fields": [],
+		"methods": [
+			{
+				"name": "<init>",
+				"obfuscated": "<init>",
+				"signature": "(DDDFFZ)V",
+				"static": false
+			}
+		]
+	},
 	"net/minecraft/client/gui/GuiScreen": {
 		"obfuscated": "axu",
-		"fields": [],
-		"methods": []
-	},
-	"net/minecraft/block/BlockOre": {
-		"obfuscated": "aim",
 		"fields": [],
 		"methods": []
 	},

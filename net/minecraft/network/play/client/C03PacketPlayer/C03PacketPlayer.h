@@ -5,6 +5,7 @@ class C03PacketPlayer : public Packet
 {
 public:
 	using Packet::Packet;
+	static C03PacketPlayer newObject(bool isOnGround, JNIEnv* env = Ripterms::p_env); //not valid on 1.19.4
 
 	Ripterms::Maths::Vector3d getXYZ();
 	void setXYZ(const Ripterms::Maths::Vector3d& vector);

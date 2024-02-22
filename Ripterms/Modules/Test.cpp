@@ -74,5 +74,7 @@ void Ripterms::Modules::Test::renderGUI()
 		});
 		a.detach();
 		*/
+
+		Ripterms::cache->thePlayer.getSendQueue().addToSendQueue(C03PacketPlayer::newObject(true));
 	}
 }

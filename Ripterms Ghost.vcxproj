@@ -177,6 +177,7 @@
     <ClCompile Include="Include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Include\miniz\miniz.c" />
     <ClCompile Include="java\lang\ClassLoader\ClassLoader.cpp" />
+    <ClCompile Include="java\lang\Double\Double.cpp" />
     <ClCompile Include="java\lang\Object\Object.cpp" />
     <ClCompile Include="java\lang\String\String.cpp" />
     <ClCompile Include="java\lang\System\System.cpp" />
@@ -195,6 +196,7 @@
     <ClCompile Include="net\minecraft\client\multiplayer\PlayerControllerMP\PlayerControllerMP.cpp" />
     <ClCompile Include="net\minecraft\client\multiplayer\WorldClient\WorldClient.cpp" />
     <ClCompile Include="net\minecraft\client\network\NetHandlerPlayClient\NetHandlerPlayClient.cpp" />
+    <ClCompile Include="net\minecraft\client\OptionInstance\OptionInstance.cpp" />
     <ClCompile Include="net\minecraft\client\renderer\ActiveRenderInfo\ActiveRenderInfo.cpp" />
     <ClCompile Include="net\minecraft\client\settings\GameSettings\GameSettings.cpp" />
     <ClCompile Include="net\minecraft\client\settings\KeyBinding\KeyBinding.cpp" />
@@ -204,6 +206,7 @@
     <ClCompile Include="net\minecraft\network\Packet\Packet.cpp" />
     <ClCompile Include="net\minecraft\network\play\client\C03PacketPlayer\C03PacketPlayer.cpp" />
     <ClCompile Include="net\minecraft\network\play\client\C03PacketPlayer\C04PacketPlayerPosition\C04PacketPlayerPosition.cpp" />
+    <ClCompile Include="net\minecraft\network\play\client\C03PacketPlayer\C06PacketPlayerPosLook\C06PacketPlayerPosLook.cpp" />
     <ClCompile Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.cpp" />
     <ClCompile Include="net\minecraft\util\BlockPos\BlockPos.cpp" />
     <ClCompile Include="net\minecraft\util\MovingObjectPosition\MovingObjectPosition.cpp" />
@@ -227,6 +230,7 @@
     <ClCompile Include="Ripterms\Modules\LeftClicker.cpp" />
     <ClCompile Include="Ripterms\Modules\LegitScaffold.cpp" />
     <ClCompile Include="Ripterms\Modules\Modules.cpp" />
+    <ClCompile Include="Ripterms\Modules\NoFall.cpp" />
     <ClCompile Include="Ripterms\Modules\Reach.cpp" />
     <ClCompile Include="Ripterms\Modules\Sprint.cpp" />
     <ClCompile Include="Ripterms\Modules\Test.cpp" />
@@ -239,6 +243,7 @@
   <ItemGroup>
     <ClInclude Include="HotSpot\HotSpot.hpp" />
     <ClInclude Include="java\lang\ClassLoader\ClassLoader.h" />
+    <ClInclude Include="java\lang\Double\Double.h" />
     <ClInclude Include="java\lang\Object\Object.h" />
     <ClInclude Include="java\lang\String\String.h" />
     <ClInclude Include="java\lang\System\System.h" />
@@ -256,6 +261,7 @@
     <ClInclude Include="net\minecraft\client\multiplayer\PlayerControllerMP\PlayerControllerMP.h" />
     <ClInclude Include="net\minecraft\client\multiplayer\WorldClient\WorldClient.h" />
     <ClInclude Include="net\minecraft\client\network\NetHandlerPlayClient\NetHandlerPlayClient.h" />
+    <ClInclude Include="net\minecraft\client\OptionInstance\OptionInstance.h" />
     <ClInclude Include="net\minecraft\client\renderer\ActiveRenderInfo\ActiveRenderInfo.h" />
     <ClInclude Include="net\minecraft\client\settings\GameSettings\GameSettings.h" />
     <ClInclude Include="net\minecraft\client\settings\KeyBinding\KeyBinding.h" />
@@ -265,6 +271,7 @@
     <ClInclude Include="net\minecraft\network\Packet\Packet.h" />
     <ClInclude Include="net\minecraft\network\play\client\C03PacketPlayer\C03PacketPlayer.h" />
     <ClInclude Include="net\minecraft\network\play\client\C03PacketPlayer\C04PacketPlayerPosition\C04PacketPlayerPosition.h" />
+    <ClInclude Include="net\minecraft\network\play\client\C03PacketPlayer\C06PacketPlayerPosLook\C06PacketPlayerPosLook.h" />
     <ClInclude Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.h" />
     <ClInclude Include="net\minecraft\util\BlockPos\BlockPos.h" />
     <ClInclude Include="net\minecraft\util\MovingObjectPosition\MovingObjectPosition.h" />
@@ -283,6 +290,7 @@
     <ClInclude Include="Ripterms\JavaClass\JavaClass.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_forge_1_7_10.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_16_5.h" />
+    <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_19_4.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_7_10.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_lunar_1_8_9.h" />
     <ClInclude Include="Ripterms\Mappings\mappings_vanilla_1_8_9.h" />

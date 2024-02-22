@@ -29,7 +29,7 @@ void Ripterms::Modules::Reach::disable()
 	if (!cp_reach_addr) return;
 	if (Ripterms::p_env)
 	{ 
-		*cp_reach_addr = (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 ? 9.0 : 3.0);
+		*cp_reach_addr = ((Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 || Ripterms::version.type == Ripterms::Version::MAJOR_1_19_4) ? 9.0 : 3.0);
 		_constMethod->set_constants(original_constant_pool);
 	}
 	VirtualFree(new_constant_pool, 0, MEM_RELEASE);
@@ -44,7 +44,7 @@ void Ripterms::Modules::Reach::onGetMouseOver(JNIEnv* env, float partialTicks, b
 		if (!cp_reach_addr) return;
 		if (prev_reach_distance != -1.0f)
 		{
-			*cp_reach_addr = (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 ? 9.0 : 3.0);
+			*cp_reach_addr = ((Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 || Ripterms::version.type == Ripterms::Version::MAJOR_1_19_4) ? 9.0 : 3.0);
 			prev_reach_distance = -1.0f;
 		}
 		return;
@@ -69,7 +69,7 @@ void Ripterms::Modules::Reach::onGetMouseOver(JNIEnv* env, float partialTicks, b
 		for (int i = 0; i < cp_length; ++i)
 		{
 			double* d = constant_pool_base + i;
-			if (*d == (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 ? 9.0 : 3.0))
+			if (*d == ((Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 || Ripterms::version.type == Ripterms::Version::MAJOR_1_19_4) ? 9.0 : 3.0))
 			{
 				cp_reach_addr = d;
 				break;
@@ -79,7 +79,7 @@ void Ripterms::Modules::Reach::onGetMouseOver(JNIEnv* env, float partialTicks, b
 	}
 
 	if (!cp_reach_addr) return;
-	float d = (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 ? reach_distance * reach_distance : reach_distance);
+	float d = ((Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5 || Ripterms::version.type == Ripterms::Version::MAJOR_1_19_4) ? reach_distance * reach_distance : reach_distance);
 	if (prev_reach_distance == d) return;
 	*cp_reach_addr = (double)d;
 	prev_reach_distance = d;
