@@ -28,7 +28,7 @@ void Ripterms::Modules::AimAssist::run()
 
 	for (EntityPlayer& target : Ripterms::cache->playerEntities.toVector<EntityPlayer>())
 	{
-		if (target.isEqualTo(cache->thePlayer))
+		if (!target.isValid() || target.isEqualTo(cache->thePlayer) || target.getTicksExisted() < 10)
 			continue;
 
 		AxisAlignedBB targetBB = target.getBoundingBox();

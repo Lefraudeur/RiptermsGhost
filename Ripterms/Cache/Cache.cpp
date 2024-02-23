@@ -13,7 +13,7 @@ bool Ripterms::Cache::fillCache()
 		return false;
 	}
 	thePlayer = theMinecraft.getThePlayer();
-	if (!thePlayer.isValid())
+	if (!thePlayer.isValid() || thePlayer.getTicksExisted() < 10)
 	{
 		is_valid = false;
 		return false;
