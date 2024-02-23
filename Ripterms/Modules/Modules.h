@@ -186,7 +186,7 @@ namespace Ripterms
 		class Xray : public IModule
 		{
 		public:
-			Xray() { this->keyBind = 0x58; };
+			//Xray() { this->keyBind = 0x58; };
 			void renderGUI() override;
 			void render() override;
 			void disable() override;
@@ -237,7 +237,7 @@ namespace Ripterms
 		class Glide : public IModule
 		{
 		public:
-			Glide() { this->keyBind = 0x47; };
+			//Glide() { this->keyBind = 0x47; };
 			void renderGUI() override;
 			void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel) override;
 		};
@@ -260,9 +260,18 @@ namespace Ripterms
 			float speed = 0.1f;
 		};
 
+		class BackTrack : public IModule
+		{
+		public:
+			void renderGUI() override;
+			void run() override;
+		private:
+			float partialTicks = 1.0f;
+		};
+
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
-			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap(), new HitBoxes()}},
+			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap(), new HitBoxes(), new BackTrack()}},
 			{"Player", {new FastPlace(), new Blink(), new LegitScaffold(), new NoFall()}},
 			{"Movement", {new Velocity(), new Sprint(), new Glide(), new VelocityFly(), new Speed()}},
 			{"Render", {new Xray(), new FullBright(), new ESP()}},
