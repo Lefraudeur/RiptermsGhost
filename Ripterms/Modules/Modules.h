@@ -278,7 +278,7 @@ namespace Ripterms
 			void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel) override;
 			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel) override;
 		private:
-			std::atomic<bool> lag = false;
+			bool lag = false;
 			int delay = 250;
 		};
 
