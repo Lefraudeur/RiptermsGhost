@@ -41,6 +41,12 @@ void Ripterms::Modules::IModule::onGetClientModName(JNIEnv* env, bool* cancel)
 {
 }
 
+void Ripterms::Modules::IModule::onKeyBind(int keyBind)
+{
+	if (!keyBind || keyBind != this->keyBind) return;
+	enabled = !enabled;
+}
+
 static void addToSendQueue_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
 	if (!Ripterms::p_env) return;

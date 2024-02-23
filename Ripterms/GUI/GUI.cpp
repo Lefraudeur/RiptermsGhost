@@ -74,6 +74,17 @@ static LRESULT CALLBACK detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 		return true;
 	}
 
+	if (msg == WM_KEYDOWN)
+	{
+		for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+		{
+			for (Ripterms::Modules::IModule* m : category.second)
+			{
+				m->onKeyBind(wParam);
+			}
+		}
+	}
+
 	return CallWindowProcA(original_WndProc, hWnd, msg, wParam, lParam);
 }
 

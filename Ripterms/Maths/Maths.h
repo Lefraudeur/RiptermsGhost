@@ -5,6 +5,8 @@ namespace Ripterms
 {
 	namespace Maths
 	{
+		inline constexpr double pi = 3.14159265;
+
 		class Vector3d
 		{
 		public:
@@ -26,10 +28,12 @@ namespace Ripterms
 			Vector2d operator-(const Vector2d& other_vector);
 			Vector2d operator+(const Vector2d& other_vector);
 			Vector2d operator*(double coef);
+			Vector2d crop180();
 			double distance();
 		};
 
 		Vector2d getYawPitch(Vector3d playerPos, Vector3d facingPos);
+		Vector3d getCameraVector(Vector2d cameraRot, double distance = 1.0);
 
 		double cropAngle180(double angle);
 		double cropAngle360(double angle);
