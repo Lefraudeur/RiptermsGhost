@@ -27,7 +27,7 @@ namespace Ripterms
 			virtual void render();
 			virtual void disable();
 
-			inline static std::atomic<bool> onAddToSendQueueNoEvent = false;
+			inline static bool onAddToSendQueueNoEvent = false;
 			virtual void onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel);
 
 			virtual void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel);

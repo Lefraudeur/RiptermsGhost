@@ -40,7 +40,8 @@ void Ripterms::Modules::BackTrack::run()
 		Ripterms::Maths::Vector3d maxbb(bb.getMaxX(), bb.getMaxY(), bb.getMaxZ());
 		minbb = minbb - vector;
 		maxbb = maxbb - vector;
-		bb.setMinX(minbb.x); bb.setMinY(minbb.y); bb.setMinZ(minbb.z);
-		bb.setMaxX(maxbb.x); bb.setMaxY(maxbb.y); bb.setMaxZ(maxbb.z);
+
+		bb.setMinX(min(minbb.x, bb.getMinX())); bb.setMinY(min(minbb.y, bb.getMinY())); bb.setMinZ(min(minbb.z, bb.getMinZ()));
+		bb.setMaxX(max(maxbb.x, bb.getMaxX())); bb.setMaxY(max(maxbb.y, bb.getMaxY())); bb.setMaxZ(max(maxbb.z, bb.getMaxZ()));
 	}
 }
