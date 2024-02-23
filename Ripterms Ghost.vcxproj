@@ -222,6 +222,7 @@
     <ClCompile Include="Ripterms\JavaClass\JavaClassV2.cpp" />
     <ClCompile Include="Ripterms\Maths\Maths.cpp" />
     <ClCompile Include="Ripterms\Modules\AimAssist.cpp" />
+    <ClCompile Include="Ripterms\Modules\BackTrack.cpp" />
     <ClCompile Include="Ripterms\Modules\Blink.cpp" />
     <ClCompile Include="Ripterms\Modules\ClientBrandChanger.cpp" />
     <ClCompile Include="Ripterms\Modules\FastPlace.cpp" />
