@@ -294,7 +294,6 @@ void Ripterms::Modules::NoMiss::onClickMouse(JNIEnv* env, Minecraft& theMinecraf
 	if (!enabled) return;
 	if (theMinecraft.getObjectMouseOver().getType().isEqualTo(MovingObjectType::getType("MISS")))
 	{
-		Ripterms::JavaHook::set_return_value<uint64_t>(cancel, 0);
 		*cancel = true;
 	}
 }

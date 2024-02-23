@@ -154,13 +154,11 @@ void* find_correct_hook_place(void* _i2i_entry)
 
 void common_detour(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
+    if (!(*(void**)thread->get_env())) return;
     for (HookedMethod& hk : hooked_methods)
     {
         if (hk.method == frame->get_method())
         {
-            JNIEnv* env = nullptr;
-            if (Ripterms::p_jvm->GetEnv((void**)&env, JNI_VERSION_1_8) != JNI_OK || !env || env != thread->get_env()) return;
-
             HotSpot::JavaThreadState state = thread->get_thread_state();
             if (state == HotSpot::_thread_in_Java)
                 thread->set_thread_state(HotSpot::_thread_in_native);
