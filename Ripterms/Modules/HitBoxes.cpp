@@ -36,7 +36,7 @@ void Ripterms::Modules::HitBoxes::run()
 		if (!target.isValid()) continue;
 		if (target.isEqualTo(cache->thePlayer))
 			continue;
-		if ((target.getPosition() - thePlayerPos).distance() > 6.0) continue;
+		if (target.getTicksExisted() < 10 || (target.getPosition() - thePlayerPos).distance() > 6.0) continue;
 		
 
 		AxisAlignedBB target_bb = target.getBoundingBox();
