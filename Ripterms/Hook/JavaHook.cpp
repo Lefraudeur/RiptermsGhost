@@ -158,13 +158,13 @@ void common_detour(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
     {
         if (hk.method == frame->get_method())
         {
+            JNIEnv* env = nullptr;
+            if (Ripterms::p_jvm->GetEnv((void**)&env, JNI_VERSION_1_8) != JNI_OK || !env || env != thread->get_env()) return;
+
             HotSpot::JavaThreadState state = thread->get_thread_state();
             if (state == HotSpot::_thread_in_Java)
                 thread->set_thread_state(HotSpot::_thread_in_native);
             else return;
-
-            JNIEnv* env = nullptr;
-            if (Ripterms::p_jvm->GetEnv((void**)&env, JNI_VERSION_1_8) != JNI_OK || !env) return;
 
             {
                 Ripterms::JNIFrame jni_frame(thread->get_env(), 5);

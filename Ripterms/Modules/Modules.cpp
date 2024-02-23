@@ -45,6 +45,10 @@ void Ripterms::Modules::IModule::onChannelRead0(JNIEnv* env, NetworkManager& thi
 {
 }
 
+void Ripterms::Modules::IModule::onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel)
+{
+}
+
 void Ripterms::Modules::IModule::onKeyBind(int keyBind)
 {
 	if (!keyBind || keyBind != this->keyBind) return;
@@ -158,6 +162,23 @@ static void channelRead0_callback(HotSpot::frame* frame, HotSpot::Thread* thread
 	return;
 }
 
+static void clickMouse_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
+{
+	if (!Ripterms::p_env) return;
+	JNIEnv* env = thread->get_env();
+
+	Minecraft theMinecraft(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
+
+	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	{
+		for (Ripterms::Modules::IModule* module : category.second)
+		{
+			module->onClickMouse(env, theMinecraft, cancel);
+		}
+	}
+	return;
+}
+
 void Ripterms::Modules::setupEventHooks()
 {
 	Ripterms::JavaClassV2 NetHandlerPlayClient("net/minecraft/client/network/NetHandlerPlayClient");
@@ -187,6 +208,10 @@ void Ripterms::Modules::setupEventHooks()
 	Ripterms::JavaClassV2 NetworkManager("net/minecraft/network/NetworkManager");
 	jmethodID channelRead0 = NetworkManager.getMethodID("channelRead0");
 	Ripterms::JavaHook::hook(channelRead0, channelRead0_callback);
+
+	Ripterms::JavaClassV2 Minecraft("net/minecraft/client/Minecraft");
+	jmethodID clickMouse = Minecraft.getMethodID("clickMouse");
+	Ripterms::JavaHook::hook(clickMouse, clickMouse_callback);
 }
 
 void Ripterms::Modules::runAll()
@@ -253,4 +278,23 @@ void Ripterms::Modules::AttackLag::onAttackTargetEntityWithCurrentItem(JNIEnv* e
 {
 	if (!enabled) return;
 	lag = true;
+}
+
+void Ripterms::Modules::NoMiss::renderGUI()
+{
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
+	ImGui::Checkbox("NoMiss", &enabled);
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+}
+
+void Ripterms::Modules::NoMiss::onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel)
+{
+	if (!enabled) return;
+	if (theMinecraft.getObjectMouseOver().getType().isEqualTo(MovingObjectType::getType("MISS")))
+	{
+		Ripterms::JavaHook::set_return_value<uint64_t>(cancel, 0);
+		*cancel = true;
+	}
 }

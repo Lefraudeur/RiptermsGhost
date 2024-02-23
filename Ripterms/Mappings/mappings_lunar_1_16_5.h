@@ -502,6 +502,12 @@ R"(
 				"obfuscated": "BLOCK",
 				"signature": "Lnet/minecraft/world/phys/HitResult$Type;",
 				"static": true
+			},
+			{
+				"name": "MISS",
+				"obfuscated": "MISS",
+				"signature": "Lnet/minecraft/world/phys/HitResult$Type;",
+				"static": true
 			}
 		],
 		"methods": []

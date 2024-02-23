@@ -513,6 +513,12 @@ R"(
 				"obfuscated": "b",
 				"signature": "Lauh$a;",
 				"static": true
+			},
+			{
+				"name": "MISS",
+				"obfuscated": "a",
+				"signature": "Lauh$a;",
+				"static": true
 			}
 		],
 		"methods": []

@@ -14,6 +14,7 @@
 #include <mutex>
 #include <imgui.h>
 #include "../../net/minecraft/network/NetworkManager/NetworkManager.h"
+#include "../../net/minecraft/client/Minecraft/Minecraft.h"
 
 namespace Ripterms
 {
@@ -35,6 +36,7 @@ namespace Ripterms
 			virtual void onGetMouseOver(JNIEnv* env, float partialTicks, bool* cancel);
 			virtual void onGetClientModName(JNIEnv* env, bool* cancel);
 			virtual void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel);
+			virtual void onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel);
 
 			void onKeyBind(int keyBind);
 		protected:
@@ -282,9 +284,16 @@ namespace Ripterms
 			int delay = 250;
 		};
 
+		class NoMiss : public IModule
+		{
+		public:
+			void renderGUI() override;
+			void onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel) override;
+		};
+
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
-			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap(), new HitBoxes(), new BackTrack(), new AttackLag()}},
+			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap(), new HitBoxes(), new BackTrack(), new AttackLag(), new NoMiss()}},
 			{"Player", {new FastPlace(), new Blink(), new LegitScaffold(), new NoFall()}},
 			{"Movement", {new Velocity(), new Sprint(), new Glide(), new VelocityFly(), new Speed()}},
 			{"Render", {new Xray(), new FullBright(), new ESP()}},

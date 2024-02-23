@@ -43,6 +43,7 @@ Change mappings to add new versions
 - Speed
 - BackTrack (set the hitbox of the target to a previous position)
 - AttackLag (delay received packet when attacking someone)
+- NoMiss
 
 ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/39690baa-859a-4ea2-a9b0-dfbc8cbfe472)
 

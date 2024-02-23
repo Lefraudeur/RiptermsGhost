@@ -513,6 +513,12 @@ R"(
 				"obfuscated": "BLOCK",
 				"signature": "Lnet/minecraft/util/MovingObjectPosition$MovingObjectType;",
 				"static": true
+			},
+			{
+				"name": "MISS",
+				"obfuscated": "MISS",
+				"signature": "Lnet/minecraft/util/MovingObjectPosition$MovingObjectType;",
+				"static": true
 			}
 		],
 		"methods": []
