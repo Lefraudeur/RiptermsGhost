@@ -34,10 +34,13 @@ namespace Ripterms
 			virtual void onGetMouseOver(JNIEnv* env, float partialTicks, bool* cancel);
 			virtual void onGetClientModName(JNIEnv* env, bool* cancel);
 
+			void onKeyBind(int keyBind);
 		protected:
 			inline static std::random_device rd{};
 			inline static std::mt19937 gen{rd()};
 			bool enabled = false;
+			int keyBind = 0;
+			bool waitingKey = false;
 		};
 
 
@@ -183,6 +186,7 @@ namespace Ripterms
 		class Xray : public IModule
 		{
 		public:
+			Xray() { this->keyBind = 0x58; };
 			void renderGUI() override;
 			void render() override;
 			void disable() override;
@@ -230,10 +234,37 @@ namespace Ripterms
 			void onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel) override;
 		};
 
+		class Glide : public IModule
+		{
+		public:
+			Glide() { this->keyBind = 0x47; };
+			void renderGUI() override;
+			void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel) override;
+		};
+
+		class VelocityFly : public IModule
+		{
+		public:
+			void renderGUI() override;
+			void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel) override;
+		private:
+			float speed = 0.1f;
+		};
+
+		class Speed : public IModule
+		{
+		public:
+			void renderGUI() override;
+			void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel) override;
+		private:
+			float speed = 0.1f;
+		};
+
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
 			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap(), new HitBoxes()}},
-			{"Player", {new Velocity(), new FastPlace(), new Blink(), new LegitScaffold(), new Sprint(), new NoFall()}},
+			{"Player", {new FastPlace(), new Blink(), new LegitScaffold(), new NoFall()}},
+			{"Movement", {new Velocity(), new Sprint(), new Glide(), new VelocityFly(), new Speed()}},
 			{"Render", {new Xray(), new FullBright(), new ESP()}},
 			{"Whatever", {new ClientBrandChanger(), new Test()}}
 		};

@@ -6,7 +6,6 @@
 
 Ripterms::Maths::Vector2d Ripterms::Maths::getYawPitch(Vector3d playerPos, Vector3d facingPos)
 {
-	constexpr double pi = 3.14159265;
 	Vector3d delta = facingPos - playerPos;
 
 	double hypxz = std::sqrt(delta.x * delta.x + delta.z * delta.z);
@@ -23,6 +22,15 @@ Ripterms::Maths::Vector2d Ripterms::Maths::getYawPitch(Vector3d playerPos, Vecto
 	}
 
 	return Vector2d(yawDeg, pitchDeg);
+}
+
+Ripterms::Maths::Vector3d Ripterms::Maths::getCameraVector(Vector2d cameraRot, double distance)
+{
+	double yawRad = cameraRot.x * (pi / 180.0);
+	double pitchRad = cameraRot.y * (pi / 180.0);
+	const double hypxz = distance * std::cos(pitchRad);
+
+	return Vector3d(-std::sin(yawRad) * hypxz, -std::sin(pitchRad) * distance, std::cos(yawRad) * hypxz);
 }
 
 double Ripterms::Maths::cropAngle180(double angle)
@@ -118,6 +126,11 @@ Ripterms::Maths::Vector2d Ripterms::Maths::Vector2d::operator+(const Vector2d& o
 Ripterms::Maths::Vector2d Ripterms::Maths::Vector2d::operator*(double coef)
 {
 	return Vector2d(x * coef, y * coef);
+}
+
+Ripterms::Maths::Vector2d Ripterms::Maths::Vector2d::crop180()
+{
+	return Vector2d(cropAngle180(x), cropAngle180(y));
 }
 
 double Ripterms::Maths::Vector2d::distance()

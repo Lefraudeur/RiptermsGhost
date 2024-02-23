@@ -1,10 +1,4 @@
-![image](https://github.com/Lefraudeur/RiptermsGhost/assets/73477238/0d8f6308-1036-4480-b487-eaf02d07259d)
-
 # RiptermsGhost
-
-
-#### Not maintained
-
 
 An example injectable cheat for minecraft using java native interface, jvmti, java method hooking, and constant pool editing.
 
@@ -43,13 +37,17 @@ Change mappings to add new versions
 - WTap
 - Sprint
 - HitBoxes
+- NoFall
+- Glide
+- VelocityFly
+- Speed
 
 ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/39690baa-859a-4ea2-a9b0-dfbc8cbfe472)
 
 
 Insert to open the gui / end key to self destruct
 
-![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/8857b5f1-743e-4417-ab55-922252aaf0a0)
+![image](https://github.com/Lefraudeur/RiptermsGhost/assets/73477238/0d8f6308-1036-4480-b487-eaf02d07259d)
 
 ### Event system (hook, modifiy parameters, cancel, modify return value):
 - onAddToSendQueue (edit sent packets)
