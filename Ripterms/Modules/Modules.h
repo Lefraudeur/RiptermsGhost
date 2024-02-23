@@ -291,9 +291,16 @@ namespace Ripterms
 			void onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel) override;
 		};
 
+		class BlockOnAttack : public IModule
+		{
+		public: 
+			void renderGUI() override;
+			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel) override;
+		};
+
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
-			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap(), new HitBoxes(), new BackTrack(), new AttackLag(), new NoMiss()}},
+			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap(), new HitBoxes(), new BackTrack(), new AttackLag(), new NoMiss(), new BlockOnAttack()}},
 			{"Player", {new FastPlace(), new Blink(), new LegitScaffold(), new NoFall()}},
 			{"Movement", {new Velocity(), new Sprint(), new Glide(), new VelocityFly(), new Speed()}},
 			{"Render", {new Xray(), new FullBright(), new ESP()}},

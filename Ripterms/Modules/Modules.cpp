@@ -297,3 +297,21 @@ void Ripterms::Modules::NoMiss::onClickMouse(JNIEnv* env, Minecraft& theMinecraf
 		*cancel = true;
 	}
 }
+
+void Ripterms::Modules::BlockOnAttack::renderGUI()
+{
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
+	ImGui::Checkbox("BlockOnAttack", &enabled);
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+}
+
+void Ripterms::Modules::BlockOnAttack::onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel)
+{
+	if (!enabled) return;
+	POINT cursorPos{};
+	GetCursorPos(&cursorPos);
+	PostMessageA(Ripterms::window, WM_RBUTTONDOWN, MK_RBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
+	PostMessageA(Ripterms::window, WM_RBUTTONUP, MK_RBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
+}
