@@ -8,7 +8,7 @@ namespace Ripterms::JavaHook
 
 	template <typename T> inline void set_return_value(bool* cancel, T return_value)
 	{
-		*(T*)((void**)cancel + 8) = return_value;
+		*(T*)((void**)cancel + 8) = return_value; //see asm code to understand that
 	}
 
 	//param from left to right (arg0 beeing this for non static methods)

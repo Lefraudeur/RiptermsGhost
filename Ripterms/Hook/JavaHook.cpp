@@ -30,6 +30,7 @@ void Ripterms::JavaHook::clean()
     }
     for (HookedMethod& hm : hooked_methods)
     {
+        hm.method->set_dont_inline(false);
         int* flags = (int*)hm.method->get_access_flags();
         *flags &= ~(NO_COMPILE);
     }
@@ -52,6 +53,9 @@ bool Ripterms::JavaHook::hook(jmethodID methodID, i2i_detour_t detour)
         if (hk.method == method)
             return true;
     }
+
+
+    method->set_dont_inline(true);
     int* flags = (int*)method->get_access_flags();
     *flags |= (NO_COMPILE);
 
@@ -61,6 +65,8 @@ bool Ripterms::JavaHook::hook(jmethodID methodID, i2i_detour_t detour)
     Ripterms::p_env->DeleteLocalRef(owner);
 
     method = *(HotSpot::Method**)methodID;
+
+    method->set_dont_inline(true);
     flags = (int*)method->get_access_flags();
     *flags |= (NO_COMPILE);
 

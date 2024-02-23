@@ -127,6 +127,11 @@ namespace Mappings
 			}
 		]
 	},
+	"io/netty/channel/ChannelHandlerContext": {
+		"obfuscated": "io/netty/channel/ChannelHandlerContext",
+		"fields": [],
+		"methods": []
+	},
 )"
 R"(
 	"net/minecraft/client/Minecraft": {
@@ -761,6 +766,18 @@ R"(
 			}
 		],
 		"methods": []
+	},
+	"net/minecraft/network/NetworkManager": {
+		"obfuscated": "ek",
+		"fields": [],
+		"methods": [
+			{
+				"name": "channelRead0",
+				"obfuscated": "a",
+				"signature": "(Lio/netty/channel/ChannelHandlerContext;Lff;)V",
+				"static": false
+			}
+		]
 	}
 }
 )";

@@ -206,6 +206,7 @@ namespace HotSpot
         void set_from_compiled_entry(void* entry);
         void* get_i2i_entry();
         unsigned short* get_flags();
+        void set_dont_inline(bool enabled);
     };
 
     struct Array

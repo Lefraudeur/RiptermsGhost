@@ -13,6 +13,7 @@
 #include <thread>
 #include <mutex>
 #include <imgui.h>
+#include "../../net/minecraft/network/NetworkManager/NetworkManager.h"
 
 namespace Ripterms
 {
@@ -33,6 +34,7 @@ namespace Ripterms
 			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel);
 			virtual void onGetMouseOver(JNIEnv* env, float partialTicks, bool* cancel);
 			virtual void onGetClientModName(JNIEnv* env, bool* cancel);
+			virtual void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel);
 
 			void onKeyBind(int keyBind);
 		protected:
@@ -56,7 +58,7 @@ namespace Ripterms
 			float max_distance = 6.0f;
 			float max_angle = 80.0f;
 			float multiplier = 1.0f;
-			float multiplierPitch = 0.5f;
+			float multiplierPitch = 0.0f;
 			EntityPlayer prev_selected_target{ Ripterms::p_env, true };
 		};
 
@@ -269,9 +271,20 @@ namespace Ripterms
 			float partialTicks = 1.0f;
 		};
 
+		class AttackLag : public IModule
+		{
+		public:
+			void renderGUI() override;
+			void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel) override;
+			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel) override;
+		private:
+			std::atomic<bool> lag = false;
+			int delay = 250;
+		};
+
 		inline std::map<std::string, std::vector<IModule*>> categories =
 		{
-			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap(), new HitBoxes(), new BackTrack()}},
+			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap(), new HitBoxes(), new BackTrack(), new AttackLag()}},
 			{"Player", {new FastPlace(), new Blink(), new LegitScaffold(), new NoFall()}},
 			{"Movement", {new Velocity(), new Sprint(), new Glide(), new VelocityFly(), new Speed()}},
 			{"Render", {new Xray(), new FullBright(), new ESP()}},

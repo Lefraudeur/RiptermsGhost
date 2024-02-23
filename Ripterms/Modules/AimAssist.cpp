@@ -186,7 +186,7 @@ void Ripterms::Modules::AimAssist::renderGUI()
 		ImGui::SliderFloat("Max Distance", &max_distance, 1.0f, 6.0f, "%.1f");
 		ImGui::SliderFloat("Max Angle", &max_angle, 10.0f, 180.0f, "%.1f");
 		ImGui::SliderFloat("Multiplier Yaw", &multiplier, 0.1f, 2.0f, "%.1f");
-		ImGui::SliderFloat("Multiplier Pitch", &multiplierPitch, 0.1f, 2.0f, "%.1f");
+		ImGui::SliderFloat("Multiplier Pitch", &multiplierPitch, 0.0f, 2.0f, "%.1f");
 		ImGui::EndGroup();
 	}
 }

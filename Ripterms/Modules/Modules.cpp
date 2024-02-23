@@ -41,6 +41,10 @@ void Ripterms::Modules::IModule::onGetClientModName(JNIEnv* env, bool* cancel)
 {
 }
 
+void Ripterms::Modules::IModule::onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel)
+{
+}
+
 void Ripterms::Modules::IModule::onKeyBind(int keyBind)
 {
 	if (!keyBind || keyBind != this->keyBind) return;
@@ -135,6 +139,25 @@ static void getClientModName_callback(HotSpot::frame* frame, HotSpot::Thread* th
 	return;
 }
 
+static void channelRead0_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
+{
+	if (!Ripterms::p_env) return;
+	JNIEnv* env = thread->get_env();
+
+	Packet packet(Ripterms::JavaHook::get_jobject_param_at(frame, 2), env);
+	ChannelHandlerContext context(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env);
+	NetworkManager this_networkManager(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
+
+	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	{
+		for (Ripterms::Modules::IModule* module : category.second)
+		{
+			module->onChannelRead0(env, this_networkManager, context, packet, cancel);
+		}
+	}
+	return;
+}
+
 void Ripterms::Modules::setupEventHooks()
 {
 	Ripterms::JavaClassV2 NetHandlerPlayClient("net/minecraft/client/network/NetHandlerPlayClient");
@@ -160,6 +183,10 @@ void Ripterms::Modules::setupEventHooks()
 	Ripterms::JavaClassV2 ClientBrandRetriever("net/minecraft/client/ClientBrandRetriever");
 	jmethodID getClientModName = ClientBrandRetriever.getMethodID("getClientModName");
 	Ripterms::JavaHook::hook(getClientModName, getClientModName_callback);
+
+	Ripterms::JavaClassV2 NetworkManager("net/minecraft/network/NetworkManager");
+	jmethodID channelRead0 = NetworkManager.getMethodID("channelRead0");
+	Ripterms::JavaHook::hook(channelRead0, channelRead0_callback);
 }
 
 void Ripterms::Modules::runAll()
@@ -188,4 +215,42 @@ void Ripterms::Modules::cleanAll()
 
 void Ripterms::Modules::ESP::render()
 {
+}
+
+void Ripterms::Modules::AttackLag::renderGUI()
+{
+	static bool display_options = false;
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
+	ImGui::Checkbox("AttackLag", &enabled);
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+	if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+		display_options = !display_options;
+	ImGui::SameLine();
+	ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30.0f);
+	if (ImGui::ArrowButton("aimopt", ImGuiDir_Down))
+		display_options = !display_options;
+	if (display_options)
+	{
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
+		ImGui::BeginGroup();
+		ImGui::SliderInt("Packet Receive delay ms", &delay, 10, 1000, "%d");
+		ImGui::EndGroup();
+	}
+}
+
+void Ripterms::Modules::AttackLag::onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel)
+{
+	if (lag)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+		lag = false;
+	}
+}
+
+void Ripterms::Modules::AttackLag::onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel)
+{
+	if (!enabled) return;
+	lag = true;
 }
