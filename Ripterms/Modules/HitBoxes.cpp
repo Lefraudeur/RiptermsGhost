@@ -29,12 +29,15 @@ void Ripterms::Modules::HitBoxes::run()
 	if (!enabled || !timer.isElapsed())
 		return;
 
-	Ripterms::Maths::Vector3d thePlayer_position = cache->thePlayer.getPosition();
+	Ripterms::Maths::Vector3d thePlayerPos = Ripterms::cache->thePlayer.getPosition();
 
 	for (EntityPlayer& target : cache->playerEntities.toVector<EntityPlayer>())
 	{
+		if (!target.isValid()) continue;
 		if (target.isEqualTo(cache->thePlayer))
 			continue;
+		if ((target.getPosition() - thePlayerPos).distance() > 6.0) continue;
+		
 
 		AxisAlignedBB target_bb = target.getBoundingBox();
 		if

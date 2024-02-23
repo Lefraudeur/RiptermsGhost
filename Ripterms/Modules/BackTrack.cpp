@@ -31,9 +31,11 @@ void Ripterms::Modules::BackTrack::run()
 	if (!timer.isElapsed())
 		return;
 
+	Ripterms::Maths::Vector3d thePlayerPos = Ripterms::cache->thePlayer.getPosition();
 	for (EntityPlayer& player : Ripterms::cache->playerEntities.toVector<EntityPlayer>())
 	{
-		if (player.isEqualTo(Ripterms::cache->thePlayer)) continue;
+		if (!player.isValid() || player.isEqualTo(Ripterms::cache->thePlayer)) continue;
+		if ((player.getPosition() - thePlayerPos).distance() > 6.0) continue;
 		Ripterms::Maths::Vector3d vector = player.getMovementVector(partialTicks);
 		AxisAlignedBB bb = player.getBoundingBox();
 		Ripterms::Maths::Vector3d minbb(bb.getMinX(), bb.getMinY(), bb.getMinZ());

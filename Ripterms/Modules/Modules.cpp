@@ -292,7 +292,7 @@ void Ripterms::Modules::NoMiss::renderGUI()
 void Ripterms::Modules::NoMiss::onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel)
 {
 	if (!enabled) return;
-	if (theMinecraft.getObjectMouseOver().getType().isEqualTo(MovingObjectType::getType("MISS")))
+	if (theMinecraft.getObjectMouseOver().getType().isEqualTo(MovingObjectType::getType("MISS", env)))
 	{
 		*cancel = true;
 	}
