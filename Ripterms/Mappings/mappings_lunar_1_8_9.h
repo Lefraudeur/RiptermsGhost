@@ -364,6 +364,12 @@ R"(
 				"obfuscated": "prevRotationPitch",
 				"signature": "F",
 				"static": false
+			},
+			{
+				"name": "entityId",
+				"obfuscated": "entityId",
+				"signature": "I",
+				"static": false
 			}
 		],
 		"methods": [
@@ -785,6 +791,36 @@ R"(
 				"static": false
 			}
 		]
+	},
+	"net/minecraft/network/play/server/S12PacketEntityVelocity": {
+		"obfuscated": "net/minecraft/network/play/server/S12PacketEntityVelocity",
+		"fields": [
+			{
+				"name": "entityID",
+				"obfuscated": "entityID",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "motionX",
+				"obfuscated": "motionX",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "motionY",
+				"obfuscated": "motionY",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "motionZ",
+				"obfuscated": "motionZ",
+				"signature": "I",
+				"static": false
+			}
+		],
+		"methods": []
 	}
 }
 )";

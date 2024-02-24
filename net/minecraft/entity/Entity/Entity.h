@@ -23,6 +23,7 @@ public:
 	AxisAlignedBB getBoundingBox() const;
 	float getEyeHeight() const;
 	Entity getRidingEntity() const;
+	int getEntityId() const;
 
 	void setPosition(const Ripterms::Maths::Vector3d& position);
 	void setRidingEntity(Entity& entity);

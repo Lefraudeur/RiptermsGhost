@@ -3,6 +3,7 @@
 #include <ImGui/imgui.h>
 #include "../../net/minecraft/network/play/client/C03PacketPlayer/C03PacketPlayer.h"
 #include "../Hook/JavaHook.h"
+#include "../../net/minecraft/network/play/server/S12PacketEntityVelocity/S12PacketEntityVelocity.h"
 
 void Ripterms::Modules::IModule::run()
 {
@@ -319,4 +320,26 @@ void Ripterms::Modules::BlockOnAttack::onAttackTargetEntityWithCurrentItem(JNIEn
 	GetCursorPos(&cursorPos);
 	PostMessageA(Ripterms::window, WM_RBUTTONDOWN, MK_RBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
 	PostMessageA(Ripterms::window, WM_RBUTTONUP, MK_RBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
+}
+
+void Ripterms::Modules::VelocityPacket::renderGUI()
+{
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
+	ImGui::Checkbox("VelocityPacket", &enabled);
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+}
+
+void Ripterms::Modules::VelocityPacket::onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel)
+{
+	if (!enabled) return;
+	if (!packet.isValid()) return;
+	if (!packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S12PacketEntityVelocity").get_jclass(env))) return;
+
+	S12PacketEntityVelocity velocityPacket(packet, env);
+	if (velocityPacket.getEntityID() != Minecraft::getTheMinecraft(env).getThePlayer().getEntityId()) return;
+	velocityPacket.setMotionX(0);
+	velocityPacket.setMotionY(0);
+	velocityPacket.setMotionZ(0);
 }

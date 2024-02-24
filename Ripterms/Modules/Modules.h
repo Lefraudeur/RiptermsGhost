@@ -299,6 +299,13 @@ namespace Ripterms
 			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel) override;
 		};
 
+		class VelocityPacket : public IModule
+		{
+		public:
+			void renderGUI() override;
+			void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel) override;
+		};
+
 
 		class Category
 		{
@@ -325,7 +332,7 @@ namespace Ripterms
 		{
 			Category::create<AimAssist, Reach, LeftClicker, WTap, HitBoxes, BackTrack, AttackLag, NoMiss, BlockOnAttack>("Combat"),
 			Category::create<FastPlace, Blink, LegitScaffold, NoFall>("Player"),
-			Category::create<Velocity, Sprint, Glide, VelocityFly, Speed>("Movement"),
+			Category::create<Velocity, VelocityPacket, Sprint, Glide, VelocityFly, Speed>("Movement"),
 			Category::create<Xray, FullBright, ESP>("Render"),
 			Category::create<ClientBrandChanger, Test>("Whatever")
 		};
