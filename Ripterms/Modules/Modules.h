@@ -303,11 +303,10 @@ namespace Ripterms
 		class Category
 		{
 		public:
-			Category(const char* name, std::vector<IModule*>&& modules) : name(name), modules(std::move(modules)) {}
 			Category(const Category& cat) = delete;
 			~Category() { for (IModule* module : modules) delete module; }
 
-			template<typename... T, typename = std::enable_if_t<((std::is_base_of_v<IModule, T> || ...))>>
+			template<typename... T, typename = std::enable_if_t<((std::is_base_of_v<IModule, T> && ...))>>
 			inline static Category create(const char* name)
 			{
 				std::vector<IModule*> modules{};
@@ -319,12 +318,13 @@ namespace Ripterms
 			const char* name;
 			std::vector<IModule*> modules;
 		private:
+			Category(const char* name, std::vector<IModule*>&& modules) : name(name), modules(std::move(modules)) {}
 		};
 
 		inline Category categories[] =
 		{
 			Category::create<AimAssist, Reach, LeftClicker, WTap, HitBoxes, BackTrack, AttackLag, NoMiss, BlockOnAttack>("Combat"),
-			Category::create<FastPlace, Blink, LegitScaffold, NoFall> ("Player"),
+			Category::create<FastPlace, Blink, LegitScaffold, NoFall>("Player"),
 			Category::create<Velocity, Sprint, Glide, VelocityFly, Speed>("Movement"),
 			Category::create<Xray, FullBright, ESP>("Render"),
 			Category::create<ClientBrandChanger, Test>("Whatever")
