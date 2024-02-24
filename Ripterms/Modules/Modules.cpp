@@ -61,13 +61,14 @@ static void addToSendQueue_callback(HotSpot::frame* frame, HotSpot::Thread* thre
 	if (Ripterms::Modules::IModule::onAddToSendQueueNoEvent) return;
 	JNIEnv* env = thread->get_env();
 
-	NetHandlerPlayClient sendQueue(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
-	Packet packet(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env);
+	NetHandlerPlayClient sendQueue(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
+	Packet packet(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env, true);
 
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* module : category.second)
+		for (Ripterms::Modules::IModule* module : category.modules)
 		{
+			Ripterms::JNIFrame frame(env);
 			module->onAddToSendQueue(env, sendQueue, packet, cancel);
 		}
 	}
@@ -81,9 +82,9 @@ static void getMouseOver_callback(HotSpot::frame* frame, HotSpot::Thread* thread
 	JNIEnv* env = thread->get_env();
 
 	float f = Ripterms::JavaHook::get_primitive_param_at<float>(frame, 1);
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* module : category.second)
+		for (Ripterms::Modules::IModule* module : category.modules)
 		{
 			module->onGetMouseOver(env, f, cancel);
 		}
@@ -96,13 +97,14 @@ static void attackTargetEntityWithCurrentItem_callback(HotSpot::frame* frame, Ho
 	if (!Ripterms::p_env) return;
 	JNIEnv* env = thread->get_env();
 
-	EntityPlayer this_player(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
-	Entity entity(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env);
+	EntityPlayer this_player(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
+	Entity entity(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env, true);
 
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* module : category.second)
+		for (Ripterms::Modules::IModule* module : category.modules)
 		{
+			Ripterms::JNIFrame frame(env);
 			module->onAttackTargetEntityWithCurrentItem(env, this_player, entity, cancel);
 		}
 	}
@@ -115,12 +117,13 @@ static void onUpdateWalkingPlayer_callback(HotSpot::frame* frame, HotSpot::Threa
 	if (!Ripterms::p_env) return;
 	JNIEnv* env = thread->get_env();
 
-	EntityPlayerSP this_player(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
+	EntityPlayerSP this_player(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
 
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* module : category.second)
+		for (Ripterms::Modules::IModule* module : category.modules)
 		{
+			Ripterms::JNIFrame frame(env);
 			module->onUpdateWalkingPlayer(env, this_player, cancel);
 		}
 	}
@@ -133,10 +136,11 @@ static void getClientModName_callback(HotSpot::frame* frame, HotSpot::Thread* th
 	if (!Ripterms::p_env) return;
 	JNIEnv* env = thread->get_env();
 
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* module : category.second)
+		for (Ripterms::Modules::IModule* module : category.modules)
 		{
+			Ripterms::JNIFrame frame(env);
 			module->onGetClientModName(env, cancel);
 		}
 	}
@@ -148,14 +152,15 @@ static void channelRead0_callback(HotSpot::frame* frame, HotSpot::Thread* thread
 	if (!Ripterms::p_env) return;
 	JNIEnv* env = thread->get_env();
 
-	Packet packet(Ripterms::JavaHook::get_jobject_param_at(frame, 2), env);
-	ChannelHandlerContext context(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env);
-	NetworkManager this_networkManager(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
+	NetworkManager this_networkManager(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
+	ChannelHandlerContext context(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env, true);
+	Packet packet(Ripterms::JavaHook::get_jobject_param_at(frame, 2), env, true);
 
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* module : category.second)
+		for (Ripterms::Modules::IModule* module : category.modules)
 		{
+			Ripterms::JNIFrame frame(env);
 			module->onChannelRead0(env, this_networkManager, context, packet, cancel);
 		}
 	}
@@ -167,12 +172,13 @@ static void clickMouse_callback(HotSpot::frame* frame, HotSpot::Thread* thread, 
 	if (!Ripterms::p_env) return;
 	JNIEnv* env = thread->get_env();
 
-	Minecraft theMinecraft(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
+	Minecraft theMinecraft(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
 
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* module : category.second)
+		for (Ripterms::Modules::IModule* module : category.modules)
 		{
+			Ripterms::JNIFrame frame(env);
 			module->onClickMouse(env, theMinecraft, cancel);
 		}
 	}
@@ -216,9 +222,9 @@ void Ripterms::Modules::setupEventHooks()
 
 void Ripterms::Modules::runAll()
 {
-	for (const std::pair<std::string, std::vector<IModule*>>& category : categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (IModule* m : category.second)
+		for (IModule* m : category.modules)
 		{
 			m->run();
 		}
@@ -227,12 +233,11 @@ void Ripterms::Modules::runAll()
 
 void Ripterms::Modules::cleanAll()
 {
-	for (const std::pair<std::string, std::vector<IModule*>>& category : categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (IModule* m : category.second)
+		for (IModule* m : category.modules)
 		{
 			m->disable();
-			delete m;
 		}
 	}
 }

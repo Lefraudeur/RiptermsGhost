@@ -11,8 +11,9 @@
 #include "../../net/minecraft/world/World/World.h"
 #include "../../net/minecraft/client/entity/EntityPlayerSP/EntityPlayerSP.h"
 #include <thread>
-#include <mutex>
 #include <imgui.h>
+#include <type_traits>
+#include <memory>
 #include "../../net/minecraft/network/NetworkManager/NetworkManager.h"
 #include "../../net/minecraft/client/Minecraft/Minecraft.h"
 
@@ -60,7 +61,7 @@ namespace Ripterms
 			float max_distance = 6.0f;
 			float max_angle = 80.0f;
 			float multiplier = 1.0f;
-			float multiplierPitch = 0.0f;
+			float multiplierPitch = 0.4f;
 			EntityPlayer prev_selected_target{ Ripterms::p_env, true };
 		};
 
@@ -270,7 +271,7 @@ namespace Ripterms
 			void renderGUI() override;
 			void run() override;
 		private:
-			float partialTicks = 1.0f;
+			float partialTicks = 0.3f;
 		};
 
 		class AttackLag : public IModule
@@ -281,7 +282,7 @@ namespace Ripterms
 			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel) override;
 		private:
 			bool lag = false;
-			int delay = 250;
+			int delay = 420;
 		};
 
 		class NoMiss : public IModule
@@ -298,13 +299,35 @@ namespace Ripterms
 			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel) override;
 		};
 
-		inline std::map<std::string, std::vector<IModule*>> categories =
+
+		class Category
 		{
-			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap(), new HitBoxes(), new BackTrack(), new AttackLag(), new NoMiss(), new BlockOnAttack()}},
-			{"Player", {new FastPlace(), new Blink(), new LegitScaffold(), new NoFall()}},
-			{"Movement", {new Velocity(), new Sprint(), new Glide(), new VelocityFly(), new Speed()}},
-			{"Render", {new Xray(), new FullBright(), new ESP()}},
-			{"Whatever", {new ClientBrandChanger(), new Test()}}
+		public:
+			Category(const char* name, std::vector<IModule*>&& modules) : name(name), modules(std::move(modules)) {}
+			Category(const Category& cat) = delete;
+			~Category() { for (IModule* module : modules) delete module; }
+
+			template<typename... T, typename = std::enable_if_t<((std::is_base_of_v<IModule, T> || ...))>>
+			inline static Category create(const char* name)
+			{
+				std::vector<IModule*> modules{};
+				modules.reserve(sizeof...(T));
+				(modules.push_back(new T()), ...);
+				return Category(name, std::move(modules));
+			}
+
+			const char* name;
+			std::vector<IModule*> modules;
+		private:
+		};
+
+		inline Category categories[] =
+		{
+			Category::create<AimAssist, Reach, LeftClicker, WTap, HitBoxes, BackTrack, AttackLag, NoMiss, BlockOnAttack>("Combat"),
+			Category::create<FastPlace, Blink, LegitScaffold, NoFall> ("Player"),
+			Category::create<Velocity, Sprint, Glide, VelocityFly, Speed>("Movement"),
+			Category::create<Xray, FullBright, ESP>("Render"),
+			Category::create<ClientBrandChanger, Test>("Whatever")
 		};
 
 		void setupEventHooks();
