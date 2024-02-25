@@ -4,6 +4,7 @@
 #include "../../net/minecraft/network/play/client/C03PacketPlayer/C03PacketPlayer.h"
 #include "../Hook/JavaHook.h"
 #include "../../net/minecraft/network/play/server/S12PacketEntityVelocity/S12PacketEntityVelocity.h"
+#include "../../net/minecraft/network/play/server/S19PacketEntityStatus/S19PacketEntityStatus.h"
 
 void Ripterms::Modules::IModule::run()
 {
@@ -150,7 +151,7 @@ static void getClientModName_callback(HotSpot::frame* frame, HotSpot::Thread* th
 
 static void channelRead0_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-	if (!Ripterms::p_env) return;
+	if (!Ripterms::p_env || Ripterms::Modules::IModule::onChannelRead0NoEvent) return;
 	JNIEnv* env = thread->get_env();
 
 	NetworkManager this_networkManager(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
@@ -255,7 +256,6 @@ void Ripterms::Modules::AttackLag::renderGUI()
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
 	ImGui::Checkbox("AttackLag", &enabled);
 	ImGui::PopStyleVar();
-	ImGui::PopStyleVar();
 	if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 		display_options = !display_options;
 	ImGui::SameLine();
@@ -266,17 +266,39 @@ void Ripterms::Modules::AttackLag::renderGUI()
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderInt("Packet Receive delay ms", &delay, 10, 1000, "%d");
+		ImGui::SliderInt("Packet ReceiveDelay ms", &delay, 10, 1000, "%d");
+		ImGui::Checkbox("disableOnHit", &disableOnHit);
 		ImGui::EndGroup();
 	}
+
+	ImGui::PopStyleVar();
 }
 
 void Ripterms::Modules::AttackLag::onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel)
 {
+	static Ripterms::CTimer timer{ std::chrono::milliseconds(delay) };
+	static int prev_delay = delay;
+	if (!enabled)
+	{
+		lag = false;
+		if (!packets.empty()) sendPackets();
+		return;
+	}
 	if (lag)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-		lag = false;
+		if (timer.isElapsed() || ( disableOnHit && isAttackPacket(packet, env) ))
+		{
+			lag = false;
+			if (!packets.empty()) sendPackets();
+			return;
+		}
+		*cancel = true;
+		addPacket({this_networkManager , context,  packet});
+	}
+	if (prev_delay != delay)
+	{
+		timer.setEvery(std::chrono::milliseconds(delay));
+		prev_delay = delay;
 	}
 }
 
@@ -284,6 +306,32 @@ void Ripterms::Modules::AttackLag::onAttackTargetEntityWithCurrentItem(JNIEnv* e
 {
 	if (!enabled) return;
 	lag = true;
+}
+
+bool Ripterms::Modules::AttackLag::isAttackPacket(Packet& packet, JNIEnv* env)
+{
+	if (!packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S19PacketEntityStatus").get_jclass(env))) return false;
+	S19PacketEntityStatus statusPacket(packet, env, true);
+	if (statusPacket.getEntityId() != Minecraft::getTheMinecraft(env).getThePlayer().getEntityId()) return false;
+	if (statusPacket.getLogicOpcode() == (jbyte)2)
+		return true;
+	return false;
+}
+
+void Ripterms::Modules::AttackLag::sendPackets()
+{
+	onChannelRead0NoEvent = true;
+	std::lock_guard lock{ packets_mutex };
+	for (PacketData& data : packets)
+		data.this_networkManager.channelRead0(data.context, data.packet);
+	packets.clear();
+	onChannelRead0NoEvent = false;
+}
+
+void Ripterms::Modules::AttackLag::addPacket(const PacketData& data)
+{
+	std::lock_guard lock{ packets_mutex };
+	packets.push_back(data);
 }
 
 void Ripterms::Modules::NoMiss::renderGUI()

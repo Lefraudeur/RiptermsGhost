@@ -29,14 +29,18 @@ namespace Ripterms
 			virtual void render();
 			virtual void disable();
 
-			inline static bool onAddToSendQueueNoEvent = false;
+			inline static std::atomic<bool> onAddToSendQueueNoEvent = false;
 			virtual void onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel);
 
 			virtual void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel);
 			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel);
 			virtual void onGetMouseOver(JNIEnv* env, float partialTicks, bool* cancel);
 			virtual void onGetClientModName(JNIEnv* env, bool* cancel);
+
+			inline static std::atomic<bool> onChannelRead0NoEvent = false;
 			virtual void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel);
+
+
 			virtual void onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel);
 
 			void onKeyBind(int keyBind);
@@ -156,8 +160,12 @@ namespace Ripterms
 			void renderGUI() override;
 			void disable() override;
 			void onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel) override;
+			void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel);
 		private:
 			void sendPackets(NetHandlerPlayClient& sendQueue);
+			bool delay_sent_packets = true;
+			bool delay_received_packets = false;
+
 			std::vector<Packet> packets{};
 		};
 
@@ -280,9 +288,22 @@ namespace Ripterms
 			void renderGUI() override;
 			void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel) override;
 			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel) override;
+			bool isAttackPacket(Packet& packet, JNIEnv* env);
 		private:
-			bool lag = false;
-			int delay = 420;
+			std::atomic<bool> lag = false;
+			bool disableOnHit = true;
+			int delay = 450;
+
+			struct PacketData
+			{
+				NetworkManager this_networkManager;
+				ChannelHandlerContext context;
+				Packet packet;
+			};
+			std::mutex packets_mutex{};
+			std::vector<PacketData> packets{};
+			void sendPackets();
+			void addPacket(const PacketData& data);
 		};
 
 		class NoMiss : public IModule

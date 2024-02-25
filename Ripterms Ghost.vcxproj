@@ -210,6 +210,7 @@
     <ClCompile Include="net\minecraft\network\play\client\C03PacketPlayer\C04PacketPlayerPosition\C04PacketPlayerPosition.cpp" />
     <ClCompile Include="net\minecraft\network\play\client\C03PacketPlayer\C06PacketPlayerPosLook\C06PacketPlayerPosLook.cpp" />
     <ClCompile Include="net\minecraft\network\play\server\S12PacketEntityVelocity\S12PacketEntityVelocity.cpp" />
+    <ClCompile Include="net\minecraft\network\play\server\S19PacketEntityStatus\S19PacketEntityStatus.cpp" />
     <ClCompile Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.cpp" />
     <ClCompile Include="net\minecraft\util\BlockPos\BlockPos.cpp" />
     <ClCompile Include="net\minecraft\util\MovingObjectPosition\MovingObjectPosition.cpp" />
@@ -282,6 +283,7 @@
     <ClInclude Include="net\minecraft\network\play\client\C03PacketPlayer\C04PacketPlayerPosition\C04PacketPlayerPosition.h" />
     <ClInclude Include="net\minecraft\network\play\client\C03PacketPlayer\C06PacketPlayerPosLook\C06PacketPlayerPosLook.h" />
     <ClInclude Include="net\minecraft\network\play\server\S12PacketEntityVelocity\S12PacketEntityVelocity.h" />
+    <ClInclude Include="net\minecraft\network\play\server\S19PacketEntityStatus\S19PacketEntityStatus.h" />
     <ClInclude Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.h" />
     <ClInclude Include="net\minecraft\util\BlockPos\BlockPos.h" />
     <ClInclude Include="net\minecraft\util\MovingObjectPosition\MovingObjectPosition.h" />

@@ -132,3 +132,12 @@ const jobject& Object::getInstance() const
 {
 	return instance;
 }
+
+Object& Object::makeGlobal()
+{
+	if (this->is_global) return *this;
+	this->is_global = true;
+	if (!this->instance) return *this;
+	this->instance = env->NewGlobalRef(this->instance);
+	return *this;
+}
