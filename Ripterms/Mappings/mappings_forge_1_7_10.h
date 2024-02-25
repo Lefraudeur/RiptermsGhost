@@ -810,6 +810,24 @@ R"(
 			}
 		],
 		"methods": []
+	},
+	"net/minecraft/network/play/server/S19PacketEntityStatus": {
+		"obfuscated": "net/minecraft/network/play/server/S19PacketEntityStatus",
+		"fields": [
+			{
+				"name": "entityId",
+				"obfuscated": "field_149164_a",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "logicOpcode",
+				"obfuscated": "field_149163_b",
+				"signature": "B",
+				"static": false
+			}
+		],
+		"methods": []
 	}
 }
 )";

@@ -252,6 +252,18 @@
     <ClCompile Include="net\minecraft\network\play\server\S12PacketEntityVelocity\S12PacketEntityVelocity.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="net\minecraft\network\play\server\S19PacketEntityStatus\S19PacketEntityStatus.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Ripterms\Modules\NoMiss.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Ripterms\Modules\VelocityPacket.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="net\minecraft\network\protocol\game\ClientboundDamageEventPacket\ClientboundDamageEventPacket.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ripterms\Ripterms.h">
@@ -429,6 +441,12 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="net\minecraft\network\play\server\S12PacketEntityVelocity\S12PacketEntityVelocity.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="net\minecraft\network\play\server\S19PacketEntityStatus\S19PacketEntityStatus.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="net\minecraft\network\protocol\game\ClientboundDamageEventPacket\ClientboundDamageEventPacket.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

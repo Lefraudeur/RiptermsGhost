@@ -1,5 +1,7 @@
 #include "Modules.h"
 #include "../Cache/Cache.h"
+#include "../../net/minecraft/network/play/server/S19PacketEntityStatus/S19PacketEntityStatus.h"
+#include "../../net/minecraft/network/protocol/game/ClientboundDamageEventPacket/ClientboundDamageEventPacket.h"
 
 void Ripterms::Modules::BackTrack::renderGUI()
 {
@@ -8,42 +10,94 @@ void Ripterms::Modules::BackTrack::renderGUI()
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
 	ImGui::Checkbox("BackTrack", &enabled);
 	ImGui::PopStyleVar();
-	ImGui::PopStyleVar();
 	if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
 		display_options = !display_options;
 	ImGui::SameLine();
 	ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30.0f);
-	if (ImGui::ArrowButton("BackTrackopt", ImGuiDir_Down))
+	if (ImGui::ArrowButton("BackTrackOpt", ImGuiDir_Down))
 		display_options = !display_options;
 	if (display_options)
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderFloat("PartialTicks in advance", &partialTicks, 0.01f, 2.0f, "%.2f");
+		ImGui::SliderInt("Packet ReceiveDelay ms", &delay, 10, 1000, "%d");
+		ImGui::Checkbox("disableOnHit", &disableOnHit);
 		ImGui::EndGroup();
+	}
+
+	ImGui::PopStyleVar();
+}
+
+void Ripterms::Modules::BackTrack::onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel)
+{
+	static Ripterms::CTimer timer{ std::chrono::milliseconds(delay) };
+	static int prev_delay = delay;
+	if (!enabled)
+	{
+		lag = false;
+		if (!packets.empty()) sendPackets(env);
+		return;
+	}
+	if (lag)
+	{
+		if (!packet.isValid()) return;
+		if (timer.isElapsed() || (disableOnHit && isAttackPacket(packet, env)))
+		{
+			lag = false;
+			if (!packets.empty()) sendPackets(env);
+			return;
+		}
+		*cancel = true;
+		addPacket({ this_networkManager , context,  packet });
+	}
+	if (prev_delay != delay)
+	{
+		timer.setEvery(std::chrono::milliseconds(delay));
+		prev_delay = delay;
 	}
 }
 
-void Ripterms::Modules::BackTrack::run()
+void Ripterms::Modules::BackTrack::onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel)
 {
 	if (!enabled) return;
-	static Ripterms::CTimer timer = std::chrono::milliseconds(10);
-	if (!timer.isElapsed())
-		return;
+	lag = true;
+}
 
-	Ripterms::Maths::Vector3d thePlayerPos = Ripterms::cache->thePlayer.getPosition();
-	for (EntityPlayer& player : Ripterms::cache->playerEntities.toVector<EntityPlayer>())
+bool Ripterms::Modules::BackTrack::isAttackPacket(Packet& packet, JNIEnv* env)
+{
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_19_4)
 	{
-		if (!player.isValid() || player.isEqualTo(Ripterms::cache->thePlayer)) continue;
-		if (player.getTicksExisted() < 10 || (player.getPosition() - thePlayerPos).distance() > 6.0) continue;
-		Ripterms::Maths::Vector3d vector = player.getMovementVector(partialTicks);
-		AxisAlignedBB bb = player.getBoundingBox();
-		Ripterms::Maths::Vector3d minbb(bb.getMinX(), bb.getMinY(), bb.getMinZ());
-		Ripterms::Maths::Vector3d maxbb(bb.getMaxX(), bb.getMaxY(), bb.getMaxZ());
-		minbb = minbb - vector;
-		maxbb = maxbb - vector;
-
-		bb.setMinX(min(minbb.x, bb.getMinX())); bb.setMinY(min(minbb.y, bb.getMinY())); bb.setMinZ(min(minbb.z, bb.getMinZ()));
-		bb.setMaxX(max(maxbb.x, bb.getMaxX())); bb.setMaxY(max(maxbb.y, bb.getMaxY())); bb.setMaxZ(max(maxbb.z, bb.getMaxZ()));
+		if (!packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/protocol/game/ClientboundDamageEventPacket").get_jclass(env))) return false;
+		ClientboundDamageEventPacket damagePacket(packet, env, true);
+		return damagePacket.getEntityId() == Minecraft::getTheMinecraft(env).getThePlayer().getEntityId();
 	}
+	if (!packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S19PacketEntityStatus").get_jclass(env))) return false;
+	S19PacketEntityStatus statusPacket(packet, env, true);
+	if (statusPacket.getEntityId() != Minecraft::getTheMinecraft(env).getThePlayer().getEntityId()) return false;
+
+	jbyte opcode = statusPacket.getLogicOpcode();
+
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
+		return Ripterms::is_any_of(opcode, 2, 33, 36, 37, 44);
+
+	return opcode == (jbyte)2;
+}
+
+void Ripterms::Modules::BackTrack::sendPackets(JNIEnv* env)
+{
+	onChannelRead0NoEvent = true;
+	std::lock_guard lock{ packets_mutex };
+	for (PacketData& data : packets)
+	{
+		data.this_networkManager.set_env(env);
+		data.this_networkManager.channelRead0(data.context, data.packet);
+	}
+	packets.clear();
+	onChannelRead0NoEvent = false;
+}
+
+void Ripterms::Modules::BackTrack::addPacket(const PacketData& data)
+{
+	std::lock_guard lock{ packets_mutex };
+	packets.push_back(data);
 }

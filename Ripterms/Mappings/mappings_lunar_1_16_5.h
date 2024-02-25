@@ -792,6 +792,24 @@ R"(
 			}
 		],
 		"methods": []
+	},
+	"net/minecraft/network/play/server/S19PacketEntityStatus": {
+		"obfuscated": "net/minecraft/network/protocol/game/ClientboundEntityEventPacket",
+		"fields": [
+			{
+				"name": "entityId",
+				"obfuscated": "entityId",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "logicOpcode",
+				"obfuscated": "eventId",
+				"signature": "B",
+				"static": false
+			}
+		],
+		"methods": []
 	}
 }
 )";

@@ -792,7 +792,7 @@ R"(
 		]
 	},
 	"net/minecraft/network/play/server/S12PacketEntityVelocity": {
-		"obfuscated": "net/minecraft/network/play/server/S12PacketEntityVelocity",
+		"obfuscated": "hm",
 		"fields": [
 			{
 				"name": "entityID",
@@ -816,6 +816,24 @@ R"(
 				"name": "motionZ",
 				"obfuscated": "d",
 				"signature": "I",
+				"static": false
+			}
+		],
+		"methods": []
+	},
+	"net/minecraft/network/play/server/S19PacketEntityStatus": {
+		"obfuscated": "gi",
+		"fields": [
+			{
+				"name": "entityId",
+				"obfuscated": "a",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "logicOpcode",
+				"obfuscated": "b",
+				"signature": "B",
 				"static": false
 			}
 		],

@@ -25,6 +25,8 @@ public:
 	bool isValid();
 	void clear(); //delete ref
 	const jobject& getInstance() const;
+	Object& makeGlobal();
+	void set_env(JNIEnv* env);
 protected:
 	inline static Ripterms::JavaClassV2 ObjectClass{ "java/lang/Object" };
 	JNIEnv* env = Ripterms::p_env;
