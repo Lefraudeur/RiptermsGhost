@@ -28,7 +28,7 @@ Change mappings to add new versions
 - Reach (uses constant pool editing)
 - Left Clicker
 - Full Bright
-- Velocity
+- Velocity / VelocityPacket (uses channelRead0 event)
 - Client Brand Changer (modifies the getClientModName return value) (to troll staffs lol, sent to the server on login and displayed by some anticheats)
 - Blink (hooks and cancels addToSendQueue)
 - FastPlace
@@ -58,9 +58,9 @@ Insert to open the gui / end key to self destruct
 - onUpdateWalkingPlayer
 - onAttackTargetEntityWithCurrentItem
 - onChannelRead0 (edit received packets)
-##### ⚠java method hooking is still unreliable, and might cause a crash on some methods
+##### ⚠java method hooking is still unreliable, and might cause crash the game on some methods
 
-To test it, just build the project with visual studio 2022, and inject the dll using any injector (process hacker, extreme injector...).
+To test it, just build the project with visual studio 2022 (compile on x64 Release config), and inject the dll using any injector (process hacker, extreme injector...).
 You can also take a look at RiptermsInjector: https://github.com/Lefraudeur/RiptermsInjector
 
 Help would be appreciated, this repo is here to share your knowledge with other people. You can also make suggestions. (open an issue or a pull request to dev branch)
