@@ -340,6 +340,12 @@ R"(
 				"obfuscated": "xRotO",
 				"signature": "F",
 				"static": false
+			},
+			{
+				"name": "entityId",
+				"obfuscated": "id",
+				"signature": "I",
+				"static": false
 			}
 		],
 		"methods": [
@@ -756,6 +762,36 @@ R"(
 				"static": false
 			}
 		]
+	},
+	"net/minecraft/network/play/server/S12PacketEntityVelocity": {
+		"obfuscated": "net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket",
+		"fields": [
+			{
+				"name": "entityID",
+				"obfuscated": "id",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "motionX",
+				"obfuscated": "xa",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "motionY",
+				"obfuscated": "ya",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "motionZ",
+				"obfuscated": "za",
+				"signature": "I",
+				"static": false
+			}
+		],
+		"methods": []
 	}
 }
 )";

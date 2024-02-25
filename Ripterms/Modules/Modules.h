@@ -304,6 +304,10 @@ namespace Ripterms
 		public:
 			void renderGUI() override;
 			void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel) override;
+		private:
+			float motionX_multiplier;
+			float motionY_multiplier;
+			float motionZ_multiplier;
 		};
 
 
