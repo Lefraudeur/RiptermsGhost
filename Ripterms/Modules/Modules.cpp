@@ -281,7 +281,7 @@ void Ripterms::Modules::AttackLag::onChannelRead0(JNIEnv* env, NetworkManager& t
 	if (!enabled)
 	{
 		lag = false;
-		if (!packets.empty()) sendPackets();
+		if (!packets.empty()) sendPackets(env);
 		return;
 	}
 	if (lag)
@@ -289,7 +289,7 @@ void Ripterms::Modules::AttackLag::onChannelRead0(JNIEnv* env, NetworkManager& t
 		if (timer.isElapsed() || ( disableOnHit && isAttackPacket(packet, env) ))
 		{
 			lag = false;
-			if (!packets.empty()) sendPackets();
+			if (!packets.empty()) sendPackets(env);
 			return;
 		}
 		*cancel = true;
@@ -318,12 +318,15 @@ bool Ripterms::Modules::AttackLag::isAttackPacket(Packet& packet, JNIEnv* env)
 	return false;
 }
 
-void Ripterms::Modules::AttackLag::sendPackets()
+void Ripterms::Modules::AttackLag::sendPackets(JNIEnv* env)
 {
 	onChannelRead0NoEvent = true;
 	std::lock_guard lock{ packets_mutex };
 	for (PacketData& data : packets)
+	{
+		data.this_networkManager.set_env(env);
 		data.this_networkManager.channelRead0(data.context, data.packet);
+	}
 	packets.clear();
 	onChannelRead0NoEvent = false;
 }

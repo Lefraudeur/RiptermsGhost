@@ -141,3 +141,9 @@ Object& Object::makeGlobal()
 	this->instance = env->NewGlobalRef(this->instance);
 	return *this;
 }
+
+void Object::set_env(JNIEnv* env)
+{
+	this->env = env;
+	return;
+}

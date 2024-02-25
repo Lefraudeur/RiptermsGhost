@@ -167,6 +167,17 @@ namespace Ripterms
 			bool delay_received_packets = false;
 
 			std::vector<Packet> packets{};
+
+			struct PacketData
+			{
+				NetworkManager this_networkManager;
+				ChannelHandlerContext context;
+				Packet packet;
+			};
+			std::mutex rpackets_mutex{};
+			std::vector<PacketData> rpackets{};
+			void sendrPackets(JNIEnv* env);
+			void addrPacket(const PacketData& data);
 		};
 
 		class LegitScaffold : public IModule
@@ -302,7 +313,7 @@ namespace Ripterms
 			};
 			std::mutex packets_mutex{};
 			std::vector<PacketData> packets{};
-			void sendPackets();
+			void sendPackets(JNIEnv* env);
 			void addPacket(const PacketData& data);
 		};
 
