@@ -11,8 +11,11 @@
 #include "../../net/minecraft/world/World/World.h"
 #include "../../net/minecraft/client/entity/EntityPlayerSP/EntityPlayerSP.h"
 #include <thread>
-#include <mutex>
 #include <imgui.h>
+#include <type_traits>
+#include <memory>
+#include "../../net/minecraft/network/NetworkManager/NetworkManager.h"
+#include "../../net/minecraft/client/Minecraft/Minecraft.h"
 
 namespace Ripterms
 {
@@ -26,13 +29,15 @@ namespace Ripterms
 			virtual void render();
 			virtual void disable();
 
-			inline static std::atomic<bool> onAddToSendQueueNoEvent = false;
+			inline static bool onAddToSendQueueNoEvent = false;
 			virtual void onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel);
 
 			virtual void onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel);
 			virtual void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel);
 			virtual void onGetMouseOver(JNIEnv* env, float partialTicks, bool* cancel);
 			virtual void onGetClientModName(JNIEnv* env, bool* cancel);
+			virtual void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel);
+			virtual void onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel);
 
 			void onKeyBind(int keyBind);
 		protected:
@@ -56,7 +61,7 @@ namespace Ripterms
 			float max_distance = 6.0f;
 			float max_angle = 80.0f;
 			float multiplier = 1.0f;
-			float multiplierPitch = 0.5f;
+			float multiplierPitch = 0.4f;
 			EntityPlayer prev_selected_target{ Ripterms::p_env, true };
 		};
 
@@ -266,16 +271,74 @@ namespace Ripterms
 			void renderGUI() override;
 			void run() override;
 		private:
-			float partialTicks = 1.0f;
+			float partialTicks = 0.3f;
 		};
 
-		inline std::map<std::string, std::vector<IModule*>> categories =
+		class AttackLag : public IModule
 		{
-			{"Combat", {new AimAssist(), new Reach(), new LeftClicker(), new WTap(), new HitBoxes(), new BackTrack()}},
-			{"Player", {new FastPlace(), new Blink(), new LegitScaffold(), new NoFall()}},
-			{"Movement", {new Velocity(), new Sprint(), new Glide(), new VelocityFly(), new Speed()}},
-			{"Render", {new Xray(), new FullBright(), new ESP()}},
-			{"Whatever", {new ClientBrandChanger(), new Test()}}
+		public:
+			void renderGUI() override;
+			void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel) override;
+			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel) override;
+		private:
+			bool lag = false;
+			int delay = 420;
+		};
+
+		class NoMiss : public IModule
+		{
+		public:
+			void renderGUI() override;
+			void onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel) override;
+		};
+
+		class BlockOnAttack : public IModule
+		{
+		public: 
+			void renderGUI() override;
+			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel) override;
+		};
+
+		class VelocityPacket : public IModule
+		{
+		public:
+			void renderGUI() override;
+			void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel) override;
+		private:
+			float motionX_multiplier;
+			float motionY_multiplier;
+			float motionZ_multiplier;
+		};
+
+
+		class Category
+		{
+		public:
+			Category(const Category& cat) = delete;
+			~Category() { for (IModule* module : modules) delete module; }
+
+			template<typename... T, typename = std::enable_if_t<((std::is_base_of_v<IModule, T> && ...))>>
+			inline static Category create(const char* name)
+			{
+				std::vector<IModule*> modules{};
+				modules.reserve(sizeof...(T));
+				(modules.push_back(new T()), ...);
+				return Category(name, std::move(modules));
+			}
+
+			const char* name;
+			std::vector<IModule*> modules;
+		private:
+			Category(const char* name, std::vector<IModule*>&& modules) : name(name), modules(std::move(modules)) {}
+		};
+
+		inline Category categories[] =
+		{
+			Category::create<AimAssist, Reach, LeftClicker, WTap, HitBoxes, BackTrack, AttackLag, NoMiss, BlockOnAttack>("Combat"),
+			Category::create<FastPlace, Blink, LegitScaffold, NoFall>("Player"),
+			Category::create<Velocity, VelocityPacket, Sprint, Glide, VelocityFly, Speed>("Movement"),
+			Category::create<Xray, FullBright, ESP>("Render"),
+			Category::create<ClientBrandChanger, Test>("Whatever")
 		};
 
 		void setupEventHooks();

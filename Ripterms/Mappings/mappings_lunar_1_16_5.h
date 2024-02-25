@@ -127,6 +127,11 @@ namespace Mappings
 			}
 		]
 	},
+	"io/netty/channel/ChannelHandlerContext": {
+		"obfuscated": "io/netty/channel/ChannelHandlerContext",
+		"fields": [],
+		"methods": []
+	},
 )"
 R"(
 	"net/minecraft/client/Minecraft": {
@@ -335,6 +340,12 @@ R"(
 				"obfuscated": "xRotO",
 				"signature": "F",
 				"static": false
+			},
+			{
+				"name": "entityId",
+				"obfuscated": "id",
+				"signature": "I",
+				"static": false
 			}
 		],
 		"methods": [
@@ -495,6 +506,12 @@ R"(
 			{
 				"name": "BLOCK",
 				"obfuscated": "BLOCK",
+				"signature": "Lnet/minecraft/world/phys/HitResult$Type;",
+				"static": true
+			},
+			{
+				"name": "MISS",
+				"obfuscated": "MISS",
 				"signature": "Lnet/minecraft/world/phys/HitResult$Type;",
 				"static": true
 			}
@@ -733,6 +750,48 @@ R"(
 		"fields": [],
 		"methods": [
 		]
+	},
+	"net/minecraft/network/NetworkManager": {
+		"obfuscated": "net/minecraft/network/Connection",
+		"fields": [],
+		"methods": [
+			{
+				"name": "channelRead0",
+				"obfuscated": "channelRead0",
+				"signature": "(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/protocol/Packet;)V",
+				"static": false
+			}
+		]
+	},
+	"net/minecraft/network/play/server/S12PacketEntityVelocity": {
+		"obfuscated": "net/minecraft/network/protocol/game/ClientboundSetEntityMotionPacket",
+		"fields": [
+			{
+				"name": "entityID",
+				"obfuscated": "id",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "motionX",
+				"obfuscated": "xa",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "motionY",
+				"obfuscated": "ya",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "motionZ",
+				"obfuscated": "za",
+				"signature": "I",
+				"static": false
+			}
+		],
+		"methods": []
 	}
 }
 )";

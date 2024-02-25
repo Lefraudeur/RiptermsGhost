@@ -7,8 +7,10 @@ class Object {
 public:
 	//make global if you want to preserve the reference accross local frames,
 	//so if you want to reuse it in another Modules::run() call
+	//becareful to set correct env when in hooks
 	Object(jobject instance, JNIEnv* env = Ripterms::p_env, bool is_global=false);
 	Object(const Object& other_Object);
+	//becareful to set correct env when in hooks
 	Object(JNIEnv* env = Ripterms::p_env, bool is_global = false);
 	~Object();
 

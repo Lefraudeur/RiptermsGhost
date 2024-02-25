@@ -176,6 +176,7 @@
     <ClCompile Include="Include\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Include\miniz\miniz.c" />
+    <ClCompile Include="io\netty\ChannelHandlerContext\ChannelHandlerContext.cpp" />
     <ClCompile Include="java\lang\ClassLoader\ClassLoader.cpp" />
     <ClCompile Include="java\lang\Double\Double.cpp" />
     <ClCompile Include="java\lang\Object\Object.cpp" />
@@ -203,10 +204,12 @@
     <ClCompile Include="net\minecraft\entity\EntityLivingBase\EntityLivingBase.cpp" />
     <ClCompile Include="net\minecraft\entity\Entity\Entity.cpp" />
     <ClCompile Include="net\minecraft\entity\player\EntityPlayer\EntityPlayer.cpp" />
+    <ClCompile Include="net\minecraft\network\NetworkManager\NetworkManager.cpp" />
     <ClCompile Include="net\minecraft\network\Packet\Packet.cpp" />
     <ClCompile Include="net\minecraft\network\play\client\C03PacketPlayer\C03PacketPlayer.cpp" />
     <ClCompile Include="net\minecraft\network\play\client\C03PacketPlayer\C04PacketPlayerPosition\C04PacketPlayerPosition.cpp" />
     <ClCompile Include="net\minecraft\network\play\client\C03PacketPlayer\C06PacketPlayerPosLook\C06PacketPlayerPosLook.cpp" />
+    <ClCompile Include="net\minecraft\network\play\server\S12PacketEntityVelocity\S12PacketEntityVelocity.cpp" />
     <ClCompile Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.cpp" />
     <ClCompile Include="net\minecraft\util\BlockPos\BlockPos.cpp" />
     <ClCompile Include="net\minecraft\util\MovingObjectPosition\MovingObjectPosition.cpp" />
@@ -246,6 +249,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HotSpot\HotSpot.hpp" />
+    <ClInclude Include="io\netty\ChannelHandlerContext\ChannelHandlerContext.h" />
     <ClInclude Include="java\lang\ClassLoader\ClassLoader.h" />
     <ClInclude Include="java\lang\Double\Double.h" />
     <ClInclude Include="java\lang\Object\Object.h" />
@@ -272,10 +276,12 @@
     <ClInclude Include="net\minecraft\entity\EntityLivingBase\EntityLivingBase.h" />
     <ClInclude Include="net\minecraft\entity\Entity\Entity.h" />
     <ClInclude Include="net\minecraft\entity\player\EntityPlayer\EntityPlayer.h" />
+    <ClInclude Include="net\minecraft\network\NetworkManager\NetworkManager.h" />
     <ClInclude Include="net\minecraft\network\Packet\Packet.h" />
     <ClInclude Include="net\minecraft\network\play\client\C03PacketPlayer\C03PacketPlayer.h" />
     <ClInclude Include="net\minecraft\network\play\client\C03PacketPlayer\C04PacketPlayerPosition\C04PacketPlayerPosition.h" />
     <ClInclude Include="net\minecraft\network\play\client\C03PacketPlayer\C06PacketPlayerPosLook\C06PacketPlayerPosLook.h" />
+    <ClInclude Include="net\minecraft\network\play\server\S12PacketEntityVelocity\S12PacketEntityVelocity.h" />
     <ClInclude Include="net\minecraft\util\AxisAlignedBB\AxisAlignedBB.h" />
     <ClInclude Include="net\minecraft\util\BlockPos\BlockPos.h" />
     <ClInclude Include="net\minecraft\util\MovingObjectPosition\MovingObjectPosition.h" />

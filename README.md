@@ -1,4 +1,4 @@
-# RiptermsGhost
+﻿# RiptermsGhost
 
 An example injectable cheat for minecraft using java native interface, jvmti, java method hooking, and constant pool editing.
 
@@ -16,7 +16,7 @@ Any question ? Contact me on discord: lefraudeur
 ### Supported versions :
 x64 windows only. Because of the way ripterms hooks java methods, it supports only some jvm versions (tested on zulu17, openjdk8, openjdk17).
 Please open an issue if it doesn't work on your jvm version.
-- Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1, 1.19.4, 1.20.4
+- 🌙Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1, 1.19.4, 1.20.4
 - Forge: 1.7.10
 - Badlion Client: 1.8.9
 - Vanilla: 1.8.9
@@ -28,7 +28,7 @@ Change mappings to add new versions
 - Reach (uses constant pool editing)
 - Left Clicker
 - Full Bright
-- Velocity
+- Velocity / VelocityPacket (uses channelRead0 event)
 - Client Brand Changer (modifies the getClientModName return value) (to troll staffs lol, sent to the server on login and displayed by some anticheats)
 - Blink (hooks and cancels addToSendQueue)
 - FastPlace
@@ -41,6 +41,10 @@ Change mappings to add new versions
 - Glide
 - VelocityFly
 - Speed
+- BackTrack (set the hitbox of the target to a previous position)
+- AttackLag (delay received packet when attacking someone)
+- NoMiss
+- BlockOnAttack
 
 ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/39690baa-859a-4ea2-a9b0-dfbc8cbfe472)
 
@@ -49,17 +53,19 @@ Insert to open the gui / end key to self destruct
 
 ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/73477238/0d8f6308-1036-4480-b487-eaf02d07259d)
 
-### Event system (hook, modifiy parameters, cancel, modify return value):
+### ⚓Event system (hook, modifiy parameters, cancel, modify return value):
 - onAddToSendQueue (edit sent packets)
 - onUpdateWalkingPlayer
 - onAttackTargetEntityWithCurrentItem
+- onChannelRead0 (edit received packets)
+##### ⚠java method hooking is still unreliable, and might cause crash the game on some methods
 
-To test it, just build the project with visual studio 2022, and inject the dll using any injector (process hacker, extreme injector...).
+To test it, just build the project with visual studio 2022 (compile on x64 Release config), and inject the dll using any injector (process hacker, extreme injector...).
 You can also take a look at RiptermsInjector: https://github.com/Lefraudeur/RiptermsInjector
 
 Help would be appreciated, this repo is here to share your knowledge with other people. You can also make suggestions. (open an issue or a pull request to dev branch)
 
-TODO: 
+📃TODO: 
 - Good world to screen, to make player and block ESP (missing w2s for 1.16.5)
 - Customizable key binds
 - Enabled modules list

@@ -30,6 +30,7 @@ void Ripterms::JavaHook::clean()
     }
     for (HookedMethod& hm : hooked_methods)
     {
+        hm.method->set_dont_inline(false);
         int* flags = (int*)hm.method->get_access_flags();
         *flags &= ~(NO_COMPILE);
     }
@@ -52,6 +53,9 @@ bool Ripterms::JavaHook::hook(jmethodID methodID, i2i_detour_t detour)
         if (hk.method == method)
             return true;
     }
+
+
+    method->set_dont_inline(true);
     int* flags = (int*)method->get_access_flags();
     *flags |= (NO_COMPILE);
 
@@ -61,6 +65,8 @@ bool Ripterms::JavaHook::hook(jmethodID methodID, i2i_detour_t detour)
     Ripterms::p_env->DeleteLocalRef(owner);
 
     method = *(HotSpot::Method**)methodID;
+
+    method->set_dont_inline(true);
     flags = (int*)method->get_access_flags();
     *flags |= (NO_COMPILE);
 
@@ -148,20 +154,14 @@ void* find_correct_hook_place(void* _i2i_entry)
 
 void common_detour(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
+    if (!(*(void**)thread->get_env()) || thread->get_thread_state() != HotSpot::_thread_in_Java) return;
     for (HookedMethod& hk : hooked_methods)
     {
         if (hk.method == frame->get_method())
         {
-            HotSpot::JavaThreadState state = thread->get_thread_state();
-            if (state == HotSpot::_thread_in_Java)
-                thread->set_thread_state(HotSpot::_thread_in_native);
-            else return;
-            {
-                Ripterms::JNIFrame jni_frame(thread->get_env(), 30);
-                hk.detour(frame, thread, cancel);
-            }
+            hk.detour(frame, thread, cancel);
             thread->set_thread_state(HotSpot::_thread_in_Java);
-            break;
+            return;
         }
     }
 }

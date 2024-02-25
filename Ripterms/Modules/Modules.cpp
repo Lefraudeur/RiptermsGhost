@@ -3,6 +3,7 @@
 #include <ImGui/imgui.h>
 #include "../../net/minecraft/network/play/client/C03PacketPlayer/C03PacketPlayer.h"
 #include "../Hook/JavaHook.h"
+#include "../../net/minecraft/network/play/server/S12PacketEntityVelocity/S12PacketEntityVelocity.h"
 
 void Ripterms::Modules::IModule::run()
 {
@@ -41,6 +42,14 @@ void Ripterms::Modules::IModule::onGetClientModName(JNIEnv* env, bool* cancel)
 {
 }
 
+void Ripterms::Modules::IModule::onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel)
+{
+}
+
+void Ripterms::Modules::IModule::onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel)
+{
+}
+
 void Ripterms::Modules::IModule::onKeyBind(int keyBind)
 {
 	if (!keyBind || keyBind != this->keyBind) return;
@@ -53,13 +62,14 @@ static void addToSendQueue_callback(HotSpot::frame* frame, HotSpot::Thread* thre
 	if (Ripterms::Modules::IModule::onAddToSendQueueNoEvent) return;
 	JNIEnv* env = thread->get_env();
 
-	NetHandlerPlayClient sendQueue(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
-	Packet packet(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env);
+	NetHandlerPlayClient sendQueue(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
+	Packet packet(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env, true);
 
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* module : category.second)
+		for (Ripterms::Modules::IModule* module : category.modules)
 		{
+			Ripterms::JNIFrame frame(env);
 			module->onAddToSendQueue(env, sendQueue, packet, cancel);
 		}
 	}
@@ -73,9 +83,9 @@ static void getMouseOver_callback(HotSpot::frame* frame, HotSpot::Thread* thread
 	JNIEnv* env = thread->get_env();
 
 	float f = Ripterms::JavaHook::get_primitive_param_at<float>(frame, 1);
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* module : category.second)
+		for (Ripterms::Modules::IModule* module : category.modules)
 		{
 			module->onGetMouseOver(env, f, cancel);
 		}
@@ -88,13 +98,14 @@ static void attackTargetEntityWithCurrentItem_callback(HotSpot::frame* frame, Ho
 	if (!Ripterms::p_env) return;
 	JNIEnv* env = thread->get_env();
 
-	EntityPlayer this_player(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
-	Entity entity(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env);
+	EntityPlayer this_player(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
+	Entity entity(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env, true);
 
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* module : category.second)
+		for (Ripterms::Modules::IModule* module : category.modules)
 		{
+			Ripterms::JNIFrame frame(env);
 			module->onAttackTargetEntityWithCurrentItem(env, this_player, entity, cancel);
 		}
 	}
@@ -107,12 +118,13 @@ static void onUpdateWalkingPlayer_callback(HotSpot::frame* frame, HotSpot::Threa
 	if (!Ripterms::p_env) return;
 	JNIEnv* env = thread->get_env();
 
-	EntityPlayerSP this_player(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env);
+	EntityPlayerSP this_player(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
 
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* module : category.second)
+		for (Ripterms::Modules::IModule* module : category.modules)
 		{
+			Ripterms::JNIFrame frame(env);
 			module->onUpdateWalkingPlayer(env, this_player, cancel);
 		}
 	}
@@ -125,11 +137,50 @@ static void getClientModName_callback(HotSpot::frame* frame, HotSpot::Thread* th
 	if (!Ripterms::p_env) return;
 	JNIEnv* env = thread->get_env();
 
-	for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (Ripterms::Modules::IModule* module : category.second)
+		for (Ripterms::Modules::IModule* module : category.modules)
 		{
+			Ripterms::JNIFrame frame(env);
 			module->onGetClientModName(env, cancel);
+		}
+	}
+	return;
+}
+
+static void channelRead0_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
+{
+	if (!Ripterms::p_env) return;
+	JNIEnv* env = thread->get_env();
+
+	NetworkManager this_networkManager(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
+	ChannelHandlerContext context(Ripterms::JavaHook::get_jobject_param_at(frame, 1), env, true);
+	Packet packet(Ripterms::JavaHook::get_jobject_param_at(frame, 2), env, true);
+
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
+	{
+		for (Ripterms::Modules::IModule* module : category.modules)
+		{
+			Ripterms::JNIFrame frame(env);
+			module->onChannelRead0(env, this_networkManager, context, packet, cancel);
+		}
+	}
+	return;
+}
+
+static void clickMouse_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
+{
+	if (!Ripterms::p_env) return;
+	JNIEnv* env = thread->get_env();
+
+	Minecraft theMinecraft(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
+
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
+	{
+		for (Ripterms::Modules::IModule* module : category.modules)
+		{
+			Ripterms::JNIFrame frame(env);
+			module->onClickMouse(env, theMinecraft, cancel);
 		}
 	}
 	return;
@@ -160,13 +211,21 @@ void Ripterms::Modules::setupEventHooks()
 	Ripterms::JavaClassV2 ClientBrandRetriever("net/minecraft/client/ClientBrandRetriever");
 	jmethodID getClientModName = ClientBrandRetriever.getMethodID("getClientModName");
 	Ripterms::JavaHook::hook(getClientModName, getClientModName_callback);
+
+	Ripterms::JavaClassV2 NetworkManager("net/minecraft/network/NetworkManager");
+	jmethodID channelRead0 = NetworkManager.getMethodID("channelRead0");
+	Ripterms::JavaHook::hook(channelRead0, channelRead0_callback);
+
+	Ripterms::JavaClassV2 Minecraft("net/minecraft/client/Minecraft");
+	jmethodID clickMouse = Minecraft.getMethodID("clickMouse");
+	Ripterms::JavaHook::hook(clickMouse, clickMouse_callback);
 }
 
 void Ripterms::Modules::runAll()
 {
-	for (const std::pair<std::string, std::vector<IModule*>>& category : categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (IModule* m : category.second)
+		for (IModule* m : category.modules)
 		{
 			m->run();
 		}
@@ -175,12 +234,11 @@ void Ripterms::Modules::runAll()
 
 void Ripterms::Modules::cleanAll()
 {
-	for (const std::pair<std::string, std::vector<IModule*>>& category : categories)
+	for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 	{
-		for (IModule* m : category.second)
+		for (IModule* m : category.modules)
 		{
 			m->disable();
-			delete m;
 		}
 	}
 }
@@ -188,4 +246,117 @@ void Ripterms::Modules::cleanAll()
 
 void Ripterms::Modules::ESP::render()
 {
+}
+
+void Ripterms::Modules::AttackLag::renderGUI()
+{
+	static bool display_options = false;
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
+	ImGui::Checkbox("AttackLag", &enabled);
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+	if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+		display_options = !display_options;
+	ImGui::SameLine();
+	ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30.0f);
+	if (ImGui::ArrowButton("aimopt", ImGuiDir_Down))
+		display_options = !display_options;
+	if (display_options)
+	{
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
+		ImGui::BeginGroup();
+		ImGui::SliderInt("Packet Receive delay ms", &delay, 10, 1000, "%d");
+		ImGui::EndGroup();
+	}
+}
+
+void Ripterms::Modules::AttackLag::onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel)
+{
+	if (lag)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+		lag = false;
+	}
+}
+
+void Ripterms::Modules::AttackLag::onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel)
+{
+	if (!enabled) return;
+	lag = true;
+}
+
+void Ripterms::Modules::NoMiss::renderGUI()
+{
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
+	ImGui::Checkbox("NoMiss", &enabled);
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+}
+
+void Ripterms::Modules::NoMiss::onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel)
+{
+	if (!enabled) return;
+	if (theMinecraft.getObjectMouseOver().getType().isEqualTo(MovingObjectType::getType("MISS", env)))
+	{
+		*cancel = true;
+	}
+}
+
+void Ripterms::Modules::BlockOnAttack::renderGUI()
+{
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
+	ImGui::Checkbox("BlockOnAttack", &enabled);
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+}
+
+void Ripterms::Modules::BlockOnAttack::onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel)
+{
+	if (!enabled) return;
+	POINT cursorPos{};
+	GetCursorPos(&cursorPos);
+	PostMessageA(Ripterms::window, WM_RBUTTONDOWN, MK_RBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
+	PostMessageA(Ripterms::window, WM_RBUTTONUP, MK_RBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
+}
+
+void Ripterms::Modules::VelocityPacket::renderGUI()
+{
+	static bool display_options = false;
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
+	ImGui::Checkbox("VelocityPacket", &enabled);
+	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+
+	if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+		display_options = !display_options;
+	ImGui::SameLine();
+	ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30.0f);
+	if (ImGui::ArrowButton("aimopt", ImGuiDir_Down))
+		display_options = !display_options;
+	if (display_options)
+	{
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
+		ImGui::BeginGroup();
+		ImGui::SliderFloat("motionX multiplier", &motionX_multiplier, -2.0f, 2.0f, "%.2f");
+		ImGui::SliderFloat("motionY multiplier", &motionY_multiplier, -2.0f, 2.0f, "%.2f");
+		ImGui::SliderFloat("motionZ multiplier", &motionZ_multiplier, -2.0f, 2.0f, "%.2f");
+		ImGui::EndGroup();
+	}
+}
+
+void Ripterms::Modules::VelocityPacket::onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel)
+{
+	if (!enabled) return;
+	if (!packet.isValid()) return;
+	if (!packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S12PacketEntityVelocity").get_jclass(env))) return;
+
+	S12PacketEntityVelocity velocityPacket(packet, env);
+	if (velocityPacket.getEntityID() != Minecraft::getTheMinecraft(env).getThePlayer().getEntityId()) return;
+	velocityPacket.setMotionX(int(velocityPacket.getMotionX() * motionX_multiplier));
+	velocityPacket.setMotionY(int(velocityPacket.getMotionY() * motionY_multiplier));
+	velocityPacket.setMotionZ(int(velocityPacket.getMotionZ() * motionZ_multiplier));
 }

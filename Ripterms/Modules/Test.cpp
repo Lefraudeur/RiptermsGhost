@@ -60,6 +60,8 @@ void Ripterms::Modules::Test::renderGUI()
 		//0000000003121341
 		//0x261
 
+		std::cout << Ripterms::p_env->functions->CallBooleanMethod << '\n';
+
 		/*
 		std::thread a([mid] {
 			JNIEnv* env = Ripterms::get_current_thread_env();
@@ -74,7 +76,5 @@ void Ripterms::Modules::Test::renderGUI()
 		});
 		a.detach();
 		*/
-
-		Ripterms::cache->thePlayer.getSendQueue().addToSendQueue(C03PacketPlayer::newObject(true));
 	}
 }

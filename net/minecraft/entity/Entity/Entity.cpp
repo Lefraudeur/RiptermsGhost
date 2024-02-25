@@ -121,6 +121,12 @@ Entity Entity::getRidingEntity() const
 	);
 }
 
+int Entity::getEntityId() const
+{
+	if (!instance) return 0;
+	return env->GetIntField(instance, EntityClass.getFieldID("entityId"));
+}
+
 void Entity::setPosition(const Ripterms::Maths::Vector3d& position)
 {
 	if (!instance) return;

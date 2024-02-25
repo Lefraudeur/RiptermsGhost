@@ -528,6 +528,27 @@ unsigned short* HotSpot::Method::get_flags()
     return (unsigned short*)((uint8_t*)this + vm_entry->offset);
 }
 
+void HotSpot::Method::set_dont_inline(bool enabled)
+{
+    unsigned short* _flags = get_flags();
+    if (!_flags)
+    {
+        static VMStructEntry* vm_entry = find_VMStructEntry("Method", "_intrinsic_id", false);
+        if (!vm_entry) return;
+        unsigned char* flags = ((uint8_t*)this + vm_entry->offset + 1);
+        if (enabled)
+            *flags |= (1 << 4);
+        else
+            *flags &= ~(1 << 4);
+        return;
+    }
+
+    if (enabled)
+        *_flags |= _dont_inline;
+    else
+        *_flags &= ~_dont_inline;
+}
+
 int HotSpot::Thread::get_thread_state_offset()
 {
     static VMStructEntry* vm_entry = find_VMStructEntry("JavaThread", "_thread_state", false);

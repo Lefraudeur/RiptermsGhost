@@ -31,16 +31,19 @@ void Ripterms::Modules::BackTrack::run()
 	if (!timer.isElapsed())
 		return;
 
+	Ripterms::Maths::Vector3d thePlayerPos = Ripterms::cache->thePlayer.getPosition();
 	for (EntityPlayer& player : Ripterms::cache->playerEntities.toVector<EntityPlayer>())
 	{
-		if (player.isEqualTo(Ripterms::cache->thePlayer)) continue;
+		if (!player.isValid() || player.isEqualTo(Ripterms::cache->thePlayer)) continue;
+		if (player.getTicksExisted() < 10 || (player.getPosition() - thePlayerPos).distance() > 6.0) continue;
 		Ripterms::Maths::Vector3d vector = player.getMovementVector(partialTicks);
 		AxisAlignedBB bb = player.getBoundingBox();
 		Ripterms::Maths::Vector3d minbb(bb.getMinX(), bb.getMinY(), bb.getMinZ());
 		Ripterms::Maths::Vector3d maxbb(bb.getMaxX(), bb.getMaxY(), bb.getMaxZ());
 		minbb = minbb - vector;
 		maxbb = maxbb - vector;
-		bb.setMinX(minbb.x); bb.setMinY(minbb.y); bb.setMinZ(minbb.z);
-		bb.setMaxX(maxbb.x); bb.setMaxY(maxbb.y); bb.setMaxZ(maxbb.z);
+
+		bb.setMinX(min(minbb.x, bb.getMinX())); bb.setMinY(min(minbb.y, bb.getMinY())); bb.setMinZ(min(minbb.z, bb.getMinZ()));
+		bb.setMaxX(max(maxbb.x, bb.getMaxX())); bb.setMaxY(max(maxbb.y, bb.getMaxY())); bb.setMaxZ(max(maxbb.z, bb.getMaxZ()));
 	}
 }

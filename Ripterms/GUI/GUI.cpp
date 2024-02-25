@@ -76,9 +76,9 @@ static LRESULT CALLBACK detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARA
 
 	if (msg == WM_KEYDOWN)
 	{
-		for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+		for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 		{
-			for (Ripterms::Modules::IModule* m : category.second)
+			for (Ripterms::Modules::IModule* m : category.modules)
 			{
 				m->onKeyBind(wParam);
 			}
@@ -161,9 +161,9 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 		ImGuiWindowFlags_NoBackground);
 	{
 		Ripterms::JNIFrame jni_frame(Ripterms::p_env, 30);
-		for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+		for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
 		{
-			for (Ripterms::Modules::IModule* m : category.second)
+			for (Ripterms::Modules::IModule* m : category.modules)
 			{
 				m->render();
 			}
@@ -212,28 +212,29 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 			}
 			ImGui::EndChild();
 
-			static std::string current_tab = "Combat";
+			static uint8_t current_category_id = 0;
+			constexpr uint8_t settings_id = sizeof(Ripterms::Modules::categories) / sizeof(Ripterms::Modules::Category);
 			ImGui::SetCursorPosY(55);
 			ImGui::BeginChild("##categories", ImVec2(100, 345), 0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 			{
 				ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.f);
 
-				for (const std::pair<std::string, std::vector<Ripterms::Modules::IModule*>>& category : Ripterms::Modules::categories)
+				for (uint8_t i = 0; i < sizeof(Ripterms::Modules::categories) / sizeof(Ripterms::Modules::Category); ++i)
 				{
-					bool is_selected = category.first == current_tab;
+					bool is_selected = i == current_category_id;
 					if(is_selected) 
 						ImGui::PushStyleColor(ImGuiCol_Button, Ripterms::GUI::color_active_tab);
-					if (ImGui::Button(category.first.c_str(), Ripterms::GUI::category_button_size))
-						current_tab = category.first;
+					if (ImGui::Button(Ripterms::Modules::categories[i].name, Ripterms::GUI::category_button_size))
+						current_category_id = i;
 					if (is_selected)
 						ImGui::PopStyleColor();
 				}
 
 				ImGui::SetCursorPos(ImVec2(0, ImGui::GetWindowSize()[1] - Ripterms::GUI::category_button_size[1]));
 
-				if (current_tab == "Settings") { ImGui::PushStyleColor(ImGuiCol_Button, Ripterms::GUI::color_active_tab); }
-				if (ImGui::Button("Settings", Ripterms::GUI::category_button_size)) { current_tab = "Settings"; }
-				if (current_tab == "Settings") { ImGui::PopStyleColor(); }
+				if (current_category_id == settings_id) { ImGui::PushStyleColor(ImGuiCol_Button, Ripterms::GUI::color_active_tab); }
+				if (ImGui::Button("Settings", Ripterms::GUI::category_button_size)) { current_category_id = settings_id; }
+				if (current_category_id == settings_id) { ImGui::PopStyleColor(); }
 
 				ImGui::PopStyleVar();
 			}
@@ -244,7 +245,7 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 			ImGui::SetCursorPosX(115);
 			ImGui::BeginChild("##modules");
 			{
-				if (current_tab == "Settings")
+				if (current_category_id == settings_id)
 				{
 					ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
 					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
@@ -298,11 +299,11 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 				else
 				{
 					ImGui::SetCursorPos(ImVec2(4, 2));
-					ImGui::Text(current_tab.c_str());
+					ImGui::Text(Ripterms::Modules::categories[current_category_id].name);
 					ImGui::Separator();
 					{
 						Ripterms::JNIFrame jni_frame(Ripterms::p_env, 30);
-						for (Ripterms::Modules::IModule* module : Ripterms::Modules::categories[current_tab])
+						for (Ripterms::Modules::IModule* module : Ripterms::Modules::categories[current_category_id].modules)
 						{
 							module->renderGUI();
 						}
