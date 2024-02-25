@@ -255,6 +255,12 @@
     <ClCompile Include="net\minecraft\network\play\server\S19PacketEntityStatus\S19PacketEntityStatus.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Ripterms\Modules\NoMiss.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Ripterms\Modules\VelocityPacket.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ripterms\Ripterms.h">

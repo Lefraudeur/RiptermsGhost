@@ -131,7 +131,7 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 		io.Fonts->AddFontFromMemoryTTF((void*)Custom.data(), (int)Custom.size(), 17.5f, &CustomFont);
 		io.Fonts->AddFontDefault(); ImGui::StyleColorsDark();
 
-		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 		//ImGui::StyleColorsDark();

@@ -60,6 +60,7 @@ void Ripterms::Modules::Blink::onChannelRead0(JNIEnv* env, NetworkManager& this_
 		if (!rpackets.empty()) sendrPackets(env);
 		return;
 	}
+	if (!packet.isValid()) return;
 	*cancel = true;
 	addrPacket({ this_networkManager , context,  packet });
 }

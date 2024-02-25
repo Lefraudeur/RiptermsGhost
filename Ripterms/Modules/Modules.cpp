@@ -1,10 +1,7 @@
 #include "Modules.h"
 #include "../Cache/Cache.h"
 #include <ImGui/imgui.h>
-#include "../../net/minecraft/network/play/client/C03PacketPlayer/C03PacketPlayer.h"
 #include "../Hook/JavaHook.h"
-#include "../../net/minecraft/network/play/server/S12PacketEntityVelocity/S12PacketEntityVelocity.h"
-#include "../../net/minecraft/network/play/server/S19PacketEntityStatus/S19PacketEntityStatus.h"
 
 void Ripterms::Modules::IModule::run()
 {
@@ -249,112 +246,6 @@ void Ripterms::Modules::ESP::render()
 {
 }
 
-void Ripterms::Modules::AttackLag::renderGUI()
-{
-	static bool display_options = false;
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
-	ImGui::Checkbox("AttackLag", &enabled);
-	ImGui::PopStyleVar();
-	if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
-		display_options = !display_options;
-	ImGui::SameLine();
-	ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30.0f);
-	if (ImGui::ArrowButton("aimopt", ImGuiDir_Down))
-		display_options = !display_options;
-	if (display_options)
-	{
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
-		ImGui::BeginGroup();
-		ImGui::SliderInt("Packet ReceiveDelay ms", &delay, 10, 1000, "%d");
-		ImGui::Checkbox("disableOnHit", &disableOnHit);
-		ImGui::EndGroup();
-	}
-
-	ImGui::PopStyleVar();
-}
-
-void Ripterms::Modules::AttackLag::onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel)
-{
-	static Ripterms::CTimer timer{ std::chrono::milliseconds(delay) };
-	static int prev_delay = delay;
-	if (!enabled)
-	{
-		lag = false;
-		if (!packets.empty()) sendPackets(env);
-		return;
-	}
-	if (lag)
-	{
-		if (timer.isElapsed() || ( disableOnHit && isAttackPacket(packet, env) ))
-		{
-			lag = false;
-			if (!packets.empty()) sendPackets(env);
-			return;
-		}
-		*cancel = true;
-		addPacket({this_networkManager , context,  packet});
-	}
-	if (prev_delay != delay)
-	{
-		timer.setEvery(std::chrono::milliseconds(delay));
-		prev_delay = delay;
-	}
-}
-
-void Ripterms::Modules::AttackLag::onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel)
-{
-	if (!enabled) return;
-	lag = true;
-}
-
-bool Ripterms::Modules::AttackLag::isAttackPacket(Packet& packet, JNIEnv* env)
-{
-	if (!packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S19PacketEntityStatus").get_jclass(env))) return false;
-	S19PacketEntityStatus statusPacket(packet, env, true);
-	if (statusPacket.getEntityId() != Minecraft::getTheMinecraft(env).getThePlayer().getEntityId()) return false;
-	if (statusPacket.getLogicOpcode() == (jbyte)2)
-		return true;
-	return false;
-}
-
-void Ripterms::Modules::AttackLag::sendPackets(JNIEnv* env)
-{
-	onChannelRead0NoEvent = true;
-	std::lock_guard lock{ packets_mutex };
-	for (PacketData& data : packets)
-	{
-		data.this_networkManager.set_env(env);
-		data.this_networkManager.channelRead0(data.context, data.packet);
-	}
-	packets.clear();
-	onChannelRead0NoEvent = false;
-}
-
-void Ripterms::Modules::AttackLag::addPacket(const PacketData& data)
-{
-	std::lock_guard lock{ packets_mutex };
-	packets.push_back(data);
-}
-
-void Ripterms::Modules::NoMiss::renderGUI()
-{
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
-	ImGui::Checkbox("NoMiss", &enabled);
-	ImGui::PopStyleVar();
-	ImGui::PopStyleVar();
-}
-
-void Ripterms::Modules::NoMiss::onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel)
-{
-	if (!enabled) return;
-	if (theMinecraft.getObjectMouseOver().getType().isEqualTo(MovingObjectType::getType("MISS", env)))
-	{
-		*cancel = true;
-	}
-}
-
 void Ripterms::Modules::BlockOnAttack::renderGUI()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
@@ -371,43 +262,4 @@ void Ripterms::Modules::BlockOnAttack::onAttackTargetEntityWithCurrentItem(JNIEn
 	GetCursorPos(&cursorPos);
 	PostMessageA(Ripterms::window, WM_RBUTTONDOWN, MK_RBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
 	PostMessageA(Ripterms::window, WM_RBUTTONUP, MK_RBUTTON, MAKELPARAM(cursorPos.x, cursorPos.y));
-}
-
-void Ripterms::Modules::VelocityPacket::renderGUI()
-{
-	static bool display_options = false;
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
-	ImGui::Checkbox("VelocityPacket", &enabled);
-	ImGui::PopStyleVar();
-	ImGui::PopStyleVar();
-
-	if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
-		display_options = !display_options;
-	ImGui::SameLine();
-	ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30.0f);
-	if (ImGui::ArrowButton("aimopt", ImGuiDir_Down))
-		display_options = !display_options;
-	if (display_options)
-	{
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
-		ImGui::BeginGroup();
-		ImGui::SliderFloat("motionX multiplier", &motionX_multiplier, -2.0f, 2.0f, "%.2f");
-		ImGui::SliderFloat("motionY multiplier", &motionY_multiplier, -2.0f, 2.0f, "%.2f");
-		ImGui::SliderFloat("motionZ multiplier", &motionZ_multiplier, -2.0f, 2.0f, "%.2f");
-		ImGui::EndGroup();
-	}
-}
-
-void Ripterms::Modules::VelocityPacket::onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel)
-{
-	if (!enabled) return;
-	if (!packet.isValid()) return;
-	if (!packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S12PacketEntityVelocity").get_jclass(env))) return;
-
-	S12PacketEntityVelocity velocityPacket(packet, env);
-	if (velocityPacket.getEntityID() != Minecraft::getTheMinecraft(env).getThePlayer().getEntityId()) return;
-	velocityPacket.setMotionX(int(velocityPacket.getMotionX() * motionX_multiplier));
-	velocityPacket.setMotionY(int(velocityPacket.getMotionY() * motionY_multiplier));
-	velocityPacket.setMotionZ(int(velocityPacket.getMotionZ() * motionZ_multiplier));
 }

@@ -288,15 +288,6 @@ namespace Ripterms
 		{
 		public:
 			void renderGUI() override;
-			void run() override;
-		private:
-			float partialTicks = 0.3f;
-		};
-
-		class AttackLag : public IModule
-		{
-		public:
-			void renderGUI() override;
 			void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel) override;
 			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel) override;
 			bool isAttackPacket(Packet& packet, JNIEnv* env);
@@ -366,7 +357,7 @@ namespace Ripterms
 
 		inline Category categories[] =
 		{
-			Category::create<AimAssist, Reach, LeftClicker, WTap, HitBoxes, BackTrack, AttackLag, NoMiss, BlockOnAttack>("Combat"),
+			Category::create<AimAssist, Reach, LeftClicker, WTap, HitBoxes, BackTrack, NoMiss, BlockOnAttack>("Combat"),
 			Category::create<FastPlace, Blink, LegitScaffold, NoFall>("Player"),
 			Category::create<Velocity, VelocityPacket, Sprint, Glide, VelocityFly, Speed>("Movement"),
 			Category::create<Xray, FullBright, ESP>("Render"),
