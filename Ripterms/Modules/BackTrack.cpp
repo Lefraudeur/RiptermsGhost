@@ -1,6 +1,7 @@
 #include "Modules.h"
 #include "../Cache/Cache.h"
 #include "../../net/minecraft/network/play/server/S19PacketEntityStatus/S19PacketEntityStatus.h"
+#include "../../net/minecraft/network/protocol/game/ClientboundDamageEventPacket/ClientboundDamageEventPacket.h"
 
 void Ripterms::Modules::BackTrack::renderGUI()
 {
@@ -64,12 +65,22 @@ void Ripterms::Modules::BackTrack::onAttackTargetEntityWithCurrentItem(JNIEnv* e
 
 bool Ripterms::Modules::BackTrack::isAttackPacket(Packet& packet, JNIEnv* env)
 {
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_19_4)
+	{
+		if (!packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/protocol/game/ClientboundDamageEventPacket").get_jclass(env))) return false;
+		ClientboundDamageEventPacket damagePacket(packet, env, true);
+		return damagePacket.getEntityId() == Minecraft::getTheMinecraft(env).getThePlayer().getEntityId();
+	}
 	if (!packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S19PacketEntityStatus").get_jclass(env))) return false;
 	S19PacketEntityStatus statusPacket(packet, env, true);
 	if (statusPacket.getEntityId() != Minecraft::getTheMinecraft(env).getThePlayer().getEntityId()) return false;
-	if (statusPacket.getLogicOpcode() == (jbyte)2)
-		return true;
-	return false;
+
+	jbyte opcode = statusPacket.getLogicOpcode();
+
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_16_5)
+		return Ripterms::is_any_of(opcode, 2, 33, 36, 37, 44);
+
+	return opcode == (jbyte)2;
 }
 
 void Ripterms::Modules::BackTrack::sendPackets(JNIEnv* env)

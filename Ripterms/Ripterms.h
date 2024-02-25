@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include <json.hpp>
 #include "Hook/Hook.h"
+#include <type_traits>
 
 namespace Ripterms
 {
@@ -63,4 +64,11 @@ namespace Ripterms
 		JNIEnv* env;
 		bool is_success;
 	};
+
+
+	template<std::equality_comparable T, typename... Values, typename = std::enable_if_t<(std::equality_comparable_with<T, Values> && ...)>>
+	inline bool is_any_of(T val, Values... values)
+	{
+		return ((val == values) || ...);
+	}
 }
