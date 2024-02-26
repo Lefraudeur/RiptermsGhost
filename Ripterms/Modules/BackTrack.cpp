@@ -3,6 +3,7 @@
 #include "../../net/minecraft/network/play/server/S19PacketEntityStatus/S19PacketEntityStatus.h"
 #include "../../net/minecraft/network/protocol/game/ClientboundDamageEventPacket/ClientboundDamageEventPacket.h"
 #include "../../net/minecraft/network/play/server/S14PacketEntity/S14PacketEntity.h"
+#include "../../net/minecraft/network/play/server/S12PacketEntityVelocity/S12PacketEntityVelocity.h"
 
 void Ripterms::Modules::BackTrack::renderGUI()
 {
@@ -89,9 +90,17 @@ bool Ripterms::Modules::BackTrack::isAttackPacket(Packet& packet, JNIEnv* env)
 
 bool Ripterms::Modules::BackTrack::isTargetPositionPacket(Packet& packet, JNIEnv* env)
 {
-	if (!packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S14PacketEntity").get_jclass(env))) return false;
-	S14PacketEntity entityPacket(packet, env);
-	return entityPacket.getEntityId() == saved_target_entity_id;
+	if (packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S14PacketEntity").get_jclass(env)))
+	{
+		S14PacketEntity entityPacket(packet, env);
+		return entityPacket.getEntityId() == saved_target_entity_id;
+	}
+	if (packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S12PacketEntityVelocity").get_jclass(env)))
+	{
+		S12PacketEntityVelocity velocityPacket(packet, env);
+		return velocityPacket.getEntityID() == saved_target_entity_id;
+	}
+	return false;
 }
 
 void Ripterms::Modules::BackTrack::sendPackets(JNIEnv* env)
