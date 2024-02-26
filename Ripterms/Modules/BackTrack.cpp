@@ -2,6 +2,7 @@
 #include "../Cache/Cache.h"
 #include "../../net/minecraft/network/play/server/S19PacketEntityStatus/S19PacketEntityStatus.h"
 #include "../../net/minecraft/network/protocol/game/ClientboundDamageEventPacket/ClientboundDamageEventPacket.h"
+#include "../../net/minecraft/network/play/server/S14PacketEntity/S14PacketEntity.h"
 
 void Ripterms::Modules::BackTrack::renderGUI()
 {
@@ -22,6 +23,7 @@ void Ripterms::Modules::BackTrack::renderGUI()
 		ImGui::BeginGroup();
 		ImGui::SliderInt("Packet ReceiveDelay ms", &delay, 10, 1000, "%d");
 		ImGui::Checkbox("disableOnHit", &disableOnHit);
+		ImGui::Checkbox("targetPositionPacketOnly", &targetPositionPacketOnly);
 		ImGui::EndGroup();
 	}
 
@@ -47,6 +49,7 @@ void Ripterms::Modules::BackTrack::onChannelRead0(JNIEnv* env, NetworkManager& t
 			if (!packets.empty()) sendPackets(env);
 			return;
 		}
+		if (targetPositionPacketOnly && !isTargetPositionPacket(packet, env)) return;
 		*cancel = true;
 		addPacket({ this_networkManager , context,  packet });
 	}
@@ -60,6 +63,7 @@ void Ripterms::Modules::BackTrack::onChannelRead0(JNIEnv* env, NetworkManager& t
 void Ripterms::Modules::BackTrack::onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel)
 {
 	if (!enabled) return;
+	saved_target_entity_id = entity.getEntityId();
 	lag = true;
 }
 
@@ -68,11 +72,11 @@ bool Ripterms::Modules::BackTrack::isAttackPacket(Packet& packet, JNIEnv* env)
 	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_19_4)
 	{
 		if (!packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/protocol/game/ClientboundDamageEventPacket").get_jclass(env))) return false;
-		ClientboundDamageEventPacket damagePacket(packet, env, true);
+		ClientboundDamageEventPacket damagePacket(packet, env);
 		return damagePacket.getEntityId() == Minecraft::getTheMinecraft(env).getThePlayer().getEntityId();
 	}
 	if (!packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S19PacketEntityStatus").get_jclass(env))) return false;
-	S19PacketEntityStatus statusPacket(packet, env, true);
+	S19PacketEntityStatus statusPacket(packet, env);
 	if (statusPacket.getEntityId() != Minecraft::getTheMinecraft(env).getThePlayer().getEntityId()) return false;
 
 	jbyte opcode = statusPacket.getLogicOpcode();
@@ -81,6 +85,13 @@ bool Ripterms::Modules::BackTrack::isAttackPacket(Packet& packet, JNIEnv* env)
 		return Ripterms::is_any_of(opcode, 2, 33, 36, 37, 44);
 
 	return opcode == (jbyte)2;
+}
+
+bool Ripterms::Modules::BackTrack::isTargetPositionPacket(Packet& packet, JNIEnv* env)
+{
+	if (!packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S14PacketEntity").get_jclass(env))) return false;
+	S14PacketEntity entityPacket(packet, env);
+	return entityPacket.getEntityId() == saved_target_entity_id;
 }
 
 void Ripterms::Modules::BackTrack::sendPackets(JNIEnv* env)
