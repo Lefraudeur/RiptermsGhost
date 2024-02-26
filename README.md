@@ -41,8 +41,7 @@ Change mappings to add new versions
 - Glide
 - VelocityFly
 - Speed
-- BackTrack (set the hitbox of the target to a previous position)
-- AttackLag (delay received packet when attacking someone)
+- BackTrack (delay received packets)
 - NoMiss
 - BlockOnAttack
 
