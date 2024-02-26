@@ -41,8 +41,7 @@ Change mappings to add new versions
 - Glide
 - VelocityFly
 - Speed
-- BackTrack (set the hitbox of the target to a previous position)
-- AttackLag (delay received packet when attacking someone)
+- BackTrack (delay received packets)
 - NoMiss
 - BlockOnAttack
 
@@ -58,7 +57,7 @@ Insert to open the gui / end key to self destruct
 - onUpdateWalkingPlayer
 - onAttackTargetEntityWithCurrentItem
 - onChannelRead0 (edit received packets)
-##### ⚠java method hooking is still unreliable, and might cause crash the game on some methods
+##### ⚠java method hooking is still unreliable, and might crash the game
 
 To test it, just build the project with visual studio 2022 (compile on x64 Release config), and inject the dll using any injector (process hacker, extreme injector...).
 You can also take a look at RiptermsInjector: https://github.com/Lefraudeur/RiptermsInjector
