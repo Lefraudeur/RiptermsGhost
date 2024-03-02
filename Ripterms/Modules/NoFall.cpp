@@ -4,11 +4,7 @@
 
 void Ripterms::Modules::NoFall::renderGUI()
 {
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
 	ImGui::Checkbox("NoFall", &enabled);
-	ImGui::PopStyleVar();
-	ImGui::PopStyleVar();
 }
 
 void Ripterms::Modules::NoFall::onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel)

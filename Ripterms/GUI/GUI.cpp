@@ -34,10 +34,8 @@ static void update_style()
 	ImGuiStyle& style = ImGui::GetStyle();
 
 	style.Colors[ImGuiCol_CheckMark] = Ripterms::GUI::color_bool_disabled;
-	style.Colors[ImGuiCol_CheckMarkOn] = Ripterms::GUI::color_bool_enabled;
 	style.Colors[ImGuiCol_SliderGrab] = Ripterms::GUI::color_slider_grab;
 	style.Colors[ImGuiCol_SliderGrabActive] = Ripterms::GUI::color_slider_grab;
-	style.Colors[ImGuiCol_SliderLine] = Ripterms::GUI::color_slider_line;
 	style.Colors[ImGuiCol_FrameBg] = Ripterms::GUI::color_frame_bg;
 	style.Colors[ImGuiCol_FrameBgActive] = Ripterms::GUI::color_frame_bg_active;
 	style.Colors[ImGuiCol_FrameBgHovered] = Ripterms::GUI::color_frame_bg_hovered;

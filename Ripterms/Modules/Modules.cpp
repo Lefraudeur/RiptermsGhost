@@ -248,11 +248,7 @@ void Ripterms::Modules::ESP::render()
 
 void Ripterms::Modules::BlockOnAttack::renderGUI()
 {
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
 	ImGui::Checkbox("BlockOnAttack", &enabled);
-	ImGui::PopStyleVar();
-	ImGui::PopStyleVar();
 }
 
 void Ripterms::Modules::BlockOnAttack::onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel)

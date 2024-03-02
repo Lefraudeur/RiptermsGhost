@@ -398,9 +398,6 @@
     <ClInclude Include="Ripterms\Hook\Hook.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Ripterms\GUI\GUI_conf.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="java\nio\FloatBuffer\FloatBuffer.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -453,6 +450,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="net\minecraft\network\play\server\S14PacketEntity\S14PacketEntity.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Ripterms\GUI\GUI_conf.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

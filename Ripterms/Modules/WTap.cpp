@@ -25,9 +25,5 @@ void Ripterms::Modules::WTap::onAttackTargetEntityWithCurrentItem(JNIEnv* env, E
 
 void Ripterms::Modules::WTap::renderGUI()
 {
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
 	ImGui::Checkbox("WTap", &enabled);
-	ImGui::PopStyleVar();
-	ImGui::PopStyleVar();
 }
