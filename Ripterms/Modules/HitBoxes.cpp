@@ -4,18 +4,10 @@
 
 void Ripterms::Modules::HitBoxes::renderGUI()
 {
-	static bool display_options = false;
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
 	ImGui::Checkbox("HitBoxes", &enabled);
-	ImGui::PopStyleVar();
-	ImGui::PopStyleVar();
-	if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) display_options = !display_options;
-	ImGui::SameLine();
-	ImGui::SetCursorPosX(ImGui::GetWindowWidth() - 30.0f);
-	if (ImGui::ArrowButton("hbopt", ImGuiDir_Down)) display_options = !display_options;
-	if (display_options) {
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
+	if (enabled)
+	{
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
 		ImGui::BeginGroup();
 		ImGui::SliderFloat("X Expand", &x_expand, 0.01f, 2.0f, "%.2f");
 		ImGui::SliderFloat("Y Expand", &y_expand, 0.01f, 2.0f, "%.2f");

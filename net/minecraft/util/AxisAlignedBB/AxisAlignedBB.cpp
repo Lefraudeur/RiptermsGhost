@@ -69,3 +69,26 @@ void AxisAlignedBB::setMaxZ(double  value)
 	if (!instance) return;
 	env->SetDoubleField(instance, AxisAlignedBBClass.getFieldID("maxZ"), (jdouble)value);
 }
+
+double AxisAlignedBB::getXWidth()
+{
+	return getMaxX() - getMinX();
+}
+
+double AxisAlignedBB::getZWidth()
+{
+	return getMaxZ() - getMinZ();
+}
+
+double AxisAlignedBB::getHeight()
+{
+	return getMaxY() - getMinY();
+}
+
+Ripterms::Maths::Vector3d AxisAlignedBB::getCenter()
+{
+	double halfXWidth = getXWidth() / 2.0;
+	double halfZWidth = getZWidth() / 2.0;
+	double halfHeight = getHeight() / 2.0;
+	return Ripterms::Maths::Vector3d(getMinX() + halfXWidth, getMinY() + halfHeight, getMinZ() + halfZWidth);
+}

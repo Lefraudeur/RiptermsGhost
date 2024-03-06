@@ -838,6 +838,60 @@ R"(
 			}
 		],
 		"methods": []
+	},
+	"net/minecraft/network/play/server/S14PacketEntity": {
+		"obfuscated": "gv",
+		"fields": [
+			{
+				"name": "entityId",
+				"obfuscated": "a",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "posX",
+				"obfuscated": "b",
+				"signature": "B",
+				"static": false
+			},
+			{
+				"name": "posY",
+				"obfuscated": "c",
+				"signature": "B",
+				"static": false
+			},
+			{
+				"name": "posZ",
+				"obfuscated": "d",
+				"signature": "B",
+				"static": false
+			},
+			{
+				"name": "yaw",
+				"obfuscated": "e",
+				"signature": "B",
+				"static": false
+			},
+			{
+				"name": "pitch",
+				"obfuscated": "f",
+				"signature": "B",
+				"static": false
+			},
+			{
+				"name": "onGround",
+				"obfuscated": "g",
+				"signature": "Z",
+				"static": false
+			},
+			{
+				"name": "hasRot",
+				"obfuscated": "h",
+				"signature": "Z",
+				"static": false
+			}
+		],
+		"methods": []
 	}
 }
 )";

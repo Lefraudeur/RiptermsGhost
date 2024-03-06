@@ -154,7 +154,7 @@ void* find_correct_hook_place(void* _i2i_entry)
 
 void common_detour(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-    if (!(*(void**)thread->get_env()) || thread->get_thread_state() != HotSpot::_thread_in_Java) return;
+    if (!(*(void**)thread->get_env()) || thread->get_thread_state() != HotSpot::_thread_in_Java || !Ripterms::p_env) return;
     for (HookedMethod& hk : hooked_methods)
     {
         if (hk.method == frame->get_method())

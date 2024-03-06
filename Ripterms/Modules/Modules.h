@@ -290,10 +290,11 @@ namespace Ripterms
 			void renderGUI() override;
 			void onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel) override;
 			void onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel) override;
-			bool isAttackPacket(Packet& packet, JNIEnv* env);
 		private:
 			std::atomic<bool> lag = false;
+			std::atomic<int> saved_target_entity_id = 0;
 			bool disableOnHit = true;
+			bool targetPacketsOnly = false;
 			int delay = 450;
 
 			struct PacketData
@@ -306,6 +307,9 @@ namespace Ripterms
 			std::vector<PacketData> packets{};
 			void sendPackets(JNIEnv* env);
 			void addPacket(const PacketData& data);
+
+			bool isAttackPacket(Packet& packet, JNIEnv* env);
+			bool isTargetPositionPacket(Packet& packet, JNIEnv* env);
 		};
 
 		class NoMiss : public IModule
