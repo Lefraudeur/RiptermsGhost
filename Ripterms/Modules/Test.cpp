@@ -19,7 +19,6 @@ static void callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cance
 
 void Ripterms::Modules::Test::renderGUI()
 {
-	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f);
 	if (ImGui::Button("Run Test"))
 	{
 		//jclass lol2 = Ripterms::JavaClassV2::findClass("net/minecraft/client/gui/GuiScreen");

@@ -14,7 +14,7 @@ void Ripterms::Modules::BackTrack::renderGUI()
 		ImGui::BeginGroup();
 		ImGui::SliderInt("Packet ReceiveDelay ms", &delay, 10, 1000, "%d");
 		ImGui::Checkbox("disableOnHit", &disableOnHit);
-		ImGui::Checkbox("targetPositionPacketOnly", &targetPositionPacketOnly);
+		ImGui::Checkbox("targetPacketsOnly", &targetPacketsOnly);
 		ImGui::EndGroup();
 	}
 }
@@ -38,7 +38,7 @@ void Ripterms::Modules::BackTrack::onChannelRead0(JNIEnv* env, NetworkManager& t
 			if (!packets.empty()) sendPackets(env);
 			return;
 		}
-		if (targetPositionPacketOnly && !isTargetPositionPacket(packet, env)) return;
+		if (targetPacketsOnly && !isTargetPositionPacket(packet, env)) return;
 		*cancel = true;
 		addPacket({ this_networkManager , context,  packet });
 	}
@@ -87,6 +87,16 @@ bool Ripterms::Modules::BackTrack::isTargetPositionPacket(Packet& packet, JNIEnv
 	{
 		S12PacketEntityVelocity velocityPacket(packet, env);
 		return velocityPacket.getEntityID() == saved_target_entity_id;
+	}
+	if (packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S19PacketEntityStatus").get_jclass(env)))
+	{
+		S19PacketEntityStatus statusPacket(packet, env);
+		return statusPacket.getEntityId() == saved_target_entity_id;
+	}
+	if (Ripterms::version.type == Ripterms::Version::MAJOR_1_19_4 && packet.instanceOf(Ripterms::JavaClassV2("net/minecraft/network/play/server/S19PacketEntityStatus").get_jclass(env)))
+	{
+		ClientboundDamageEventPacket damagePacket(packet, env);
+		return damagePacket.getEntityId() == saved_target_entity_id;
 	}
 	return false;
 }

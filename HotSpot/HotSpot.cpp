@@ -537,9 +537,9 @@ void HotSpot::Method::set_dont_inline(bool enabled)
         if (!vm_entry) return;
         unsigned char* flags = ((uint8_t*)this + vm_entry->offset + 1);
         if (enabled)
-            *flags |= (1 << 4);
+            *flags |= (1 << 3);
         else
-            *flags &= ~(1 << 4);
+            *flags &= ~(1 << 3);
         return;
     }
 

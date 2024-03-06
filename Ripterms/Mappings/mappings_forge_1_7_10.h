@@ -828,6 +828,54 @@ R"(
 			}
 		],
 		"methods": []
+	},
+	"net/minecraft/network/play/server/S14PacketEntity": {
+		"obfuscated": "net/minecraft/network/play/server/S14PacketEntity",
+		"fields": [
+			{
+				"name": "entityId",
+				"obfuscated": "field_149074_a",
+				"signature": "I",
+				"static": false
+			},
+			{
+				"name": "posX",
+				"obfuscated": "field_149072_b",
+				"signature": "B",
+				"static": false
+			},
+			{
+				"name": "posY",
+				"obfuscated": "field_149073_c",
+				"signature": "B",
+				"static": false
+			},
+			{
+				"name": "posZ",
+				"obfuscated": "field_149070_d",
+				"signature": "B",
+				"static": false
+			},
+			{
+				"name": "yaw",
+				"obfuscated": "field_149071_e",
+				"signature": "B",
+				"static": false
+			},
+			{
+				"name": "pitch",
+				"obfuscated": "field_149068_f",
+				"signature": "B",
+				"static": false
+			},
+			{
+				"name": "hasRot",
+				"obfuscated": "field_149069_g",
+				"signature": "Z",
+				"static": false
+			}
+		],
+		"methods": []
 	}
 }
 )";

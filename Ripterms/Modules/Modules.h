@@ -294,7 +294,7 @@ namespace Ripterms
 			std::atomic<bool> lag = false;
 			std::atomic<int> saved_target_entity_id = 0;
 			bool disableOnHit = true;
-			bool targetPositionPacketOnly = false;
+			bool targetPacketsOnly = false;
 			int delay = 450;
 
 			struct PacketData

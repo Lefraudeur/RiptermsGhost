@@ -24,6 +24,24 @@ jbyte S14PacketEntity::getPosZ() const
 	return env->GetByteField(instance, S14PacketEntityClass.getFieldID("posZ"));
 }
 
+jshort S14PacketEntity::getXa() const
+{
+	if (!instance) return 0;
+	return env->GetShortField(instance, S14PacketEntityClass.getFieldID("posX"));
+}
+
+jshort S14PacketEntity::getYa() const
+{
+	if (!instance) return 0;
+	return env->GetShortField(instance, S14PacketEntityClass.getFieldID("posY"));
+}
+
+jshort S14PacketEntity::getZa() const
+{
+	if (!instance) return 0;
+	return env->GetShortField(instance, S14PacketEntityClass.getFieldID("posZ"));
+}
+
 jbyte S14PacketEntity::getYaw() const
 {
 	if (!instance) return 0;
@@ -46,4 +64,10 @@ bool S14PacketEntity::getHasRot() const
 {
 	if (!instance) return false;
 	return env->GetBooleanField(instance, S14PacketEntityClass.getFieldID("hasRot")) == JNI_TRUE;
+}
+
+bool S14PacketEntity::getHasPos() const
+{
+	if (!instance) return false;
+	return env->GetBooleanField(instance, S14PacketEntityClass.getFieldID("hasPos")) == JNI_TRUE;
 }

@@ -167,7 +167,7 @@ void Ripterms::Modules::AimAssist::run()
 
 void Ripterms::Modules::AimAssist::renderGUI()
 {
-	ImGui::Checkbox("Aim Assist", &enabled);
+	ImGui::Checkbox("Aim Assist", &enabled, true);
 	if (enabled)
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);

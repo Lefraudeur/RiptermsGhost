@@ -33,7 +33,7 @@ static void update_style()
 
 	ImGuiStyle& style = ImGui::GetStyle();
 
-	style.Colors[ImGuiCol_CheckMark] = Ripterms::GUI::color_bool_disabled;
+	style.Colors[ImGuiCol_CheckMark] = Ripterms::GUI::color_checkmark;
 	style.Colors[ImGuiCol_SliderGrab] = Ripterms::GUI::color_slider_grab;
 	style.Colors[ImGuiCol_SliderGrabActive] = Ripterms::GUI::color_slider_grab;
 	style.Colors[ImGuiCol_FrameBg] = Ripterms::GUI::color_frame_bg;
@@ -48,6 +48,8 @@ static void update_style()
 	style.Colors[ImGuiCol_HeaderActive] = Ripterms::GUI::color_header_active;
 	style.Colors[ImGuiCol_HeaderHovered] = Ripterms::GUI::color_header_hovered;
 	style.Colors[ImGuiCol_ChildBg] = Ripterms::GUI::color_child_bg;
+	style.Colors[ImGuiCol_Border] = Ripterms::GUI::color_border;
+	style.Colors[ImGuiCol_BorderShadow] = Ripterms::GUI::color_border_shadow;
 
 	/*  rounding */
 
@@ -58,6 +60,10 @@ static void update_style()
 	style.PopupRounding = Ripterms::GUI::rounding_popup;
 	style.ScrollbarRounding = Ripterms::GUI::rounding_scrollbar;
 	style.TabRounding = Ripterms::GUI::rounding_tab;
+	style.WindowBorderSize = 1.0f;
+	style.FrameBorderSize = 1.0f;
+	style.ChildBorderSize = 1.0f;
+	style.WindowPadding = ImVec2(Ripterms::GUI::HEADER_CAT_DISTANCE, Ripterms::GUI::HEADER_CAT_DISTANCE);
 }
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -119,6 +125,7 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 		imGuiContext = ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 		io.IniFilename = nullptr;
 		io.LogFilename = nullptr;
 
@@ -127,12 +134,9 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 		CustomFont.FontDataOwnedByAtlas = false;
 
 		io.Fonts->AddFontFromMemoryTTF((void*)Custom.data(), (int)Custom.size(), 17.5f, &CustomFont);
-		io.Fonts->AddFontDefault(); ImGui::StyleColorsDark();
+		io.Fonts->AddFontDefault();
+		ImGui::StyleColorsDark();
 
-		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-		//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-
-		//ImGui::StyleColorsDark();
 		ImGui_ImplOpenGL3_Init();
 		ImGui_ImplWin32_Init(Ripterms::window);
 		isInit = true;
@@ -151,12 +155,7 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
 	ImGui::Begin("Overlay", nullptr, 
-		ImGuiWindowFlags_NoTitleBar | 
-		ImGuiWindowFlags_NoResize | 
-		ImGuiWindowFlags_NoMove | 
-		ImGuiWindowFlags_NoScrollbar | 
-		ImGuiWindowFlags_NoInputs | 
-		ImGuiWindowFlags_NoBackground);
+		ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoBackground);
 	{
 		Ripterms::JNIFrame jni_frame(Ripterms::p_env, 30);
 		for (Ripterms::Modules::Category& category : Ripterms::Modules::categories)
@@ -180,24 +179,20 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 			clipped = false;
 		}
 
-		ImGui::SetNextWindowBgAlpha(.8f);
-		ImGui::SetWindowSize(ImVec2(600.0f, 400.f));
-		ImGui::SetNextWindowSizeConstraints(ImVec2(600.f, 400.f), ImVec2(600.f, 1000.f));
-		ImGui::Begin("Ripterms Ghost", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_AlwaysAutoResize);
+		ImGui::SetNextWindowBgAlpha(.75f);
+		ImGui::SetNextWindowSize(ImVec2(600.0f, 400.f));
+		ImGui::Begin("Ripterms Ghost", nullptr, ImGuiWindowFlags_NoDecoration);
 		{
-
-			ImGui::SetWindowSize(ImVec2(600.f, 400.f));
-		
-		
 			ImVec2 window_size = ImGui::GetWindowSize();
 			ImVec2 center_pos = ImVec2(window_size.x * .5f, window_size.y * .5f);
 
-			ImGui::BeginChild("##header", (ImVec2(583, 40)));
+			ImGui::BeginChild("##header", (ImVec2(window_size.x, Ripterms::GUI::HEADER_HEIGHT)));
 
 			if(Ripterms::GUI::ripterms_title)
 			{
-				ImGui::SetCursorPosY(10);
-				ImGui::SetCursorPosX(center_pos.x - 55);
+				ImVec2 txt_size = ImGui::CalcTextSize(Ripterms::GUI::client_name);
+				ImGui::SetCursorPosY((Ripterms::GUI::HEADER_HEIGHT - txt_size.y) / 2.0);
+				ImGui::SetCursorPosX(center_pos.x - txt_size.x / 2.0);
 				ImGui::TextColored
 				(
 					ImColor
@@ -205,53 +200,48 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 						150,	0, 20,
 						255
 					),
-					"r i p t e r m s    g h o s t"
+					Ripterms::GUI::client_name
 				);
 			}
 			ImGui::EndChild();
 
 			static uint8_t current_category_id = 0;
 			constexpr uint8_t settings_id = sizeof(Ripterms::Modules::categories) / sizeof(Ripterms::Modules::Category);
-			ImGui::SetCursorPosY(55);
-			ImGui::BeginChild("##categories", ImVec2(100, 345), 0, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+			ImGui::SetCursorPosY(Ripterms::GUI::HEADER_HEIGHT + Ripterms::GUI::HEADER_CAT_DISTANCE + ImGui::GetStyle().WindowPadding.y);
+			ImGui::BeginChild("##categories", ImVec2(Ripterms::GUI::CATEGORY_WIDTH, 0));
 			{
-				ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.f);
-
 				for (uint8_t i = 0; i < sizeof(Ripterms::Modules::categories) / sizeof(Ripterms::Modules::Category); ++i)
 				{
 					bool is_selected = i == current_category_id;
 					if(is_selected) 
-						ImGui::PushStyleColor(ImGuiCol_Button, Ripterms::GUI::color_active_tab);
+						ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(Ripterms::GUI::color_active_tab));
 					if (ImGui::Button(Ripterms::Modules::categories[i].name, Ripterms::GUI::category_button_size))
 						current_category_id = i;
 					if (is_selected)
 						ImGui::PopStyleColor();
 				}
 
-				ImGui::SetCursorPos(ImVec2(0, ImGui::GetWindowSize()[1] - Ripterms::GUI::category_button_size[1]));
+				ImGui::SetCursorPos(ImVec2(0, ImGui::GetWindowSize().y - Ripterms::GUI::category_button_size.y));
 
-				if (current_category_id == settings_id) { ImGui::PushStyleColor(ImGuiCol_Button, Ripterms::GUI::color_active_tab); }
+				if (current_category_id == settings_id) { ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(Ripterms::GUI::color_active_tab)); }
 				if (ImGui::Button("Settings", Ripterms::GUI::category_button_size)) { current_category_id = settings_id; }
 				if (current_category_id == settings_id) { ImGui::PopStyleColor(); }
-
-				ImGui::PopStyleVar();
 			}
 			ImGui::EndChild();
 
 			ImGui::SameLine();
 		
-			ImGui::SetCursorPosX(115);
+			ImGui::SetCursorPosX(Ripterms::GUI::CATEGORY_WIDTH + Ripterms::GUI::HEADER_CAT_DISTANCE + ImGui::GetStyle().WindowPadding.x);
 			ImGui::BeginChild("##modules");
 			{
 				if (current_category_id == settings_id)
 				{
-					ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(20.0f, 0.0f));
-					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(250.0f, ImGui::GetStyle().FramePadding.y));
-
-					ImGui::SetCursorPos(ImVec2(4, 2));
+					ImGui::SetCursorPosX(ImGui::GetStyle().WindowPadding.x);
 					ImGui::Text("Settings");
-					ImGui::Separator();	
-				
+					ImGui::Separator();
+
+					ImGui::BeginChild("settings content", { 0, 0 }, ImGuiChildFlags_AlwaysUseWindowPadding, ImGuiWindowFlags_NoBackground);
+
 					ImGui::Checkbox("Ripterms Title", &Ripterms::GUI::ripterms_title);
 					ImGui::Checkbox("Show Color Theming", &Ripterms::GUI::show_color_theming);
 					ImGui::Checkbox("Show Rounding Theming", &Ripterms::GUI::show_rounding_theming);
@@ -260,13 +250,10 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 					{
 						ImGui::Separator();
 
-						ImGui::ColorEdit4("Active Tab", &Ripterms::GUI::color_active_tab.x, ImGuiColorEditFlags_NoInputs);
+						ImGui::ColorEdit4("Active Tab", &Ripterms::GUI::color_active_tab.Value.x, ImGuiColorEditFlags_NoInputs);
 						//ImGui::ColorEdit4("Inactive Tab", &Ripterms::GUI::color_inactive_tab.x, ImGuiColorEditFlags_NoInputs);
 						ImGui::ColorEdit4("Child Background", &Ripterms::GUI::color_child_bg.Value.x, ImGuiColorEditFlags_NoInputs);
-						ImGui::ColorEdit4("Bool Enabled", &Ripterms::GUI::color_bool_enabled.Value.x, ImGuiColorEditFlags_NoInputs);
-						ImGui::ColorEdit4("Bool Disabled", &Ripterms::GUI::color_bool_disabled.Value.x, ImGuiColorEditFlags_NoInputs);
 						ImGui::ColorEdit4("Slider Grab", &Ripterms::GUI::color_slider_grab.Value.x, ImGuiColorEditFlags_NoInputs);
-						ImGui::ColorEdit4("Slider Line", &Ripterms::GUI::color_slider_line.Value.x, ImGuiColorEditFlags_NoInputs);
 						ImGui::ColorEdit4("Frame Background", &Ripterms::GUI::color_frame_bg.Value.x, ImGuiColorEditFlags_NoInputs);
 						ImGui::ColorEdit4("Frame Background Active", &Ripterms::GUI::color_frame_bg_active.Value.x, ImGuiColorEditFlags_NoInputs);
 						ImGui::ColorEdit4("Frame Background Hovered", &Ripterms::GUI::color_frame_bg_hovered.Value.x, ImGuiColorEditFlags_NoInputs);
@@ -278,6 +265,8 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 						ImGui::ColorEdit4("Header", &Ripterms::GUI::color_header.Value.x, ImGuiColorEditFlags_NoInputs);
 						ImGui::ColorEdit4("Header Active", &Ripterms::GUI::color_header_active.Value.x, ImGuiColorEditFlags_NoInputs);
 						ImGui::ColorEdit4("Header Hovered", &Ripterms::GUI::color_header_hovered.Value.x, ImGuiColorEditFlags_NoInputs);
+						ImGui::ColorEdit4("Border", &Ripterms::GUI::color_border.Value.x, ImGuiColorEditFlags_NoInputs);
+						ImGui::ColorEdit4("Border Shadow", &Ripterms::GUI::color_border_shadow.Value.x, ImGuiColorEditFlags_NoInputs);
 					}
 				
 					if (Ripterms::GUI::show_rounding_theming)
@@ -292,20 +281,27 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 						ImGui::SliderFloat("Scrollbar ##Rounding", &Ripterms::GUI::rounding_scrollbar, 0, 100, "%1.0f");
 						ImGui::SliderFloat("Tab ##Rounding", &Ripterms::GUI::rounding_tab, 0, 100, "%1.0f");
 					}
-					ImGui::PopStyleVar(2);
+
+					ImGui::EndChild();
 				}
 				else
 				{
-					ImGui::SetCursorPos(ImVec2(4, 2));
+					ImGui::SetCursorPosX(ImGui::GetStyle().WindowPadding.x);
 					ImGui::Text(Ripterms::Modules::categories[current_category_id].name);
 					ImGui::Separator();
+
+					ImGui::BeginChild("content", { 0, 0 }, ImGuiChildFlags_AlwaysUseWindowPadding, ImGuiWindowFlags_NoBackground);
+					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, {3.0, 3.0});
 					{
 						Ripterms::JNIFrame jni_frame(Ripterms::p_env, 30);
 						for (Ripterms::Modules::IModule* module : Ripterms::Modules::categories[current_category_id].modules)
 						{
+							ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetStyle().ItemSpacing.y / 2.0f);
 							module->renderGUI();
 						}
 					}
+
+					ImGui::EndChild();
 				}
 			}
 			ImGui::EndChild();
