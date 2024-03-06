@@ -179,7 +179,7 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 			clipped = false;
 		}
 
-		ImGui::SetNextWindowBgAlpha(.75f);
+		ImGui::SetNextWindowBgAlpha(.8f);
 		ImGui::SetNextWindowSize(ImVec2(600.0f, 400.f));
 		ImGui::Begin("Ripterms Ghost", nullptr, ImGuiWindowFlags_NoDecoration);
 		{
