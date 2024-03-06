@@ -183,16 +183,13 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 		ImGui::SetNextWindowSize(ImVec2(600.0f, 400.f));
 		ImGui::Begin("Ripterms Ghost", nullptr, ImGuiWindowFlags_NoDecoration);
 		{
-			ImVec2 window_size = ImGui::GetWindowSize();
-			ImVec2 center_pos = ImVec2(window_size.x * .5f, window_size.y * .5f);
-
-			ImGui::BeginChild("##header", (ImVec2(window_size.x, Ripterms::GUI::HEADER_HEIGHT)));
+			ImGui::BeginChild("##header", (ImVec2(ImGui::GetWindowWidth() - ImGui::GetStyle().WindowPadding.x * 2.f, Ripterms::GUI::HEADER_HEIGHT)));
 
 			if(Ripterms::GUI::ripterms_title)
 			{
 				ImVec2 txt_size = ImGui::CalcTextSize(Ripterms::GUI::client_name);
 				ImGui::SetCursorPosY((Ripterms::GUI::HEADER_HEIGHT - txt_size.y) / 2.0);
-				ImGui::SetCursorPosX(center_pos.x - txt_size.x / 2.0);
+				ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.0f - txt_size.x / 2.0f);
 				ImGui::TextColored
 				(
 					ImColor
