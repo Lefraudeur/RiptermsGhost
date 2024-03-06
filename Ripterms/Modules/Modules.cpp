@@ -56,7 +56,7 @@ void Ripterms::Modules::IModule::onKeyBind(int keyBind)
 
 static void addToSendQueue_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-	if (!Ripterms::p_env) return;
+	if (!Ripterms::p_env || !Ripterms::cache->is_valid) return;
 	if (Ripterms::Modules::IModule::onAddToSendQueueNoEvent) return;
 	JNIEnv* env = thread->get_env();
 
@@ -77,7 +77,7 @@ static void addToSendQueue_callback(HotSpot::frame* frame, HotSpot::Thread* thre
 
 static void getMouseOver_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-	if (!Ripterms::p_env) return;
+	if (!Ripterms::p_env || !Ripterms::cache->is_valid) return;
 	JNIEnv* env = thread->get_env();
 
 	float f = Ripterms::JavaHook::get_primitive_param_at<float>(frame, 1);
@@ -93,7 +93,7 @@ static void getMouseOver_callback(HotSpot::frame* frame, HotSpot::Thread* thread
 
 static void attackTargetEntityWithCurrentItem_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-	if (!Ripterms::p_env) return;
+	if (!Ripterms::p_env || !Ripterms::cache->is_valid) return;
 	JNIEnv* env = thread->get_env();
 
 	EntityPlayer this_player(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
@@ -113,7 +113,7 @@ static void attackTargetEntityWithCurrentItem_callback(HotSpot::frame* frame, Ho
 
 static void onUpdateWalkingPlayer_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-	if (!Ripterms::p_env) return;
+	if (!Ripterms::p_env || !Ripterms::cache->is_valid) return;
 	JNIEnv* env = thread->get_env();
 
 	EntityPlayerSP this_player(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
@@ -148,7 +148,7 @@ static void getClientModName_callback(HotSpot::frame* frame, HotSpot::Thread* th
 
 static void channelRead0_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-	if (!Ripterms::p_env || Ripterms::Modules::IModule::onChannelRead0NoEvent) return;
+	if (!Ripterms::p_env || !Ripterms::cache->is_valid || Ripterms::Modules::IModule::onChannelRead0NoEvent) return;
 	JNIEnv* env = thread->get_env();
 
 	NetworkManager this_networkManager(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
@@ -168,7 +168,7 @@ static void channelRead0_callback(HotSpot::frame* frame, HotSpot::Thread* thread
 
 static void clickMouse_callback(HotSpot::frame* frame, HotSpot::Thread* thread, bool* cancel)
 {
-	if (!Ripterms::p_env) return;
+	if (!Ripterms::p_env || !Ripterms::cache->is_valid) return;
 	JNIEnv* env = thread->get_env();
 
 	Minecraft theMinecraft(Ripterms::JavaHook::get_jobject_param_at(frame, 0), env, true);
