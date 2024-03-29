@@ -9,23 +9,6 @@ This cheat is open source, mainly to show you a combination of all the technique
 
 #### Download: https://github.com/Lefraudeur/RiptermsGhost/actions
 
-### License :
-This project is subject to the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html).
-The following is not legal advice. It is just a summary of the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html).
-
-*Actions that you are allowed to do:*
-
-- Use
-- Share
-- Modify
-
-*If you do decide to use ANY code from the source:*
-
-- **You must disclose the source code of your modified work and the source code you took from this project. This means
-  you are not allowed to use code from this project (even partially) in a closed-source (or even obfuscated)
-  application.**
-- **Your modified application must also be licensed under the GPL License.**
-
 ### Supported versions :
 - Lunar Client: 1.7.10, 1.8.9, 1.16.5, 1.17.1, 1.18.2
 - Forge: 1.7.10
