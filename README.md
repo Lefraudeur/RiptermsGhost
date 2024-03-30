@@ -82,13 +82,3 @@ Thanks to t0r-onion for the GUI
 Current Contributors:
 Lefraudeur,
 t0r-onion
-
-### License
-This project is licensed under MIT license: 
-<br/>https://github.com/Lefraudeur/RiptermsGhost/blob/master/README.md
-<br/>Limitation:
-<br/>If you use and redistribute any part of the project, you will have to mention explicitly:
-<br/>`Copyright (c) 2023 Lefraudeur`
-<br/>to not falsly claim ownership of the content.
-<br/>see: [MIT license L12](https://github.com/Lefraudeur/RiptermsGhost/blob/master/LICENSE#L12)
-<br/>For special inqueries or adaptation of the limitations, contact me through discord.
