@@ -88,6 +88,7 @@ bool Ripterms::JavaHook::hook(jmethodID methodID, i2i_detour_t detour)
     if (!target)
     {
         std::cerr << "Failed to find correct i2i hook location\n";
+        std::cout << "Debug: i2ientry: " << i2i << '\n';
         return false;
     }
     std::cout << "placed i2i hook at: " << (void*)target << '\n';
@@ -116,7 +117,7 @@ void* find_correct_hook_place(void* _i2i_entry)
     };
 
     uint8_t* curr = (uint8_t*)_i2i_entry;
-    while (curr < (uint8_t*)_i2i_entry + 0x350)
+    while (curr < (uint8_t*)_i2i_entry + 0x400)
     {
         int matches = 0;
         for (int i = 0; i < sizeof(pattern); ++i)
