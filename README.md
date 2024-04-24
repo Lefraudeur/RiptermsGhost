@@ -50,7 +50,8 @@ Change mappings to add new versions
 
 Insert to open the gui / end key to self destruct
 
-![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/9957d440-6bee-4f18-b1bd-5c90fd535bd8)
+<!-- ![image](https://github.com/Lefraudeur/RiptermsGhost/assets/91006387/9957d440-6bee-4f18-b1bd-5c90fd535bd8) -->
+![image](https://api.stargaze.cloud/file/uploads/Ripterms_New_UI_By_tor.png)
 
 
 ### ⚓Event system (hook, modifiy parameters, cancel, modify return value):
