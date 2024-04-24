@@ -3,6 +3,7 @@
 #include "../Cache/Cache.h"
 #include <ImGui/imgui.h>
 
+
 void Ripterms::Modules::AimAssist::run()
 {
 	if (!enabled || !(GetKeyState(VK_LBUTTON) & 0x8000) || GUI::draw || cache->theMinecraft.getCurrentScreen().isValid())
@@ -167,15 +168,15 @@ void Ripterms::Modules::AimAssist::run()
 
 void Ripterms::Modules::AimAssist::renderGUI()
 {
-	ImGui::Checkbox("Aim Assist", &enabled, true);
+	ImGui::IOSToggle("Aim Assist", &enabled);
 	if (enabled)
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderFloat("Max Distance", &max_distance, 1.0f, 6.0f, "%.1f");
-		ImGui::SliderFloat("Max Angle", &max_angle, 10.0f, 180.0f, "%.1f");
-		ImGui::SliderFloat("Multiplier Yaw", &multiplier, 0.1f, 2.0f, "%.1f");
-		ImGui::SliderFloat("Multiplier Pitch", &multiplierPitch, 0.0f, 2.0f, "%.1f");
+		ImGui::CustomSliderFloat ("Max Distance", &max_distance, 1.0f, 6.0f, "%.1f", 0);
+		ImGui::CustomSliderFloat ("Max Angle", &max_angle, 10.0f, 180.0f, "%.1f", 0);
+		ImGui::CustomSliderFloat ("Multiplier Yaw", &multiplier, 0.1f, 2.0f, "%.1f", 0);
+		ImGui::CustomSliderFloat ("Multiplier Pitch", &multiplierPitch, 0.0f, 2.0f, "%.1f", 0);
 		ImGui::EndGroup();
 	}
 }

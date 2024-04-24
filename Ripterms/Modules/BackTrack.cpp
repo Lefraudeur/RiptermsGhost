@@ -7,14 +7,14 @@
 
 void Ripterms::Modules::BackTrack::renderGUI()
 {
-	ImGui::Checkbox("BackTrack", &enabled);
+	ImGui::IOSToggle ("BackTrack", &enabled);
 	if (enabled)
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderInt("Packet ReceiveDelay ms", &delay, 10, 1000, "%d");
-		ImGui::Checkbox("disableOnHit", &disableOnHit);
-		ImGui::Checkbox("targetPacketsOnly", &targetPacketsOnly);
+		ImGui::CustomSliderInt ("Packet ReceiveDelay ms", &delay, 10, 1000, "%d", 0);
+		ImGui::IOSToggle ("disableOnHit", &disableOnHit);
+		ImGui::IOSToggle ("targetPacketsOnly", &targetPacketsOnly);
 		ImGui::EndGroup();
 	}
 }

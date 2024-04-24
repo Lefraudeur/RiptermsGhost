@@ -4,7 +4,7 @@
 
 void Ripterms::Modules::NoFall::renderGUI()
 {
-	ImGui::Checkbox("NoFall", &enabled);
+	ImGui::IOSToggle ("NoFall", &enabled);
 }
 
 void Ripterms::Modules::NoFall::onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel)

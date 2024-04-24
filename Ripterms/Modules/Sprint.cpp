@@ -11,5 +11,5 @@ void Ripterms::Modules::Sprint::run()
 
 void Ripterms::Modules::Sprint::renderGUI()
 {
-	ImGui::Checkbox("Sprint", &enabled);
+	ImGui::IOSToggle ("Sprint", &enabled);
 }

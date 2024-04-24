@@ -2,7 +2,7 @@
 
 void Ripterms::Modules::Glide::renderGUI()
 {
-	ImGui::Checkbox("Glide", &enabled);
+	ImGui::IOSToggle ("Glide", &enabled);
 }
 
 void Ripterms::Modules::Glide::onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel)

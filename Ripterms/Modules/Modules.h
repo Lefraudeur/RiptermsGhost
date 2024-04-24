@@ -16,6 +16,7 @@
 #include <memory>
 #include "../../net/minecraft/network/NetworkManager/NetworkManager.h"
 #include "../../net/minecraft/client/Minecraft/Minecraft.h"
+#include "../GUI/gyro_gui/gyro_gui.h"
 
 namespace Ripterms
 {
@@ -365,7 +366,7 @@ namespace Ripterms
 			Category::create<FastPlace, Blink, LegitScaffold, NoFall>("Player"),
 			Category::create<Velocity, VelocityPacket, Sprint, Glide, VelocityFly, Speed>("Movement"),
 			Category::create<Xray, FullBright, ESP>("Render"),
-			Category::create<ClientBrandChanger, Test>("Whatever")
+			Category::create<ClientBrandChanger, Test>("Misc")
 		};
 
 		void setupEventHooks();

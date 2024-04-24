@@ -222,6 +222,7 @@
     <ClCompile Include="net\minecraft\world\World\World.cpp" />
     <ClCompile Include="Ripterms\Cache\Cache.cpp" />
     <ClCompile Include="Ripterms\GUI\GUI.cpp" />
+    <ClCompile Include="Ripterms\GUI\gyro_gui\gyro_gui.cpp" />
     <ClCompile Include="Ripterms\Hook\Capstone.cpp" />
     <ClCompile Include="Ripterms\Hook\JavaHook.cpp" />
     <ClCompile Include="Ripterms\Hook\Module.cpp" />
@@ -301,6 +302,7 @@
     <ClInclude Include="Ripterms\GUI\font.h" />
     <ClInclude Include="Ripterms\GUI\GUI.h" />
     <ClInclude Include="Ripterms\GUI\GUI_conf.h" />
+    <ClInclude Include="Ripterms\GUI\gyro_gui\gyro_gui.h" />
     <ClInclude Include="Ripterms\Hook\Capstone.h" />
     <ClInclude Include="Ripterms\Hook\Hook.h" />
     <ClInclude Include="Ripterms\Hook\JavaHook.h" />

@@ -19,7 +19,7 @@ void Ripterms::Modules::FullBright::run()
 
 void Ripterms::Modules::FullBright::renderGUI()
 {
-	ImGui::Checkbox("Full Bright", &enabled);
+	ImGui::IOSToggle ("Full Bright", &enabled);
 }
 
 void Ripterms::Modules::FullBright::disable()

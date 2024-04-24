@@ -3,14 +3,14 @@
 
 void Ripterms::Modules::VelocityPacket::renderGUI()
 {
-	ImGui::Checkbox("VelocityPacket", &enabled);
+	ImGui::IOSToggle ("VelocityPacket", &enabled);
 	if (enabled)
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderFloat("motionX multiplier", &motionX_multiplier, -2.0f, 2.0f, "%.2f");
-		ImGui::SliderFloat("motionY multiplier", &motionY_multiplier, -2.0f, 2.0f, "%.2f");
-		ImGui::SliderFloat("motionZ multiplier", &motionZ_multiplier, -2.0f, 2.0f, "%.2f");
+		ImGui::CustomSliderFloat ("motionX multiplier", &motionX_multiplier, -2.0f, 2.0f, "%.2f", 0);
+		ImGui::CustomSliderFloat ("motionY multiplier", &motionY_multiplier, -2.0f, 2.0f, "%.2f", 0);
+		ImGui::CustomSliderFloat ("motionZ multiplier", &motionZ_multiplier, -2.0f, 2.0f, "%.2f", 0);
 		ImGui::EndGroup();
 	}
 }

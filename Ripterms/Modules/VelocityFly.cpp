@@ -2,12 +2,12 @@
 
 void Ripterms::Modules::VelocityFly::renderGUI()
 {
-	ImGui::Checkbox("VelocityFly", &enabled);
+	ImGui::IOSToggle ("VelocityFly", &enabled);
 	if (enabled)
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderFloat("Speed", &speed, 0.01f, 2.0f, "%.2f");
+		ImGui::CustomSliderFloat ("Speed", &speed, 0.01f, 2.0f, "%.2f", 0);
 		ImGui::EndGroup();
 	}
 }

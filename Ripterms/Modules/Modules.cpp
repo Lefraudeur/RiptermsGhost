@@ -248,7 +248,7 @@ void Ripterms::Modules::ESP::render()
 
 void Ripterms::Modules::BlockOnAttack::renderGUI()
 {
-	ImGui::Checkbox("BlockOnAttack", &enabled);
+	ImGui::IOSToggle ("BlockOnAttack", &enabled);
 }
 
 void Ripterms::Modules::BlockOnAttack::onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel)

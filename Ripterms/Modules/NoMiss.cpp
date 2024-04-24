@@ -3,7 +3,7 @@
 
 void Ripterms::Modules::NoMiss::renderGUI()
 {
-	ImGui::Checkbox("NoMiss", &enabled);
+	ImGui::IOSToggle ("NoMiss", &enabled);
 }
 
 void Ripterms::Modules::NoMiss::onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel)

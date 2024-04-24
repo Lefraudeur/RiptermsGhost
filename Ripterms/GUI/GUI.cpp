@@ -34,6 +34,10 @@ static void update_style()
 	ImGuiStyle& style = ImGui::GetStyle();
 
 	style.Colors[ImGuiCol_CheckMark] = Ripterms::GUI::color_checkmark;
+	style.Colors[ImGuiCol_IOSToggleCircle] = Ripterms::GUI::color_ios_toggle_circle;
+	style.Colors[ImGuiCol_SliderLine] = Ripterms::GUI::color_slider_line;
+	style.Colors[ImGuiCol_IOSToggleBgOff] = Ripterms::GUI::color_ios_off;
+	style.Colors[ImGuiCol_IOSToggleBgOn] = Ripterms::GUI::color_ios_on;
 	style.Colors[ImGuiCol_SliderGrab] = Ripterms::GUI::color_slider_grab;
 	style.Colors[ImGuiCol_SliderGrabActive] = Ripterms::GUI::color_slider_grab;
 	style.Colors[ImGuiCol_FrameBg] = Ripterms::GUI::color_frame_bg;
@@ -60,18 +64,20 @@ static void update_style()
 	style.PopupRounding = Ripterms::GUI::rounding_popup;
 	style.ScrollbarRounding = Ripterms::GUI::rounding_scrollbar;
 	style.TabRounding = Ripterms::GUI::rounding_tab;
-	style.WindowBorderSize = 1.0f;
+	style.WindowBorderSize = 1.5f;
 	style.FrameBorderSize = 1.0f;
 	style.ChildBorderSize = 1.0f;
 	style.WindowPadding = ImVec2(Ripterms::GUI::HEADER_CAT_DISTANCE, Ripterms::GUI::HEADER_CAT_DISTANCE);
 }
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-static LRESULT CALLBACK detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+static LRESULT CALLBACK detour_WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
+{
 	if (msg == WM_KEYDOWN && wParam == VK_INSERT)
 	{
 		Ripterms::GUI::draw = !Ripterms::GUI::draw;
 	}
+
 	if (Ripterms::GUI::draw)
 	{
 		ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
@@ -179,29 +185,38 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 			clipped = false;
 		}
 
-		ImGui::SetNextWindowBgAlpha(.8f);
+		ImGui::SetNextWindowBgAlpha(1.f);
 		ImGui::SetNextWindowSize(ImVec2(600.0f, 400.f));
 		ImGui::Begin("Ripterms Ghost", nullptr, ImGuiWindowFlags_NoDecoration);
 		{
-			ImGui::BeginChild("##header", (ImVec2(ImGui::GetWindowWidth() - ImGui::GetStyle().WindowPadding.x * 2.f, Ripterms::GUI::HEADER_HEIGHT)));
+			
+			ImGui::BeginChild ( "##header" , ( ImVec2 ( ImGui::GetWindowWidth ( ) - ImGui::GetStyle ( ).WindowPadding.x * 2.f , Ripterms::GUI::HEADER_HEIGHT ) ) );
 
-			if(Ripterms::GUI::ripterms_title)
+			if ( Ripterms::GUI::ripterms_title )
 			{
-				ImVec2 txt_size = ImGui::CalcTextSize(Ripterms::GUI::client_name);
-				ImGui::SetCursorPosY((Ripterms::GUI::HEADER_HEIGHT - txt_size.y) / 2.0);
-				ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2.0f - txt_size.x / 2.0f);
+				ImVec2 txt_size = ImGui::CalcTextSize ( Ripterms::GUI::client_name );
+				ImGui::SetCursorPosY ( ( Ripterms::GUI::HEADER_HEIGHT - txt_size.y ) / 2.0 );
+				ImGui::SetCursorPosX ( ImGui::GetWindowWidth ( ) / 2.0f - txt_size.x / 2.0f );
 				ImGui::TextColored
 				(
+					/* if you guys do not like the color change on text there is the original one:
+						ImColor
+					(
+						150 , 0 , 20 ,
+						255
+					) ,
+					*/
+
 					ImColor
 					(
-						150,	0, 20,
+						78 , 108 , 211 ,
 						255
-					),
+					) ,
 					Ripterms::GUI::client_name
 				);
 			}
-			ImGui::EndChild();
-
+			ImGui::EndChild ( );
+			
 			static uint8_t current_category_id = 0;
 			constexpr uint8_t settings_id = sizeof(Ripterms::Modules::categories) / sizeof(Ripterms::Modules::Category);
 			ImGui::SetCursorPosY(Ripterms::GUI::HEADER_HEIGHT + Ripterms::GUI::HEADER_CAT_DISTANCE + ImGui::GetStyle().WindowPadding.y);
@@ -229,7 +244,7 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 			ImGui::SameLine();
 		
 			ImGui::SetCursorPosX(Ripterms::GUI::CATEGORY_WIDTH + Ripterms::GUI::HEADER_CAT_DISTANCE + ImGui::GetStyle().WindowPadding.x);
-			ImGui::BeginChild("##modules");
+			ImGui::BeginChild("##modules", ImVec2 ( 0 , 0 ) , 0 , ImGuiWindowFlags_NoScrollbar );
 			{
 				if (current_category_id == settings_id)
 				{
@@ -239,9 +254,9 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 
 					ImGui::BeginChild("settings content", { 0, 0 }, ImGuiChildFlags_AlwaysUseWindowPadding, ImGuiWindowFlags_NoBackground);
 
-					ImGui::Checkbox("Ripterms Title", &Ripterms::GUI::ripterms_title);
-					ImGui::Checkbox("Show Color Theming", &Ripterms::GUI::show_color_theming);
-					ImGui::Checkbox("Show Rounding Theming", &Ripterms::GUI::show_rounding_theming);
+					ImGui::IOSToggle ("Ripterms Title", &Ripterms::GUI::ripterms_title);
+					ImGui::IOSToggle ("Show Color Theming", &Ripterms::GUI::show_color_theming);
+					ImGui::IOSToggle ("Show Rounding Theming", &Ripterms::GUI::show_rounding_theming);
 
 					if(Ripterms::GUI::show_color_theming)
 					{
@@ -255,6 +270,10 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 						ImGui::ColorEdit4("Frame Background Active", &Ripterms::GUI::color_frame_bg_active.Value.x, ImGuiColorEditFlags_NoInputs);
 						ImGui::ColorEdit4("Frame Background Hovered", &Ripterms::GUI::color_frame_bg_hovered.Value.x, ImGuiColorEditFlags_NoInputs);
 						ImGui::ColorEdit4("Window Background", &Ripterms::GUI::color_window_bg.Value.x, ImGuiColorEditFlags_NoInputs);
+						ImGui::ColorEdit4 ( "IOS Toggle Circle" , &Ripterms::GUI::color_ios_toggle_circle.Value.x , ImGuiColorEditFlags_NoInputs );
+						ImGui::ColorEdit4 ( "IOS On" , &Ripterms::GUI::color_ios_on.Value.x , ImGuiColorEditFlags_NoInputs );
+						ImGui::ColorEdit4 ( "IOS Off" , &Ripterms::GUI::color_ios_off.Value.x , ImGuiColorEditFlags_NoInputs );
+						ImGui::ColorEdit4 ( "Slider Line" , &Ripterms::GUI::color_slider_line.Value.x , ImGuiColorEditFlags_NoInputs );
 						ImGui::ColorEdit4("Button", &Ripterms::GUI::color_button.Value.x, ImGuiColorEditFlags_NoInputs);
 						ImGui::ColorEdit4("Button  Active", &Ripterms::GUI::color_button_active.Value.x, ImGuiColorEditFlags_NoInputs);
 						ImGui::ColorEdit4("Button Hovered", &Ripterms::GUI::color_button_hovered.Value.x, ImGuiColorEditFlags_NoInputs);

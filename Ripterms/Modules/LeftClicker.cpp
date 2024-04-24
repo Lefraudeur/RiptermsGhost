@@ -22,13 +22,13 @@ void Ripterms::Modules::LeftClicker::run()
 
 void Ripterms::Modules::LeftClicker::renderGUI()
 {
-	ImGui::Checkbox("Left Clicker", &enabled);
+	ImGui::IOSToggle ("Left Clicker", &enabled);
 	if (enabled)
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderInt("Min CPS", &min_cps, 1, 150);
-		ImGui::SliderInt("Max CPS", &max_cps, 1, 150);
+		ImGui::CustomSliderInt("Min CPS", &min_cps, 1, 150, 0, 0);
+		ImGui::CustomSliderInt("Max CPS", &max_cps, 1, 150, 0, 0 );
 		ImGui::EndGroup();
 	}
 }

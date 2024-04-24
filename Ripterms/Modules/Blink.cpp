@@ -9,13 +9,13 @@ void Ripterms::Modules::Blink::run()
 
 void Ripterms::Modules::Blink::renderGUI()
 {
-	ImGui::Checkbox("Blink", &enabled);
+	ImGui::IOSToggle ("Blink", &enabled);
 	if (enabled)
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
 		ImGui::BeginGroup();
-		ImGui::Checkbox("delay sent", &delay_sent_packets);
-		ImGui::Checkbox("delay received", &delay_received_packets);
+		ImGui::IOSToggle ("delay sent", &delay_sent_packets);
+		ImGui::IOSToggle ("delay received", &delay_received_packets);
 		ImGui::EndGroup();
 	}
 }

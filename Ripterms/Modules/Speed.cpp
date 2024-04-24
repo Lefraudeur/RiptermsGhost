@@ -2,12 +2,12 @@
 
 void Ripterms::Modules::Speed::renderGUI()
 {
-	ImGui::Checkbox("Speed", &enabled);
+	ImGui::IOSToggle ("Speed", &enabled);
 	if (enabled)
 	{
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
 		ImGui::BeginGroup();
-		ImGui::SliderFloat("Speed abpt", &speed, 0.01f, 2.0f, "%.2f");
+		ImGui::CustomSliderFloat ("Speed abpt", &speed, 0.01f, 2.0f, "%.2f", 0);
 		ImGui::EndGroup();
 	}
 }
