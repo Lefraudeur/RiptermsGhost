@@ -275,6 +275,20 @@ void ImGui::CenterTextHV ( const char* text )
 	ImGui::Text ( text );
 }
 
+
+static ImVector<ImVec2> verticalLineStack;
+void ImGui::BeginVerticalLine()
+{
+	verticalLineStack.push_back(ImGui::GetCursorScreenPos());
+}
+
+void ImGui::EndVerticalLine()
+{
+	const ImVec2& old_pos = verticalLineStack.back();
+	ImGui::GetWindowDrawList()->AddLine(old_pos, {old_pos.x, ImGui::GetCursorScreenPos().y}, ImColor(56, 61, 69), 2.0f);
+	verticalLineStack.pop_back();
+}
+
 bool ImGui::ColorEdit ( const char* label , float col[ 3 ] , ImGuiColorEditFlags flags )
 {
 	return ColorEdit4 ( label , col , flags | ImGuiColorEditFlags_NoInputs );

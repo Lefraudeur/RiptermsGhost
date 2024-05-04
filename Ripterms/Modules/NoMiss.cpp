@@ -1,11 +1,6 @@
 #include "Modules.h"
 #include "../Hook/JavaHook.h"
 
-void Ripterms::Modules::NoMiss::renderGUI()
-{
-	ImGui::IOSToggle ("NoMiss", &enabled);
-}
-
 void Ripterms::Modules::NoMiss::onClickMouse(JNIEnv* env, Minecraft& theMinecraft, bool* cancel)
 {
 	if (!enabled) return;

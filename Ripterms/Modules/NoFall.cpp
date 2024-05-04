@@ -2,10 +2,6 @@
 #include "../Cache/Cache.h"
 #include "../../net/minecraft/network/play/client/C03PacketPlayer/C06PacketPlayerPosLook/C06PacketPlayerPosLook.h"
 
-void Ripterms::Modules::NoFall::renderGUI()
-{
-	ImGui::IOSToggle ("NoFall", &enabled);
-}
 
 void Ripterms::Modules::NoFall::onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel)
 {

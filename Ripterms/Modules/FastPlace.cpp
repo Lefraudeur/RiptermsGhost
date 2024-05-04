@@ -13,12 +13,5 @@ void Ripterms::Modules::FastPlace::run()
 
 void Ripterms::Modules::FastPlace::renderGUI()
 {
-	ImGui::IOSToggle ("Fast Place", &enabled);
-	if (enabled)
-	{
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
-		ImGui::BeginGroup();
-		ImGui::CustomSliderInt("Tick Delay", &tickDelay, 0, 3, "%" , 0 );
-		ImGui::EndGroup();
-	}
+	ImGui::CustomSliderInt("Tick Delay", &tickDelay, 0, 3, "%", 0);
 }

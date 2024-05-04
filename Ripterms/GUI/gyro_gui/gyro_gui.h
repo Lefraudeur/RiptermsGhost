@@ -18,4 +18,7 @@ namespace ImGui
 	IMGUI_API void CenterTextH ( const char* text );
 	IMGUI_API void CenterTextV ( const char* text );
 	IMGUI_API void CenterTextHV ( const char* text );
+
+	IMGUI_API void BeginVerticalLine();
+	IMGUI_API void EndVerticalLine();
 }

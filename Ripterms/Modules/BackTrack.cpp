@@ -7,16 +7,9 @@
 
 void Ripterms::Modules::BackTrack::renderGUI()
 {
-	ImGui::IOSToggle ("BackTrack", &enabled);
-	if (enabled)
-	{
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
-		ImGui::BeginGroup();
-		ImGui::CustomSliderInt ("Packet ReceiveDelay ms", &delay, 10, 1000, "%d", 0);
-		ImGui::IOSToggle ("disableOnHit", &disableOnHit);
-		ImGui::IOSToggle ("targetPacketsOnly", &targetPacketsOnly);
-		ImGui::EndGroup();
-	}
+	ImGui::CustomSliderInt("Packet ReceiveDelay ms", &delay, 10, 1000, "%d", 0);
+	ImGui::IOSToggle("disableOnHit", &disableOnHit);
+	ImGui::IOSToggle("targetPacketsOnly", &targetPacketsOnly);
 }
 
 void Ripterms::Modules::BackTrack::onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel)

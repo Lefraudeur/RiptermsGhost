@@ -3,16 +3,9 @@
 
 void Ripterms::Modules::VelocityPacket::renderGUI()
 {
-	ImGui::IOSToggle ("VelocityPacket", &enabled);
-	if (enabled)
-	{
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
-		ImGui::BeginGroup();
-		ImGui::CustomSliderFloat ("motionX multiplier", &motionX_multiplier, -2.0f, 2.0f, "%.2f", 0);
-		ImGui::CustomSliderFloat ("motionY multiplier", &motionY_multiplier, -2.0f, 2.0f, "%.2f", 0);
-		ImGui::CustomSliderFloat ("motionZ multiplier", &motionZ_multiplier, -2.0f, 2.0f, "%.2f", 0);
-		ImGui::EndGroup();
-	}
+	ImGui::CustomSliderFloat("motionX multiplier", &motionX_multiplier, -2.0f, 2.0f, "%.2f", 0);
+	ImGui::CustomSliderFloat("motionY multiplier", &motionY_multiplier, -2.0f, 2.0f, "%.2f", 0);
+	ImGui::CustomSliderFloat("motionZ multiplier", &motionZ_multiplier, -2.0f, 2.0f, "%.2f", 0);
 }
 
 void Ripterms::Modules::VelocityPacket::onChannelRead0(JNIEnv* env, NetworkManager& this_networkManager, ChannelHandlerContext& context, Packet& packet, bool* cancel)

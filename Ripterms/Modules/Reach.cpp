@@ -6,14 +6,7 @@
 
 void Ripterms::Modules::Reach::renderGUI()
 {
-	ImGui::IOSToggle("Reach", &enabled);
-	if (enabled)
-	{
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
-		ImGui::BeginGroup();
-		ImGui::CustomSliderFloat ("Reach Distance", &reach_distance, 3.0f, 4.0f, "%.2f", 0);
-		ImGui::EndGroup();
-	}
+	ImGui::CustomSliderFloat("Reach Distance", &reach_distance, 3.0f, 4.0f, "%.2f", 0);
 }
 
 void Ripterms::Modules::Reach::disable()

@@ -8,8 +8,3 @@ void Ripterms::Modules::Sprint::run()
 		return;
 	cache->gameSettings.getKeyBindSprint().setPressed(true);
 }
-
-void Ripterms::Modules::Sprint::renderGUI()
-{
-	ImGui::IOSToggle ("Sprint", &enabled);
-}

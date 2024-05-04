@@ -4,15 +4,8 @@
 
 void Ripterms::Modules::HitBoxes::renderGUI()
 {
-	ImGui::IOSToggle ("HitBoxes", &enabled);
-	if (enabled)
-	{
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
-		ImGui::BeginGroup();
-		ImGui::CustomSliderFloat ("X Expand", &x_expand, 0.01f, 2.0f, "%.2f", 0);
-		ImGui::CustomSliderFloat ("Y Expand", &y_expand, 0.01f, 2.0f, "%.2f", 0);
-		ImGui::EndGroup();
-	}
+	ImGui::CustomSliderFloat("X Expand", &x_expand, 0.01f, 2.0f, "%.2f", 0);
+	ImGui::CustomSliderFloat("Y Expand", &y_expand, 0.01f, 2.0f, "%.2f", 0);
 }
 
 void Ripterms::Modules::HitBoxes::run()

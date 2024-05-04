@@ -168,17 +168,10 @@ void Ripterms::Modules::AimAssist::run()
 
 void Ripterms::Modules::AimAssist::renderGUI()
 {
-	ImGui::IOSToggle("Aim Assist", &enabled);
-	if (enabled)
-	{
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
-		ImGui::BeginGroup();
-		ImGui::CustomSliderFloat ("Max Distance", &max_distance, 1.0f, 6.0f, "%.1f", 0);
-		ImGui::CustomSliderFloat ("Max Angle", &max_angle, 10.0f, 180.0f, "%.1f", 0);
-		ImGui::CustomSliderFloat ("Multiplier Yaw", &multiplier, 0.1f, 2.0f, "%.1f", 0);
-		ImGui::CustomSliderFloat ("Multiplier Pitch", &multiplierPitch, 0.0f, 2.0f, "%.1f", 0);
-		ImGui::EndGroup();
-	}
+	ImGui::CustomSliderFloat ("Max Distance", &max_distance, 1.0f, 6.0f, "%.1f", 0);
+	ImGui::CustomSliderFloat ("Max Angle", &max_angle, 10.0f, 180.0f, "%.1f", 0);
+	ImGui::CustomSliderFloat ("Multiplier Yaw", &multiplier, 0.1f, 2.0f, "%.1f", 0);
+	ImGui::CustomSliderFloat ("Multiplier Pitch", &multiplierPitch, 0.0f, 2.0f, "%.1f", 0);
 }
 
 void Ripterms::Modules::AimAssist::render()

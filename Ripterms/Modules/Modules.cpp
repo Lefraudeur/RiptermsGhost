@@ -3,6 +3,12 @@
 #include <ImGui/imgui.h>
 #include "../Hook/JavaHook.h"
 
+Ripterms::Modules::IModule::IModule(const char* name, const char* description) :
+	name(name),
+	description(description)
+{
+}
+
 void Ripterms::Modules::IModule::run()
 {
 }
@@ -18,6 +24,16 @@ void Ripterms::Modules::IModule::render()
 void Ripterms::Modules::IModule::disable()
 {
 	enabled = false;
+}
+
+const char* Ripterms::Modules::IModule::get_name()
+{
+	return name;
+}
+
+const char* Ripterms::Modules::IModule::get_description()
+{
+	return description;
 }
 
 void Ripterms::Modules::IModule::onAddToSendQueue(JNIEnv* env, NetHandlerPlayClient& sendQueue, Packet& packet, bool* cancel)
@@ -244,11 +260,6 @@ void Ripterms::Modules::cleanAll()
 
 void Ripterms::Modules::ESP::render()
 {
-}
-
-void Ripterms::Modules::BlockOnAttack::renderGUI()
-{
-	ImGui::IOSToggle ("BlockOnAttack", &enabled);
 }
 
 void Ripterms::Modules::BlockOnAttack::onAttackTargetEntityWithCurrentItem(JNIEnv* env, EntityPlayer& this_player, Entity& entity, bool* cancel)

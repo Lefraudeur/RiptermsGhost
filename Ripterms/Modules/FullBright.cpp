@@ -17,11 +17,6 @@ void Ripterms::Modules::FullBright::run()
 	}
 }
 
-void Ripterms::Modules::FullBright::renderGUI()
-{
-	ImGui::IOSToggle ("Full Bright", &enabled);
-}
-
 void Ripterms::Modules::FullBright::disable()
 {
 	if (!Ripterms::p_env) return;

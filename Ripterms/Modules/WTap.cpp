@@ -22,8 +22,3 @@ void Ripterms::Modules::WTap::onAttackTargetEntityWithCurrentItem(JNIEnv* env, E
 	if (!enabled) return;
 	ticks = 0;
 }
-
-void Ripterms::Modules::WTap::renderGUI()
-{
-	ImGui::IOSToggle ("WTap", &enabled);
-}

@@ -49,12 +49,5 @@ void Ripterms::Modules::LegitScaffold::onUpdateWalkingPlayer(JNIEnv* env, Entity
 
 void Ripterms::Modules::LegitScaffold::renderGUI()
 {
-	ImGui::IOSToggle ("Legit Scaffold", &enabled);
-	if (enabled)
-	{
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
-		ImGui::BeginGroup();
-		ImGui::CustomSliderInt("delay", &tickDelay, 0, 10, 0, 0);
-		ImGui::EndGroup();
-	}
+	ImGui::CustomSliderInt("delay", &tickDelay, 0, 10, 0, 0);
 }

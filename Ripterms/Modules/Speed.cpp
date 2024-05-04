@@ -2,14 +2,7 @@
 
 void Ripterms::Modules::Speed::renderGUI()
 {
-	ImGui::IOSToggle ("Speed", &enabled);
-	if (enabled)
-	{
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
-		ImGui::BeginGroup();
-		ImGui::CustomSliderFloat ("Speed abpt", &speed, 0.01f, 2.0f, "%.2f", 0);
-		ImGui::EndGroup();
-	}
+	ImGui::CustomSliderFloat("Speed abpt", &speed, 0.01f, 2.0f, "%.2f", 0);
 }
 
 void Ripterms::Modules::Speed::onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel)

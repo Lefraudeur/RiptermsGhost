@@ -1,10 +1,5 @@
 #include "Modules.h"
 
-void Ripterms::Modules::Glide::renderGUI()
-{
-	ImGui::IOSToggle ("Glide", &enabled);
-}
-
 void Ripterms::Modules::Glide::onUpdateWalkingPlayer(JNIEnv* env, EntityPlayerSP& this_player, bool* cancel)
 {
 	if (!enabled || this_player.getMotion().y > -0.1) return;

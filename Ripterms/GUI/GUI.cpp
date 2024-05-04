@@ -235,9 +235,10 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 
 				ImGui::SetCursorPos(ImVec2(0, ImGui::GetWindowSize().y - Ripterms::GUI::category_button_size.y));
 
-				if (current_category_id == settings_id) { ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(Ripterms::GUI::color_active_tab)); }
+				bool is_settings_selected = current_category_id == settings_id;
+				if (is_settings_selected) { ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(Ripterms::GUI::color_active_tab)); }
 				if (ImGui::Button("Settings", Ripterms::GUI::category_button_size)) { current_category_id = settings_id; }
-				if (current_category_id == settings_id) { ImGui::PopStyleColor(); }
+				if (is_settings_selected) { ImGui::PopStyleColor(); }
 			}
 			ImGui::EndChild();
 
@@ -306,14 +307,30 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 					ImGui::Text(Ripterms::Modules::categories[current_category_id].name);
 					ImGui::Separator();
 
+					ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(6, 6));
 					ImGui::BeginChild("content", { 0, 0 }, ImGuiChildFlags_AlwaysUseWindowPadding, ImGuiWindowFlags_NoBackground);
-					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, {3.0, 3.0});
 					{
 						Ripterms::JNIFrame jni_frame(Ripterms::p_env, 30);
 						for (Ripterms::Modules::IModule* module : Ripterms::Modules::categories[current_category_id].modules)
 						{
-							ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetStyle().ItemSpacing.y / 2.0f);
-							module->renderGUI();
+							if (ImGui::IOSToggle(module->get_name(), &module->enabled))
+								module->display_options = module->enabled;
+							if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+								module->display_options = !module->display_options;
+							if (module->display_options)
+							{
+								ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetStyle().ItemSpacing.y);
+								ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetStyle().WindowPadding.x);
+								ImGui::BeginVerticalLine();
+								ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetStyle().WindowPadding.x);
+								ImGui::BeginGroup();
+								ImGui::Text(module->get_description());
+								module->renderGUI();
+								ImGui::EndGroup();
+								ImGui::EndVerticalLine();
+								ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetStyle().ItemSpacing.y);
+							}
+							ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetStyle().ItemSpacing.y);
 						}
 					}
 

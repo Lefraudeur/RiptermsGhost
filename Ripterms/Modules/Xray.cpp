@@ -7,22 +7,15 @@
 
 void Ripterms::Modules::Xray::renderGUI()
 {
-	ImGui::IOSToggle ("Xray", &enabled);
-	if (enabled)
-	{
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 15.0f);
-		ImGui::BeginGroup();
-		ImGui::CustomSliderInt("Radius", &RADIUS, 5, 50, 0, 0);
-		ImGui::IOSToggle ("Coal", &coal);
-		ImGui::IOSToggle ("Redstone", &redstone);
-		ImGui::IOSToggle ("Diamond", &diamond);
-		ImGui::IOSToggle("Gold", &gold);
-		ImGui::IOSToggle("Iron", &iron);
-		ImGui::IOSToggle("Emerald", &emerald);
-		ImGui::IOSToggle("Lapis", &lapis);
-		ImGui::IOSToggle("Other", &other);
-		ImGui::EndGroup();
-	}
+	ImGui::CustomSliderInt("Radius", &RADIUS, 5, 50, 0, 0);
+	ImGui::IOSToggle("Coal", &coal);
+	ImGui::IOSToggle("Redstone", &redstone);
+	ImGui::IOSToggle("Diamond", &diamond);
+	ImGui::IOSToggle("Gold", &gold);
+	ImGui::IOSToggle("Iron", &iron);
+	ImGui::IOSToggle("Emerald", &emerald);
+	ImGui::IOSToggle("Lapis", &lapis);
+	ImGui::IOSToggle("Other", &other);
 }
 
 void Ripterms::Modules::Xray::render()
