@@ -136,7 +136,7 @@ namespace Ripterms
 			void renderGUI() override;
 			void onGetClientModName(JNIEnv* env, bool* cancel) override;
 		private:
-			char name[128] = { 0 };
+			char client_name[256] = { '\0' };
 			String getClientModName();
 		};
 
@@ -212,7 +212,7 @@ namespace Ripterms
 		class Sprint : public IModule
 		{
 		public:
-			Sprint() : IModule("Sprint", "Same as contantly holding your sprint key") {}
+			Sprint() : IModule("Sprint", "Same as constantly holding your sprint key") {}
 			void run() override;
 		};
 

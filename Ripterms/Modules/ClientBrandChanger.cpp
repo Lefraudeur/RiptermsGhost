@@ -8,28 +8,21 @@ void Ripterms::Modules::ClientBrandChanger::renderGUI()
 	static bool runonce = true;
 	if (runonce)
 	{
-		std::strcpy(name, getClientModName().toStdString().c_str());
+		std::strcpy(client_name, getClientModName().toStdString().c_str());
 		runonce = false;
 	}
-	ImGui::Text("Client Brand Changer:");
-	ImGui::InputText("name", name, sizeof(name));
-	if (ImGui::Button("change"))
-	{
-		enabled = true;
-	}
-	ImGui::SameLine();
+	ImGui::Text("Client brand:");
+	ImGui::InputText("name", client_name, sizeof(client_name));
 	if (ImGui::Button("reset"))
 	{
-		enabled = false;
-		std::strcpy(name, getClientModName().toStdString().c_str());
+		std::strcpy(client_name, getClientModName().toStdString().c_str());
 	}
 }
 
 void Ripterms::Modules::ClientBrandChanger::onGetClientModName(JNIEnv* env, bool* cancel)
 {
-	if (!enabled)
-		return;
-	jobject new_name = env->NewStringUTF(name);
+	if (!enabled || client_name[0] == '\0') return;
+	jobject new_name = env->NewStringUTF(client_name);
 	Ripterms::JavaHook::set_return_value<void*>(cancel, *(void**)new_name);
 	*cancel = true;
 }
