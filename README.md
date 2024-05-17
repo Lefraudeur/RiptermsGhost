@@ -1,4 +1,4 @@
-﻿# RiptermsGhost
+﻿# RiptermsGhost[GUIDE]
 
 Inactive, random crash on some versions, needs a full recode
 
