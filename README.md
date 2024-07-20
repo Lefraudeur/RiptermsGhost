@@ -3,7 +3,7 @@
 Inactive, random crash on some versions, needs a full recode
 
 ### ⚠️ Many people are selling this cheat with insignificant modifications, and pretend to be me
-> I communicate only through my discord discord: lefraudeur\
+> I communicate only through my discord: lefraudeur\
 > You can also find me on aXXo's discord server: https://discord.gg/EKu4xbuh8v
 
 An example injectable cheat for minecraft using java native interface, jvmti, java method hooking, and constant pool editing.
