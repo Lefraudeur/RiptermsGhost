@@ -1,28 +1,28 @@
 #include "Ripterms.h"
 
 Ripterms::CTimer::CTimer(std::chrono::milliseconds everyXms)
+    : timerBegin(std::chrono::steady_clock::now()), targetMs(everyXms)
 {
-	setEvery(everyXms);
 }
 
 bool Ripterms::CTimer::isElapsed()
 {
-	std::chrono::steady_clock::time_point timerNow = std::chrono::steady_clock::now();
-	if (duration_cast<std::chrono::milliseconds>(timerNow - timerBegin) >= targetMs)
-	{
-		timerBegin = timerNow;
-		return true;
-	}
-	return false;
+    auto timerNow = std::chrono::steady_clock::now();
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(timerNow - timerBegin) >= targetMs)
+    {
+        timerBegin = timerNow;
+        return true;
+    }
+    return false;
 }
 
 void Ripterms::CTimer::setEvery(std::chrono::milliseconds everyXms)
 {
-	timerBegin = std::chrono::steady_clock::now();
-	targetMs = everyXms;
+    targetMs = everyXms;
+    reset();
 }
 
 void Ripterms::CTimer::reset()
 {
-	timerBegin = std::chrono::steady_clock::now();
+    timerBegin = std::chrono::steady_clock::now();
 }
