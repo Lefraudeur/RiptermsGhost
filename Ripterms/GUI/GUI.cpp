@@ -215,7 +215,7 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 					Ripterms::GUI::client_name
 				);
 			}
-			ImGui::EndChild ( );
+			ImGui::EndChild();
 			
 			static uint8_t current_category_id = 0;
 			constexpr uint8_t settings_id = sizeof(Ripterms::Modules::categories) / sizeof(Ripterms::Modules::Category);
@@ -310,7 +310,7 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 					ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(6, 6));
 					ImGui::BeginChild("content", { 0, 0 }, ImGuiChildFlags_AlwaysUseWindowPadding, ImGuiWindowFlags_NoBackground);
 					{
-						Ripterms::JNIFrame jni_frame(Ripterms::p_env, 30);
+						//Ripterms::JNIFrame jni_frame(Ripterms::p_env, 30);
 						for (Ripterms::Modules::IModule* module : Ripterms::Modules::categories[current_category_id].modules)
 						{
 							if (ImGui::IOSToggle(module->get_name(), &module->enabled))
@@ -333,6 +333,7 @@ static BOOL WINAPI detour_wglSwapBuffers(HDC unnamedParam1)
 							ImGui::SetCursorPosY(ImGui::GetCursorPosY() + ImGui::GetStyle().ItemSpacing.y);
 						}
 					}
+					ImGui::PopStyleVar();
 
 					ImGui::EndChild();
 				}
